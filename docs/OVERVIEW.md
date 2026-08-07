@@ -1,6 +1,10 @@
-# Overview
+# Dev environment
 
-Dev environment template based on [code-server](https://github.com/coder/code-server), with the
+How to build and start the environment Iron Squid is developed in. This is the only document here
+about tooling rather than the product — for the project itself see [`CHALLENGE.md`](CHALLENGE.md),
+[`ARCHITECTURE.md`](ARCHITECTURE.md) and [`RULES.md`](RULES.md).
+
+The environment is a template based on [code-server](https://github.com/coder/code-server), with the
 Claude Code CLI, `ai-jail`, the GitHub CLI, and a nested rootless Docker daemon already set up. The
 template itself lives in its own repo,
 [`jvsl.env.agents.code-server`](https://github.com/TheHefty/jvsl.env.agents.code-server),
