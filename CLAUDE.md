@@ -5,14 +5,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## What this repository is
 
 **Iron Squid** — a public tracker for a Splatoon 3 gauntlet challenge, where the weapon and gear set
-are drawn at random and the player has to win with every weapon in the game. This monorepo is where
-it is being rebuilt as a server-backed public tracker.
+are drawn at random and the player has to win with every weapon in the game.
 
-There is **no application code here yet**. What exists is the dev container (vendored as a
-submodule), the release plumbing, and the documents below. The version currently live at
-[iron-squid.top](https://www.iron-squid.top) is a separate, frozen Angular repo,
-[`jvsl.web.angular.iron_squid`](https://github.com/TheHefty/jvsl.web.angular.iron_squid), kept as a
-behavioural reference and as the source of the weapon/gear datasets.
+The application is **`apps/web/`** in this repo, an npm workspace. Everything lives here: the app,
+the decisions that govern it, and the dev container it is developed in.
+
+The version currently live at [iron-squid.top](https://www.iron-squid.top) is a separate, frozen
+Angular repo — [`jvsl.web.angular.iron_squid`](https://github.com/TheHefty/jvsl.web.angular.iron_squid)
+— kept as a behavioural reference and as the source of the weapon/gear datasets. It is the only
+other repo involved.
+
+The app spent a short while in a repo of its own and was folded back in; `docs/ARCHITECTURE.md`
+records why, so the split is not re-proposed without new reasons.
 
 ## Read these first
 
@@ -64,8 +68,35 @@ Squid**.
 
 ## Commands
 
-There is no application yet, so there is no build, test or lint command for product code. Node 22 is
-available in the container (`node --version` → v22).
+Product commands run from the repo root, which forwards to the `apps/web` workspace:
+
+```bash
+npm install     # wires the workspace; run once after cloning
+npm run dev     # next dev
+npm run build   # next build — runs TypeScript too
+npm test        # vitest run
+npm run lint    # eslint
+npm run format  # prettier --write .
+```
+
+The weapon and gear catalogue is **generated and committed**, never hand-edited:
+
+```bash
+npm run generate:catalogue   # refetches Leanny/splat3 at the pinned game version
+```
+
+Run it only when deliberately moving to a new game version — bump `GAME_VERSION` in
+`apps/web/src/data/source.ts` first. `docs/ARCHITECTURE.md` explains why the version is pinned rather
+than floating, and why the output is split into one structural file plus one file per language.
+
+Note that `npm run format` reaches `apps/web` only. The Markdown under `docs/` is deliberately
+outside Prettier's scope — do not reformat it as a side effect of editing it.
+
+Node 22 is available in the container (`node --version` → v22). Husky lives at the repo root and
+runs `lint-staged` on commit and the test suite on push, so a broken suite does not reach the
+remote.
+
+The rest of the commands below are the dev container's own, and run **on the host**, not in here.
 
 Build the dev image (interactive; also how you add/remove stacks later):
 ```bash

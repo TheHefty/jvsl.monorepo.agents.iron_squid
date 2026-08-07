@@ -1,0 +1,137 @@
+{
+  "meta": {
+    "title": "Iron Squid",
+    "description": "Gana con todas las armas. Pierde una vez y vuelve a empezar. Un registro público del gauntlet de Splatoon 3."
+  },
+  "nav": {
+    "brand": "IRON SQUID",
+    "rules": "Reglas",
+    "runs": "Rachas",
+    "armory": "Arsenal",
+    "myRun": "Mi racha",
+    "log": "Registro",
+    "leaderboard": "Clasificación",
+    "startRun": "Comenzar una racha",
+    "skipToContent": "Saltar al contenido"
+  },
+  "landing": {
+    "stats": "{runs, plural, =0 {Aún no hay rachas} one {# racha} other {# rachas}} · {completed} completadas",
+    "headline": "Nadie ha terminado esto.",
+    "body": "Un arma al azar, un equipo al azar, una vida. Diez victorias te compran otra. Si pierdes, has de volver a ganar con cada arma que ya habías superado antes de conocer una nueva.",
+    "record": "El récord es {count}.",
+    "rollFirst": "Sortear mi primera arma",
+    "seeRecord": "Ver la racha récord",
+    "nowRolling": "Sorteando · {handle}",
+    "progress": "{cleared} / {total}",
+    "lives": "Vidas",
+    "rulesHeading": "Las reglas",
+    "conditionsHeading": "Condiciones",
+    "conditionSkip": "No se permite saltarse armas ni equipo; hay que ganar con cada uno.",
+    "conditionShare": "El progreso se registra aquí, y se anima a los jugadores a compartir su racha."
+  },
+  "rules": {
+    "roll": {
+      "title": "El sorteo",
+      "text": "El arma y el equipo se asignan al azar. No los eliges, y no puedes volver a sortear."
+    },
+    "lives": {
+      "title": "Vidas",
+      "text": "Cada racha empieza con una vida y gana otra por cada diez victorias dentro de ella."
+    },
+    "win": {
+      "title": "La victoria",
+      "text": "El arma que te tocó sigue siendo tuya hasta que ganes con ella. No se salta, por ningún motivo."
+    },
+    "reset": {
+      "title": "La caída",
+      "text": "Si pierdes la última vida, la racha se acaba. La siguiente empieza de cero: cada arma que habías superado vuelve a la mesa."
+    },
+    "end": {
+      "title": "El final",
+      "text": "El desafío se completa cuando una sola racha gana con todas las armas del juego."
+    }
+  },
+  "dashboard": {
+    "runTitle": "Racha n.º {number}",
+    "runDay": "día {day}",
+    "started": "Comenzó el {date}",
+    "lastLoss": "última derrota {ago}",
+    "yourWeapon": "Tu arma",
+    "rolling": "Sorteando…",
+    "weaponOf": "Arma {index} de {total}",
+    "neverCleared": "nunca superada",
+    "singleUse": "un solo uso",
+    "head": "Cabeza",
+    "clothes": "Ropa",
+    "shoes": "Calzado",
+    "iWon": "Gané",
+    "iLost": "Perdí",
+    "iWonMobile": "Gané — sortear la siguiente",
+    "armoryHeading": "El arsenal",
+    "armoryCounts": "{cleared} superadas · {current} en juego · {untouched} intactas",
+    "livesLabel": "Vidas",
+    "livesRemaining": "{count, plural, one {# vida restante} other {# vidas restantes}}",
+    "livesNote": "{count, plural, one {# victoria} other {# victorias}} para la siguiente.",
+    "streak": "Racha de victorias",
+    "personalBest": "Mejor marca {count}",
+    "replayQueue": "Cola de repetición",
+    "replayNote": "Si caes en esta, deberás repetir las {count} armas ya superadas antes de que el arsenal vuelva a abrirse.",
+    "armoryCleared": "{cleared} / {total} del arsenal superadas",
+    "gearLedger": "Control de equipo",
+    "headBurned": "Cabeza gastadas",
+    "clothesBurned": "Ropa gastada",
+    "shoesBurned": "Calzado gastado",
+    "honourSystem": "El registro es por honor. Tu página muestra cada entrada, así que miente asumiendo el coste social."
+  },
+  "armory": {
+    "heading": "El arsenal",
+    "intro": "Rellena significa superada. Con contorno significa que te está esperando. No hay un tercer estado, y no se salta.",
+    "cleared": "Superadas {count}",
+    "current": "En juego {count}",
+    "untouched": "Intactas {count}",
+    "stateCleared": "superada",
+    "stateCurrent": "en juego",
+    "stateUntouched": "intacta",
+    "weaponState": "{name}, {state}",
+    "listLabel": "Las {total} armas y su estado"
+  },
+  "log": {
+    "heading": "Registro de la racha",
+    "intro": "Lo más reciente primero. Las caídas son las entradas que te costaron el arsenal.",
+    "win": "Victoria",
+    "death": "Caída",
+    "empty": "Todavía no hay nada registrado.",
+    "fromRun": "Racha {number}"
+  },
+  "publicRun": {
+    "kicker": "Iron Squid · página pública de la racha",
+    "headline": "{handle} lleva {cleared} armas y ha caído {deaths, plural, one {una vez} other {# veces}}.",
+    "summary": "Racha n.º {run}, {days} días. Mejor racha: {best}.",
+    "cleared": "Superadas",
+    "toGo": "Faltan",
+    "deaths": "Caídas",
+    "matches": "Partidas",
+    "follow": "Seguir esta racha",
+    "copyLink": "Copiar enlace"
+  },
+  "settings": {
+    "heading": "Visualización",
+    "open": "Opciones de visualización",
+    "theme": "Tema",
+    "themeDark": "Oscuro",
+    "themeLight": "Claro",
+    "motion": "Movimiento",
+    "motionFull": "Completo",
+    "motionReduced": "Reducido",
+    "contrast": "Contraste",
+    "contrastNormal": "Normal",
+    "contrastHigh": "Alto",
+    "textSize": "Tamaño del texto",
+    "textSmall": "Pequeño",
+    "textNormal": "Normal",
+    "textLarge": "Grande",
+    "shapes": "Estado de las armas",
+    "shapesColour": "Color",
+    "shapesShapes": "Color y símbolo"
+  }
+}

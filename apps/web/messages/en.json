@@ -1,0 +1,137 @@
+{
+  "meta": {
+    "title": "Iron Squid",
+    "description": "Win with every weapon. Lose once, start over. A public tracker for the Splatoon 3 gauntlet."
+  },
+  "nav": {
+    "brand": "IRON SQUID",
+    "rules": "Rules",
+    "runs": "Runs",
+    "armory": "Armory",
+    "myRun": "My run",
+    "log": "Log",
+    "leaderboard": "Leaderboard",
+    "startRun": "Start a run",
+    "skipToContent": "Skip to content"
+  },
+  "landing": {
+    "stats": "{runs, plural, =0 {No runs yet} one {# run} other {# runs}} · {completed} completed",
+    "headline": "Nobody has finished this.",
+    "body": "One random weapon, one random gear set, one life. Ten wins buys you another. Lose and you replay every weapon you've already cleared before you're allowed to meet a new one.",
+    "record": "The record is {count}.",
+    "rollFirst": "Roll my first weapon",
+    "seeRecord": "See the record run",
+    "nowRolling": "Now rolling · {handle}",
+    "progress": "{cleared} / {total}",
+    "lives": "Lives",
+    "rulesHeading": "The rules",
+    "conditionsHeading": "Conditions",
+    "conditionSkip": "Skipping weapons or gear is not permitted; each must be used to achieve a victory.",
+    "conditionShare": "Progress is tracked here, and players are encouraged to share their runs."
+  },
+  "rules": {
+    "roll": {
+      "title": "The roll",
+      "text": "A weapon and a gear set are assigned at random. You don't choose them, and you can't re-roll."
+    },
+    "lives": {
+      "title": "Lives",
+      "text": "You start a run with one life, and earn another for every ten victories within it."
+    },
+    "win": {
+      "title": "The win",
+      "text": "The weapon you were given stays yours until you win with it. There is no skipping, for any reason."
+    },
+    "reset": {
+      "title": "The reset",
+      "text": "Lose your last life and the run is over. The next one starts from nothing — every weapon you had cleared goes back on the table."
+    },
+    "end": {
+      "title": "The end",
+      "text": "The challenge is complete when a single run has cleared every weapon in the game."
+    }
+  },
+  "dashboard": {
+    "runTitle": "Run #{number}",
+    "runDay": "day {day}",
+    "started": "Started {date}",
+    "lastLoss": "last loss {ago}",
+    "yourWeapon": "Your weapon",
+    "rolling": "Rolling…",
+    "weaponOf": "Weapon {index} of {total}",
+    "neverCleared": "never cleared",
+    "singleUse": "single use",
+    "head": "Head",
+    "clothes": "Body",
+    "shoes": "Shoes",
+    "iWon": "I won",
+    "iLost": "I lost",
+    "iWonMobile": "I won — roll the next one",
+    "armoryHeading": "The armory",
+    "armoryCounts": "{cleared} cleared · {current} up now · {untouched} untouched",
+    "livesLabel": "Lives",
+    "livesRemaining": "{count, plural, one {# life} other {# lives}} remaining",
+    "livesNote": "{count, plural, one {# win} other {# wins}} from the next one.",
+    "streak": "Win streak",
+    "personalBest": "Personal best {count}",
+    "replayQueue": "Replay queue",
+    "replayNote": "If you drop this one, you replay all {count} cleared weapons before the armory opens again.",
+    "armoryCleared": "{cleared} / {total} of the armory cleared",
+    "gearLedger": "Gear ledger",
+    "headBurned": "Headgear burned",
+    "clothesBurned": "Clothing burned",
+    "shoesBurned": "Shoes burned",
+    "honourSystem": "Reporting is on the honour system. Your run page shows every entry, so lie at your own social cost."
+  },
+  "armory": {
+    "heading": "The armory",
+    "intro": "Filled means cleared. Outlined means it is waiting for you. There is no third state, and no skipping.",
+    "cleared": "Cleared {count}",
+    "current": "Up now {count}",
+    "untouched": "Untouched {count}",
+    "stateCleared": "cleared",
+    "stateCurrent": "up now",
+    "stateUntouched": "untouched",
+    "weaponState": "{name}, {state}",
+    "listLabel": "All {total} weapons and their state"
+  },
+  "log": {
+    "heading": "Run log",
+    "intro": "Newest first. Deaths are the entries that cost you the armory.",
+    "win": "Win",
+    "death": "Death",
+    "empty": "Nothing logged yet.",
+    "fromRun": "Run {number}"
+  },
+  "publicRun": {
+    "kicker": "Iron Squid · public run page",
+    "headline": "{handle} is {cleared} weapons deep and has died {deaths, plural, one {once} other {# times}}.",
+    "summary": "Run #{run}, {days} days old. Best streak {best}.",
+    "cleared": "Cleared",
+    "toGo": "To go",
+    "deaths": "Deaths",
+    "matches": "Matches",
+    "follow": "Follow this run",
+    "copyLink": "Copy link"
+  },
+  "settings": {
+    "heading": "Display",
+    "open": "Display settings",
+    "theme": "Theme",
+    "themeDark": "Dark",
+    "themeLight": "Light",
+    "motion": "Motion",
+    "motionFull": "Full",
+    "motionReduced": "Reduced",
+    "contrast": "Contrast",
+    "contrastNormal": "Normal",
+    "contrastHigh": "High",
+    "textSize": "Text size",
+    "textSmall": "Small",
+    "textNormal": "Normal",
+    "textLarge": "Large",
+    "shapes": "Weapon state",
+    "shapesColour": "Colour",
+    "shapesShapes": "Colour and symbol"
+  }
+}

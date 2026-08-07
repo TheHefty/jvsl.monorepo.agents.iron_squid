@@ -13,9 +13,12 @@ Angular app that keeps everything in the browser it was played in — see
 [`jvsl.web.angular.iron_squid`](https://github.com/TheHefty/jvsl.web.angular.iron_squid), which is
 now frozen and kept as a reference.
 
-This repo is where it becomes a public tracker: challenges that live on a server, run pages you can
-share, and a record of every run that died along the way. **No application code has landed yet** —
-what is here is the dev container, the release plumbing and the design docs.
+It is being rebuilt as a public tracker: challenges that live on a server, run pages you can share,
+and a record of every run that died along the way. That work happens here, in `apps/web/`.
+
+The version currently live at [iron-squid.top](https://www.iron-squid.top) is a separate, frozen
+Angular app — [`jvsl.web.angular.iron_squid`](https://github.com/TheHefty/jvsl.web.angular.iron_squid)
+— kept as a behavioural reference and as the source of the weapon and gear datasets.
 
 ## Docs
 

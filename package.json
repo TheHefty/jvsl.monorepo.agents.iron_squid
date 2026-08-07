@@ -1,0 +1,23 @@
+{
+  "name": "iron-squid",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A public tracker for a Splatoon 3 gauntlet challenge",
+  "license": "MIT",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @iron-squid/web",
+    "build": "npm run build --workspace @iron-squid/web",
+    "start": "npm run start --workspace @iron-squid/web",
+    "test": "npm test --workspace @iron-squid/web",
+    "lint": "npm run lint --workspace @iron-squid/web",
+    "format": "npm run format --workspace @iron-squid/web",
+    "generate:catalogue": "npm run generate:catalogue --workspace @iron-squid/web",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "meta": {
+    "title": "Iron Squid",
+    "description": "すべてのブキで勝つ。一度負けたら、最初から。スプラトゥーン3のガントレット挑戦を記録する公開トラッカー。"
+  },
+  "nav": {
+    "brand": "IRON SQUID",
+    "rules": "ルール",
+    "runs": "挑戦記録",
+    "armory": "ブキ庫",
+    "myRun": "自分の挑戦",
+    "log": "ログ",
+    "leaderboard": "ランキング",
+    "startRun": "挑戦を始める",
+    "skipToContent": "本文へスキップ"
+  },
+  "landing": {
+    "stats": "{runs, plural, =0 {挑戦はまだありません} other {挑戦 #件}} · 達成 {completed} 件",
+    "headline": "まだ誰も終わらせていない。",
+    "body": "ランダムなブキ、ランダムなギア、そして残機は1。10勝ごとに残機が1つ増える。負ければ、これまでクリアしたブキをすべてもう一度倒さないと、新しいブキには進めない。",
+    "record": "最高記録は {count} 本。",
+    "rollFirst": "最初のブキを引く",
+    "seeRecord": "記録保持者の挑戦を見る",
+    "nowRolling": "抽選中 · {handle}",
+    "progress": "{cleared} / {total}",
+    "lives": "残機",
+    "rulesHeading": "ルール",
+    "conditionsHeading": "条件",
+    "conditionSkip": "ブキもギアもスキップ不可。すべてで勝利する必要があります。",
+    "conditionShare": "進捗はここに記録されます。自分の挑戦を共有することを歓迎します。"
+  },
+  "rules": {
+    "roll": {
+      "title": "抽選",
+      "text": "ブキとギアはランダムに割り当てられます。自分では選べず、引き直しもできません。"
+    },
+    "lives": {
+      "title": "残機",
+      "text": "挑戦は残機1から始まり、その挑戦の中で10勝するごとに1つ増えます。"
+    },
+    "win": {
+      "title": "勝利",
+      "text": "引いたブキは、それで勝つまで変わりません。いかなる理由でもスキップはできません。"
+    },
+    "reset": {
+      "title": "リセット",
+      "text": "最後の残機を失うと挑戦は終了。次の挑戦はゼロから始まり、クリア済みのブキもすべて戻ります。"
+    },
+    "end": {
+      "title": "達成",
+      "text": "1回の挑戦でゲーム内のすべてのブキをクリアした時点で、挑戦は完了です。"
+    }
+  },
+  "dashboard": {
+    "runTitle": "挑戦 #{number}",
+    "runDay": "{day} 日目",
+    "started": "開始 {date}",
+    "lastLoss": "最後の敗北 {ago}",
+    "yourWeapon": "あなたのブキ",
+    "rolling": "抽選中…",
+    "weaponOf": "{total} 本中 {index} 本目",
+    "neverCleared": "未クリア",
+    "singleUse": "1回限り",
+    "head": "アタマ",
+    "clothes": "フク",
+    "shoes": "クツ",
+    "iWon": "勝った",
+    "iLost": "負けた",
+    "iWonMobile": "勝った — 次を引く",
+    "armoryHeading": "ブキ庫",
+    "armoryCounts": "クリア {cleared} · 挑戦中 {current} · 未挑戦 {untouched}",
+    "livesLabel": "残機",
+    "livesRemaining": "残り {count} 機",
+    "livesNote": "次の残機まであと {count} 勝。",
+    "streak": "連勝",
+    "personalBest": "自己ベスト {count}",
+    "replayQueue": "やり直しキュー",
+    "replayNote": "ここで落とすと、ブキ庫が再び開くまでにクリア済みの {count} 本をすべてやり直すことになります。",
+    "armoryCleared": "ブキ庫 {cleared} / {total} クリア",
+    "gearLedger": "ギア使用状況",
+    "headBurned": "アタマ使用済み",
+    "clothesBurned": "フク使用済み",
+    "shoesBurned": "クツ使用済み",
+    "honourSystem": "戦績の申告は自己申告制です。挑戦ページにはすべての記録が残るので、偽るかどうかは自分の信用次第。"
+  },
+  "armory": {
+    "heading": "ブキ庫",
+    "intro": "塗りつぶしはクリア済み。枠線だけのものは、これから挑むブキ。3つ目の状態はなく、スキップもできません。",
+    "cleared": "クリア {count}",
+    "current": "挑戦中 {count}",
+    "untouched": "未挑戦 {count}",
+    "stateCleared": "クリア済み",
+    "stateCurrent": "挑戦中",
+    "stateUntouched": "未挑戦",
+    "weaponState": "{name}、{state}",
+    "listLabel": "全 {total} 本のブキと状態"
+  },
+  "log": {
+    "heading": "挑戦ログ",
+    "intro": "新しい順。「敗北」がブキ庫を失った記録です。",
+    "win": "勝利",
+    "death": "敗北",
+    "empty": "まだ記録がありません。",
+    "fromRun": "挑戦 {number}"
+  },
+  "publicRun": {
+    "kicker": "Iron Squid · 公開ページ",
+    "headline": "{handle} は {cleared} 本まで進み、{deaths} 回落ちています。",
+    "summary": "挑戦 #{run}、{days} 日目。最高連勝 {best}。",
+    "cleared": "クリア",
+    "toGo": "残り",
+    "deaths": "敗北",
+    "matches": "試合",
+    "follow": "この挑戦をフォロー",
+    "copyLink": "リンクをコピー"
+  },
+  "settings": {
+    "heading": "表示",
+    "open": "表示設定",
+    "theme": "テーマ",
+    "themeDark": "ダーク",
+    "themeLight": "ライト",
+    "motion": "アニメーション",
+    "motionFull": "通常",
+    "motionReduced": "控えめ",
+    "contrast": "コントラスト",
+    "contrastNormal": "標準",
+    "contrastHigh": "高",
+    "textSize": "文字サイズ",
+    "textSmall": "小",
+    "textNormal": "標準",
+    "textLarge": "大",
+    "shapes": "ブキの状態表示",
+    "shapesColour": "色",
+    "shapesShapes": "色と記号"
+  }
+}

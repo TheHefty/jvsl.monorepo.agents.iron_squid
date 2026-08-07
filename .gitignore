@@ -1,2 +1,5 @@
 .ai-jail
 .claude/settings.local.json
+
+apps/web/node_modules
+apps/web/.next
