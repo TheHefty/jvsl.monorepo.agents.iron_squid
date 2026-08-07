@@ -14,6 +14,7 @@
     "test": "npm test --workspace @iron-squid/web",
     "lint": "npm run lint --workspace @iron-squid/web",
     "format": "npm run format --workspace @iron-squid/web",
+    "generate:catalogue": "npm run generate:catalogue --workspace @iron-squid/web",
     "prepare": "husky"
   },
   "devDependencies": {

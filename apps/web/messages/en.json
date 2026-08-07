@@ -62,7 +62,7 @@
     "neverCleared": "never cleared",
     "singleUse": "single use",
     "head": "Head",
-    "body": "Body",
+    "clothes": "Body",
     "shoes": "Shoes",
     "iWon": "I won",
     "iLost": "I lost",
@@ -100,7 +100,8 @@
     "intro": "Newest first. Deaths are the entries that cost you the armory.",
     "win": "Win",
     "death": "Death",
-    "empty": "Nothing logged yet."
+    "empty": "Nothing logged yet.",
+    "fromRun": "Run {number}"
   },
   "publicRun": {
     "kicker": "Iron Squid · public run page",

@@ -180,7 +180,14 @@ describe('buildNames', () => {
     'CommonMsg/Weapon/WeaponTypeName': {Shooter: 'Shooters'},
     'CommonMsg/Gear/GearName_Head': {CAP000: 'Backwards Cap'},
     'CommonMsg/Gear/GearName_Clothes': {JKT000: 'Blue Jacket'},
-    'CommonMsg/Gear/GearName_Shoes': {BOT000: 'Red Boots'}
+    'CommonMsg/Gear/GearName_Shoes': {BOT000: 'Red Boots'},
+    'CommonMsg/VS/VSRuleName': {
+      Var: 'Splat Zones',
+      Vlf: 'Tower Control',
+      Vgl: 'Rainmaker',
+      Vcl: 'Clam Blitz',
+      Pnt: 'Turf War'
+    }
   };
 
   it('resolves weapons, classes and gear for one language', () => {
@@ -200,6 +207,21 @@ describe('buildNames', () => {
     expect(Object.keys(names.gear)).toEqual(
       expect.arrayContaining(['Hed_CAP000', 'Clt_JKT000', 'Shs_BOT000'])
     );
+  });
+
+  it('takes the four ranked mode names from the game, not from us', () => {
+    const names = buildNames(buildCatalogue(raw()), language);
+    expect(names.modes).toEqual({
+      splatZones: 'Splat Zones',
+      towerControl: 'Tower Control',
+      rainmaker: 'Rainmaker',
+      clamBlitz: 'Clam Blitz'
+    });
+  });
+
+  it('never picks up Turf War, which does not count towards the challenge', () => {
+    const names = buildNames(buildCatalogue(raw()), language);
+    expect(Object.values(names.modes)).not.toContain('Turf War');
   });
 
   it('trims the stray whitespace the source ships on some names', () => {

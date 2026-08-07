@@ -59,11 +59,19 @@ server-side, and the accessibility baseline plus its four user-controlled option
 Next.js 16 renamed Middleware to **Proxy**, so the locale routing lives in `src/proxy.ts`.
 
 Since then: the challenge rules as a framework-free domain in `src/domain/`, with the RNG injected so
-it stays pure and the CSPRNG can live at the server edge; and the generated weapon and gear catalogue
-in `src/data/`.
+it stays pure and the CSPRNG can live at the server edge; the generated weapon and gear catalogue in
+`src/data/`; and the screens wired to both, so every page now renders the real 162-weapon roster in
+whichever of the five languages it was asked for.
 
-Not built: persistence, route handlers, the PWA layer, and the wiring that would let a page read the
-real catalogue instead of `src/lib/mock.ts`. The win/loss buttons are inert.
+There is no placeholder data left. What the screens show comes from `src/lib/demo.ts`, which is not
+a fixture: it *plays* a challenge — a fixed script of wins and losses pushed through `applyMatch`
+against the real catalogue with a seeded RNG — and every figure on the page is derived from the
+resulting state. Lives, cleared count, gear ledger, streak, personal best and the log therefore
+cannot contradict each other, which is exactly what hand-written fixtures stop doing the moment one
+of them is edited. It is also the seam persistence replaces: the pages ask for a challenge and
+render it, and will not care that it started coming from a database.
+
+Not built: persistence, route handlers, and the PWA layer. The win/loss buttons are inert.
 
 ### Decided
 
@@ -285,7 +293,13 @@ lookup as everything else.
 | File | Contents |
 | --- | --- |
 | `catalogue.json` | Ids, weapon classes and the game version. Not one word of prose, so it is the same file in every language. |
-| `names/USen.json`, `names/USes.json`, `names/EUes.json`, `names/JPja.json` | One language each: weapon names, class labels, gear names. |
+| `names/USen.json`, `names/USes.json`, `names/EUes.json`, `names/JPja.json` | One language each: weapon names, class labels, gear names, and the four ranked mode names. |
+
+Mode names are generated rather than written into the message files, for the same reason weapon
+names are: they are the game's nouns, and a player reading the log expects Splatoon's words. They
+come from `CommonMsg/VS/VSRuleName`, which also holds Turf War — deliberately not mapped, since it
+does not count towards the challenge. The two Spanish datasets disagree here too: `Torre` against
+`Torreón`.
 
 The split is the point. The domain draws from ids and never reads a name, so `loadCatalogue(locale)`
 in `src/data/catalogue.ts` joins the two halves for the locale being rendered and nothing loads the

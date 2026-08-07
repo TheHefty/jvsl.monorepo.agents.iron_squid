@@ -62,7 +62,7 @@
     "neverCleared": "nunca vencida",
     "singleUse": "uso único",
     "head": "Cabeça",
-    "body": "Roupa",
+    "clothes": "Roupa",
     "shoes": "Pés",
     "iWon": "Venci",
     "iLost": "Perdi",
@@ -100,7 +100,8 @@
     "intro": "Mais recentes primeiro. As quedas são as entradas que custaram o arsenal.",
     "win": "Vitória",
     "death": "Queda",
-    "empty": "Nada registrado ainda."
+    "empty": "Nada registrado ainda.",
+    "fromRun": "Run {number}"
   },
   "publicRun": {
     "kicker": "Iron Squid · página pública da run",

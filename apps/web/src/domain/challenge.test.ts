@@ -3,6 +3,7 @@ import {
   LIVES_AT_START,
   WINS_PER_EXTRA_LIFE,
   applyMatch,
+  armoryView,
   drawFrom,
   progress,
   startChallenge,
@@ -10,6 +11,7 @@ import {
 } from './challenge';
 import {
   EmptyPoolError,
+  MATCH_MODES,
   type Catalogue,
   type ChallengeState,
   type Rng
@@ -60,7 +62,7 @@ function win(
   rng: Rng = firstAlways,
   at = AT
 ) {
-  return applyMatch(state, cat, rng, {result: 'win', at});
+  return applyMatch(state, cat, rng, {result: 'win', mode: 'splatZones', at});
 }
 
 function loss(
@@ -69,7 +71,7 @@ function loss(
   rng: Rng = firstAlways,
   at = AT
 ) {
-  return applyMatch(state, cat, rng, {result: 'loss', at});
+  return applyMatch(state, cat, rng, {result: 'loss', mode: 'rainmaker', at});
 }
 
 describe('starting a challenge', () => {
@@ -458,5 +460,130 @@ describe('progress', () => {
 
     for (let i = 0; i < 6; i++) state = win(state, cat);
     expect(progress(state, cat).winsToNextLife).toBe(10);
+  });
+});
+
+describe('the mode a match was played in', () => {
+  it('is recorded, because it is the only trace rule 3 leaves', () => {
+    const cat = catalogue();
+    const state = applyMatch(
+      startChallenge(cat, firstAlways, AT),
+      cat,
+      firstAlways,
+      {result: 'win', mode: 'clamBlitz', at: AT}
+    );
+
+    expect(state.run.matches[0].mode).toBe('clamBlitz');
+  });
+
+  it('is recorded on losses too, not only on wins', () => {
+    const cat = catalogue();
+    const state = loss(startChallenge(cat, firstAlways, AT), cat);
+    expect(state.deadRuns[0].matches[0].mode).toBe('rainmaker');
+  });
+
+  it('offers the four ranked modes and no Turf War', () => {
+    // Rule 3: a win counts in Anarchy or X Battle only. Turf War being
+    // unrepresentable is the point — it cannot be reported by mistake.
+    expect([...MATCH_MODES]).toEqual([
+      'splatZones',
+      'towerControl',
+      'rainmaker',
+      'clamBlitz'
+    ]);
+  });
+});
+
+describe('armoryView', () => {
+  it('marks the drawn weapon current, the won ones cleared, the rest untouched', () => {
+    const cat = catalogue(4);
+    const state = win(startChallenge(cat, firstAlways, AT), cat);
+
+    expect(armoryView(state, cat).map((w) => w.state)).toEqual([
+      'cleared',
+      'current',
+      'untouched',
+      'untouched'
+    ]);
+  });
+
+  it('keeps the catalogue order, so the grid does not reshuffle as it fills', () => {
+    const cat = catalogue(4);
+    const state = win(startChallenge(cat, firstAlways, AT), cat);
+    expect(armoryView(state, cat).map((w) => w.id)).toEqual(
+      cat.weapons.map((w) => w.id)
+    );
+  });
+
+  it('carries the name and class through, so components need no lookup', () => {
+    const cat = catalogue(3);
+    const state = startChallenge(cat, firstAlways, AT);
+    expect(armoryView(state, cat)[0]).toMatchObject({
+      id: 'w-0',
+      name: 'Weapon 0',
+      className: 'Shooter'
+    });
+  });
+
+  it('returns everything untouched again after a run dies', () => {
+    // Rule 5 takes the credit back, so there is no "failed" state to show.
+    const cat = catalogue(4);
+    let state = win(startChallenge(cat, firstAlways, AT), cat);
+    state = loss(state, cat);
+
+    const states = armoryView(state, cat).map((w) => w.state);
+    expect(states.filter((s) => s === 'cleared')).toHaveLength(0);
+    expect(states.filter((s) => s === 'current')).toHaveLength(1);
+  });
+});
+
+describe('progress, the derived counters', () => {
+  it('counts the streak from the last loss, not from the start of the run', () => {
+    const cat = catalogue(30);
+    let state = startChallenge(cat, firstAlways, AT);
+    for (let i = 0; i < 3; i++) state = win(state, cat);
+    expect(progress(state, cat).streak).toBe(3);
+
+    state = win(loss(state, cat), cat);
+    expect(progress(state, cat).streak).toBe(1);
+  });
+
+  it('reports a streak of zero before anything is played', () => {
+    const cat = catalogue();
+    const state = startChallenge(cat, firstAlways, AT);
+    expect(progress(state, cat).streak).toBe(0);
+  });
+
+  it('remembers the best run even after it has died', () => {
+    const cat = catalogue(30);
+    let state = startChallenge(cat, firstAlways, AT);
+    for (let i = 0; i < 5; i++) state = win(state, cat);
+    state = loss(state, cat);
+
+    // The new run has cleared nothing, but the record still stands at five.
+    expect(progress(state, cat).cleared).toBe(0);
+    expect(progress(state, cat).best).toBe(5);
+  });
+
+  it('counts the current run as the best while it is ahead', () => {
+    const cat = catalogue(30);
+    let state = startChallenge(cat, firstAlways, AT);
+    state = loss(state, cat);
+    for (let i = 0; i < 3; i++) state = win(state, cat);
+    expect(progress(state, cat).best).toBe(3);
+  });
+
+  it('grows the lives meter as lives are earned, not as they are spent', () => {
+    const cat = catalogue(30);
+    let state = startChallenge(cat, firstAlways, AT);
+    expect(progress(state, cat).livesMax).toBe(1);
+
+    for (let i = 0; i < 10; i++) state = win(state, cat);
+    expect(progress(state, cat).livesMax).toBe(2);
+
+    state = loss(state, cat);
+    // A spent life leaves the total alone: the meter shows 1 of 2, not 1 of 1.
+    expect(state.run.lives).toBe(1);
+    expect(progress(state, cat).livesMax).toBe(2);
   });
 });

@@ -62,7 +62,7 @@
     "neverCleared": "nunca superada",
     "singleUse": "un solo uso",
     "head": "Cabeza",
-    "body": "Ropa",
+    "clothes": "Ropa",
     "shoes": "Calzado",
     "iWon": "Gané",
     "iLost": "Perdí",
@@ -100,7 +100,8 @@
     "intro": "Lo más reciente primero. Las caídas son las entradas que te costaron el arsenal.",
     "win": "Victoria",
     "death": "Caída",
-    "empty": "Todavía no hay nada registrado."
+    "empty": "Todavía no hay nada registrado.",
+    "fromRun": "Racha {number}"
   },
   "publicRun": {
     "kicker": "Iron Squid · página pública de la racha",

@@ -1,4 +1,7 @@
-import type {GearSlot} from '@/domain/types';
+// Type-only, and it has to stay that way: the generator runs this file under
+// plain Node, which erases `import type` but cannot resolve the `@/` alias for
+// a value import.
+import type {GearSlot, MatchMode} from '@/domain/types';
 
 /**
  * Turning Leanny/splat3 into the Iron Squid catalogue.
@@ -64,6 +67,22 @@ export const GEAR_SOURCES: Record<
 
 export const WEAPON_NAME_KEY = 'CommonMsg/Weapon/WeaponName_Main';
 export const WEAPON_CLASS_KEY = 'CommonMsg/Weapon/WeaponTypeName';
+export const MODE_NAME_KEY = 'CommonMsg/VS/VSRuleName';
+
+/**
+ * Our mode names against the game's own keys.
+ *
+ * Taken from the dataset rather than translated by hand: these are the game's
+ * nouns, and a player reading the log expects the words Splatoon uses. The
+ * bucket also holds `Pnt` (Turf War) and `_2L` line-broken variants, and we
+ * want neither — Turf War does not count towards the challenge at all.
+ */
+export const MODE_KEYS: Record<MatchMode, string> = {
+  splatZones: 'Var',
+  towerControl: 'Vlf',
+  rainmaker: 'Vgl',
+  clamBlitz: 'Vcl'
+};
 
 /**
  * Gear families excluded from the draw, by the letters that open their row id.
@@ -148,6 +167,7 @@ export type NameTable = {
   weapons: Record<string, string>;
   classes: Record<string, string>;
   gear: Record<string, string>;
+  modes: Record<MatchMode, string>;
 };
 
 export type RawGameData = {
@@ -223,5 +243,10 @@ export function buildNames(
     }
   }
 
-  return {weapons, classes, gear};
+  const modes = {} as Record<MatchMode, string>;
+  for (const mode of Object.keys(MODE_KEYS) as MatchMode[]) {
+    modes[mode] = read(MODE_NAME_KEY, MODE_KEYS[mode]);
+  }
+
+  return {weapons, classes, gear, modes};
 }

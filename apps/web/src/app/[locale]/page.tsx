@@ -3,12 +3,9 @@ import {getDisplayPrefs} from '@/lib/display.server';
 import {SiteNav} from '@/components/SiteNav';
 import {LivesMeter} from '@/components/LivesMeter';
 import {Link} from '@/i18n/navigation';
-import {
-  CLEARED_COUNT,
-  RUN_SUMMARY,
-  TOTAL_WEAPONS,
-  getCurrentDraw
-} from '@/lib/mock';
+import {getDemoChallenge} from '@/lib/demo';
+import {GEAR_SLOTS} from '@/domain/types';
+import type {Locale} from '@/i18n/routing';
 
 const RULE_KEYS = ['roll', 'lives', 'win', 'reset', 'end'] as const;
 
@@ -25,7 +22,9 @@ export default async function LandingPage({
   const tr = await getTranslations('rules');
   const td = await getTranslations('dashboard');
   const prefs = await getDisplayPrefs();
-  const draw = getCurrentDraw();
+  const {draw, progress, run, handle, site} = await getDemoChallenge(
+    locale as Locale
+  );
 
   return (
     <>
@@ -43,14 +42,11 @@ export default async function LandingPage({
         <div className="hero">
           <div>
             <span className="kicker">
-              {t('stats', {
-                runs: RUN_SUMMARY.totalRuns,
-                completed: RUN_SUMMARY.completedRuns
-              })}
+              {t('stats', {runs: site.runs, completed: site.completed})}
             </span>
             <h1 className="hero-title">{t('headline')}</h1>
             <p className="hero-body">
-              {t('body')} {t('record', {count: RUN_SUMMARY.personalBest})}
+              {t('body')} {t('record', {count: progress.best})}
             </p>
             <div className="hero-actions">
               <Link href="/run/demo" className="btn btn-primary">
@@ -64,14 +60,15 @@ export default async function LandingPage({
 
           <div className="roll-card">
             <div className="roll-head">
-              <span className="text-muted">
-                {t('nowRolling', {handle: RUN_SUMMARY.handle})}
-              </span>
+              <span className="text-muted">{t('nowRolling', {handle})}</span>
               <span
                 className="tnum"
                 style={{color: 'var(--color-accent-text)'}}
               >
-                {t('progress', {cleared: CLEARED_COUNT, total: TOTAL_WEAPONS})}
+                {t('progress', {
+                  cleared: progress.cleared,
+                  total: progress.total
+                })}
               </span>
             </div>
 
@@ -86,26 +83,17 @@ export default async function LandingPage({
             </div>
 
             <dl className="gear-slots">
-              <div className="gear-slot">
-                <dt>{td('head')}</dt>
-                <dd>{draw.gear.head}</dd>
-              </div>
-              <div className="gear-slot">
-                <dt>{td('body')}</dt>
-                <dd>{draw.gear.body}</dd>
-              </div>
-              <div className="gear-slot">
-                <dt>{td('shoes')}</dt>
-                <dd>{draw.gear.shoes}</dd>
-              </div>
+              {GEAR_SLOTS.map((slot) => (
+                <div className="gear-slot" key={slot}>
+                  <dt>{td(slot)}</dt>
+                  <dd>{draw.gear[slot].name}</dd>
+                </div>
+              ))}
             </dl>
 
             <div className="roll-foot">
               <span>{t('lives')}</span>
-              <LivesMeter
-                lives={RUN_SUMMARY.lives}
-                max={RUN_SUMMARY.maxLives}
-              />
+              <LivesMeter lives={run.lives} max={progress.livesMax} />
             </div>
           </div>
         </div>

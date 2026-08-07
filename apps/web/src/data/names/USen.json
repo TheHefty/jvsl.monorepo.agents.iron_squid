@@ -983,5 +983,11 @@
     "Shs_TRS000": "Trail Boots",
     "Shs_TRS001": "Custom Trail Boots",
     "Shs_TRS002": "Pro Trail Boots"
+  },
+  "modes": {
+    "splatZones": "Splat Zones",
+    "towerControl": "Tower Control",
+    "rainmaker": "Rainmaker",
+    "clamBlitz": "Clam Blitz"
   }
 }

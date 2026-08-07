@@ -62,7 +62,7 @@
     "neverCleared": "未クリア",
     "singleUse": "1回限り",
     "head": "アタマ",
-    "body": "フク",
+    "clothes": "フク",
     "shoes": "クツ",
     "iWon": "勝った",
     "iLost": "負けた",
@@ -100,7 +100,8 @@
     "intro": "新しい順。「敗北」がブキ庫を失った記録です。",
     "win": "勝利",
     "death": "敗北",
-    "empty": "まだ記録がありません。"
+    "empty": "まだ記録がありません。",
+    "fromRun": "挑戦 {number}"
   },
   "publicRun": {
     "kicker": "Iron Squid · 公開ページ",

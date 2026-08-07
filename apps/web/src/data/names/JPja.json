@@ -983,5 +983,11 @@
     "Shs_TRS000": "トレッキングライト",
     "Shs_TRS001": "トレッキングカスタム",
     "Shs_TRS002": "トレッキングプロ"
+  },
+  "modes": {
+    "splatZones": "ガチエリア",
+    "towerControl": "ガチヤグラ",
+    "rainmaker": "ガチホコバトル",
+    "clamBlitz": "ガチアサリ"
   }
 }

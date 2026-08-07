@@ -1,5 +1,6 @@
 import {useTranslations} from 'next-intl';
-import type {Weapon, WeaponState} from '@/lib/mock';
+import type {ArmoryEntry} from '@/domain/challenge';
+import type {WeaponState} from '@/domain/types';
 
 /**
  * The armory.
@@ -24,11 +25,29 @@ const SYMBOL: Record<WeaponState, string> = {
   untouched: '·'
 };
 
+/**
+ * The two-character badge on a tile.
+ *
+ * Latin names read best as initials — *Splattershot Jr.* as `SJ` — but a
+ * Japanese name has no word breaks to take initials from, so it takes its
+ * first two characters instead. An earlier version stripped everything outside
+ * `[A-Za-z0-9]` and rendered every Japanese weapon as `?`; that worked only
+ * because the placeholder roster was entirely ASCII.
+ */
 function code(name: string) {
-  const parts = name.replace(/[^A-Za-z0-9 .'-]/g, '').split(/[\s-]+/);
-  const first = parts[0]?.[0] ?? '?';
-  const second = parts[1]?.[0] ?? parts[0]?.[1] ?? '';
-  return (first + second).toUpperCase();
+  const chars = (s: string) => Array.from(s);
+  const words = Array.from(name.matchAll(/[\p{L}\p{N}]+/gu), (m) => m[0]);
+
+  if (words.length === 0) return chars(name).slice(0, 2).join('');
+
+  // Initials only when the name opens with a Latin letter. A name that opens
+  // with a digit keeps it — `.52 Gal` and `.96 Gal` are told apart by the
+  // number, not by the `G`.
+  if (words.length >= 2 && /^\p{Script=Latin}/u.test(words[0])) {
+    return (chars(words[0])[0] + chars(words[1])[0]).toUpperCase();
+  }
+
+  return chars(words[0]).slice(0, 2).join('').toUpperCase();
 }
 
 export function ArmoryGrid({
@@ -36,7 +55,7 @@ export function ArmoryGrid({
   columns = 7,
   showCode = true
 }: {
-  weapons: Weapon[];
+  weapons: ArmoryEntry[];
   columns?: number;
   showCode?: boolean;
 }) {

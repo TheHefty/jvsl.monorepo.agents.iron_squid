@@ -5,10 +5,10 @@ import {
   startChallenge,
   targetWeaponCount
 } from '@/domain/challenge';
-import {GEAR_SLOTS, type Rng} from '@/domain/types';
+import {GEAR_SLOTS, MATCH_MODES, type Rng} from '@/domain/types';
 import {locales} from '@/i18n/routing';
 
-import {gameVersion, loadCatalogue} from './catalogue';
+import {gameVersion, loadCatalogue, loadModeNames} from './catalogue';
 
 /**
  * These run against the committed catalogue, not a fixture.
@@ -82,6 +82,26 @@ describe.each(locales)('names in %s', (locale) => {
   });
 });
 
+describe('mode names', () => {
+  it('are complete in every locale', async () => {
+    for (const locale of locales) {
+      const modes = await loadModeNames(locale);
+      expect(Object.keys(modes).sort()).toEqual([...MATCH_MODES].sort());
+      expect(Object.values(modes).every((n) => n.trim() !== '')).toBe(true);
+    }
+  });
+
+  it('differ between the two Spanish datasets', async () => {
+    // `Torre` against `Torreón` — the same reason the locales are carried
+    // separately at all.
+    const [latam, spain] = await Promise.all([
+      loadModeNames('es-419'),
+      loadModeNames('es-ES')
+    ]);
+    expect(latam.towerControl).not.toBe(spain.towerControl);
+  });
+});
+
 describe('locale mapping', () => {
   it('gives Japanese its own names', async () => {
     const [en, ja] = await Promise.all([
@@ -136,6 +156,7 @@ describe('driving the domain with real data', () => {
     for (let i = 0; i < total; i += 1) {
       state = applyMatch(state, catalogue, firstAvailable, {
         result: 'win',
+        mode: 'splatZones',
         at: '2026-01-01T00:00:00Z'
       });
     }

@@ -3,12 +3,8 @@ import {getTranslations, setRequestLocale} from 'next-intl/server';
 import {getDisplayPrefs} from '@/lib/display.server';
 import {SiteNav} from '@/components/SiteNav';
 import {ArmoryGrid} from '@/components/ArmoryGrid';
-import {
-  CLEARED_COUNT,
-  RUN_SUMMARY,
-  TOTAL_WEAPONS,
-  getWeapons
-} from '@/lib/mock';
+import {getDemoChallenge} from '@/lib/demo';
+import type {Locale} from '@/i18n/routing';
 
 /**
  * The public run page — design option 1h, "the thing people paste in Discord".
@@ -28,11 +24,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const {locale} = await params;
   const t = await getTranslations({locale, namespace: 'publicRun'});
+  const {progress, handle} = await getDemoChallenge(locale as Locale);
 
   const title = t('headline', {
-    handle: RUN_SUMMARY.handle,
-    cleared: CLEARED_COUNT,
-    deaths: RUN_SUMMARY.deaths
+    handle,
+    cleared: progress.cleared,
+    deaths: progress.deaths
   });
 
   return {
@@ -52,7 +49,9 @@ export default async function PublicRunPage({
 
   const t = await getTranslations('publicRun');
   const prefs = await getDisplayPrefs();
-  const weapons = getWeapons();
+  const {armory, progress, run, day, handle} = await getDemoChallenge(
+    locale as Locale
+  );
 
   return (
     <>
@@ -66,40 +65,40 @@ export default async function PublicRunPage({
         <span className="kicker">{t('kicker')}</span>
         <h1 className="public-headline">
           {t('headline', {
-            handle: RUN_SUMMARY.handle,
-            cleared: CLEARED_COUNT,
-            deaths: RUN_SUMMARY.deaths
+            handle,
+            cleared: progress.cleared,
+            deaths: progress.deaths
           })}
         </h1>
         <p className="note" style={{marginTop: 'var(--space-6)'}}>
           {t('summary', {
-            run: RUN_SUMMARY.number,
-            days: RUN_SUMMARY.day,
-            best: RUN_SUMMARY.personalBest
+            run: run.number,
+            days: day,
+            best: progress.best
           })}
         </p>
 
         <div className="stat-row">
           <div>
-            <p>{CLEARED_COUNT}</p>
+            <p>{progress.cleared}</p>
             <p>{t('cleared')}</p>
           </div>
           <div>
-            <p>{TOTAL_WEAPONS - CLEARED_COUNT}</p>
+            <p>{progress.remaining}</p>
             <p>{t('toGo')}</p>
           </div>
           <div>
-            <p>{RUN_SUMMARY.deaths}</p>
+            <p>{progress.deaths}</p>
             <p>{t('deaths')}</p>
           </div>
           <div>
-            <p>{RUN_SUMMARY.matches}</p>
+            <p>{progress.matches}</p>
             <p>{t('matches')}</p>
           </div>
         </div>
 
         <div style={{marginTop: 'var(--space-8)'}}>
-          <ArmoryGrid weapons={weapons} columns={20} showCode={false} />
+          <ArmoryGrid weapons={armory} columns={20} showCode={false} />
         </div>
       </main>
     </>

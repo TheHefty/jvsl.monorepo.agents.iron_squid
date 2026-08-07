@@ -3,9 +3,9 @@ import {render, screen} from '@testing-library/react';
 import {NextIntlClientProvider} from 'next-intl';
 import messages from '../../messages/en.json';
 import {ArmoryGrid} from './ArmoryGrid';
-import type {Weapon} from '@/lib/mock';
+import type {ArmoryEntry} from '@/domain/challenge';
 
-const weapons: Weapon[] = [
+const weapons: ArmoryEntry[] = [
   {id: 'a', name: 'Splattershot', className: 'Shooter', state: 'cleared'},
   {id: 'b', name: 'Splat Roller', className: 'Roller', state: 'current'},
   {id: 'c', name: 'Splat Charger', className: 'Charger', state: 'untouched'}
@@ -75,5 +75,49 @@ describe('ArmoryGrid', () => {
   it('hides the code when rendered compact', () => {
     const {container} = renderGrid({weapons, showCode: false});
     expect(container.querySelectorAll('.armory-tile-code')).toHaveLength(0);
+  });
+});
+
+describe('the tile code', () => {
+  function codes(entries: ArmoryEntry[]) {
+    const {container} = renderGrid({weapons: entries});
+    return Array.from(container.querySelectorAll('.armory-tile-code')).map(
+      (el) => el.textContent
+    );
+  }
+
+  const entry = (name: string): ArmoryEntry => ({
+    id: name,
+    name,
+    className: 'Shooters',
+    state: 'untouched'
+  });
+
+  it('takes initials from a two-word Latin name', () => {
+    expect(
+      codes([entry('Splattershot Jr.'), entry('Neo Sploosh-o-matic')])
+    ).toEqual(['SJ', 'NS']);
+  });
+
+  it('takes the first two characters of a single-word name', () => {
+    expect(codes([entry('Squeezer')])).toEqual(['SQ']);
+  });
+
+  it('renders Japanese names rather than a question mark', () => {
+    // The regression: the code stripped everything outside [A-Za-z0-9], so
+    // every weapon in the Japanese catalogue rendered as `?`. It went unnoticed
+    // because the placeholder roster it was written against was all ASCII.
+    expect(
+      codes([entry('ボールドマーカー'), entry('スプラシューター')])
+    ).toEqual(['ボー', 'スプ']);
+  });
+
+  it('keeps accented Latin initials instead of dropping them', () => {
+    expect(codes([entry('Élite Óptica')])).toEqual(['ÉÓ']);
+  });
+
+  it('keeps the number when a name leads with one', () => {
+    // `.52 Gal` and `.96 Gal` are told apart by the digits, not by the `G`.
+    expect(codes([entry('.52 Gal'), entry('.96 Gal')])).toEqual(['52', '96']);
   });
 });

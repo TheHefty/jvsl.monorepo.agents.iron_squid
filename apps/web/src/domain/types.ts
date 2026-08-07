@@ -21,6 +21,14 @@ export type Weapon = {
   className: string;
 };
 
+/**
+ * How a weapon stands in the run being viewed.
+ *
+ * Note the armory has no "failed" state: a weapon cleared in a run that later
+ * died is simply untouched again, because rule 5 takes the credit back.
+ */
+export type WeaponState = 'cleared' | 'current' | 'untouched';
+
 export type GearItem = {
   id: string;
   name: string;
@@ -42,12 +50,32 @@ export type Draw = {
 export type MatchResult = 'win' | 'loss';
 
 /**
+ * The four ranked modes. Rule 3 counts a win only in Anarchy or X Battle, so
+ * Turf War is deliberately absent and cannot be reported.
+ *
+ * The mode is recorded because it is the only trace the honour system leaves:
+ * results are self-reported and unverifiable, but a log that names the mode
+ * makes rule 3 something a reader can check rather than merely assume. The
+ * stage is not recorded — it proves nothing and would be one more field to fill
+ * in on every match.
+ */
+export const MATCH_MODES = [
+  'splatZones',
+  'towerControl',
+  'rainmaker',
+  'clamBlitz'
+] as const;
+
+export type MatchMode = (typeof MATCH_MODES)[number];
+
+/**
  * One played match. Losses are recorded too — the run log is supposed to show
  * deaths, and the previous implementation dropped every non-fatal defeat.
  */
 export type MatchRecord = {
   draw: Draw;
   result: MatchResult;
+  mode: MatchMode;
   at: string;
 };
 
@@ -93,6 +121,7 @@ export type Rng = (exclusiveMax: number) => number;
 
 export type MatchEvent = {
   result: MatchResult;
+  mode: MatchMode;
   at: string;
 };
 

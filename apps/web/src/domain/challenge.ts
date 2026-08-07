@@ -6,9 +6,14 @@ import {
   type DeadRun,
   type Draw,
   type GearSlot,
+  type GearItem,
   type MatchEvent,
+  type MatchMode,
+  type MatchResult,
   type Rng,
-  type RunState
+  type RunState,
+  type Weapon,
+  type WeaponState
 } from './types';
 
 /**
@@ -46,8 +51,8 @@ export function targetWeaponCount(catalogue: Catalogue): number {
  * Draws a weapon and one item per gear slot from what the run has not consumed.
  *
  * Single use is per item: each drawn head, clothes and shoes leaves its own
- * pool. Not the combination — with 26.7 million combinations against 162
- * draws, "the set does not repeat" would bind in 0.049% of runs, which is to
+ * pool. Not the combination — with 18.5 million combinations against 162
+ * draws, "the set does not repeat" would bind in 0.070% of runs, which is to
  * say never.
  */
 export function drawFrom(
@@ -118,7 +123,10 @@ export function startChallenge(
 }
 
 function recordMatch(run: RunState, event: MatchEvent): RunState['matches'] {
-  return [...run.matches, {draw: run.draw, result: event.result, at: event.at}];
+  return [
+    ...run.matches,
+    {draw: run.draw, result: event.result, mode: event.mode, at: event.at}
+  ];
 }
 
 function applyWin(
@@ -214,6 +222,112 @@ export function applyMatch(
     : applyLoss(state, catalogue, rng, event);
 }
 
+/** One tile of the armory: a weapon, and how it stands in the run being viewed. */
+export type ArmoryEntry = Weapon & {state: WeaponState};
+
+/**
+ * How each weapon in the catalogue stands in the current run.
+ *
+ * A read model rather than stored state: `cleared` is a list of ids, and the
+ * armory needs it as a list of weapons in roster order. Deriving it here keeps
+ * the rule — one weapon is active, the rest are cleared or untouched — out of
+ * the component that draws the grid.
+ */
+export function armoryView(
+  state: ChallengeState,
+  catalogue: Catalogue
+): ArmoryEntry[] {
+  const cleared = new Set(state.run.cleared);
+
+  return catalogue.weapons.map((weapon) => ({
+    ...weapon,
+    state: cleared.has(weapon.id)
+      ? 'cleared'
+      : weapon.id === state.run.draw.weaponId
+        ? 'current'
+        : 'untouched'
+  }));
+}
+
+/**
+ * The active draw with its ids resolved to catalogue entries.
+ *
+ * Stored state keeps ids, because the draw must mean the same thing in every
+ * language. Resolving them is a read concern, and doing it here keeps the
+ * lookup out of the pages.
+ */
+export function drawView(
+  state: ChallengeState,
+  catalogue: Catalogue
+): {weapon: Weapon; gear: Record<GearSlot, GearItem>} {
+  const {draw} = state.run;
+
+  const weapon = catalogue.weapons.find((w) => w.id === draw.weaponId);
+  if (!weapon) {
+    throw new Error(`Drawn weapon ${draw.weaponId} is not in the catalogue.`);
+  }
+
+  const gear = {} as Record<GearSlot, GearItem>;
+  for (const slot of GEAR_SLOTS) {
+    const item = catalogue.gear[slot].find((g) => g.id === draw.gear[slot]);
+    if (!item) {
+      throw new Error(
+        `Drawn ${slot} ${draw.gear[slot]} is not in the catalogue.`
+      );
+    }
+    gear[slot] = item;
+  }
+
+  return {weapon, gear};
+}
+
+/** One row of the run log. Carries no prose: the mode is a key, not a label. */
+export type LogEntry = {
+  id: string;
+  result: MatchResult;
+  mode: MatchMode;
+  weaponName: string;
+  runNumber: number;
+  at: string;
+};
+
+/**
+ * Every match played, newest first, across the live run and the dead ones.
+ *
+ * Losses included — that is the whole point of the log, and the failure the
+ * original app shipped, where a defeat was only written down when it was the
+ * last one.
+ */
+export function matchLog(
+  state: ChallengeState,
+  catalogue: Catalogue
+): LogEntry[] {
+  const names = new Map(catalogue.weapons.map((w) => [w.id, w.name]));
+
+  const rows = [state.run, ...state.deadRuns].flatMap((run) =>
+    run.matches.map((match, index) => ({
+      id: `${run.number}-${index}`,
+      result: match.result,
+      mode: match.mode,
+      weaponName: names.get(match.draw.weaponId) ?? match.draw.weaponId,
+      runNumber: run.number,
+      at: match.at
+    }))
+  );
+
+  return rows.sort((a, b) => Date.parse(b.at) - Date.parse(a.at));
+}
+
+/** Wins since the last loss, within the current run. */
+function trailingWins(run: RunState): number {
+  let streak = 0;
+  for (let i = run.matches.length - 1; i >= 0; i -= 1) {
+    if (run.matches[i].result !== 'win') break;
+    streak += 1;
+  }
+  return streak;
+}
+
 /** Read models the UI needs, derived rather than stored. */
 export function progress(state: ChallengeState, catalogue: Catalogue) {
   const total = targetWeaponCount(catalogue);
@@ -225,6 +339,15 @@ export function progress(state: ChallengeState, catalogue: Catalogue) {
     remaining: total - cleared,
     winsToNextLife:
       WINS_PER_EXTRA_LIFE - (state.run.wins % WINS_PER_EXTRA_LIFE),
+    /** Consecutive wins right now. Not the same as `wins`, which losses do not reset. */
+    streak: trailingWins(state.run),
+    /**
+     * The furthest any run has got, this one included. The number a player
+     * actually competes against once a run has died.
+     */
+    best: Math.max(cleared, ...state.deadRuns.map((r) => r.cleared.length), 0),
+    /** Lives earned this run, which is what the meter draws as its total. */
+    livesMax: LIVES_AT_START + Math.floor(state.run.wins / WINS_PER_EXTRA_LIFE),
     deaths: state.deadRuns.length,
     matches:
       state.run.matches.length +

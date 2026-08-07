@@ -1,4 +1,10 @@
-import type {Catalogue, GearItem, GearSlot, Weapon} from '@/domain/types';
+import type {
+  Catalogue,
+  GearItem,
+  GearSlot,
+  MatchMode,
+  Weapon
+} from '@/domain/types';
 import {gameDataLocale, type Locale} from '@/i18n/routing';
 
 import catalogueData from './catalogue.json';
@@ -29,8 +35,20 @@ const NAME_LOADERS: Record<GameLocale, () => Promise<{default: NameTable}>> = {
   JPja: () => import('./names/JPja.json')
 };
 
-/** Built once per game locale. The data is immutable and identical per request. */
-const cache = new Map<GameLocale, Promise<Catalogue>>();
+/** Loaded once per game locale. The data is immutable and identical per request. */
+const cache = new Map<GameLocale, Promise<NameTable>>();
+
+function names(locale: Locale): Promise<NameTable> {
+  const gameLocale = gameDataLocale[locale];
+
+  let loading = cache.get(gameLocale);
+  if (!loading) {
+    loading = NAME_LOADERS[gameLocale]().then((module) => module.default);
+    cache.set(gameLocale, loading);
+  }
+
+  return loading;
+}
 
 function assemble(names: NameTable): Catalogue {
   const weapons: Weapon[] = data.weapons.map((weapon) => ({
@@ -59,17 +77,21 @@ function assemble(names: NameTable): Catalogue {
  * originals. That mapping lives in `i18n/routing.ts`, next to the locales.
  */
 export function loadCatalogue(locale: Locale): Promise<Catalogue> {
-  const gameLocale = gameDataLocale[locale];
+  return names(locale).then(assemble);
+}
 
-  let built = cache.get(gameLocale);
-  if (!built) {
-    built = NAME_LOADERS[gameLocale]().then((module) =>
-      assemble(module.default)
-    );
-    cache.set(gameLocale, built);
-  }
-
-  return built;
+/**
+ * The four ranked modes, as Splatoon names them.
+ *
+ * Generated with the rest of the game data rather than written into the
+ * message files, for the same reason weapon names are: these are the game's
+ * nouns, and a player reading the log expects its words. Note the two Spanish
+ * datasets genuinely disagree here — `Torre` against `Torreón`.
+ */
+export function loadModeNames(
+  locale: Locale
+): Promise<Record<MatchMode, string>> {
+  return names(locale).then((table) => table.modes);
 }
 
 /** The game version the committed catalogue was generated from. */

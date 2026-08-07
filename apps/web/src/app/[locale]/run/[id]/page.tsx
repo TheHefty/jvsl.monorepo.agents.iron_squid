@@ -4,13 +4,9 @@ import {SiteNav} from '@/components/SiteNav';
 import {ArmoryGrid} from '@/components/ArmoryGrid';
 import {LivesMeter} from '@/components/LivesMeter';
 import {Link} from '@/i18n/navigation';
-import {
-  CLEARED_COUNT,
-  RUN_SUMMARY,
-  TOTAL_WEAPONS,
-  getCurrentDraw,
-  getWeapons
-} from '@/lib/mock';
+import {GEAR_SLOTS} from '@/domain/types';
+import {getDemoChallenge} from '@/lib/demo';
+import type {Locale} from '@/i18n/routing';
 
 /**
  * Run dashboard — design option 1c.
@@ -28,10 +24,10 @@ export default async function RunPage({
 
   const t = await getTranslations('dashboard');
   const prefs = await getDisplayPrefs();
-  const weapons = getWeapons();
-  const draw = getCurrentDraw();
-  const untouched = TOTAL_WEAPONS - CLEARED_COUNT - 1;
-  const winsToNextLife = 10 - (RUN_SUMMARY.streak % 10);
+  const {armory, draw, progress, run, day} = await getDemoChallenge(
+    locale as Locale
+  );
+  const untouched = progress.remaining - 1;
 
   return (
     <>
@@ -49,11 +45,10 @@ export default async function RunPage({
         <div>
           <div className="section-head">
             <h1 style={{margin: 0, fontSize: '1.5625rem'}}>
-              {t('runTitle', {number: RUN_SUMMARY.number})} —{' '}
-              {t('runDay', {day: RUN_SUMMARY.day})}
+              {t('runTitle', {number: run.number})} — {t('runDay', {day})}
             </h1>
             <span className="note">
-              {t('started', {date: RUN_SUMMARY.startedISO})}
+              {t('started', {date: run.startedAt.slice(0, 10)})}
             </span>
           </div>
 
@@ -64,8 +59,8 @@ export default async function RunPage({
               </span>
               <span className="text-muted tnum">
                 {t('weaponOf', {
-                  index: CLEARED_COUNT + 1,
-                  total: TOTAL_WEAPONS
+                  index: progress.cleared + 1,
+                  total: progress.total
                 })}
               </span>
             </div>
@@ -85,18 +80,12 @@ export default async function RunPage({
             </div>
 
             <dl className="gear-slots">
-              {(
-                [
-                  ['head', draw.gear.head],
-                  ['body', draw.gear.body],
-                  ['shoes', draw.gear.shoes]
-                ] as const
-              ).map(([slot, name]) => (
+              {GEAR_SLOTS.map((slot) => (
                 <div className="gear-slot" key={slot}>
                   <dt>
                     {t(slot)} · {t('singleUse')}
                   </dt>
-                  <dd>{name}</dd>
+                  <dd>{draw.gear[slot].name}</dd>
                 </div>
               ))}
             </dl>
@@ -121,14 +110,14 @@ export default async function RunPage({
             </h2>
             <span className="note tnum">
               {t('armoryCounts', {
-                cleared: CLEARED_COUNT,
+                cleared: progress.cleared,
                 current: 1,
                 untouched
               })}
             </span>
           </div>
 
-          <ArmoryGrid weapons={weapons} columns={20} showCode={false} />
+          <ArmoryGrid weapons={armory} columns={20} showCode={false} />
 
           <p style={{marginTop: 'var(--space-6)'}}>
             <Link href={`/run/${id}/armory`} className="btn btn-ghost">
@@ -140,42 +129,44 @@ export default async function RunPage({
         <aside className="dashboard-side">
           <div className="card stat-card">
             <p className="stat-label">{t('livesLabel')}</p>
-            <LivesMeter lives={RUN_SUMMARY.lives} max={RUN_SUMMARY.maxLives} />
+            <LivesMeter lives={run.lives} max={progress.livesMax} />
             <p className="note" style={{margin: 0}}>
-              {t('livesNote', {count: winsToNextLife})}
+              {t('livesNote', {count: progress.winsToNextLife})}
             </p>
           </div>
 
           <div className="card stat-card">
             <p className="stat-label">{t('streak')}</p>
-            <p className="stat-value">{RUN_SUMMARY.streak}</p>
+            <p className="stat-value">{progress.streak}</p>
             <p className="note" style={{margin: 0}}>
-              {t('personalBest', {count: RUN_SUMMARY.personalBest})}
+              {t('personalBest', {count: progress.best})}
             </p>
           </div>
 
           <div className="card stat-card">
             <p className="stat-label">{t('replayQueue')}</p>
-            <p className="note">{t('replayNote', {count: CLEARED_COUNT})}</p>
+            <p className="note">{t('replayNote', {count: progress.cleared})}</p>
             <div
               className="meter"
               role="progressbar"
-              aria-valuenow={CLEARED_COUNT}
+              aria-valuenow={progress.cleared}
               aria-valuemin={0}
-              aria-valuemax={TOTAL_WEAPONS}
+              aria-valuemax={progress.total}
               aria-label={t('armoryCleared', {
-                cleared: CLEARED_COUNT,
-                total: TOTAL_WEAPONS
+                cleared: progress.cleared,
+                total: progress.total
               })}
             >
               <span
-                style={{width: `${(CLEARED_COUNT / TOTAL_WEAPONS) * 100}%`}}
+                style={{
+                  width: `${(progress.cleared / progress.total) * 100}%`
+                }}
               />
             </div>
             <p className="note tnum" style={{margin: 'var(--space-3) 0 0'}}>
               {t('armoryCleared', {
-                cleared: CLEARED_COUNT,
-                total: TOTAL_WEAPONS
+                cleared: progress.cleared,
+                total: progress.total
               })}
             </p>
           </div>
@@ -183,25 +174,14 @@ export default async function RunPage({
           <div className="card stat-card">
             <p className="stat-label">{t('gearLedger')}</p>
             <ul className="ledger-rows">
-              <li>
-                <span>{t('headBurned')}</span>
-                <span className="tnum">
-                  {RUN_SUMMARY.gearBurned.head} / {RUN_SUMMARY.gearTotals.head}
-                </span>
-              </li>
-              <li>
-                <span>{t('clothesBurned')}</span>
-                <span className="tnum">
-                  {RUN_SUMMARY.gearBurned.body} / {RUN_SUMMARY.gearTotals.body}
-                </span>
-              </li>
-              <li>
-                <span>{t('shoesBurned')}</span>
-                <span className="tnum">
-                  {RUN_SUMMARY.gearBurned.shoes} /{' '}
-                  {RUN_SUMMARY.gearTotals.shoes}
-                </span>
-              </li>
+              {GEAR_SLOTS.map((slot) => (
+                <li key={slot}>
+                  <span>{t(`${slot}Burned`)}</span>
+                  <span className="tnum">
+                    {progress.gearSpent[slot]} / {progress.gearTotals[slot]}
+                  </span>
+                </li>
+              ))}
             </ul>
           </div>
         </aside>

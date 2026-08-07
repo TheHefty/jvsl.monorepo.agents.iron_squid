@@ -983,5 +983,11 @@
     "Shs_TRS000": "Bota montaña",
     "Shs_TRS001": "Bota montaña especial",
     "Shs_TRS002": "Bota montaña pro"
+  },
+  "modes": {
+    "splatZones": "Pintazonas",
+    "towerControl": "Torre",
+    "rainmaker": "Pez dorado",
+    "clamBlitz": "Asalto almeja"
   }
 }
