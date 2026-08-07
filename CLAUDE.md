@@ -5,14 +5,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## What this repository is
 
 **Iron Squid** — a public tracker for a Splatoon 3 gauntlet challenge, where the weapon and gear set
-are drawn at random and the player has to win with every weapon in the game. This monorepo is where
-it is being rebuilt as a server-backed public tracker.
+are drawn at random and the player has to win with every weapon in the game.
 
-There is **no application code here yet**. What exists is the dev container (vendored as a
-submodule), the release plumbing, and the documents below. The version currently live at
-[iron-squid.top](https://www.iron-squid.top) is a separate, frozen Angular repo,
-[`jvsl.web.angular.iron_squid`](https://github.com/TheHefty/jvsl.web.angular.iron_squid), kept as a
-behavioural reference and as the source of the weapon/gear datasets.
+**This repo holds no product code, and the application does not live here.** It carries the
+decisions, the docs and the dev container; the app is a sibling repo. Three repos, each with one
+job:
+
+| Repo | Role |
+| --- | --- |
+| `jvsl.monorepo.agents.iron_squid` (this one) | Decisions, docs, dev container. |
+| [`jvsl.web.react.iron_squid`](https://github.com/TheHefty/jvsl.web.react.iron_squid) | The application — Next.js. All product work happens there. |
+| [`jvsl.web.angular.iron_squid`](https://github.com/TheHefty/jvsl.web.angular.iron_squid) | The original app, live at [iron-squid.top](https://www.iron-squid.top). Frozen; kept as a behavioural reference and as the source of the weapon/gear datasets. |
+
+They are siblings, not submodules. A working copy of the app repo is usually cloned to `web/` here,
+because the dev container only mounts this repository — `web/` is gitignored and disposable, and the
+app's real home is its own remote. **Before working on the app, check whether `web/` exists**; if it
+does not, clone it there.
 
 ## Read these first
 
@@ -64,8 +72,21 @@ Squid**.
 
 ## Commands
 
-There is no application yet, so there is no build, test or lint command for product code. Node 22 is
-available in the container (`node --version` → v22).
+This repo has nothing to build. Product commands run in the app repo, from `web/`:
+
+```bash
+cd web
+npm run dev     # next dev
+npm run build   # next build — runs TypeScript too
+npm test        # vitest run
+npm run lint    # eslint
+npm run format  # prettier --write .
+```
+
+Node 22 is available in the container (`node --version` → v22). Husky runs `lint-staged` on commit
+and the test suite on push, so a broken suite does not reach the remote.
+
+The rest of the commands below are the dev container's own, and run **on the host**, not in here.
 
 Build the dev image (interactive; also how you add/remove stacks later):
 ```bash

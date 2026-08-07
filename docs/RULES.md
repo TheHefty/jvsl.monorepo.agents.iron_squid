@@ -96,6 +96,24 @@ mistake being corrected.
 idempotency key and ignores a repeat. Background Sync retries, tabs get restored, and requests
 arrive twice; without this, one bad connection silently spends a life or clears a weapon twice.
 
+**Unit tests are mandatory.** Code lands with the tests that prove it, in the same change — not in a
+follow-up, not "once it settles". Untested logic does not merge.
+
+What that means in practice, since not everything deserves the same treatment:
+
+- **The domain is covered exhaustively.** The draw, the lives arithmetic, the reset, the single-use
+  pools and the finish condition are pure functions over plain data precisely so they can be tested
+  without a browser, a database or a network. Every rule in [CHALLENGE.md](CHALLENGE.md) has a test
+  that would fail if the rule were broken, including the boundaries: the tenth win, the last life,
+  the last weapon.
+- **Every route handler is tested** for its happy path, its rejected input, and its idempotent
+  replay.
+- **Components are tested for behaviour, not markup.** Assert what a user can perceive — text,
+  roles, accessible names, what a click does. A test that pins class names or DOM structure blocks
+  refactoring and proves nothing.
+- **Rendering-only presentational components do not need a test each.** Chasing coverage on markup
+  produces tests nobody trusts.
+
 **Every bug fix ships with a regression test** for the exact scenario that was broken — not a test
 of the general area, the specific case. If the code cannot be tested as written, refactor it until
 it can, in the same change.

@@ -4,16 +4,22 @@ How Iron Squid is built and why. The challenge itself — the thing being tracke
 [CHALLENGE.md](CHALLENGE.md), and the engineering constraints every change is held to are in
 [RULES.md](RULES.md); this document is about the software.
 
-**Status: nothing in "The application" below is built yet.** This repo currently holds the
-dev-container submodule, the release plumbing and these docs. Sections are marked *decided*,
-*inherited* or *open* so the difference between a decision and an implementation stays visible.
+Sections are marked *decided*, *built*, *inherited* or *open* so the difference between a decision
+and an implementation stays visible.
 
 ## Where the code lives
 
+Three repos, each with one job. **The application does not live in this one.**
+
 | Repo | Role |
 | --- | --- |
-| `jvsl.monorepo.agents.iron_squid` (this one) | The product going forward. |
+| `jvsl.monorepo.agents.iron_squid` (this one) | Decisions, docs and the dev container. No product code. |
+| [`jvsl.web.react.iron_squid`](https://github.com/TheHefty/jvsl.web.react.iron_squid) | The application. Next.js, and where all product work happens. |
 | [`jvsl.web.angular.iron_squid`](https://github.com/TheHefty/jvsl.web.angular.iron_squid) | The original app, live at [iron-squid.top](https://www.iron-squid.top). Frozen: kept as the reference for behaviour and as the source of the datasets, not developed further. |
+
+The three are siblings, not submodules — nothing here vendors the app. A working copy of the app
+repo is usually cloned to `web/` inside this one, because the dev container only mounts this
+repository; `web/` is gitignored and disposable, and the app's real home is its own remote.
 
 ### What the original app is
 
@@ -39,6 +45,17 @@ Four things carried over from reading it, recorded so they are not reintroduced:
   gained more weapons. The count must come from the data.
 
 ## The application
+
+### Built so far
+
+The first pass covers the interface and nothing behind it. In
+[`jvsl.web.react.iron_squid`](https://github.com/TheHefty/jvsl.web.react.iron_squid): Next.js 16 on
+the App Router, the five screens below against mock data, all five locales, both themes resolved
+server-side, and the accessibility baseline plus its four user-controlled options. Note that
+Next.js 16 renamed Middleware to **Proxy**, so the locale routing lives in `src/proxy.ts`.
+
+Not built: the domain logic, persistence, route handlers, the PWA layer, and the generated dataset.
+The win/loss buttons are inert.
 
 ### Decided
 

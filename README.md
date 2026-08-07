@@ -13,9 +13,12 @@ Angular app that keeps everything in the browser it was played in — see
 [`jvsl.web.angular.iron_squid`](https://github.com/TheHefty/jvsl.web.angular.iron_squid), which is
 now frozen and kept as a reference.
 
-This repo is where it becomes a public tracker: challenges that live on a server, run pages you can
-share, and a record of every run that died along the way. **No application code has landed yet** —
-what is here is the dev container, the release plumbing and the design docs.
+It is being rebuilt as a public tracker: challenges that live on a server, run pages you can share,
+and a record of every run that died along the way. That work happens in
+[`jvsl.web.react.iron_squid`](https://github.com/TheHefty/jvsl.web.react.iron_squid).
+
+**This repo holds no product code.** It carries the decisions, the docs and the dev container — the
+things that outlive any one implementation, and that the app repo is held to.
 
 ## Docs
 
