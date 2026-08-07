@@ -58,8 +58,12 @@ Router, the five screens below against mock data, all five locales, both themes 
 server-side, and the accessibility baseline plus its four user-controlled options. Note that
 Next.js 16 renamed Middleware to **Proxy**, so the locale routing lives in `src/proxy.ts`.
 
-Not built: the domain logic, persistence, route handlers, the PWA layer, and the generated dataset.
-The win/loss buttons are inert.
+Since then: the challenge rules as a framework-free domain in `src/domain/`, with the RNG injected so
+it stays pure and the CSPRNG can live at the server edge; and the generated weapon and gear catalogue
+in `src/data/`.
+
+Not built: persistence, route handlers, the PWA layer, and the wiring that would let a page read the
+real catalogue instead of `src/lib/mock.ts`. The win/loss buttons are inert.
 
 ### Decided
 
@@ -239,23 +243,82 @@ Four, all shipping in v1, on top of respecting the OS-level `prefers-reduced-mot
 
 ### Game data
 
-Generated from **[`Leanny/splat3`](https://github.com/Leanny/splat3)**, which carries both halves of
-the problem and joins them on one key (`__RowId`, e.g. `Shooter_Short_00`):
+*Built.* Generated from **[`Leanny/splat3`](https://github.com/Leanny/splat3)**, which carries both
+halves of the problem:
 
-- **Roster** — `data/mush/<version>/WeaponInfoMain.json` (current version `1120`), plus
+- **Roster** — `data/mush/<version>/WeaponInfoMain.json` (pinned at version `1120`), plus
   `GearInfoHead/Clothes/Shoes.json`.
-- **Localised names** — `data/language/<locale>.json`, under `CommonMsg/Weapon/WeaponName_Main` and
-  `CommonMsg/Gear/GearName_*`. Locale files map to ours as `USen` → `en` *and* `pt-BR`, `USes` →
-  `es-419`, `EUes` → `es-ES`, `JPja` → `ja`.
+- **Localised names** — `data/language/<locale>.json`, under `CommonMsg/Weapon/WeaponName_Main`,
+  `CommonMsg/Weapon/WeaponTypeName` and `CommonMsg/Gear/GearName_*`. Locale files map to ours as
+  `USen` → `en` *and* `pt-BR`, `USes` → `es-419`, `EUes` → `es-ES`, `JPja` → `ja`.
+
+**The two halves do not join on the same key**, which is the trap in this dataset. Weapons join on
+the full `__RowId` (`Shooter_Short_00`). Gear names are keyed on the `__RowId` *without* its slot
+prefix — `Hed_AMB000` in the roster is `AMB000` in the language file. Getting this wrong does not
+error: it produces a name table that is silently empty, which is exactly how it was first written
+here.
 
 **What counts as a weapon:** every row with `Type == "Versus"`, minus the Side Order replicas. Those
 are identified by `__RowId` ending in `_O` — 11 rows, including `Brush_Normal_O` (*Orderbrush
 Replica*), and the rule deliberately catches nothing else: `Shooter_Normal_H` (*Hero Shot Replica*)
 and `Shooter_Normal_Oct` (*Octo Shot Replica*) stay in. Keying off `__RowId` rather than the English
-name keeps the filter language-independent.
+name keeps the filter language-independent. That yields **162 weapons** at version 1120 — a number
+the app derives from the file and never hardcodes.
 
-That yields **162 weapons** at version 1120 — a number the app derives at build time and never
-hardcodes.
+**What counts as drawable gear:** everything except `HowToGet == "Impossible"` and the amiibo family
+(`__RowId` beginning `AMB` after the slot prefix). Both cuts are rules of the challenge and are
+argued in [CHALLENGE.md](CHALLENGE.md#the-gear-that-is-out-of-the-pool); here they are just a filter.
+That yields **245 head, 335 clothes and 226 shoes** — 806 of the dataset's 943.
+
+**Roster order** comes from the weapon's `Id`, which is unique and ascends through the classes in the
+order the game itself lists them. `DebugDispOrder` is the field that looks right and is not: it
+repeats, so it cannot order the roster on its own.
+
+**Weapon classes** are not a hand-written map. The `__RowId` prefix (`Shooter`, `Maneuver`, …)
+matches the keys of `WeaponTypeName` exactly, all eleven, so the class label is localised by the same
+lookup as everything else.
+
+### What the generator emits
+
+`npm run generate:catalogue` writes five files into `apps/web/src/data/`:
+
+| File | Contents |
+| --- | --- |
+| `catalogue.json` | Ids, weapon classes and the game version. Not one word of prose, so it is the same file in every language. |
+| `names/USen.json`, `names/USes.json`, `names/EUes.json`, `names/JPja.json` | One language each: weapon names, class labels, gear names. |
+
+The split is the point. The domain draws from ids and never reads a name, so `loadCatalogue(locale)`
+in `src/data/catalogue.ts` joins the two halves for the locale being rendered and nothing loads the
+other three languages. Adding a sixth language costs one names file.
+
+The judgement — every filter, every join, every sort — lives in `src/data/source.ts` as pure
+functions over parsed JSON, unit-tested without a network. `scripts/generate-catalogue.mts` only
+fetches, writes and reports. A name the catalogue needs and a language file lacks throws there rather
+than rendering as a blank tile; a source whose shape changed throws rather than emitting an empty
+roster.
+
+`src/data/catalogue.test.ts` runs against the committed files rather than a fixture, so the data
+actually in the repository is checked: no duplicate ids across the three slots, no blank name in any
+of the five locales, and — the one that would bite quietly — **every gear pool at least as large as
+the roster**. Single use is per item, so a complete run spends 162 pieces per slot; if the roster ever
+outgrew a pool, runs would become impossible to finish and the failure would surface as an
+`EmptyPoolError` in somebody's last few draws.
+
+### When the catalogue is regenerated
+
+*Decided.* The version is **pinned** (`GAME_VERSION` in `src/data/source.ts`) and the generated files
+are **committed**. Regenerating is a deliberate act: bump the constant, run the script, review the
+diff, open a PR.
+
+The alternative — reading Leanny's `latest` at build time — keeps the roster current for free, and
+was rejected on two counts. Every deploy would depend on someone else's repository being up and
+correct, and the roster could change *under a live run* with nobody having decided to let it. That
+second point is not hypothetical: what a mid-run roster change should do to a player's progress is
+still an open question of the challenge, and floating the dataset would answer it by accident.
+
+Pinning has one real cost, and it is the failure the live site is already in: a roster can go stale
+silently. A scheduled job that regenerates and opens a PR would close that without giving up the
+hermetic build, and is the obvious next step if it ever bites.
 
 ### Replacing the inherited datasets
 
@@ -267,18 +330,16 @@ is a **Splatoon 2** weapon that should never have been in the file. Regenerating
 all of it and keeps fixing it. The gear images are still worth taking, since the data source
 provides names, not art.
 
+Its counts are not ours and should not be quoted as such: the old file's 912 gear items include
+pieces that cannot be worn in Versus. The drawable pool is 806. Earlier drafts of
+[CHALLENGE.md](CHALLENGE.md) did the single-use arithmetic on the old numbers.
+
 ### Open
 
 - **Persistence.** No database chosen. Constrained by the decisions above: server-side draws and
   public pages need real storage, and secret-link ownership needs no user table.
 - **Hosting.** The original is on Azure Static Web Apps, which does not fit an app that renders on
   the server and talks to a database.
-- **When the dataset is regenerated.** The source is settled (see [Game data](#game-data)); the
-  refresh policy is not. Fetching from Leanny at build time keeps the roster current on its own but
-  makes every deploy depend on someone else's repo; committing the generated file and refreshing it
-  deliberately keeps builds hermetic but can go stale — which is the failure the live site is
-  already in. A generated file committed to the repo, refreshed by a scheduled job that opens a PR,
-  gets both, at the cost of a workflow to maintain.
 - **Whether a mid-run roster change disturbs a live run** — stated in
   [CHALLENGE.md](CHALLENGE.md#open-questions), because it is a rule of the challenge before it is a
   data problem, but it lands here too: pinning a run to the roster version it started on means

@@ -9,6 +9,7 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
+    "generate:catalogue": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-catalogue.mts",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

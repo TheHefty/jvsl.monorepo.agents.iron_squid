@@ -79,6 +79,19 @@ npm run lint    # eslint
 npm run format  # prettier --write .
 ```
 
+The weapon and gear catalogue is **generated and committed**, never hand-edited:
+
+```bash
+npm run generate:catalogue   # refetches Leanny/splat3 at the pinned game version
+```
+
+Run it only when deliberately moving to a new game version — bump `GAME_VERSION` in
+`apps/web/src/data/source.ts` first. `docs/ARCHITECTURE.md` explains why the version is pinned rather
+than floating, and why the output is split into one structural file plus one file per language.
+
+Note that `npm run format` reaches `apps/web` only. The Markdown under `docs/` is deliberately
+outside Prettier's scope — do not reformat it as a side effect of editing it.
+
 Node 22 is available in the container (`node --version` → v22). Husky lives at the repo root and
 runs `lint-staged` on commit and the test suite on push, so a broken suite does not reach the
 remote.

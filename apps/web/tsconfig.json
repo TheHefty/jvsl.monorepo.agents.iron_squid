@@ -11,6 +11,9 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    // Node 22 runs TypeScript directly but requires the extension on value
+    // imports, which is how scripts/generate-catalogue.ts reaches src/data.
+    "allowImportingTsExtensions": true,
     "jsx": "react-jsx",
     "incremental": true,
     "plugins": [
