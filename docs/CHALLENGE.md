@@ -68,14 +68,34 @@ part of a player's page.
 
 Recorded because the alternative reading was chosen first, and the arithmetic is what overturned it.
 
-Across the three slots there are 273 head, 385 clothes and 254 shoes — **26,696,670** possible
+Across the three slots there are 245 head, 335 clothes and 226 shoes — **18,548,950** possible
 combinations. Over the 162 draws of a complete run, the chance that any combination recurs is
-**0.049%**: about one run in two thousand. "The drawn set does not repeat" is therefore a rule that
-would essentially never bind. It forbids nothing that was not already going to be true.
+**0.070%**: about one run in fourteen hundred. "The drawn set does not repeat" is therefore a rule
+that would essentially never bind. It forbids nothing that was not already going to be true.
 
-Per item does bind. A complete run burns 59% of the head pool, 42% of the clothes and 64% of the
+Per item does bind. A complete run burns 66% of the head pool, 48% of the clothes and 72% of the
 shoes — enough that the ledger of what has been spent is worth showing, which is what the design's
 gear ledger was always for. It is also what the Angular app implements, so the two agree.
+
+Those pool sizes are the drawable pools, not the raw dataset — see
+[the gear that is out of the pool](#the-gear-that-is-out-of-the-pool) below.
+
+## The gear that is out of the pool
+
+The dataset carries 943 pieces of gear. **806** of them can be drawn. Two cuts get us there, and both
+are rules of the challenge rather than data cleanup, which is why they are stated here.
+
+**Gear that cannot be worn in a Versus battle** — 73 pieces, marked `HowToGet: "Impossible"` in the
+dataset. These are the Salmon Run work uniforms and the original Hero Mode and Side Order outfits.
+The *replicas* of those outfits are separate items that anyone can obtain, and they stay in the pool;
+only the originals go.
+
+**Amiibo gear** — 64 pieces, which require buying a physical figure. This is the judgement call, not
+the obvious one. Rule 3 forbids skipping a draw for any reason, so drawing a piece a player has no
+way to acquire would stall a run indefinitely on a constraint that has nothing to do with playing
+Splatoon. Every other hard-to-get family stays in: Splatfest gear, Salmon Run rewards and the Side
+Order replicas are all reachable by someone who simply keeps playing, and being *hard* to get is the
+challenge working as intended.
 
 ## Identity
 
