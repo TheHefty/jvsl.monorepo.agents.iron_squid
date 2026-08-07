@@ -74,6 +74,12 @@ The win/loss buttons are inert.
   secret edit URL. No auth, no password reset, no email. The data model still carries a nullable
   owner field, so a challenge can be claimed later if accounts are ever added — the point is to
   avoid painting the schema into a corner, not to build accounts now.
+- **An unverified display name, and a leaderboard that needs no login.** This is how the design's
+  `@ika_no_9`, its leaderboard and its "Follow this run" button resolve without accounts: the name
+  is whatever the player typed and nobody checks it, the leaderboard lists public challenges, and
+  "follow" becomes "copy link". Consistent with a challenge whose results are self-reported anyway —
+  see [CHALLENGE.md](CHALLENGE.md#identity). It does mean display names are untrusted text and some
+  will need removing, which [RULES.md](RULES.md#privacy) already requires.
 - **The server owns the randomness.** Draws are produced server-side and persisted before they are
   shown. This is the one rule the honour system cannot cover: self-reported results are visible and
   socially checkable, but a client that can re-roll until it likes the weapon defeats the challenge
@@ -273,11 +279,13 @@ provides names, not art.
   deliberately keeps builds hermetic but can go stale — which is the failure the live site is
   already in. A generated file committed to the repo, refreshed by a scheduled job that opens a PR,
   gets both, at the cost of a workflow to maintain.
-- **Whether a mid-run roster change disturbs a live run.** Splatoon 3 adding weapons changes the
-  finish line under players who are part-way through. Growing the target mid-run is one answer;
-  pinning a run to the roster version it started on is another.
-- The rule-level open questions in [CHALLENGE.md](CHALLENGE.md#open-questions), which shape the
-  domain model and so block it.
+- **Whether a mid-run roster change disturbs a live run** — stated in
+  [CHALLENGE.md](CHALLENGE.md#open-questions), because it is a rule of the challenge before it is a
+  data problem, but it lands here too: pinning a run to the roster version it started on means
+  storing that version with the run.
+
+The rules themselves are now settled — gear is single-use per item, only Anarchy and X Battle count,
+and identity is an unverified display name with no accounts. The domain model is no longer blocked.
 
 ## Repository plumbing
 

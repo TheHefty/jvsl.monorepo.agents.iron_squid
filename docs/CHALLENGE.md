@@ -27,10 +27,12 @@ one used here.
 
 1. **The draw.** A weapon and a gear set are assigned at random. The player does not choose, and
    cannot re-roll.
-2. **Single use.** A drawn weapon leaves the pool for the rest of the run. So does the gear — see
-   [Open questions](#open-questions) for the one detail still unsettled.
+2. **Single use, per item.** A drawn weapon leaves the pool for the rest of the run, and so does
+   each individual piece of gear: the head, the clothes and the shoes each leave their own pool.
+   Not the combination — the *item*.
 3. **Win before advancing.** The active draw stays active until the player wins a match with it.
-   There is no skipping, for any reason.
+   There is no skipping, for any reason. A win is a won match in **Anarchy Battle or X Battle** —
+   Splat Zones, Tower Control, Rainmaker or Clam Blitz. Turf War does not count.
 4. **Lives.** A run starts with 1 life and earns +1 for every 10 wins within that run. Losing a
    match spends a life.
 5. **The reset.** At 0 lives the run ends. A new run begins from nothing: 1 life, 0 wins, the full
@@ -62,19 +64,33 @@ part of a player's page.
   makes rules 1 and 3 meaningless. A run page shows every entry, so dishonesty is visible rather
   than prevented.
 
+## Why single use is per item
+
+Recorded because the alternative reading was chosen first, and the arithmetic is what overturned it.
+
+Across the three slots there are 273 head, 385 clothes and 254 shoes — **26,696,670** possible
+combinations. Over the 162 draws of a complete run, the chance that any combination recurs is
+**0.049%**: about one run in two thousand. "The drawn set does not repeat" is therefore a rule that
+would essentially never bind. It forbids nothing that was not already going to be true.
+
+Per item does bind. A complete run burns 59% of the head pool, 42% of the clothes and 64% of the
+shoes — enough that the ledger of what has been spent is worth showing, which is what the design's
+gear ledger was always for. It is also what the Angular app implements, so the two agree.
+
+## Identity
+
+There are no accounts. A player picks a display name when they create their challenge and it is
+never verified — anyone could claim any name. That is consistent rather than careless: results are
+already self-reported on the honour system, so an unverified name adds no weakness that the
+challenge did not already accept, and it avoids collecting personal data the project has no use for
+(see [RULES.md](RULES.md#privacy)).
+
+Public challenges appear on a leaderboard, which needs no login to read or to be listed on. The
+design's "Follow this run" button implies an account to attach a subscription to, so it becomes
+"copy link" instead.
+
 ## Open questions
 
-These are unsettled. Nothing that depends on them should be implemented until they are closed.
-
-- **Scope of gear single-use.** Two readings are live. *Per piece*: each head/clothes/shoes item
-  leaves the pool individually — this is what the Angular app implements and what the design mocks
-  show (slots labelled "single use", a gear ledger counting burned items per slot). *Per set*: the
-  drawn combination does not recur but individual pieces may — this is what was chosen in the design
-  conversation. The design and the existing code agree with each other and disagree with that
-  choice, so it needs an explicit decision. The dataset supports either — there are hundreds of
-  items in each of the three slots against 162 weapons, so per-piece never exhausts the pool.
-- **Which modes count.** The Angular app allows only the four Anarchy modes (Splat Zones, Tower
-  Control, Rainmaker, Clam Blitz); the design's run log shows a Turf War win. One of them is wrong.
-- **Identity.** The design shows handles (`@ika_no_9`), a leaderboard and a "Follow this run"
-  button, all of which imply persistent accounts. The decision taken was secret-link ownership with
-  no accounts at all. See [ARCHITECTURE.md](ARCHITECTURE.md).
+- **What happens to a live run when Splatoon 3 adds weapons.** Growing the target under a player
+  who is part-way through is one answer; pinning a run to the roster version it started on is
+  another. This is a rule of the challenge, not a data problem, which is why it is here.
