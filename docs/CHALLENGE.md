@@ -58,6 +58,10 @@ part of a player's page.
   from the dataset — the previous Angular implementation hardcoded `129` and silently went stale.
   How the roster is generated, and the exact filter, are in
   [ARCHITECTURE.md](ARCHITECTURE.md#game-data).
+- **The mode is recorded; the stage is not.** Reporting a match names which of the four ranked modes
+  it was played in. That is the only trace rule 3 leaves: results cannot be verified, but a log that
+  names the mode makes "this was Anarchy or X Battle" something a reader can check rather than
+  simply assume. The stage proves nothing, so it is one more field nobody has to fill in.
 - **Reporting is on the honour system.** Nothing verifies that a reported win happened; the player
   types it in. What the server *does* own is the randomness (see
   [ARCHITECTURE.md](ARCHITECTURE.md) and [RULES.md](RULES.md)), because a client that can re-roll
