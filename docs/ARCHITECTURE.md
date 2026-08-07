@@ -9,17 +9,22 @@ and an implementation stays visible.
 
 ## Where the code lives
 
-Three repos, each with one job. **The application does not live in this one.**
+**Here.** The application is `apps/web/` in this repo, an npm workspace, alongside the docs that
+govern it and the dev container it is developed in.
 
 | Repo | Role |
 | --- | --- |
-| `jvsl.monorepo.agents.iron_squid` (this one) | Decisions, docs and the dev container. No product code. |
-| [`jvsl.web.react.iron_squid`](https://github.com/TheHefty/jvsl.web.react.iron_squid) | The application. Next.js, and where all product work happens. |
+| `jvsl.monorepo.agents.iron_squid` (this one) | Everything: the app, the decisions, the docs, the dev container. |
 | [`jvsl.web.angular.iron_squid`](https://github.com/TheHefty/jvsl.web.angular.iron_squid) | The original app, live at [iron-squid.top](https://www.iron-squid.top). Frozen: kept as the reference for behaviour and as the source of the datasets, not developed further. |
 
-The three are siblings, not submodules — nothing here vendors the app. A working copy of the app
-repo is usually cloned to `web/` inside this one, because the dev container only mounts this
-repository; `web/` is gitignored and disposable, and the app's real home is its own remote.
+The app briefly lived in a repo of its own and was folded back in, which is worth recording so it is
+not re-proposed without new reasons. Splitting it cost more than it returned: the dev container
+mounts *this repository* as its workspace and everything outside it is tmpfs, so a sibling checkout
+was not reachable from inside the container at all — the arrangement only worked as an untracked
+clone sitting inside this repo, which is a workaround rather than a design. It also put a rule and
+the code that rule governs on opposite sides of a boundary, with nothing but discipline keeping them
+in step. What the split would have bought — independent CI and releases for the app — is not wanted
+yet. Revisit it when it is.
 
 ### What the original app is
 
@@ -48,9 +53,8 @@ Four things carried over from reading it, recorded so they are not reintroduced:
 
 ### Built so far
 
-The first pass covers the interface and nothing behind it. In
-[`jvsl.web.react.iron_squid`](https://github.com/TheHefty/jvsl.web.react.iron_squid): Next.js 16 on
-the App Router, the five screens below against mock data, all five locales, both themes resolved
+The first pass covers the interface and nothing behind it. In `apps/web/`: Next.js 16 on the App
+Router, the five screens below against mock data, all five locales, both themes resolved
 server-side, and the accessibility baseline plus its four user-controlled options. Note that
 Next.js 16 renamed Middleware to **Proxy**, so the locale routing lives in `src/proxy.ts`.
 

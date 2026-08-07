@@ -7,20 +7,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **Iron Squid** — a public tracker for a Splatoon 3 gauntlet challenge, where the weapon and gear set
 are drawn at random and the player has to win with every weapon in the game.
 
-**This repo holds no product code, and the application does not live here.** It carries the
-decisions, the docs and the dev container; the app is a sibling repo. Three repos, each with one
-job:
+The application is **`apps/web/`** in this repo, an npm workspace. Everything lives here: the app,
+the decisions that govern it, and the dev container it is developed in.
 
-| Repo | Role |
-| --- | --- |
-| `jvsl.monorepo.agents.iron_squid` (this one) | Decisions, docs, dev container. |
-| [`jvsl.web.react.iron_squid`](https://github.com/TheHefty/jvsl.web.react.iron_squid) | The application — Next.js. All product work happens there. |
-| [`jvsl.web.angular.iron_squid`](https://github.com/TheHefty/jvsl.web.angular.iron_squid) | The original app, live at [iron-squid.top](https://www.iron-squid.top). Frozen; kept as a behavioural reference and as the source of the weapon/gear datasets. |
+The version currently live at [iron-squid.top](https://www.iron-squid.top) is a separate, frozen
+Angular repo — [`jvsl.web.angular.iron_squid`](https://github.com/TheHefty/jvsl.web.angular.iron_squid)
+— kept as a behavioural reference and as the source of the weapon/gear datasets. It is the only
+other repo involved.
 
-They are siblings, not submodules. A working copy of the app repo is usually cloned to `web/` here,
-because the dev container only mounts this repository — `web/` is gitignored and disposable, and the
-app's real home is its own remote. **Before working on the app, check whether `web/` exists**; if it
-does not, clone it there.
+The app spent a short while in a repo of its own and was folded back in; `docs/ARCHITECTURE.md`
+records why, so the split is not re-proposed without new reasons.
 
 ## Read these first
 
@@ -72,10 +68,10 @@ Squid**.
 
 ## Commands
 
-This repo has nothing to build. Product commands run in the app repo, from `web/`:
+Product commands run from the repo root, which forwards to the `apps/web` workspace:
 
 ```bash
-cd web
+npm install     # wires the workspace; run once after cloning
 npm run dev     # next dev
 npm run build   # next build — runs TypeScript too
 npm test        # vitest run
@@ -83,8 +79,9 @@ npm run lint    # eslint
 npm run format  # prettier --write .
 ```
 
-Node 22 is available in the container (`node --version` → v22). Husky runs `lint-staged` on commit
-and the test suite on push, so a broken suite does not reach the remote.
+Node 22 is available in the container (`node --version` → v22). Husky lives at the repo root and
+runs `lint-staged` on commit and the test suite on push, so a broken suite does not reach the
+remote.
 
 The rest of the commands below are the dev container's own, and run **on the host**, not in here.
 

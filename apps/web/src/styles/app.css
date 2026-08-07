@@ -1,0 +1,517 @@
+/*
+ * Iron Squid's own composition, built on the Nocturne classes rather than
+ * beside them. Anything reusable belongs in nocturne.css; anything that only
+ * makes sense for this product belongs here.
+ */
+
+.page {
+  max-width: 70rem;
+  margin: 0 auto;
+  padding-inline: var(--space-8);
+}
+
+.site-nav {
+  max-width: 70rem;
+  margin: 0 auto;
+  padding-inline: var(--space-8);
+  gap: var(--space-6);
+}
+
+.site-nav .nav-brand {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* — display settings — */
+.settings {
+  position: relative;
+}
+
+.settings > summary {
+  list-style: none;
+}
+
+.settings > summary::-webkit-details-marker {
+  display: none;
+}
+
+.settings-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + var(--space-2));
+  z-index: 20;
+  width: min(20rem, calc(100vw - 2rem));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.settings-title {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.settings-group {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+/* — hero (1b) — */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: var(--space-8);
+  align-items: center;
+  padding-block: 5.5rem 4.5rem;
+}
+
+.hero-title {
+  font-size: clamp(2.5rem, 5vw, 3.875rem);
+  line-height: 1.11;
+  margin: 0;
+}
+
+.hero-body {
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  max-width: 46ch;
+  margin: var(--space-6) 0 0;
+}
+
+.hero-actions {
+  display: flex;
+  gap: var(--space-4);
+  margin-top: var(--space-8);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 60rem) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    padding-block: 3rem;
+  }
+}
+
+/* — the roll card — */
+.roll-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-md);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-md);
+}
+
+.roll-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.roll-weapon {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  padding: var(--space-6);
+  background: var(--color-bg);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-md);
+}
+
+.roll-badge {
+  width: 3.25rem;
+  height: 3.25rem;
+  flex: none;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--color-accent) 16%, transparent);
+  border: 1px solid var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  color: var(--color-accent-text);
+}
+
+.roll-name {
+  margin: 0;
+  font-size: 1.1875rem;
+  line-height: 1.25;
+  font-weight: 500;
+}
+
+.roll-class {
+  margin: 2px 0 0;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.gear-slots {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.gear-slot {
+  padding: var(--space-4);
+  background: var(--color-bg);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-md);
+}
+
+.gear-slot dt {
+  margin: 0;
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.gear-slot dd {
+  margin: 4px 0 0;
+  font-size: 0.75rem;
+  line-height: 1.35;
+}
+
+.roll-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-divider);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.lives-meter {
+  margin: 0;
+}
+
+.lives-marks {
+  letter-spacing: 0.28em;
+  color: var(--color-accent-text);
+  font-size: 0.8125rem;
+}
+
+/* — rules ledger — */
+.ledger {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 4.5rem;
+}
+
+.ledger li {
+  display: grid;
+  grid-template-columns: minmax(0, 26ch) minmax(0, 1fr);
+  gap: var(--space-8);
+  padding: var(--space-8) 0;
+  border-top: 1px solid var(--color-divider);
+  align-items: baseline;
+}
+
+.ledger h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.ledger p {
+  margin: 0;
+  font-size: 0.96875rem;
+  line-height: 1.8;
+  max-width: 62ch;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 45rem) {
+  .ledger li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
+  }
+}
+
+/* — dashboard — */
+.dashboard {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 19rem;
+  gap: var(--space-8);
+  align-items: start;
+  padding-block: var(--space-8) 3rem;
+}
+
+.dashboard-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.stat-card {
+  padding: var(--space-6);
+}
+
+.stat-label {
+  margin: 0;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.stat-value {
+  margin: var(--space-2) 0 0;
+  font-size: 2.5rem;
+  line-height: 1.1;
+  font-weight: 500;
+  font-feature-settings: 'tnum' 1;
+}
+
+.meter {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--color-neutral-900);
+  margin-top: var(--space-4);
+  overflow: hidden;
+}
+
+[data-theme='light'] .meter {
+  background: var(--color-neutral-300);
+}
+
+.meter > span {
+  display: block;
+  height: 100%;
+  background: var(--color-accent);
+}
+
+.ledger-rows {
+  list-style: none;
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  font-size: 0.75rem;
+}
+
+.ledger-rows li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+@media (max-width: 62rem) {
+  .dashboard {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+  flex-wrap: wrap;
+}
+
+/* — armory grid — */
+.armory-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--armory-columns, 7), minmax(0, 1fr));
+  gap: 6px;
+}
+
+.armory-tile {
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  /* The border is the accessibility fix: the untouched tile measured 1.24:1
+   * against the page in dark and 1.13:1 in light, so the most common state was
+   * effectively invisible. */
+  border: 1px solid;
+}
+
+.armory-tile[data-compact='true'] {
+  aspect-ratio: auto;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.armory-tile[data-state='cleared'] {
+  background: var(--tile-cleared-bg);
+  color: var(--tile-cleared-fg);
+  border-color: var(--tile-cleared-edge);
+}
+
+.armory-tile[data-state='current'] {
+  background: var(--tile-current-bg);
+  color: var(--tile-current-fg);
+  border-color: var(--tile-current-edge);
+}
+
+.armory-tile[data-state='untouched'] {
+  background: var(--tile-untouched-bg);
+  color: var(--tile-untouched-fg);
+  border-color: var(--tile-untouched-edge);
+}
+
+.armory-tile-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  line-height: 1;
+}
+
+/* The symbol is the second channel: with it on, the three states differ by
+ * shape as well as colour. */
+.armory-tile-symbol {
+  display: none;
+  font-size: 0.625rem;
+}
+
+[data-weapon-mark='shapes'] .armory-tile-symbol {
+  display: inline;
+}
+
+.armory-tile[data-compact='true'] .armory-tile-symbol,
+.armory-tile[data-compact='true'] .armory-tile-code {
+  display: none;
+}
+
+.legend {
+  display: flex;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+  flex-wrap: wrap;
+}
+
+/* — run log — */
+.log-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.log-row {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr) auto;
+  gap: var(--space-6);
+  align-items: center;
+  padding: var(--space-6) 0;
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.log-mark {
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 4px 0;
+  border-radius: var(--radius-sm);
+  border: 1px solid;
+}
+
+.log-mark[data-kind='win'] {
+  background: color-mix(in srgb, var(--color-accent) 16%, transparent);
+  color: var(--color-accent-text);
+  border-color: var(--color-accent-700);
+}
+
+.log-mark[data-kind='death'] {
+  background: transparent;
+  color: var(--color-text-muted);
+  border-color: var(--color-divider);
+}
+
+.log-title {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+.log-detail {
+  margin: 2px 0 0;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.log-when {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  font-feature-settings: 'tnum' 1;
+}
+
+@media (max-width: 45rem) {
+  .log-row {
+    grid-template-columns: 4rem minmax(0, 1fr);
+  }
+  .log-when {
+    grid-column: 2;
+  }
+}
+
+/* — public run page — */
+.public-run {
+  padding-block: 3rem;
+}
+
+.public-headline {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  line-height: 1.15;
+  margin: 0;
+  max-width: 22ch;
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-6);
+  margin-top: var(--space-8);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--color-divider);
+}
+
+.stat-row p:first-child {
+  margin: 0;
+  font-size: 1.875rem;
+  font-weight: 500;
+  font-feature-settings: 'tnum' 1;
+}
+
+.stat-row p:last-child {
+  margin: 6px 0 0;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin: var(--space-8) 0 var(--space-4);
+  flex-wrap: wrap;
+}
+
+.note {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+  max-width: 60ch;
+}

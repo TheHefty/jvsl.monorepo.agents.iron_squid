@@ -1,0 +1,136 @@
+{
+  "meta": {
+    "title": "Iron Squid",
+    "description": "Vença com todas as armas. Perca uma vez, comece do zero. Um rastreador público do gauntlet de Splatoon 3."
+  },
+  "nav": {
+    "brand": "IRON SQUID",
+    "rules": "Regras",
+    "runs": "Runs",
+    "armory": "Arsenal",
+    "myRun": "Minha run",
+    "log": "Histórico",
+    "leaderboard": "Ranking",
+    "startRun": "Começar uma run",
+    "skipToContent": "Pular para o conteúdo"
+  },
+  "landing": {
+    "stats": "{runs, plural, =0 {Nenhuma run ainda} one {# run} other {# runs}} · {completed} concluídas",
+    "headline": "Ninguém terminou isso.",
+    "body": "Uma arma aleatória, um conjunto de gear aleatório, uma vida. Dez vitórias compram mais uma. Perca e você refaz todas as armas que já venceu antes de ter direito a uma nova.",
+    "record": "O recorde é {count}.",
+    "rollFirst": "Sortear minha primeira arma",
+    "seeRecord": "Ver a run recordista",
+    "nowRolling": "Sorteando agora · {handle}",
+    "progress": "{cleared} / {total}",
+    "lives": "Vidas",
+    "rulesHeading": "As regras",
+    "conditionsHeading": "Condições",
+    "conditionSkip": "Não é permitido pular arma nem gear; é preciso vencer com cada um deles.",
+    "conditionShare": "O progresso é registrado aqui, e compartilhar a própria run é incentivado."
+  },
+  "rules": {
+    "roll": {
+      "title": "O sorteio",
+      "text": "A arma e o conjunto de gear são sorteados. Você não escolhe, e não pode sortear de novo."
+    },
+    "lives": {
+      "title": "Vidas",
+      "text": "Cada run começa com uma vida e ganha mais uma a cada dez vitórias dentro dela."
+    },
+    "win": {
+      "title": "A vitória",
+      "text": "A arma sorteada continua sendo a sua até você vencer com ela. Não se pula, por motivo nenhum."
+    },
+    "reset": {
+      "title": "A queda",
+      "text": "Perdeu a última vida, acabou a run. A próxima começa do zero — cada arma já conquistada volta para a mesa."
+    },
+    "end": {
+      "title": "O fim",
+      "text": "O desafio termina quando uma única run vence com todas as armas do jogo."
+    }
+  },
+  "dashboard": {
+    "runTitle": "Run #{number}",
+    "runDay": "dia {day}",
+    "started": "Começou em {date}",
+    "lastLoss": "última derrota {ago}",
+    "yourWeapon": "Sua arma",
+    "rolling": "Sorteando…",
+    "weaponOf": "Arma {index} de {total}",
+    "neverCleared": "nunca vencida",
+    "singleUse": "uso único",
+    "head": "Cabeça",
+    "body": "Roupa",
+    "shoes": "Pés",
+    "iWon": "Venci",
+    "iLost": "Perdi",
+    "iWonMobile": "Venci — sortear a próxima",
+    "armoryHeading": "O arsenal",
+    "armoryCounts": "{cleared} vencidas · {current} em jogo · {untouched} intocadas",
+    "livesLabel": "Vidas",
+    "livesRemaining": "{count, plural, one {# vida restante} other {# vidas restantes}}",
+    "livesNote": "{count, plural, one {# vitória} other {# vitórias}} para a próxima.",
+    "streak": "Sequência de vitórias",
+    "personalBest": "Recorde pessoal {count}",
+    "replayQueue": "Fila de repetição",
+    "replayNote": "Se cair nesta, você refaz as {count} armas já vencidas antes de o arsenal abrir de novo.",
+    "armoryCleared": "{cleared} / {total} do arsenal vencidas",
+    "gearLedger": "Controle de gear",
+    "headBurned": "Cabeça gastas",
+    "clothesBurned": "Roupas gastas",
+    "shoesBurned": "Pés gastos",
+    "honourSystem": "O relato é por honra. Sua página mostra cada entrada, então minta por sua conta e risco."
+  },
+  "armory": {
+    "heading": "O arsenal",
+    "intro": "Preenchida quer dizer vencida. Contornada quer dizer que ela está te esperando. Não existe terceiro estado, e não se pula.",
+    "cleared": "Vencidas {count}",
+    "current": "Em jogo {count}",
+    "untouched": "Intocadas {count}",
+    "stateCleared": "vencida",
+    "stateCurrent": "em jogo",
+    "stateUntouched": "intocada",
+    "weaponState": "{name}, {state}",
+    "listLabel": "Todas as {total} armas e seus estados"
+  },
+  "log": {
+    "heading": "Histórico da run",
+    "intro": "Mais recentes primeiro. As quedas são as entradas que custaram o arsenal.",
+    "win": "Vitória",
+    "death": "Queda",
+    "empty": "Nada registrado ainda."
+  },
+  "publicRun": {
+    "kicker": "Iron Squid · página pública da run",
+    "headline": "{handle} está a {cleared} armas de profundidade e já caiu {deaths, plural, one {uma vez} other {# vezes}}.",
+    "summary": "Run #{run}, {days} dias de idade. Melhor sequência: {best}.",
+    "cleared": "Vencidas",
+    "toGo": "Faltam",
+    "deaths": "Quedas",
+    "matches": "Partidas",
+    "follow": "Acompanhar esta run",
+    "copyLink": "Copiar link"
+  },
+  "settings": {
+    "heading": "Exibição",
+    "open": "Opções de exibição",
+    "theme": "Tema",
+    "themeDark": "Escuro",
+    "themeLight": "Claro",
+    "motion": "Movimento",
+    "motionFull": "Completo",
+    "motionReduced": "Reduzido",
+    "contrast": "Contraste",
+    "contrastNormal": "Normal",
+    "contrastHigh": "Alto",
+    "textSize": "Tamanho do texto",
+    "textSmall": "Pequeno",
+    "textNormal": "Normal",
+    "textLarge": "Grande",
+    "shapes": "Estado das armas",
+    "shapesColour": "Cor",
+    "shapesShapes": "Cor e símbolo"
+  }
+}
