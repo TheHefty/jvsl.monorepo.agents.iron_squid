@@ -147,11 +147,22 @@ the tag when it is merged, with `version.txt` + `CHANGELOG.md` as the only versi
 (`release-type: simple` — there is nothing here to publish). Commit messages are therefore
 load-bearing: only `feat`/`fix` reach the changelog, and a release is proposed only when one lands.
 
+**The repo's default merge method is squash**, which decides which message that is: the whole branch
+lands as one commit whose subject is the *pull request title*, not the titles of the commits on the
+branch. So a PR whose title is stale, or is not a conventional commit, silently costs the changelog
+its entry. Retitle before merging. All three methods are enabled, and a merge commit is the way to
+keep a branch's individual commits in `master`'s history — worth choosing deliberately when the
+commits carry reasoning worth reading in `git log`.
+
 `master` is protected, so **there is no direct push to it** — every change, including a submodule
 bump or a one-line doc fix, goes through a pull request. No approvals are required (single
 maintainer), but the rule applies to administrators too, and force-pushes and branch deletion are
 blocked. There are no required status checks, because this repo has no CI of its own: a PR here is
-mergeable as soon as it is open. Head branches are deleted automatically on merge.
+mergeable as soon as it is open.
+
+**Head branches are not deleted on merge** (`deleteBranchOnMerge` is `false`). That is what keeps a
+squashed branch's original commits reachable after the merge, so deleting one throws away the only
+remaining record of how the work was broken up.
 
 `bootstrap-sha` in `release-please-config.json` pins the changelog's starting point at this repo's
 initial commit, `afdcf7f`.
