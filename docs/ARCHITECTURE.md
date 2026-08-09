@@ -108,8 +108,9 @@ Not built: persistence, route handlers, and the PWA layer. The win/loss buttons 
 
 ### Screens
 
-From the design doc `Armory Run.dc.html`. It offered alternatives for two screens; the chosen ones
-are marked, and the rejected variants are left in the design project rather than copied here.
+From the design doc `Armory Run.dc.html`, whose first turn offered alternatives for two screens; the
+chosen ones are marked, and the rejected variants are left in the design project rather than copied
+here.
 
 | Route | Screen | Design |
 | --- | --- | --- |
@@ -121,6 +122,29 @@ are marked, and the rejected variants are left in the design project rather than
 
 Mock 1f is not a route: it is 1c at 390px, so the dashboard is built responsive rather than as a
 separate mobile screen.
+
+**The design doc has since grown three more turns, and none of them changes the table above.** They
+are the same screens and the same routes, re-presented:
+
+| Turn | What it is | Mocks |
+| --- | --- | --- |
+| 1 | the pass the app is built from | 1a–1h |
+| 2 | light mode, on the neutral ramp's light steps | 2a–2c |
+| 3 | the **inked** pass — ink blots, turf bars, tilted stickers, angular cuts, still on Nocturne's palette | 3a–3f |
+| 4 | light mode for the inked screens, whose indigo grounds stay saturated in both themes | 4a–4d |
+
+Turn 1 is unchanged, label for label, so nothing already built is invalidated. The Nocturne port in
+`src/styles/nocturne.css` is not behind either: the design system was last updated at 03:39Z on
+2026-08-07 and the port was committed at 10:16Z the same day.
+
+Whether the inked direction is adopted is open, and recorded below. Two things are worth knowing
+before that decision rather than after. It is **presentational only** — no route, screen or domain
+change — so it is orthogonal to persistence and can be sequenced whenever. And it is not merely a
+palette swap: half of it lands in `nocturne.css`, but the blots, bars and stickers are new
+decorative markup. Its saturated grounds also push against two rules already written down —
+Nocturne's own "do not flood large areas with the accent", and the AA floor in
+[RULES.md](RULES.md#accessibility) that the turn 1 port already had to correct values for. Measuring
+the inked mocks' contrast is the first step of adopting them, not a review afterwards.
 
 ### Internationalisation
 
@@ -440,6 +464,8 @@ between reports it is static for minutes or hours.
   Postgres in Docker is undecided.
 - **Where migrations run on deploy.** Vercel has no release step of its own, so applying a migration
   is a decision rather than a default.
+- **Whether the inked direction is adopted** — turns 3 and 4 of the design doc, described under
+  [Screens](#screens). Presentational only, so it blocks nothing and is blocked by nothing.
 - **Whether a mid-run roster change disturbs a live run** — stated in
   [CHALLENGE.md](CHALLENGE.md#open-questions), because it is a rule of the challenge before it is a
   data problem, but it lands here too: pinning a run to the roster version it started on means

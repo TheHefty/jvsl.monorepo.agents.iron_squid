@@ -66,6 +66,11 @@ The design doc offers alternatives per screen. The chosen ones, and the route ea
 recorded in `docs/ARCHITECTURE.md`. Note the design's nav says "ARMORY RUN"; the brand is **Iron
 Squid**.
 
+It now carries **four turns**, not one: turn 1 is what the app is built from, turn 2 is its light
+mode, and turns 3 and 4 are an "inked" Splatoon-themed pass and its light mode. They are the same
+screens and routes throughout — presentational only. Whether the inked set is adopted is undecided
+and tracked in `docs/ARCHITECTURE.md`; until it is, build against turn 1.
+
 ## Commands
 
 Product commands run from the repo root, which forwards to the `apps/web` workspace:
