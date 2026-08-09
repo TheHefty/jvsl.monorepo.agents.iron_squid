@@ -11,7 +11,12 @@
     "test:watch": "vitest",
     "generate:catalogue": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-catalogue.mts",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "db:generate": "drizzle-kit generate",
+    "db:up": "./scripts/local-db.sh up",
+    "db:down": "./scripts/local-db.sh down",
+    "db:migrate": "./scripts/local-db.sh migrate",
+    "db:psql": "./scripts/local-db.sh psql"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -23,6 +28,8 @@
     ]
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
+    "drizzle-orm": "^0.45.2",
     "next": "16.3.0",
     "next-intl": "^4.13.5",
     "react": "19.2.8",
@@ -35,14 +42,17 @@
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.3",
     "@types/node": "^20",
+    "@types/pg": "^8.21.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6.0.5",
+    "drizzle-kit": "^0.31.10",
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
     "husky": "^9.1.7",
     "jsdom": "^30.0.1",
     "lint-staged": "^17.3.0",
+    "pg": "^8.23.0",
     "prettier": "^3.9.6",
     "typescript": "^5",
     "vitest": "^4.1.10"

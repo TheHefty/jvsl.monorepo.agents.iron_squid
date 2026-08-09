@@ -15,7 +15,12 @@
     "lint": "npm run lint --workspace @iron-squid/web",
     "format": "npm run format --workspace @iron-squid/web",
     "generate:catalogue": "npm run generate:catalogue --workspace @iron-squid/web",
-    "prepare": "husky"
+    "prepare": "husky",
+    "db:generate": "npm run db:generate --workspace @iron-squid/web",
+    "db:up": "npm run db:up --workspace @iron-squid/web",
+    "db:down": "npm run db:down --workspace @iron-squid/web",
+    "db:migrate": "npm run db:migrate --workspace @iron-squid/web",
+    "db:psql": "npm run db:psql --workspace @iron-squid/web"
   },
   "devDependencies": {
     "husky": "^9.1.7"
