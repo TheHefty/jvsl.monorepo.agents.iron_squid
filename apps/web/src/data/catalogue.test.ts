@@ -2,6 +2,7 @@ import {describe, expect, it} from 'vitest';
 
 import {
   applyMatch,
+  drawsFrom,
   startChallenge,
   targetWeaponCount
 } from '@/domain/challenge';
@@ -148,13 +149,10 @@ describe('driving the domain with real data', () => {
     const catalogue = await loadCatalogue('en');
     const total = targetWeaponCount(catalogue);
 
-    let state = startChallenge(
-      catalogue,
-      firstAvailable,
-      '2026-01-01T00:00:00Z'
-    );
+    const draws = drawsFrom(catalogue, firstAvailable);
+    let state = startChallenge(draws, '2026-01-01T00:00:00Z');
     for (let i = 0; i < total; i += 1) {
-      state = applyMatch(state, catalogue, firstAvailable, {
+      state = applyMatch(state, catalogue, draws, {
         result: 'win',
         mode: 'splatZones',
         at: '2026-01-01T00:00:00Z'

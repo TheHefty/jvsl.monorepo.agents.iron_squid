@@ -5,7 +5,9 @@ import {
   applyMatch,
   armoryView,
   drawFrom,
+  drawsFrom,
   progress,
+  replayDraws,
   startChallenge,
   targetWeaponCount
 } from './challenge';
@@ -14,6 +16,8 @@ import {
   MATCH_MODES,
   type Catalogue,
   type ChallengeState,
+  type Draw,
+  type MatchEvent,
   type Rng
 } from './types';
 
@@ -62,7 +66,11 @@ function win(
   rng: Rng = firstAlways,
   at = AT
 ) {
-  return applyMatch(state, cat, rng, {result: 'win', mode: 'splatZones', at});
+  return applyMatch(state, cat, drawsFrom(cat, rng), {
+    result: 'win',
+    mode: 'splatZones',
+    at
+  });
 }
 
 function loss(
@@ -71,13 +79,17 @@ function loss(
   rng: Rng = firstAlways,
   at = AT
 ) {
-  return applyMatch(state, cat, rng, {result: 'loss', mode: 'rainmaker', at});
+  return applyMatch(state, cat, drawsFrom(cat, rng), {
+    result: 'loss',
+    mode: 'rainmaker',
+    at
+  });
 }
 
 describe('starting a challenge', () => {
   it('opens with one life, no wins, and a draw already dealt', () => {
     const cat = catalogue();
-    const state = startChallenge(cat, firstAlways, AT);
+    const state = startChallenge(drawsFrom(cat, firstAlways), AT);
 
     expect(state.status).toBe('ongoing');
     expect(state.run.number).toBe(1);
@@ -187,7 +199,7 @@ describe('the draw', () => {
     // Rule 1 — no re-rolling — is enforced by absence rather than by a check:
     // `applyMatch` is the only path to a new draw, and it needs a result.
     const cat = catalogue(5);
-    const state = startChallenge(cat, firstAlways, AT);
+    const state = startChallenge(drawsFrom(cat, firstAlways), AT);
     const before = state.run.draw;
 
     expect(win(state, cat).run.draw).not.toEqual(before);
@@ -198,7 +210,7 @@ describe('the draw', () => {
 describe('winning', () => {
   it('clears the weapon, spends the gear, and deals a new draw', () => {
     const cat = catalogue(5);
-    const start = startChallenge(cat, firstAlways, AT);
+    const start = startChallenge(drawsFrom(cat, firstAlways), AT);
     const drawn = start.run.draw;
     const next = win(start, cat);
 
@@ -212,7 +224,7 @@ describe('winning', () => {
 
   it('never deals a cleared weapon again within the run', () => {
     const cat = catalogue(4);
-    let state = startChallenge(cat, firstAlways, AT);
+    let state = startChallenge(drawsFrom(cat, firstAlways), AT);
     const seen: string[] = [];
 
     for (let i = 0; i < 4; i++) {
@@ -225,7 +237,7 @@ describe('winning', () => {
 
   it('records the win', () => {
     const cat = catalogue();
-    const state = win(startChallenge(cat, firstAlways, AT), cat);
+    const state = win(startChallenge(drawsFrom(cat, firstAlways), AT), cat);
 
     expect(state.run.matches).toHaveLength(1);
     expect(state.run.matches[0]).toMatchObject({result: 'win', at: AT});
@@ -235,7 +247,7 @@ describe('winning', () => {
 describe('lives', () => {
   it('grants one on the tenth win and not before', () => {
     const cat = catalogue(30);
-    let state = startChallenge(cat, firstAlways, AT);
+    let state = startChallenge(drawsFrom(cat, firstAlways), AT);
 
     for (let i = 1; i <= WINS_PER_EXTRA_LIFE - 1; i++) {
       state = win(state, cat);
@@ -249,7 +261,7 @@ describe('lives', () => {
 
   it('does not grant another on the eleventh, and does on the twentieth', () => {
     const cat = catalogue(30);
-    let state = startChallenge(cat, firstAlways, AT);
+    let state = startChallenge(drawsFrom(cat, firstAlways), AT);
     for (let i = 0; i < 11; i++) state = win(state, cat);
     expect(state.run.lives).toBe(2);
 
@@ -260,7 +272,7 @@ describe('lives', () => {
 
   it('counts wins toward the next life from the run, not the challenge', () => {
     const cat = catalogue(30);
-    let state = startChallenge(cat, firstAlways, AT);
+    let state = startChallenge(drawsFrom(cat, firstAlways), AT);
     for (let i = 0; i < 5; i++) state = win(state, cat);
 
     state = loss(state, cat); // one life, so this ends the run
@@ -273,7 +285,7 @@ describe('losing', () => {
   it('spends a life and keeps the same draw', () => {
     // The weapon you were given stays yours until you win with it.
     const cat = catalogue(30);
-    let state = startChallenge(cat, firstAlways, AT);
+    let state = startChallenge(drawsFrom(cat, firstAlways), AT);
     for (let i = 0; i < 10; i++) state = win(state, cat);
 
     const drawBefore = state.run.draw;
@@ -288,7 +300,7 @@ describe('losing', () => {
     // The previous implementation only wrote a defeat to history when it was
     // the last life, so intermediate losses vanished from the run log.
     const cat = catalogue(30);
-    let state = startChallenge(cat, firstAlways, AT);
+    let state = startChallenge(drawsFrom(cat, firstAlways), AT);
     for (let i = 0; i < 10; i++) state = win(state, cat);
     state = loss(state, cat);
 
@@ -301,7 +313,7 @@ describe('losing', () => {
 describe('the reset', () => {
   it('ends the run at zero lives and starts the next from nothing', () => {
     const cat = catalogue(5);
-    let state = startChallenge(cat, firstAlways, AT);
+    let state = startChallenge(drawsFrom(cat, firstAlways), AT);
     state = win(state, cat);
     state = win(state, cat);
 
@@ -319,7 +331,7 @@ describe('the reset', () => {
 
   it('restores every weapon, including ones already cleared', () => {
     const cat = catalogue(3);
-    let state = startChallenge(cat, firstAlways, AT);
+    let state = startChallenge(drawsFrom(cat, firstAlways), AT);
     state = win(state, cat); // clears w-0
     expect(state.run.draw.weaponId).toBe('w-1');
 
@@ -329,7 +341,7 @@ describe('the reset', () => {
 
   it('restores the gear pools too', () => {
     const cat = catalogue(3);
-    let state = startChallenge(cat, firstAlways, AT);
+    let state = startChallenge(drawsFrom(cat, firstAlways), AT);
     const firstGear = state.run.draw.gear;
     state = win(state, cat);
     expect(state.run.draw.gear.head).not.toBe(firstGear.head);
@@ -340,7 +352,7 @@ describe('the reset', () => {
 
   it('keeps the dead run, with its matches, as history', () => {
     const cat = catalogue(5);
-    let state = startChallenge(cat, firstAlways, AT);
+    let state = startChallenge(drawsFrom(cat, firstAlways), AT);
     state = win(state, cat);
     state = loss(state, cat, firstAlways, '2026-08-07T13:00:00.000Z');
 
@@ -356,7 +368,7 @@ describe('the reset', () => {
 
   it('puts the newest dead run first', () => {
     const cat = catalogue(5);
-    let state = startChallenge(cat, firstAlways, AT);
+    let state = startChallenge(drawsFrom(cat, firstAlways), AT);
     state = loss(state, cat);
     state = loss(state, cat);
 
@@ -368,7 +380,7 @@ describe('the reset', () => {
 describe('the end', () => {
   it('completes when a single run clears the last weapon', () => {
     const cat = catalogue(3);
-    let state = startChallenge(cat, firstAlways, AT);
+    let state = startChallenge(drawsFrom(cat, firstAlways), AT);
     state = win(state, cat);
     state = win(state, cat);
     expect(state.status).toBe('ongoing');
@@ -383,14 +395,14 @@ describe('the end', () => {
 
   it('does not try to deal a draw it cannot satisfy on the last win', () => {
     const cat = catalogue(2);
-    let state = startChallenge(cat, firstAlways, AT);
+    let state = startChallenge(drawsFrom(cat, firstAlways), AT);
     state = win(state, cat);
     expect(() => win(state, cat)).not.toThrow();
   });
 
   it('refuses further matches once complete', () => {
     const cat = catalogue(1);
-    const state = win(startChallenge(cat, firstAlways, AT), cat);
+    const state = win(startChallenge(drawsFrom(cat, firstAlways), AT), cat);
     expect(state.status).toBe('complete');
     expect(() => win(state, cat)).toThrow(/complete/i);
   });
@@ -399,7 +411,7 @@ describe('the end', () => {
     // Two weapons cleared in run 1 and one in run 2 is not a finished
     // challenge — that is the whole point of the reset.
     const cat = catalogue(3);
-    let state = startChallenge(cat, firstAlways, AT);
+    let state = startChallenge(drawsFrom(cat, firstAlways), AT);
     state = win(state, cat);
     state = win(state, cat);
     state = loss(state, cat);
@@ -413,7 +425,7 @@ describe('the end', () => {
 describe('purity', () => {
   it('does not mutate the state it is given', () => {
     const cat = catalogue(5);
-    const state = startChallenge(cat, firstAlways, AT);
+    const state = startChallenge(drawsFrom(cat, firstAlways), AT);
     const snapshot = structuredClone(state);
 
     win(state, cat);
@@ -425,7 +437,10 @@ describe('purity', () => {
   it('does not mutate the catalogue', () => {
     const cat = catalogue(5);
     const snapshot = structuredClone(cat);
-    const played = loss(win(startChallenge(cat, firstAlways, AT), cat), cat);
+    const played = loss(
+      win(startChallenge(drawsFrom(cat, firstAlways), AT), cat),
+      cat
+    );
 
     expect(played.run.number).toBe(2);
     expect(cat).toEqual(snapshot);
@@ -435,7 +450,7 @@ describe('purity', () => {
 describe('progress', () => {
   it('reports what the interface needs, derived rather than stored', () => {
     const cat = catalogue(10, 20);
-    let state = startChallenge(cat, firstAlways, AT);
+    let state = startChallenge(drawsFrom(cat, firstAlways), AT);
     for (let i = 0; i < 3; i++) state = win(state, cat);
     state = loss(state, cat);
     state = win(state, cat);
@@ -452,7 +467,7 @@ describe('progress', () => {
 
   it('counts down to the next life', () => {
     const cat = catalogue(30);
-    let state = startChallenge(cat, firstAlways, AT);
+    let state = startChallenge(drawsFrom(cat, firstAlways), AT);
     expect(progress(state, cat).winsToNextLife).toBe(10);
 
     for (let i = 0; i < 4; i++) state = win(state, cat);
@@ -467,7 +482,7 @@ describe('the mode a match was played in', () => {
   it('is recorded, because it is the only trace rule 3 leaves', () => {
     const cat = catalogue();
     const state = applyMatch(
-      startChallenge(cat, firstAlways, AT),
+      startChallenge(drawsFrom(cat, firstAlways), AT),
       cat,
       firstAlways,
       {result: 'win', mode: 'clamBlitz', at: AT}
@@ -478,7 +493,7 @@ describe('the mode a match was played in', () => {
 
   it('is recorded on losses too, not only on wins', () => {
     const cat = catalogue();
-    const state = loss(startChallenge(cat, firstAlways, AT), cat);
+    const state = loss(startChallenge(drawsFrom(cat, firstAlways), AT), cat);
     expect(state.deadRuns[0].matches[0].mode).toBe('rainmaker');
   });
 
@@ -497,7 +512,7 @@ describe('the mode a match was played in', () => {
 describe('armoryView', () => {
   it('marks the drawn weapon current, the won ones cleared, the rest untouched', () => {
     const cat = catalogue(4);
-    const state = win(startChallenge(cat, firstAlways, AT), cat);
+    const state = win(startChallenge(drawsFrom(cat, firstAlways), AT), cat);
 
     expect(armoryView(state, cat).map((w) => w.state)).toEqual([
       'cleared',
@@ -509,7 +524,7 @@ describe('armoryView', () => {
 
   it('keeps the catalogue order, so the grid does not reshuffle as it fills', () => {
     const cat = catalogue(4);
-    const state = win(startChallenge(cat, firstAlways, AT), cat);
+    const state = win(startChallenge(drawsFrom(cat, firstAlways), AT), cat);
     expect(armoryView(state, cat).map((w) => w.id)).toEqual(
       cat.weapons.map((w) => w.id)
     );
@@ -517,7 +532,7 @@ describe('armoryView', () => {
 
   it('carries the name and class through, so components need no lookup', () => {
     const cat = catalogue(3);
-    const state = startChallenge(cat, firstAlways, AT);
+    const state = startChallenge(drawsFrom(cat, firstAlways), AT);
     expect(armoryView(state, cat)[0]).toMatchObject({
       id: 'w-0',
       name: 'Weapon 0',
@@ -528,7 +543,7 @@ describe('armoryView', () => {
   it('returns everything untouched again after a run dies', () => {
     // Rule 5 takes the credit back, so there is no "failed" state to show.
     const cat = catalogue(4);
-    let state = win(startChallenge(cat, firstAlways, AT), cat);
+    let state = win(startChallenge(drawsFrom(cat, firstAlways), AT), cat);
     state = loss(state, cat);
 
     const states = armoryView(state, cat).map((w) => w.state);
@@ -540,7 +555,7 @@ describe('armoryView', () => {
 describe('progress, the derived counters', () => {
   it('counts the streak from the last loss, not from the start of the run', () => {
     const cat = catalogue(30);
-    let state = startChallenge(cat, firstAlways, AT);
+    let state = startChallenge(drawsFrom(cat, firstAlways), AT);
     for (let i = 0; i < 3; i++) state = win(state, cat);
     expect(progress(state, cat).streak).toBe(3);
 
@@ -550,13 +565,13 @@ describe('progress, the derived counters', () => {
 
   it('reports a streak of zero before anything is played', () => {
     const cat = catalogue();
-    const state = startChallenge(cat, firstAlways, AT);
+    const state = startChallenge(drawsFrom(cat, firstAlways), AT);
     expect(progress(state, cat).streak).toBe(0);
   });
 
   it('remembers the best run even after it has died', () => {
     const cat = catalogue(30);
-    let state = startChallenge(cat, firstAlways, AT);
+    let state = startChallenge(drawsFrom(cat, firstAlways), AT);
     for (let i = 0; i < 5; i++) state = win(state, cat);
     state = loss(state, cat);
 
@@ -567,7 +582,7 @@ describe('progress, the derived counters', () => {
 
   it('counts the current run as the best while it is ahead', () => {
     const cat = catalogue(30);
-    let state = startChallenge(cat, firstAlways, AT);
+    let state = startChallenge(drawsFrom(cat, firstAlways), AT);
     state = loss(state, cat);
     for (let i = 0; i < 3; i++) state = win(state, cat);
     expect(progress(state, cat).best).toBe(3);
@@ -575,7 +590,7 @@ describe('progress, the derived counters', () => {
 
   it('grows the lives meter as lives are earned, not as they are spent', () => {
     const cat = catalogue(30);
-    let state = startChallenge(cat, firstAlways, AT);
+    let state = startChallenge(drawsFrom(cat, firstAlways), AT);
     expect(progress(state, cat).livesMax).toBe(1);
 
     for (let i = 0; i < 10; i++) state = win(state, cat);
@@ -585,5 +600,74 @@ describe('progress, the derived counters', () => {
     // A spent life leaves the total alone: the meter shows 1 of 2, not 1 of 1.
     expect(state.run.lives).toBe(1);
     expect(progress(state, cat).livesMax).toBe(2);
+  });
+});
+
+describe('replaying from stored draws', () => {
+  const events: MatchEvent[] = [
+    {result: 'win', mode: 'splatZones', at: AT},
+    {result: 'loss', mode: 'rainmaker', at: AT},
+    {result: 'win', mode: 'towerControl', at: AT},
+    {result: 'loss', mode: 'clamBlitz', at: AT},
+    {result: 'loss', mode: 'splatZones', at: AT},
+    {result: 'win', mode: 'rainmaker', at: AT}
+  ];
+
+  /** Plays the events the way the server would, recording every draw dealt. */
+  function play(cat: Catalogue, rng: Rng) {
+    const dealt: Draw[] = [];
+    const source = drawsFrom(cat, rng);
+    const recording = (
+      cleared: readonly string[],
+      spent: Parameters<typeof source>[1]
+    ) => {
+      const draw = source(cleared, spent);
+      dealt.push(draw);
+      return draw;
+    };
+
+    let state = startChallenge(recording, AT);
+    for (const event of events)
+      state = applyMatch(state, cat, recording, event);
+    return {state, dealt};
+  }
+
+  it('rebuilds the identical state, draw for draw', () => {
+    const cat = catalogue(6, 40);
+    const {state, dealt} = play(cat, scripted(2, 5, 9, 13, 1, 0, 4, 7));
+
+    // One source for the whole replay: its position is what keeps the draws
+    // in the order they were dealt.
+    const stored = replayDraws(dealt);
+    let rebuilt = startChallenge(stored, AT);
+    for (const event of events)
+      rebuilt = applyMatch(rebuilt, cat, stored, event);
+
+    expect(rebuilt).toEqual(state);
+  });
+
+  it('would not rebuild the same state from a fresh generator', () => {
+    // The reason DrawSource exists at all: replaying through a new rng invents
+    // weapons the player never held.
+    const cat = catalogue(6, 40);
+    const {state} = play(cat, scripted(2, 5, 9, 13, 1, 0, 4, 7));
+
+    const other = drawsFrom(cat, scripted(1, 3, 0, 2));
+    let wrong = startChallenge(other, AT);
+    for (const event of events) wrong = applyMatch(wrong, cat, other, event);
+
+    expect(wrong.run.draw).not.toEqual(state.run.draw);
+  });
+
+  it('throws rather than inventing one when the stored draws run out', () => {
+    const cat = catalogue(6, 40);
+    const {dealt} = play(cat, scripted(2, 5, 9, 13, 1, 0, 4, 7));
+
+    const short = replayDraws(dealt.slice(0, 2));
+    let state = startChallenge(short, AT);
+
+    expect(() => {
+      for (const event of events) state = applyMatch(state, cat, short, event);
+    }).toThrow(/only 2 were stored/);
   });
 });

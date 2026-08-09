@@ -3,6 +3,7 @@ import {
   applyMatch,
   armoryView,
   drawView,
+  drawsFrom,
   matchLog,
   progress,
   startChallenge
@@ -90,10 +91,15 @@ function play(catalogue: Catalogue): ChallengeState {
 
   const mode = (): MatchMode => MATCH_MODES[rng(MATCH_MODES.length)];
 
-  let state = startChallenge(catalogue, rng, at());
+  const draws = drawsFrom(catalogue, rng);
+  let state = startChallenge(draws, at());
 
   const report = (result: MatchResult) => {
-    state = applyMatch(state, catalogue, rng, {result, mode: mode(), at: at()});
+    state = applyMatch(state, catalogue, draws, {
+      result,
+      mode: mode(),
+      at: at()
+    });
   };
 
   for (const wins of DEAD_RUN_WINS) {
