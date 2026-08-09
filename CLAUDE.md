@@ -147,12 +147,19 @@ the tag when it is merged, with `version.txt` + `CHANGELOG.md` as the only versi
 (`release-type: simple` — there is nothing here to publish). Commit messages are therefore
 load-bearing: only `feat`/`fix` reach the changelog, and a release is proposed only when one lands.
 
-**The repo's default merge method is squash**, which decides which message that is: the whole branch
-lands as one commit whose subject is the *pull request title*, not the titles of the commits on the
-branch. So a PR whose title is stale, or is not a conventional commit, silently costs the changelog
-its entry. Retitle before merging. All three methods are enabled, and a merge commit is the way to
-keep a branch's individual commits in `master`'s history — worth choosing deliberately when the
-commits carry reasoning worth reading in `git log`.
+**Merge with a merge commit.** That is this project's convention, not a repository setting — GitHub
+has no "default merge method" option, only the three enable/disable toggles, and all three are on.
+The choice decides which messages the changelog quotes. A merge commit lands every commit from the
+branch in `master`, so release-please reads each one and a branch carrying three `feat` commits
+produces three changelog entries. The merge commit itself contributes nothing: its subject is
+GitHub's `Merge pull request #N from …` and the PR title goes in the body, so neither parses as a
+conventional commit. **The commit messages on the branch are therefore load-bearing** — which is the
+point, because they are also what stays readable in `git log`.
+
+Squash is still available, for a branch whose individual commits are not worth keeping — a long
+fix-the-fix sequence, say. It inverts which message matters: the whole branch lands as one commit
+whose subject is the *pull request title*, so a title that is stale, or is not a conventional commit,
+silently costs the changelog its entry. Retitle before squashing.
 
 `master` is protected, so **there is no direct push to it** — every change, including a submodule
 bump or a one-line doc fix, goes through a pull request. No approvals are required (single
@@ -160,9 +167,10 @@ maintainer), but the rule applies to administrators too, and force-pushes and br
 blocked. There are no required status checks, because this repo has no CI of its own: a PR here is
 mergeable as soon as it is open.
 
-**Head branches are not deleted on merge** (`deleteBranchOnMerge` is `false`). That is what keeps a
-squashed branch's original commits reachable after the merge, so deleting one throws away the only
-remaining record of how the work was broken up.
+**Head branches are not deleted on merge** (`deleteBranchOnMerge` is `false`). After a merge commit
+that costs nothing — the branch's commits are already in `master`. It matters after a squash,
+where the branch ref is the only remaining record of how the work was broken up — deleting one
+throws that away. `feat/web-app-first-pass` is kept for exactly that reason.
 
 `bootstrap-sha` in `release-please-config.json` pins the changelog's starting point at this repo's
 initial commit, `afdcf7f`.
