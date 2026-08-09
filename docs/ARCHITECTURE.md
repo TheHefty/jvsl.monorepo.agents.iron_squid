@@ -115,13 +115,21 @@ here.
 | Route | Screen | Design |
 | --- | --- | --- |
 | `/` | Landing — split hero with the live roll card beside it | 1b *(chosen over 1a)* |
-| `/run/[id]` | Run dashboard — lives, streak, replay queue, armory grid | 1c |
-| `/run/[id]/armory` | The armory — dense tile grid, state by fill | 1d *(chosen over 1e)* |
-| `/run/[id]/log` | Run log — every win and every death | 1g |
-| `/r/[token]` | Public run page — the shareable one | 1h |
+| `/edit/[editSecret]` | Run dashboard — lives, streak, replay queue, armory grid | 1c |
+| `/edit/[editSecret]/armory` | The armory — dense tile grid, state by fill | 1d *(chosen over 1e)* |
+| `/edit/[editSecret]/log` | Run log — every win and every death | 1g |
+| `/r/[publicId]` | Public run page — the shareable one | 1h |
 
 Mock 1f is not a route: it is 1c at 390px, so the dashboard is built responsive rather than as a
 separate mobile screen.
+
+**The paths deviate from the design doc, which uses `/run` and `/r`.** Both parameters were
+originally named the opposite of what they hold — the credential was the one called `id` — and the
+rename fixes two different hazards. In code, `id` is the name that invites `logger.info({id})` from
+someone who has not read [RULES.md](RULES.md#security). In a browser, `/run/abc` and `/r/abc` look
+alike enough that the *owner* can paste the wrong one into Discord, and a leaked edit link is full
+write access with no second factor. The rules stop the site from rendering the secret; nothing
+stopped the player from handing it over. `edit` in the path is a label a human reads before pasting.
 
 **The design doc has since grown three more turns, and none of them changes the table above.** They
 are the same screens and the same routes, re-presented:
@@ -381,13 +389,34 @@ rebuilt by replaying them through `applyMatch` — the same reducer the domain t
 and the same one `src/lib/demo.ts` already runs a whole challenge through.
 
 ```
-challenges  handle, visibility, created_at, + its identifiers
+challenges  public_id, secret_hash, handle, visibility, created_at
 runs        challenge_id, number, started_at, ended_at
 draws       run_id, weapon_id, head_id, clothes_id, shoes_id, drawn_at
 matches     run_id, draw_id, result, mode, played_at, idempotency_key
 ```
 
-The identifier columns are deliberately vague above, because they are still open — see below.
+**The two identifiers have opposite jobs**, which is why they are two columns and not one.
+
+`public_id` is what goes in a shared URL: about ten characters of Crockford base32, roughly 50 bits,
+random. Not because a public page needs to be unguessable — it is public by design — but so that the
+corpus cannot be walked by incrementing a number, and so the link does not depend on the handle. A
+handle is unverified user content that can change, collide, or need removing, and any of the three
+would break every link already pasted.
+
+`secret_hash` is the credential's, never the credential. The token itself is at least 128 bits from a
+CSPRNG, and the row is found by looking up its SHA-256 with a unique index — the plaintext is never
+stored, which is what [RULES.md](RULES.md#security) already requires. SHA-256 rather than Argon2 on
+purpose: password hashing exists to make brute force expensive against the low-entropy secrets humans
+choose, and 128 random bits are already unreachable without it. Argon2 would buy nothing and cost
+tens to hundreds of milliseconds on every read of an edit page, on a plan whose binding limit is
+CU-hours. HMAC with a server-side pepper was the other candidate, and it is genuinely stronger — a
+database-only leak could not even be tested offline — but it introduces a key whose loss invalidates
+every secret link ever issued, which is a worse failure than the one it prevents at this scale.
+
+The route naming above is part of this: `/edit/[editSecret]` exists so the credential is not called
+`id` in code or mistaken for the share link by its owner. `Referrer-Policy: no-referrer` on those
+pages is the other half, and it is not optional decoration — the token is in the URL, so any outbound
+link would otherwise hand it to the destination.
 
 Storing the materialised state as a single JSON document was the alternative. It loses on two counts
 that are specific to this project: the row grows without bound, since the demo challenge reaches 188
@@ -454,10 +483,11 @@ between reports it is static for minutes or hours.
 
 ### Open
 
-- **The identifiers.** The public id that appears in a shareable URL, and the secret edit link that
-  [RULES.md](RULES.md#security) treats as a credential — at least 128 bits from a CSPRNG, stored
-  hashed, never logged. Both are persistence decisions and neither is taken, which is why the schema
-  above leaves those columns unnamed.
+- **Whether a challenge can be unlisted.** [CHALLENGE.md](CHALLENGE.md#identity) says public
+  challenges appear on the leaderboard, which implies some are not, but nothing decides it. It lands
+  here because it is the one thing that could still change `public_id`: if every challenge is public,
+  a 50-bit slug only has to resist enumeration, and if unlisted ones exist, that slug becomes a
+  quasi-credential and wants the entropy and the handling of one.
 - **Where the repository boundary sits, and how handlers are tested.**
   [RULES.md](RULES.md#development) requires every route handler to be tested for its happy path, its
   rejected input and its idempotent replay. Whether that runs against a fake repository or a real

@@ -17,9 +17,9 @@ import type {Locale} from '@/i18n/routing';
 export default async function RunPage({
   params
 }: {
-  params: Promise<{locale: string; id: string}>;
+  params: Promise<{locale: string; editSecret: string}>;
 }) {
-  const {locale, id} = await params;
+  const {locale, editSecret} = await params;
   setRequestLocale(locale);
 
   const t = await getTranslations('dashboard');
@@ -35,9 +35,9 @@ export default async function RunPage({
         prefs={prefs}
         current="myRun"
         links={[
-          {key: 'myRun', href: `/run/${id}`},
-          {key: 'armory', href: `/run/${id}/armory`},
-          {key: 'log', href: `/run/${id}/log`}
+          {key: 'myRun', href: `/edit/${editSecret}`},
+          {key: 'armory', href: `/edit/${editSecret}/armory`},
+          {key: 'log', href: `/edit/${editSecret}/log`}
         ]}
       />
 
@@ -120,7 +120,7 @@ export default async function RunPage({
           <ArmoryGrid weapons={armory} columns={20} showCode={false} />
 
           <p style={{marginTop: 'var(--space-6)'}}>
-            <Link href={`/run/${id}/armory`} className="btn btn-ghost">
+            <Link href={`/edit/${editSecret}/armory`} className="btn btn-ghost">
               {t('armoryHeading')}
             </Link>
           </p>

@@ -13,8 +13,9 @@ import type {Locale} from '@/i18n/routing';
  * server so that a shared link has real content and a real link preview, and
  * the theme comes from a cookie so it never paints the wrong one first.
  *
- * Nothing here may ever render the secret edit token. This route is reached by
- * a public read URL only.
+ * Reached by `publicId` only — the short random slug that goes in a shared
+ * URL. The edit credential lives on `/edit/[editSecret]` and must never appear
+ * here: not in the markup, not in a link, not in the metadata above.
  */
 
 export async function generateMetadata({
@@ -42,7 +43,7 @@ export async function generateMetadata({
 export default async function PublicRunPage({
   params
 }: {
-  params: Promise<{locale: string; token: string}>;
+  params: Promise<{locale: string; publicId: string}>;
 }) {
   const {locale} = await params;
   setRequestLocale(locale);
@@ -58,7 +59,7 @@ export default async function PublicRunPage({
       <SiteNav
         prefs={prefs}
         links={[{key: 'rules', href: '/'}]}
-        action={{key: 'startRun', href: '/run/demo'}}
+        action={{key: 'startRun', href: '/edit/demo'}}
       />
 
       <main id="main" className="page public-run">
