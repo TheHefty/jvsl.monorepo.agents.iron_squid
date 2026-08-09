@@ -145,8 +145,9 @@ Turn 1 is unchanged, label for label, so nothing already built is invalidated. T
 `src/styles/nocturne.css` is not behind either: the design system was last updated at 03:39Z on
 2026-08-07 and the port was committed at 10:16Z the same day.
 
-Whether the inked direction is adopted is open, and recorded below. Two things are worth knowing
-before that decision rather than after. It is **presentational only** — no route, screen or domain
+**The inked direction is adopted** — turns 3 and 4 replace turn 1 as the target, and the app is
+re-skinned to them when the persistence work reaches a pausing point. Two things are worth knowing
+about it. It is **presentational only** — no route, screen or domain
 change — so it is orthogonal to persistence and can be sequenced whenever. And it is not merely a
 palette swap: half of it lands in `nocturne.css`, but the blots, bars and stickers are new
 decorative markup. Its saturated grounds also push against two rules already written down —
@@ -389,7 +390,7 @@ rebuilt by replaying them through `applyMatch` — the same reducer the domain t
 and the same one `src/lib/demo.ts` already runs a whole challenge through.
 
 ```
-challenges  public_id, secret_hash, handle, visibility, created_at
+challenges  public_id, secret_hash, handle, owner_id, created_at
 runs        challenge_id, number, started_at, ended_at
 draws       run_id, weapon_id, head_id, clothes_id, shoes_id, drawn_at
 matches     run_id, draw_id, result, mode, played_at, idempotency_key
@@ -535,17 +536,14 @@ non-event rather than an outage.
 
 ### Open
 
-- **Whether a challenge can be unlisted.** [CHALLENGE.md](CHALLENGE.md#identity) says public
-  challenges appear on the leaderboard, which implies some are not, but nothing decides it. It lands
-  here because it is the one thing that could still change `public_id`: if every challenge is public,
-  a 50-bit slug only has to resist enumeration, and if unlisted ones exist, that slug becomes a
-  quasi-credential and wants the entropy and the handling of one.
-- **Whether the inked direction is adopted** — turns 3 and 4 of the design doc, described under
-  [Screens](#screens). Presentational only, so it blocks nothing and is blocked by nothing.
-- **Whether a mid-run roster change disturbs a live run** — stated in
-  [CHALLENGE.md](CHALLENGE.md#open-questions), because it is a rule of the challenge before it is a
-  data problem, but it lands here too: pinning a run to the roster version it started on means
-  storing that version with the run.
+Nothing about persistence, and nothing that blocks the next change.
+
+- **Measuring the inked light mode.** Turns 3 and 4 are adopted (see [Screens](#screens)), and the
+  dark set was measured statically: a handful of muted values one ramp step short of AA, the same
+  correction the turn 1 port already made once, and zero failures on the landing and the public run
+  page. The light set could not be measured the same way — those screens theme through a `.light`
+  class that redefines the custom properties, which a static walk over inline styles cannot follow.
+  It needs a rendered measurement before the re-skin ships, not after.
 
 The rules themselves are now settled — gear is single-use per item, only Anarchy and X Battle count,
 and identity is an unverified display name with no accounts. The domain model is no longer blocked.

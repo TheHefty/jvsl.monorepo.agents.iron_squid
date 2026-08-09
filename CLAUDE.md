@@ -67,10 +67,11 @@ The design doc offers alternatives per screen. The chosen ones, and the route ea
 recorded in `docs/ARCHITECTURE.md`. Note the design's nav says "ARMORY RUN"; the brand is **Iron
 Squid**.
 
-It now carries **four turns**, not one: turn 1 is what the app is built from, turn 2 is its light
-mode, and turns 3 and 4 are an "inked" Splatoon-themed pass and its light mode. They are the same
-screens and routes throughout — presentational only. Whether the inked set is adopted is undecided
-and tracked in `docs/ARCHITECTURE.md`; until it is, build against turn 1.
+It carries **four turns**, not one: turn 1 is what the app was built from, turn 2 is its light mode,
+and turns 3 and 4 are an "inked" Splatoon-themed pass and its light mode. They are the same screens
+and routes throughout — presentational only. **Turns 3 and 4 are the adopted target**; turn 1 is what
+currently exists. New presentation work goes to the inked set, and the re-skin itself is scheduled
+after the persistence work reaches a pausing point.
 
 ## Commands
 
