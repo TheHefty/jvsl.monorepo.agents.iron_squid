@@ -39,6 +39,9 @@ one used here.
    weapon pool and the full gear pool restored, everything re-drawn. Weapons cleared in the dead run
    carry no credit into the new one — they must be won again.
 6. **The end.** The challenge is complete when a *single run* has cleared every weapon in the game.
+7. **The roster is whatever the game has today.** When Splatoon 3 adds weapons, every run's target
+   grows with it, including runs already under way. Nothing already cleared is taken back — there is
+   simply more to clear.
 
 Rule 5 is the whole difficulty of the challenge, and the reason a tracker is worth building: the
 cost of one loss late in a run is enormous, and the record of the runs that died is the interesting
@@ -53,6 +56,11 @@ part of a player's page.
 - **Every kit is a weapon.** The Splattershot and the Tentatek Splattershot are two entries, not
   one, because they are different kits. Side Order replicas do not count. Everything else playable
   in Versus does — currently **162 weapons**.
+- **A growing roster moves the finish line, and that is deliberate.** Rule 7 is the harsher of the
+  two answers: a player at 160 of 162 can wake up at 160 of 165. Pinning a run to the roster it
+  started on was the alternative, and it loses on the leaderboard — two "complete" runs measured
+  against different rosters are two different challenges sharing one table. Rule 6 says *every weapon
+  in the game*, and it means the game as it is, not as it was.
 - **The weapon count is data, not a constant.** Splatoon 3 has gained weapons through updates and
   may gain more, so 162 is a fact about today's roster, not a rule. The number to clear is derived
   from the dataset — the previous Angular implementation hardcoded `129` and silently went stale.
@@ -109,12 +117,17 @@ already self-reported on the honour system, so an unverified name adds no weakne
 challenge did not already accept, and it avoids collecting personal data the project has no use for
 (see [RULES.md](RULES.md#privacy)).
 
-Public challenges appear on a leaderboard, which needs no login to read or to be listed on. The
-design's "Follow this run" button implies an account to attach a subscription to, so it becomes
+Every challenge is public, and appears on a leaderboard that needs no login to read or to be listed
+on. There is no unlisted mode: "public means public, and it must be obvious" is a rule of the project
+([RULES.md](RULES.md#privacy)), and a second, quieter kind of challenge would blunt it. Someone who
+does not want to appear in a ranking is better served by not creating one than by a setting that
+makes the promise conditional. If that turns out to be wrong it is one nullable column away, which is
+the easy case of the expand-first rule rather than a rewrite.
+
+The design's "Follow this run" button implies an account to attach a subscription to, so it becomes
 "copy link" instead.
 
 ## Open questions
 
-- **What happens to a live run when Splatoon 3 adds weapons.** Growing the target under a player
-  who is part-way through is one answer; pinning a run to the roster version it started on is
-  another. This is a rule of the challenge, not a data problem, which is why it is here.
+None. The last one — what happens to a live run when Splatoon 3 adds weapons — is answered above,
+under [the rules](#the-rules).

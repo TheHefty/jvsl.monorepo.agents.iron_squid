@@ -53,17 +53,18 @@ In order. Each one is small enough to finish in a sitting.
 5. **Caching the public page.** Not an optimisation: the state is rebuilt by replay on every read,
    and Neon's free tier suspends compute for the rest of the month when its CU-hours run out.
 6. **The offline queue and the PWA layer.**
+7. **The inked re-skin.** Turns 3 and 4, six screens across both themes. Half lands in
+   `nocturne.css`; the blots, turf bars and stickers are new markup. Measure the light set first.
 
 ## Open questions
 
-These block nothing right now, but two of them are yours to answer rather than mine.
+None outstanding. The three that were here — whether a challenge can be unlisted, whether the inked
+design is adopted, and what a growing roster does to a live run — are answered in
+[CHALLENGE.md](CHALLENGE.md) and [ARCHITECTURE.md](ARCHITECTURE.md).
 
-- **Can a challenge be unlisted?** [CHALLENGE.md](CHALLENGE.md#identity) says public challenges
-  appear on the leaderboard, which implies some are not. If they can, the public slug stops being
-  merely unenumerable and becomes a quasi-credential.
-- **Is the inked design direction adopted?** Turns 3 and 4 of the design doc. Presentational only.
-- **Does a mid-run roster change disturb a live run?** A rule of the challenge before it is a schema
-  question — see [CHALLENGE.md](CHALLENGE.md#open-questions).
+One measurement is still owed: the inked **light** mode has not been checked for contrast, because
+those screens theme through a class that redefines the custom properties and a static analysis cannot
+follow it. That has to happen before the re-skin ships.
 
 ## Things that will bite you
 
