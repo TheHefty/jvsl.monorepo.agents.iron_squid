@@ -6,7 +6,6 @@
 ### Features
 
 * generate and hash the two identifiers ([12d6210](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/12d6210334ae5be3fc991545381b9b4b2075508e))
-* the draw source, the identifiers, and where the work stands ([8923531](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/8923531e495c5a0f2efd3b1acc094b95ec693a88))
 
 
 ### Bug Fixes
