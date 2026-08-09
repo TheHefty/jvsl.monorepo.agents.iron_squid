@@ -108,8 +108,9 @@ Not built: persistence, route handlers, and the PWA layer. The win/loss buttons 
 
 ### Screens
 
-From the design doc `Armory Run.dc.html`. It offered alternatives for two screens; the chosen ones
-are marked, and the rejected variants are left in the design project rather than copied here.
+From the design doc `Armory Run.dc.html`, whose first turn offered alternatives for two screens; the
+chosen ones are marked, and the rejected variants are left in the design project rather than copied
+here.
 
 | Route | Screen | Design |
 | --- | --- | --- |
@@ -121,6 +122,29 @@ are marked, and the rejected variants are left in the design project rather than
 
 Mock 1f is not a route: it is 1c at 390px, so the dashboard is built responsive rather than as a
 separate mobile screen.
+
+**The design doc has since grown three more turns, and none of them changes the table above.** They
+are the same screens and the same routes, re-presented:
+
+| Turn | What it is | Mocks |
+| --- | --- | --- |
+| 1 | the pass the app is built from | 1a–1h |
+| 2 | light mode, on the neutral ramp's light steps | 2a–2c |
+| 3 | the **inked** pass — ink blots, turf bars, tilted stickers, angular cuts, still on Nocturne's palette | 3a–3f |
+| 4 | light mode for the inked screens, whose indigo grounds stay saturated in both themes | 4a–4d |
+
+Turn 1 is unchanged, label for label, so nothing already built is invalidated. The Nocturne port in
+`src/styles/nocturne.css` is not behind either: the design system was last updated at 03:39Z on
+2026-08-07 and the port was committed at 10:16Z the same day.
+
+Whether the inked direction is adopted is open, and recorded below. Two things are worth knowing
+before that decision rather than after. It is **presentational only** — no route, screen or domain
+change — so it is orthogonal to persistence and can be sequenced whenever. And it is not merely a
+palette swap: half of it lands in `nocturne.css`, but the blots, bars and stickers are new
+decorative markup. Its saturated grounds also push against two rules already written down —
+Nocturne's own "do not flood large areas with the accent", and the AA floor in
+[RULES.md](RULES.md#accessibility) that the turn 1 port already had to correct values for. Measuring
+the inked mocks' contrast is the first step of adopting them, not a review afterwards.
 
 ### Internationalisation
 
@@ -348,12 +372,100 @@ Its counts are not ours and should not be quoted as such: the old file's 912 gea
 pieces that cannot be worn in Versus. The drawable pool is 806. Earlier drafts of
 [CHALLENGE.md](CHALLENGE.md) did the single-use arithmetic on the old numbers.
 
+### Persistence
+
+Decided, not built. This is what the route handlers will be written against.
+
+**The event log is the record of truth.** Four tables, and the `ChallengeState` a page renders is
+rebuilt by replaying them through `applyMatch` — the same reducer the domain tests already cover,
+and the same one `src/lib/demo.ts` already runs a whole challenge through.
+
+```
+challenges  handle, visibility, created_at, + its identifiers
+runs        challenge_id, number, started_at, ended_at
+draws       run_id, weapon_id, head_id, clothes_id, shoes_id, drawn_at
+matches     run_id, draw_id, result, mode, played_at, idempotency_key
+```
+
+The identifier columns are deliberately vague above, because they are still open — see below.
+
+Storing the materialised state as a single JSON document was the alternative. It loses on two counts
+that are specific to this project: the row grows without bound, since the demo challenge reaches 188
+matches by run 7 and a complete run is longer than that; and the idempotency key that
+[RULES.md](RULES.md#development) requires has nowhere natural to live except inside the very
+document it exists to protect. As rows, that key is a `UNIQUE (run_id, idempotency_key)` constraint,
+and the constraint is the entire implementation. A draw persisted before it is shown — what
+server-owned randomness obliges — is likewise just a row that exists before the response is written.
+
+**The cost is paid on read, deliberately.** Every public page view replays a challenge's history, and
+the leaderboard replays every challenge it lists in order to rank them. Keeping a materialised
+snapshot beside the log would remove both, and was rejected for now: it is a second representation of
+the same truth, and a snapshot that silently disagrees with its log is a worse failure than a slow
+page. Worth revisiting when the leaderboard is real, not before.
+
+**Postgres on Neon, with the app serverless on Vercel.** Postgres because the model above is
+relational and nothing here argues otherwise. Neon because it is plain Postgres with a one-click
+Vercel integration, where Supabase would bring the auth and storage this project has decided not to
+have. Local development runs Postgres in Docker inside the dev container — same engine, same SQL —
+which was verified to run here before the choice was made.
+
+A persistent container hosting its own Postgres was chosen first and then reversed. The reversal is
+recorded because it is what makes the next two entries necessary: a long-lived process would have had
+an ordinary connection pool and interactive transactions, and an ephemeral function has neither.
+
+**Drizzle for data access.** The schema is declared in TypeScript and `drizzle-kit` generates the
+migration SQL from it, reviewed and committed like any other change. Hand-written SQL with
+hand-written row types was the close alternative, and lost on a single criterion: it is the only
+option where a migration that invalidates the code fails *silently*. Renaming a column leaves `tsc`
+satisfied and breaks when a visitor opens the page. Everything else on the list breaks loudly, and in
+a single-maintainer project where months can separate two sessions, the silent break is the expensive
+one. Prisma does the same job, but its generated client is a second type system running beside
+`src/domain/types.ts`, with a conversion at every boundary, and its DSL sits outside TypeScript.
+
+Parameterisation is a second reason, worth naming because the repository is public and the question
+comes up: queries are not secrets, and no amount of hiding them substitutes for parameterising them.
+Writing an injectable query in Drizzle means deliberately stepping off the normal path, while raw SQL
+makes the safe and the unsafe form equally easy to type.
+
+**No interactive transaction is used, or needed.** Reporting a match reads the state, lets the domain
+decide what happened, and then writes — a `BEGIN`, think, `COMMIT` shape that Neon's HTTP driver does
+not support. It is not needed. The read happens outside any transaction, the domain computes, and the
+writes go in one batch whose safety comes from the idempotency constraint: a replayed Background Sync
+entry hits it and is ignored, and two tabs racing hit the same one. The alternative was Neon's
+WebSocket pool, which restores interactive transactions at the cost of holding a connection open —
+handing back the property serverless was chosen for.
+
+**The database module imports `server-only`.** Importing it from a client component would bundle it
+for the browser, and with it any environment variable read at module scope. The package turns that
+into a build failure rather than a silent leak. [RULES.md](RULES.md#security) already forbids the
+outcome; this is the thing that enforces it.
+
+**The free tiers are a design constraint, not just a bill.** Vercel's Hobby plan is restricted to
+non-commercial use, so adding a donation button or a sponsor changes the plan and not merely the
+tone. Neon's free tier suspends compute until the next billing month once a monthly limit is hit —
+the site stops rather than degrades — and the limit that binds first is 100 CU-hours, not the 0.5 GB
+of storage, which this data will not approach. Because compute suspends after five minutes idle, the
+dangerous traffic pattern is the counter-intuitive one: thin and constant, where a visitor every few
+minutes keeps the database awake all month, rather than spiky.
+
+Together with a state rebuilt by replay on every read, that makes caching the public page a
+requirement rather than an optimisation. A challenge changes only when its player reports a match;
+between reports it is static for minutes or hours.
+
 ### Open
 
-- **Persistence.** No database chosen. Constrained by the decisions above: server-side draws and
-  public pages need real storage, and secret-link ownership needs no user table.
-- **Hosting.** The original is on Azure Static Web Apps, which does not fit an app that renders on
-  the server and talks to a database.
+- **The identifiers.** The public id that appears in a shareable URL, and the secret edit link that
+  [RULES.md](RULES.md#security) treats as a credential — at least 128 bits from a CSPRNG, stored
+  hashed, never logged. Both are persistence decisions and neither is taken, which is why the schema
+  above leaves those columns unnamed.
+- **Where the repository boundary sits, and how handlers are tested.**
+  [RULES.md](RULES.md#development) requires every route handler to be tested for its happy path, its
+  rejected input and its idempotent replay. Whether that runs against a fake repository or a real
+  Postgres in Docker is undecided.
+- **Where migrations run on deploy.** Vercel has no release step of its own, so applying a migration
+  is a decision rather than a default.
+- **Whether the inked direction is adopted** — turns 3 and 4 of the design doc, described under
+  [Screens](#screens). Presentational only, so it blocks nothing and is blocked by nothing.
 - **Whether a mid-run roster change disturbs a live run** — stated in
   [CHALLENGE.md](CHALLENGE.md#open-questions), because it is a rule of the challenge before it is a
   data problem, but it lands here too: pinning a run to the roster version it started on means
