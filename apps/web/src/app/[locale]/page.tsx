@@ -32,10 +32,10 @@ export default async function LandingPage({
         prefs={prefs}
         links={[
           {key: 'rules', href: '/'},
-          {key: 'runs', href: '/run/demo'},
+          {key: 'runs', href: '/edit/demo'},
           {key: 'leaderboard', href: '/'}
         ]}
-        action={{key: 'startRun', href: '/run/demo'}}
+        action={{key: 'startRun', href: '/edit/demo'}}
       />
 
       <main id="main" className="page">
@@ -49,7 +49,7 @@ export default async function LandingPage({
               {t('body')} {t('record', {count: progress.best})}
             </p>
             <div className="hero-actions">
-              <Link href="/run/demo" className="btn btn-primary">
+              <Link href="/edit/demo" className="btn btn-primary">
                 {t('rollFirst')}
               </Link>
               <Link href="/r/demo" className="btn btn-secondary">

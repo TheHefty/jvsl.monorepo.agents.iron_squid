@@ -13,9 +13,9 @@ import type {Locale} from '@/i18n/routing';
 export default async function LogPage({
   params
 }: {
-  params: Promise<{locale: string; id: string}>;
+  params: Promise<{locale: string; editSecret: string}>;
 }) {
-  const {locale, id} = await params;
+  const {locale, editSecret} = await params;
   setRequestLocale(locale);
 
   const t = await getTranslations('log');
@@ -32,9 +32,9 @@ export default async function LogPage({
         prefs={prefs}
         current="log"
         links={[
-          {key: 'myRun', href: `/run/${id}`},
-          {key: 'armory', href: `/run/${id}/armory`},
-          {key: 'log', href: `/run/${id}/log`}
+          {key: 'myRun', href: `/edit/${editSecret}`},
+          {key: 'armory', href: `/edit/${editSecret}/armory`},
+          {key: 'log', href: `/edit/${editSecret}/log`}
         ]}
       />
 

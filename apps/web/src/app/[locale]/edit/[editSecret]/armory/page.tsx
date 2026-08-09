@@ -9,9 +9,9 @@ import type {Locale} from '@/i18n/routing';
 export default async function ArmoryPage({
   params
 }: {
-  params: Promise<{locale: string; id: string}>;
+  params: Promise<{locale: string; editSecret: string}>;
 }) {
-  const {locale, id} = await params;
+  const {locale, editSecret} = await params;
   setRequestLocale(locale);
 
   const t = await getTranslations('armory');
@@ -25,9 +25,9 @@ export default async function ArmoryPage({
         prefs={prefs}
         current="armory"
         links={[
-          {key: 'myRun', href: `/run/${id}`},
-          {key: 'armory', href: `/run/${id}/armory`},
-          {key: 'log', href: `/run/${id}/log`}
+          {key: 'myRun', href: `/edit/${editSecret}`},
+          {key: 'armory', href: `/edit/${editSecret}/armory`},
+          {key: 'log', href: `/edit/${editSecret}/log`}
         ]}
       />
 
