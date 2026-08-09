@@ -76,7 +76,9 @@ Learned the hard way, and cheaper to read than to rediscover.
   direct `drizzle-kit migrate` from here hangs and then reports success against nothing.
 - **`npm run format` and `lint-staged` only reach `apps/web`.** The Markdown under `docs/` is
   deliberately outside Prettier's scope — do not reformat it while editing it.
-- **The pull request title is not what the changelog quotes any more.** Merges use a merge commit, so
-  each commit on the branch reaches `master` on its own and release-please reads them individually.
+- **Both the branch's commits and the pull request title reach the changelog.** Merges use a merge
+  commit, so release-please reads each commit on the branch — and the merge commit too, which carries
+  the pull request title in its body. Write that title as an ordinary sentence, not as a `feat:` or
+  `fix:`, or it becomes an extra entry summarising the real ones.
 - **`drizzle-kit` cannot resolve the `@/` alias.** `src/db/schema.ts` imports the domain relatively
   for that reason, the same trap as `scripts/generate-catalogue.mts`.
