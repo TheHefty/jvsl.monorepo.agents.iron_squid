@@ -187,10 +187,16 @@ there.
 has no "default merge method" option, only the three enable/disable toggles, and all three are on.
 The choice decides which messages the changelog quotes. A merge commit lands every commit from the
 branch in `master`, so release-please reads each one and a branch carrying three `feat` commits
-produces three changelog entries. The merge commit itself contributes nothing: its subject is
-GitHub's `Merge pull request #N from …` and the PR title goes in the body, so neither parses as a
-conventional commit. **The commit messages on the branch are therefore load-bearing** — which is the
-point, because they are also what stays readable in `git log`.
+produces three changelog entries. **The commit messages on the branch are therefore load-bearing** —
+which is the point, because they are also what stays readable in `git log`.
+
+**The pull request title reaches the changelog too**, which is not what this file claimed until #13
+proved otherwise. release-please reads the merge commit as well as the branch, and the title arrives
+in its body — so a title written as a conventional commit becomes an extra entry alongside the real
+ones, usually summarising them. So under a merge commit, **write the pull request title as an
+ordinary sentence, not as a `feat:` or `fix:`.** Let the branch's commits carry the changelog and let
+the title be what a person reads on GitHub. If one slips through, the entry can be deleted by hand on
+release-please's own branch before the release lands; it respects the edit.
 
 Squash is still available, for a branch whose individual commits are not worth keeping — a long
 fix-the-fix sequence, say. It inverts which message matters: the whole branch lands as one commit
