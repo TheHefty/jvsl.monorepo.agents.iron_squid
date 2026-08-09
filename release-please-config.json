@@ -4,6 +4,10 @@
   "include-component-in-tag": false,
   "bootstrap-sha": "afdcf7fd0c5392194825bd465811d19fb5499ad4",
   "packages": {
-    ".": {}
+    ".": {
+      "extra-files": [
+        {"type": "json", "path": "package.json", "jsonpath": "$.version"}
+      ]
+    }
   }
 }
