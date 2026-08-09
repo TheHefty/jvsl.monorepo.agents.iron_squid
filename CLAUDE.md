@@ -94,6 +94,28 @@ Run it only when deliberately moving to a new game version — bump `GAME_VERSIO
 `apps/web/src/data/source.ts` first. `docs/ARCHITECTURE.md` explains why the version is pinned rather
 than floating, and why the output is split into one structural file plus one file per language.
 
+The database:
+
+```bash
+npm run db:generate   # drizzle-kit generate — reads the schema, writes drizzle/*.sql
+npm run db:up         # start the local Postgres and wait for it
+npm run db:migrate    # apply drizzle/*.sql to the local Postgres
+npm run db:psql       # a shell on it
+npm run db:down       # remove it, and its data
+```
+
+**Nothing running in this container reaches a container over the network.** The Docker daemon is
+behind a socket and its containers are in another network namespace, so a published port does not
+listen here and the daemon's bridge shares this container's `172.17.0.0/16` — a container's own IP
+resolves back to us. That is why every command above except `db:generate` goes through
+`apps/web/scripts/local-db.sh`, which runs the work *inside* the database's network instead of
+connecting to it from here. Do not replace them with a direct `drizzle-kit migrate`: it will hang and
+then report success against nothing.
+
+The app in development points at a Neon branch for the same reason — `next dev` cannot reach a
+container either. The local Postgres exists for the contract test suite, which is headless and runs
+in a container happily.
+
 Note that `npm run format` reaches `apps/web` only. The Markdown under `docs/` is deliberately
 outside Prettier's scope — do not reformat it as a side effect of editing it.
 

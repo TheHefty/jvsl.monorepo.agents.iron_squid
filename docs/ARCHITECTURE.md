@@ -435,8 +435,20 @@ page. Worth revisiting when the leaderboard is real, not before.
 **Postgres on Neon, with the app serverless on Vercel.** Postgres because the model above is
 relational and nothing here argues otherwise. Neon because it is plain Postgres with a one-click
 Vercel integration, where Supabase would bring the auth and storage this project has decided not to
-have. Local development runs Postgres in Docker inside the dev container — same engine, same SQL —
-which was verified to run here before the choice was made.
+have.
+
+**The app in development talks to Neon too, not to a local Postgres**, and the reason is a property
+of the dev container rather than a preference. Nothing running in it reaches a container over the
+network: the Docker daemon is behind a socket at `/config/.docker/run/docker.sock` and its containers
+live in another network namespace, so a published port does not listen here, and the daemon's bridge
+uses the same `172.17.0.0/16` this container sits on — which makes a container's own IP resolve back
+to us. `next dev` therefore cannot reach a database in a container, and neither could the app if it
+were containerised alongside one, because its port would be just as unreachable.
+
+An earlier draft of this section claimed local development runs Postgres in Docker, on the strength
+of having watched the container start. It starts; it cannot be connected to. The two are not the same
+check, and the correction is recorded rather than quietly edited because the mistake is easy to
+repeat.
 
 A persistent container hosting its own Postgres was chosen first and then reversed. The reversal is
 recorded because it is what makes the next two entries necessary: a long-lived process would have had
@@ -498,6 +510,18 @@ ordering.
 That split also keeps `npm test` instant and dependency-free, which matters because husky runs it on
 `pre-push`. A suite that needed Docker would turn "the nested daemon is down" into "I cannot push".
 The database-backed run is its own command.
+
+That run happens **inside a container**, for the networking reason above: the suite cannot connect to
+the local Postgres from here, so it goes to the database rather than the database coming to it.
+`scripts/local-db.sh` is the wrapper — it starts the container, waits for readiness, and runs a
+command in a throwaway `node:22` container that shares the database's network stack with the
+repository mounted and `DATABASE_URL` already set. Verified end to end: Node in that container loads
+the repository's own `node_modules`, connects, and migrates.
+
+Contract tests therefore use the local Postgres, not Neon. They stay free, offline and isolated, and
+they do not spend the CU-hours that are the free tier's binding limit — which matters more than usual
+here, because a test suite is exactly the kind of thin, repeated traffic that keeps a scale-to-zero
+database awake.
 
 **Migrations run in the production build, guarded.** `drizzle-kit migrate` goes in the Vercel build
 behind a `VERCEL_ENV=production` check. The guard is the whole point: Vercel builds every pull
