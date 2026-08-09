@@ -481,6 +481,34 @@ Together with a state rebuilt by replay on every read, that makes caching the pu
 requirement rather than an optimisation. A challenge changes only when its player reports a match;
 between reports it is static for minutes or hours.
 
+**The seam is already cut, halfway.** `src/lib/demo.ts` separates `play(catalogue) → ChallengeState`
+from `view(catalogue) → the shape a page renders`, and only the first is what persistence replaces —
+`view` is pure and stays exactly as it is. So the repository interface is small: find by `public_id`,
+find by the hash of an edit secret, create a challenge, append a match.
+
+**Handlers are tested against a fake repository; a separate contract suite proves the fake and
+Postgres agree.** The reason is specific rather than doctrinal. [RULES.md](RULES.md#development)
+requires every route handler to be tested for its idempotent replay, but idempotency is not in the
+handler — it is the `UNIQUE (run_id, idempotency_key)` constraint. A fake deduplicates with a `Map`
+and the database deduplicates with a constraint, so testing replay against the fake alone tests the
+fake. The contract suite is what stops the two drifting: it runs against a real Postgres and covers
+the behaviours the fake claims to have — the unique constraint, the cascade on delete, and log
+ordering.
+
+That split also keeps `npm test` instant and dependency-free, which matters because husky runs it on
+`pre-push`. A suite that needed Docker would turn "the nested daemon is down" into "I cannot push".
+The database-backed run is its own command.
+
+**Migrations run in the production build, guarded.** `drizzle-kit migrate` goes in the Vercel build
+behind a `VERCEL_ENV=production` check. The guard is the whole point: Vercel builds every pull
+request, so an unguarded migration step would have each preview migrating production.
+
+Whichever order is chosen there is a window where schema and code are at different versions — migrate
+first and old code meets a new column, migrate last and new code meets an old schema. **So a
+migration has to be compatible with the code already running**, expanding in one deploy and
+contracting in a later one. That rule is what makes a build failing *after* a successful migration a
+non-event rather than an outage.
+
 ### Open
 
 - **Whether a challenge can be unlisted.** [CHALLENGE.md](CHALLENGE.md#identity) says public
@@ -488,12 +516,6 @@ between reports it is static for minutes or hours.
   here because it is the one thing that could still change `public_id`: if every challenge is public,
   a 50-bit slug only has to resist enumeration, and if unlisted ones exist, that slug becomes a
   quasi-credential and wants the entropy and the handling of one.
-- **Where the repository boundary sits, and how handlers are tested.**
-  [RULES.md](RULES.md#development) requires every route handler to be tested for its happy path, its
-  rejected input and its idempotent replay. Whether that runs against a fake repository or a real
-  Postgres in Docker is undecided.
-- **Where migrations run on deploy.** Vercel has no release step of its own, so applying a migration
-  is a decision rather than a default.
 - **Whether the inked direction is adopted** — turns 3 and 4 of the design doc, described under
   [Screens](#screens). Presentational only, so it blocks nothing and is blocked by nothing.
 - **Whether a mid-run roster change disturbs a live run** — stated in
