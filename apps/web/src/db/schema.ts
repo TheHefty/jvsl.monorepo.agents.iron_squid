@@ -15,7 +15,6 @@
 import {sql} from 'drizzle-orm';
 import {
   check,
-  index,
   integer,
   pgTable,
   text,
@@ -113,9 +112,19 @@ export const draws = pgTable(
     clothesId: text('clothes_id').notNull(),
     shoesId: text('shoes_id').notNull(),
 
+    /**
+     * Position within the run, 1-based.
+     *
+     * Replay has to deal these back in the order they were dealt, and
+     * drawn_at cannot carry that: two draws can share a timestamp, and then
+     * their order is undefined. An explicit sequence is the only thing that
+     * makes the reconstruction deterministic.
+     */
+    seq: integer('seq').notNull(),
+
     drawnAt: timestamp('drawn_at', {withTimezone: true}).notNull().defaultNow()
   },
-  (t) => [index('draws_run_idx').on(t.runId, t.drawnAt)]
+  (t) => [unique('draws_run_seq_key').on(t.runId, t.seq)]
 );
 
 export const matches = pgTable(
@@ -144,11 +153,16 @@ export const matches = pgTable(
      * deliver the same report twice. The unique constraint below is what makes
      * the second one a no-op instead of a spent life.
      */
-    idempotencyKey: text('idempotency_key').notNull()
+    idempotencyKey: text('idempotency_key').notNull(),
+
+    /** Position within the run, 1-based. Same reason as draws.seq: the order
+     * of play is what replay depends on, and played_at is reported by the
+     * client and can repeat. */
+    seq: integer('seq').notNull()
   },
   (t) => [
     unique('matches_run_idempotency_key').on(t.runId, t.idempotencyKey),
-    index('matches_run_played_idx').on(t.runId, t.playedAt),
+    unique('matches_run_seq_key').on(t.runId, t.seq),
     check('matches_result_check', oneOf('result', MATCH_RESULTS)),
     check('matches_mode_check', oneOf('mode', MATCH_MODES))
   ]

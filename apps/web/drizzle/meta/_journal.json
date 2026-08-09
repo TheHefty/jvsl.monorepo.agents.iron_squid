@@ -8,6 +8,13 @@
       "when": 1786313429960,
       "tag": "0000_huge_swordsman",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1786315357850,
+      "tag": "0001_opposite_shotgun",
+      "breakpoints": true
     }
   ]
 }
