@@ -143,9 +143,17 @@ worth knowing without opening it:
 ## Releases
 
 release-please (`.github/workflows/release-please.yml`) keeps a release PR open on `master` and cuts
-the tag when it is merged, with `version.txt` + `CHANGELOG.md` as the only versioned artifacts
-(`release-type: simple` — there is nothing here to publish). Commit messages are therefore
-load-bearing: only `feat`/`fix` reach the changelog, and a release is proposed only when one lands.
+the tag when it is merged (`release-type: simple` — there is nothing here to publish). Commit
+messages are therefore load-bearing: only `feat`/`fix` reach the changelog, and a release is proposed
+only when one lands.
+
+It writes the version to `version.txt` and `CHANGELOG.md`, and to the root `package.json` through the
+`extra-files` entry in `release-please-config.json`. It does **not** write `package-lock.json`, which
+carries the same version twice — npm does not check the root package's version when installing, so
+the lock drifting by a release costs nothing and the next `npm install` rewrites it anyway. The
+version in `apps/web/package.json` is the workspace's own and is deliberately not tracked: nothing
+publishes it, and tying it to the repo's release number would only imply a coupling that is not
+there.
 
 **Merge with a merge commit.** That is this project's convention, not a repository setting — GitHub
 has no "default merge method" option, only the three enable/disable toggles, and all three are on.
