@@ -131,6 +131,20 @@ export const matches = pgTable(
   'matches',
   {
     id: uuid('id').primaryKey().defaultRandom(),
+    /**
+     * Denormalised from the run on purpose.
+     *
+     * Idempotency has to be scoped to what the client retries against, and a
+     * client knows nothing about runs — it reports a match to a challenge. Were
+     * the key unique per run, a report that killed a run and started another
+     * would be re-applied on retry: the new run has never seen that key.
+     * Postgres cannot enforce uniqueness across a join, so the column lives
+     * here.
+     */
+    challengeId: uuid('challenge_id')
+      .notNull()
+      .references(() => challenges.id, {onDelete: 'cascade'}),
+
     runId: uuid('run_id')
       .notNull()
       .references(() => runs.id, {onDelete: 'cascade'}),
@@ -161,7 +175,7 @@ export const matches = pgTable(
     seq: integer('seq').notNull()
   },
   (t) => [
-    unique('matches_run_idempotency_key').on(t.runId, t.idempotencyKey),
+    unique('matches_idempotency_key').on(t.challengeId, t.idempotencyKey),
     unique('matches_run_seq_key').on(t.runId, t.seq),
     check('matches_result_check', oneOf('result', MATCH_RESULTS)),
     check('matches_mode_check', oneOf('mode', MATCH_MODES))

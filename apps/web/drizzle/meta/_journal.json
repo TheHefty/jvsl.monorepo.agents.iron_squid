@@ -15,6 +15,13 @@
       "when": 1786315357850,
       "tag": "0001_opposite_shotgun",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1786317325168,
+      "tag": "0002_solid_sinister_six",
+      "breakpoints": true
     }
   ]
 }
