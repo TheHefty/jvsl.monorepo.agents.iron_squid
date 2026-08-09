@@ -20,11 +20,12 @@ records why, so the split is not re-proposed without new reasons.
 
 ## Read these first
 
-Four documents carry the project's decisions. Do not re-derive from code what they already state,
+Five documents carry the project's decisions. Do not re-derive from code what they already state,
 and do not contradict them silently — if one is wrong, change it deliberately, in its own commit.
 
 | Document | What it owns |
 | --- | --- |
+| [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md) | Where the work stands right now, what to do next, and the traps already hit. Read it first when picking the project back up; it describes the present and is rewritten rather than appended to. |
 | [`docs/CHALLENGE.md`](docs/CHALLENGE.md) | The rules of the challenge, and the project's vocabulary (*challenge* / *run* / *draw* / *match* — note that **run** means one attempt, not the whole thing). Source of truth for behaviour. Its "Open questions" section blocks the domain model. |
 | [`docs/RULES.md`](docs/RULES.md) | Security, privacy and development non-negotiables. Read before writing code, not after review. |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | How the software is built and why: decisions taken and their rationale, what was learned from the original Angular app, the screen→route map, and what is still undecided. |
