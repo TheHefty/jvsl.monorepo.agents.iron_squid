@@ -81,14 +81,59 @@ export function drawFrom(
 }
 
 /**
+ * Where the next draw comes from.
+ *
+ * The rules decide *when* a draw is dealt; they have no opinion on how it is
+ * produced, and taking a source rather than an `Rng` is what lets the same
+ * functions serve two callers that must not diverge:
+ *
+ * - the server, which deals from a CSPRNG and persists the result before
+ *   anyone sees it, because a client that can re-roll voids rules 1 and 3;
+ * - a replay, which deals the draws already stored, in order.
+ *
+ * Replay is the reason this is not simply an `Rng`. Rebuilding a challenge by
+ * pushing its matches back through `applyMatch` with a fresh generator would
+ * invent different weapons than the ones the player actually played, and the
+ * stored draw is the truth.
+ */
+export type DrawSource = (
+  cleared: readonly string[],
+  spentGear: Record<GearSlot, readonly string[]>
+) => Draw;
+
+/** The server's source: draws from what the run has not consumed. */
+export function drawsFrom(catalogue: Catalogue, rng: Rng): DrawSource {
+  return (cleared, spentGear) => drawFrom(catalogue, cleared, spentGear, rng);
+}
+
+/**
+ * A replay's source: hands back stored draws in the order they were dealt.
+ *
+ * Running out is a bug rather than an edge case — it means the stored matches
+ * and the stored draws disagree — so it throws instead of dealing something
+ * plausible.
+ */
+export function replayDraws(stored: readonly Draw[]): DrawSource {
+  let next = 0;
+  return () => {
+    const draw = stored[next++];
+    if (!draw) {
+      throw new Error(
+        `Replay needed draw ${next} but only ${stored.length} were stored.`
+      );
+    }
+    return draw;
+  };
+}
+
+/**
  * Begins a run: one life, no wins, the full weapon and gear pools restored.
  *
  * Nothing carries over from a previous run. That is the whole difficulty of the
  * challenge — a weapon cleared in a dead run must be cleared again.
  */
 export function startRun(
-  catalogue: Catalogue,
-  rng: Rng,
+  draws: DrawSource,
   number: number,
   at: string
 ): RunState {
@@ -104,20 +149,16 @@ export function startRun(
     wins: 0,
     cleared: [],
     spentGear,
-    draw: drawFrom(catalogue, [], spentGear, rng),
+    draw: draws([], spentGear),
     matches: [],
     startedAt: at
   };
 }
 
-export function startChallenge(
-  catalogue: Catalogue,
-  rng: Rng,
-  at: string
-): ChallengeState {
+export function startChallenge(draws: DrawSource, at: string): ChallengeState {
   return {
     status: 'ongoing',
-    run: startRun(catalogue, rng, 1, at),
+    run: startRun(draws, 1, at),
     deadRuns: []
   };
 }
@@ -132,7 +173,7 @@ function recordMatch(run: RunState, event: MatchEvent): RunState['matches'] {
 function applyWin(
   state: ChallengeState,
   catalogue: Catalogue,
-  rng: Rng,
+  draws: DrawSource,
   event: MatchEvent
 ): ChallengeState {
   const {run} = state;
@@ -165,15 +206,14 @@ function applyWin(
       matches,
       // A finished challenge keeps its last draw rather than dealing one it
       // could not satisfy: the weapon pool is empty by definition.
-      draw: finished ? run.draw : drawFrom(catalogue, cleared, spentGear, rng)
+      draw: finished ? run.draw : draws(cleared, spentGear)
     }
   };
 }
 
 function applyLoss(
   state: ChallengeState,
-  catalogue: Catalogue,
-  rng: Rng,
+  draws: DrawSource,
   event: MatchEvent
 ): ChallengeState {
   const {run} = state;
@@ -195,7 +235,7 @@ function applyLoss(
 
   return {
     ...state,
-    run: startRun(catalogue, rng, run.number + 1, event.at),
+    run: startRun(draws, run.number + 1, event.at),
     deadRuns: [dead, ...state.deadRuns]
   };
 }
@@ -210,7 +250,7 @@ function applyLoss(
 export function applyMatch(
   state: ChallengeState,
   catalogue: Catalogue,
-  rng: Rng,
+  draws: DrawSource,
   event: MatchEvent
 ): ChallengeState {
   if (state.status === 'complete') {
@@ -218,8 +258,8 @@ export function applyMatch(
   }
 
   return event.result === 'win'
-    ? applyWin(state, catalogue, rng, event)
-    : applyLoss(state, catalogue, rng, event);
+    ? applyWin(state, catalogue, draws, event)
+    : applyLoss(state, draws, event);
 }
 
 /** One tile of the armory: a weapon, and how it stands in the run being viewed. */
