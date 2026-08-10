@@ -87,6 +87,16 @@ export class ChallengeService {
   }
 
   /**
+   * The same challenge, opened by its credential instead of its public id.
+   *
+   * What the edit screens render is identical to what the public one does —
+   * the difference between them is what they let you *do*, not what they show.
+   */
+  readByEditSecret(editSecret: string): Promise<StoredChallenge | null> {
+    return this.store.findByEditSecret(editSecret);
+  }
+
+  /**
    * Records a reported result against the challenge the secret opens.
    *
    * The timestamp is the server's. A client may lie about a result — the

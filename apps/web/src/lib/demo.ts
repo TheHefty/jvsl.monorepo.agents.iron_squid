@@ -1,13 +1,5 @@
 import {loadCatalogue} from '@/data/catalogue';
-import {
-  applyMatch,
-  armoryView,
-  drawView,
-  drawsFrom,
-  matchLog,
-  progress,
-  startChallenge
-} from '@/domain/challenge';
+import {applyMatch, drawsFrom, startChallenge} from '@/domain/challenge';
 import {
   MATCH_MODES,
   type Catalogue,
@@ -17,6 +9,7 @@ import {
   type Rng
 } from '@/domain/types';
 import type {Locale} from '@/i18n/routing';
+import {viewChallenge} from './view';
 
 /**
  * A worked example of a challenge in progress, for the screens to render until
@@ -121,29 +114,15 @@ function play(catalogue: Catalogue): ChallengeState {
 
 export type DemoChallenge = ReturnType<typeof view>;
 
+/**
+ * The demo is now the landing page's source and nothing else's — every other
+ * screen reads a stored challenge. It survives because the landing shows a
+ * live roll card and site-wide totals, and neither has a real answer while no
+ * challenge exists and the store has no operation that counts them.
+ */
 function view(catalogue: Catalogue) {
-  const challenge = play(catalogue);
-  const counts = progress(challenge, catalogue);
-  const log = matchLog(challenge, catalogue);
-
   return {
-    catalogue,
-    challenge,
-    progress: counts,
-    armory: armoryView(challenge, catalogue),
-    draw: drawView(challenge, catalogue),
-    log,
-    run: challenge.run,
-    /** Days from the start of the live run to its most recent match. */
-    day: Math.max(
-      1,
-      Math.floor(
-        (Date.parse(log[0]?.at ?? challenge.run.startedAt) -
-          Date.parse(challenge.run.startedAt)) /
-          86_400_000
-      )
-    ),
-    handle: DEMO_HANDLE,
+    ...viewChallenge(play(catalogue), catalogue, DEMO_HANDLE),
     site: SITE_TOTALS
   };
 }

@@ -3,7 +3,7 @@ import {getTranslations, setRequestLocale} from 'next-intl/server';
 import {getDisplayPrefs} from '@/lib/display.server';
 import {SiteNav} from '@/components/SiteNav';
 import {ArmoryGrid} from '@/components/ArmoryGrid';
-import {getDemoChallenge} from '@/lib/demo';
+import {publicChallenge} from '@/lib/challenge.server';
 import type {Locale} from '@/i18n/routing';
 
 /**
@@ -21,11 +21,11 @@ import type {Locale} from '@/i18n/routing';
 export async function generateMetadata({
   params
 }: {
-  params: Promise<{locale: string}>;
+  params: Promise<{locale: string; publicId: string}>;
 }): Promise<Metadata> {
-  const {locale} = await params;
+  const {locale, publicId} = await params;
   const t = await getTranslations({locale, namespace: 'publicRun'});
-  const {progress, handle} = await getDemoChallenge(locale as Locale);
+  const {progress, handle} = await publicChallenge(publicId, locale as Locale);
 
   const title = t('headline', {
     handle,
@@ -45,12 +45,13 @@ export default async function PublicRunPage({
 }: {
   params: Promise<{locale: string; publicId: string}>;
 }) {
-  const {locale} = await params;
+  const {locale, publicId} = await params;
   setRequestLocale(locale);
 
   const t = await getTranslations('publicRun');
   const prefs = await getDisplayPrefs();
-  const {armory, progress, run, day, handle} = await getDemoChallenge(
+  const {armory, progress, run, day, handle} = await publicChallenge(
+    publicId,
     locale as Locale
   );
 

@@ -5,7 +5,7 @@ import {ArmoryGrid} from '@/components/ArmoryGrid';
 import {LivesMeter} from '@/components/LivesMeter';
 import {Link} from '@/i18n/navigation';
 import {GEAR_SLOTS} from '@/domain/types';
-import {getDemoChallenge} from '@/lib/demo';
+import {editableChallenge} from '@/lib/challenge.server';
 import type {Locale} from '@/i18n/routing';
 
 /**
@@ -24,7 +24,8 @@ export default async function RunPage({
 
   const t = await getTranslations('dashboard');
   const prefs = await getDisplayPrefs();
-  const {armory, draw, progress, run, day} = await getDemoChallenge(
+  const {armory, draw, progress, run, day} = await editableChallenge(
+    editSecret,
     locale as Locale
   );
   const untouched = progress.remaining - 1;
