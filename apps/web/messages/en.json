@@ -27,7 +27,13 @@
     "rulesHeading": "The rules",
     "conditionsHeading": "Conditions",
     "conditionSkip": "Skipping weapons or gear is not permitted; each must be used to achieve a victory.",
-    "conditionShare": "Progress is tracked here, and players are encouraged to share their runs."
+    "conditionShare": "Progress is tracked here, and players are encouraged to share their runs.",
+    "handleLabel": "Pick a name",
+    "handleHint": "Anyone can claim any name. Nothing here is verified, and nothing needs an account.",
+    "creating": "Rolling…",
+    "createFailed": "That did not go through. Try again.",
+    "sampleDraw": "An example draw",
+    "nobodyYet": "Nobody has rolled yet. Be the first."
   },
   "rules": {
     "roll": {

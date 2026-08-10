@@ -27,7 +27,13 @@
     "rulesHeading": "ルール",
     "conditionsHeading": "条件",
     "conditionSkip": "ブキもギアもスキップ不可。すべてで勝利する必要があります。",
-    "conditionShare": "進捗はここに記録されます。自分の挑戦を共有することを歓迎します。"
+    "conditionShare": "進捗はここに記録されます。自分の挑戦を共有することを歓迎します。",
+    "handleLabel": "名前を決める",
+    "handleHint": "名前は誰でも自由に名乗れます。ここでは何も認証せず、アカウントも不要です。",
+    "creating": "抽選中…",
+    "createFailed": "送信できませんでした。もう一度お試しください。",
+    "sampleDraw": "抽選の一例",
+    "nobodyYet": "まだ誰も挑戦していません。最初の一人になりましょう。"
   },
   "rules": {
     "roll": {

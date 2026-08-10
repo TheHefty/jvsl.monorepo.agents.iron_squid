@@ -62,6 +62,9 @@ export type MatchWrite = {
    */
   nextDraw?: Draw;
 
+  /** Set when this match finished the challenge. Recorded once, never undone. */
+  completesAt?: string;
+
   /**
    * Set when this match emptied the last life: the current run ends at `at`,
    * and a new one begins with this number. `nextDraw` is then its first draw
@@ -77,6 +80,16 @@ export type MatchWrite = {
  */
 export type AppendResult = {applied: boolean};
 
+/** What the landing needs: two counts, and whoever is playing right now. */
+export type Overview = {
+  /** Every run ever started, across every challenge. Countable in SQL. */
+  runs: number;
+  /** Challenges that reached the end. Countable only because it is recorded. */
+  completed: number;
+  /** The most recently active public challenge, or null on an empty site. */
+  latest: StoredChallenge | null;
+};
+
 export interface ChallengeStore {
   create(input: NewChallenge): Promise<CreatedChallenge>;
 
@@ -86,6 +99,8 @@ export interface ChallengeStore {
   findByEditSecret(editSecret: string): Promise<StoredChallenge | null>;
 
   appendMatch(publicId: string, write: MatchWrite): Promise<AppendResult>;
+
+  overview(): Promise<Overview>;
 }
 
 /** Thrown when a write names a challenge that is not there. */

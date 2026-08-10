@@ -9,11 +9,17 @@ import {
   type Rng
 } from '@/domain/types';
 import type {Locale} from '@/i18n/routing';
-import {viewChallenge} from './view';
+import {viewChallenge} from '@/lib/view';
 
 /**
- * A worked example of a challenge in progress, for the screens to render until
- * there is somewhere to persist a real one.
+ * A long challenge, actually played, kept as a test fixture.
+ *
+ * It rendered the screens until there was somewhere to persist a real one, and
+ * every page now reads from the database instead. What it is still good for is
+ * the thing the unit tests cannot show: whether the rules hold together across
+ * 188 matches and seven runs, where a slow drift between the cleared count, the
+ * gear ledger and the personal best would surface and a single-rule test would
+ * not.
  *
  * It is not mock data. Nothing here invents a number: the challenge is *played*
  * — a fixed script of wins and losses pushed through `applyMatch` against the

@@ -237,6 +237,22 @@ export function describeChallengeStore(
         expect(after?.state.deadRuns).toHaveLength(2);
       });
 
+      it('records the completion, so it can be counted without a replay', async () => {
+        const {publicId, editSecret} = await seed();
+        const found = await store.findByEditSecret(editSecret);
+
+        await store.appendMatch(publicId, {
+          idempotencyKey: 'k1',
+          result: 'win',
+          mode: 'splatZones',
+          at: AT,
+          completesAt: AT,
+          nextDraw: found!.state.run.draw
+        });
+
+        expect((await store.overview()).completed).toBe(1);
+      });
+
       it('rejects a write against a challenge that is not there', async () => {
         await expect(
           store.appendMatch('0000000000', {
@@ -246,6 +262,48 @@ export function describeChallengeStore(
             at: AT
           })
         ).rejects.toThrow();
+      });
+    });
+
+    describe('the overview', () => {
+      it('is empty on an empty site rather than absent', async () => {
+        const overview = await store.overview();
+        expect(overview).toEqual({runs: 0, completed: 0, latest: null});
+      });
+
+      it('counts every run across every challenge', async () => {
+        const a = await seed('a');
+        await seed('b');
+
+        // Kill a's first run, so it has two.
+        await store.appendMatch(a.publicId, {
+          idempotencyKey: 'k1',
+          result: 'loss',
+          mode: 'rainmaker',
+          at: AT,
+          startsRun: 2,
+          nextDraw: opening()
+        });
+
+        expect((await store.overview()).runs).toBe(3);
+      });
+
+      it('offers the most recently active challenge, not the newest', async () => {
+        const older = await seed('older');
+        await seed('newer');
+
+        // A match on the older one makes it the active one again.
+        await store.appendMatch(older.publicId, {
+          idempotencyKey: 'k1',
+          result: 'loss',
+          mode: 'rainmaker',
+          at: '2027-01-01T00:00:00.000Z',
+          startsRun: 2,
+          nextDraw: opening()
+        });
+
+        const overview = await store.overview();
+        expect(overview.latest?.handle).toBe('older');
       });
     });
   });

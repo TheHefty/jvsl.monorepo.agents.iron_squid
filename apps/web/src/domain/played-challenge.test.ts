@@ -2,14 +2,14 @@ import {describe, expect, it} from 'vitest';
 
 import {MATCH_MODES} from '@/domain/types';
 
-import {getDemoChallenge} from './demo';
+import {getDemoChallenge} from '../../test/played-challenge';
 
 /**
  * The demo's value is that its numbers cannot lie to each other, so that is
  * what these check: not the specific figures, but that they agree.
  */
 
-describe('the demo challenge', () => {
+describe('a played challenge', () => {
   it('is identical on every call, so pages do not shift under the reader', async () => {
     const [a, b] = await Promise.all([
       getDemoChallenge('en'),

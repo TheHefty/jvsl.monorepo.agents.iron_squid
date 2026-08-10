@@ -1,6 +1,6 @@
 import 'server-only';
 
-import {desc, eq, inArray, sql, type SQL} from 'drizzle-orm';
+import {desc, eq, inArray, isNotNull, sql, type SQL} from 'drizzle-orm';
 import type {NeonDatabase} from 'drizzle-orm/neon-serverless';
 import type {NodePgDatabase} from 'drizzle-orm/node-postgres';
 import {hashEditSecret, newEditSecret, newPublicId, normalise} from './ids';
@@ -12,6 +12,7 @@ import {
   type CreatedChallenge,
   type MatchWrite,
   type NewChallenge,
+  type Overview,
   type StoredChallenge
 } from './store';
 import type {Catalogue, Draw} from '@/domain/types';
@@ -157,8 +158,47 @@ export class DrizzleChallengeStore implements ChallengeStore {
           .values({runId, seq, drawnAt: at, ...flatten(write.nextDraw)});
       }
 
+      if (write.completesAt) {
+        await tx
+          .update(challenges)
+          .set({completedAt: new Date(write.completesAt)})
+          .where(eq(challenges.id, challenge.id));
+      }
+
       return {applied: true};
     });
+  }
+
+  async overview(): Promise<Overview> {
+    // Two counts that are plain SQL, and one row. None of this replays a
+    // challenge — which is the reason completed_at is stored at all.
+    const [[runCount], [completedCount], recent] = await Promise.all([
+      this.db.select({n: sql<number>`count(*)::int`}).from(runs),
+      this.db
+        .select({n: sql<number>`count(*)::int`})
+        .from(challenges)
+        .where(isNotNull(challenges.completedAt)),
+      this.db
+        .select({id: challenges.id})
+        .from(challenges)
+        .leftJoin(matches, eq(matches.challengeId, challenges.id))
+        .groupBy(challenges.id)
+        .orderBy(
+          desc(sql`coalesce(max(${matches.playedAt}), ${challenges.createdAt})`)
+        )
+        .limit(1)
+    ]);
+
+    return {
+      runs: runCount.n,
+      completed: completedCount.n,
+      // "Most recently active" is the last match played, falling back to when
+      // the challenge was opened — a challenge with no matches yet is still
+      // the newest thing on the site.
+      latest: recent[0]
+        ? await this.load(eq(challenges.id, recent[0].id))
+        : null
+    };
   }
 
   private async load(where: SQL): Promise<StoredChallenge | null> {
