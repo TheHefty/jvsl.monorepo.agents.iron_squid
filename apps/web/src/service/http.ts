@@ -96,7 +96,15 @@ export function createChallenge(service: ChallengeService) {
  * RULES.md forbids it reaching a log line — a URL path reaches the access log
  * of every hop between here and the client.
  */
-export function reportMatch(service: ChallengeService) {
+/**
+ * `onApplied` is how the cache gets invalidated without this file importing
+ * Next. The route handler supplies it; the tests do not, and prove the rest of
+ * the behaviour without one.
+ */
+export function reportMatch(
+  service: ChallengeService,
+  onApplied?: (publicId: string) => void
+) {
   return async (request: Request): Promise<Response> => {
     const input = await body(request);
     if (!input) return rejected([bad('body', 'must be a JSON object')]);
@@ -130,6 +138,10 @@ export function reportMatch(service: ChallengeService) {
 
     try {
       const outcome = await service.report(editSecret, report);
+
+      // Only on a real application. A recognised replay changed nothing, so
+      // there is nothing to invalidate.
+      if (outcome.applied) onApplied?.(outcome.challenge.publicId);
 
       // A replayed key is a success. The queue that sent it twice did nothing
       // wrong, and telling it otherwise would make it retry forever.

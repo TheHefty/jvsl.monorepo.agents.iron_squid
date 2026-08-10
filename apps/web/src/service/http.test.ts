@@ -115,6 +115,27 @@ describe('the route handlers', () => {
       expect((await retry.json()).applied).toBe(false);
     });
 
+    it('invalidates the public page, but only when something changed', async () => {
+      const invalidated: string[] = [];
+      const reportWith = reportMatch(service, (id) => invalidated.push(id));
+      const {editSecret, publicId} = await opened();
+      const payload = {
+        editSecret,
+        result: 'win',
+        mode: 'splatZones',
+        idempotencyKey: 'once'
+      };
+
+      await reportWith(post(payload));
+      expect(invalidated).toEqual([publicId]);
+
+      // A recognised replay changed nothing, so there is nothing to
+      // invalidate — and doing it anyway would throw away a cache entry on
+      // every retry a flaky connection makes.
+      await reportWith(post(payload));
+      expect(invalidated).toEqual([publicId]);
+    });
+
     it('refuses Turf War, because rule 3 does', async () => {
       const {editSecret} = await opened();
 
