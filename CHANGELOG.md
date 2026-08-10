@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/compare/v1.4.0...v1.5.0) (2026-08-10)
+
+
+### Features
+
+* the route handlers for creating a challenge and reporting a match ([4ba6194](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/4ba619409f5dafa62951274e773a3a8221a3e03d))
+
 ## [1.4.0](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/compare/v1.3.0...v1.4.0) (2026-08-10)
 
 
