@@ -502,6 +502,36 @@ for the browser, and with it any environment variable read at module scope. The 
 into a build failure rather than a silent leak. [RULES.md](RULES.md#security) already forbids the
 outcome; this is the thing that enforces it.
 
+**Creation is rate-limited at the edge, by a Vercel WAF rule.**
+[RULES.md](RULES.md#security) requires it: creating a challenge is unauthenticated and public, which
+makes it a spam and storage-exhaustion vector. The rule is configured in Vercel's dashboard rather
+than in this repository, so its exact shape is recorded here — a decision that lives only in a
+dashboard is one nobody can reproduce.
+
+| Field | Value | Why |
+| --- | --- | --- |
+| Condition | path starts with `/api` | not only `/api/challenges` — see below |
+| Key | IP | the only key Hobby offers besides a JA4 digest |
+| Algorithm | fixed window | the only one Hobby offers |
+| Window | 60s | inside Hobby's 10s–10min range |
+| Limit | 30 requests | far above a person reporting matches, far below a flood |
+| Action | Deny (429) | |
+
+It covers the whole API and not just creation, because Hobby allows **one** rate-limit rule per
+project and `/api/matches` is a vector too: reporting looks a challenge up by the hash of its secret,
+which is a database query even when the secret is nonsense. Limiting only creation would leave the
+door beside it open to the same attack.
+
+The edge is the right place for a reason specific to this stack. A limiter that counts in the
+database spends CU-hours to decide whether to spend CU-hours, and CU-hours are exactly what a flood
+exhausts first — it would lose faster with that defence than without it. A WAF rule refuses the
+request before any function or query runs.
+
+Two limits worth knowing rather than discovering. Counters are **per region**, so a distributed
+source can spend the whole allowance in each region separately; this stops a crude flood, not a
+determined distributed one. And the rule does not exist until someone creates it — it is a
+prerequisite of the first deployment, not something the code brings with it.
+
 **The free tiers are a design constraint, not just a bill.** Vercel's Hobby plan is restricted to
 non-commercial use, so adding a donation button or a sponsor changes the plan and not merely the
 tone. Neon's free tier suspends compute until the next billing month once a monthly limit is hit —

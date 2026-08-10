@@ -28,7 +28,7 @@ they cannot contradict each other.
 | Identifier generation and hashing (`src/db/ids.ts`) | done, tested |
 | The challenge store (`src/db/store*.ts`) | done — two implementations, one shared contract |
 | The service over it (`src/service/`) | done — creates, reads, reports; owns the clock and the CSPRNG |
-| Route handlers (`src/app/api/`) | written and tested; **creation is not rate-limited yet** |
+| Route handlers (`src/app/api/`) | written and tested; rate limiting decided, applied at deploy |
 | Offline queue, PWA | not started |
 | Hosting | decided (Vercel + Neon), nothing deployed |
 
@@ -39,21 +39,28 @@ here has been deployed.
 
 In order. Each one is small enough to finish in a sitting.
 
-1. **Rate-limit challenge creation.** [RULES.md](RULES.md#security) requires it — creation is
-   unauthenticated and public, which makes it a spam and storage-exhaustion vector — and nothing
-   provides it today. It needs a decision before code: an in-memory counter does not survive
-   serverless, so the candidates are Vercel's firewall rules, a database-backed counter, or a
-   third-party limiter.
-2. **Prove the production wiring.** The handlers are tested against the fake, and the store against
+1. **Prove the production wiring.** The handlers are tested against the fake, and the store against
    a local Postgres, but nothing has run against a Neon endpoint — there is no account yet, so the
    WebSocket pool in `src/db/client.ts` is the one piece of this that has never executed.
-3. **Wire the pages to the store,** replacing `demo.ts` as the source. `view()` in that file is pure
+2. **Wire the pages to the store,** replacing `demo.ts` as the source. `view()` in that file is pure
    and stays; only `play()` is replaced.
-4. **Caching the public page.** Not an optimisation: the state is rebuilt by replay on every read,
+3. **Caching the public page.** Not an optimisation: the state is rebuilt by replay on every read,
    and Neon's free tier suspends compute for the rest of the month when its CU-hours run out.
-5. **The offline queue and the PWA layer.**
-6. **The inked re-skin.** Turns 3 and 4, six screens across both themes. Half lands in
+4. **The offline queue and the PWA layer.**
+5. **The inked re-skin.** Turns 3 and 4, six screens across both themes. Half lands in
    `nocturne.css`; the blots, turf bars and stickers are new markup. Measure the light set first.
+
+## Before the first deployment
+
+Things the code cannot bring with it, and that are easy to discover only after they were needed.
+
+- **Create the Vercel WAF rate-limit rule.** `/api`, IP key, 60s window, 30 requests, deny.
+  [RULES.md](RULES.md#security) requires creation to be limited and nothing in the repository
+  enforces it — the rule is the enforcement. [ARCHITECTURE.md](ARCHITECTURE.md#persistence) records
+  why it covers the whole API rather than only creation.
+- **Set `DATABASE_URL`** in the Vercel project. It is read on first use, so a build without it
+  succeeds and the first request fails, which is the intended order.
+- **Point `iron-squid.top` at the new deployment.** It currently serves the frozen Angular app.
 
 ## Open questions
 
