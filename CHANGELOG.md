@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/compare/v1.5.0...v1.6.0) (2026-08-10)
+
+
+### Features
+
+* the challenge pages read a stored challenge ([2dd918e](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/2dd918ed59566e0e8e47357e8a67437dc32d8e7a))
+
 ## [1.5.0](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/compare/v1.4.0...v1.5.0) (2026-08-10)
 
 
