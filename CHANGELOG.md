@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/compare/v1.6.0...v1.7.0) (2026-08-10)
+
+
+### Features
+
+* the landing opens a challenge, and shows a real one ([c02b859](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/c02b859ca26854d4a13731950da822b47e2dbca6))
+
 ## [1.6.0](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/compare/v1.5.0...v1.6.0) (2026-08-10)
 
 
