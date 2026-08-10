@@ -62,7 +62,18 @@ export const challenges = pgTable(
 
     createdAt: timestamp('created_at', {withTimezone: true})
       .notNull()
-      .defaultNow()
+      .defaultNow(),
+
+    /**
+     * When the challenge was finished, or null while it is not.
+     *
+     * Denormalised, and it is worth saying why this one is allowed where a
+     * materialised snapshot was refused. It records a fact at the moment it
+     * happens and never changes afterwards, so there is no second copy of the
+     * truth to drift out of step. Without it, "how many challenges are
+     * complete" cannot be answered without replaying every one of them.
+     */
+    completedAt: timestamp('completed_at', {withTimezone: true})
   },
   (t) => [
     unique('challenges_public_id_key').on(t.publicId),

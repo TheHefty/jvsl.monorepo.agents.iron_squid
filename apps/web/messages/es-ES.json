@@ -27,7 +27,13 @@
     "rulesHeading": "Las reglas",
     "conditionsHeading": "Condiciones",
     "conditionSkip": "No se permite saltarse armas ni equipo; hay que ganar con cada uno.",
-    "conditionShare": "El progreso se registra aquí, y se anima a los jugadores a compartir su racha."
+    "conditionShare": "El progreso se registra aquí, y se anima a los jugadores a compartir su racha.",
+    "handleLabel": "Elige un nombre",
+    "handleHint": "Cualquiera puede usar cualquier nombre. Aquí no se verifica nada, y nada requiere una cuenta.",
+    "creating": "Sorteando…",
+    "createFailed": "No se ha podido. Inténtalo de nuevo.",
+    "sampleDraw": "Un sorteo de ejemplo",
+    "nobodyYet": "Nadie ha sorteado todavía. Sé el primero."
   },
   "rules": {
     "roll": {

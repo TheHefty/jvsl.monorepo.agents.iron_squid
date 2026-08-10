@@ -11,6 +11,7 @@ import type {
   ChallengeStore,
   CreatedChallenge,
   MatchWrite,
+  Overview,
   StoredChallenge
 } from '@/db/store';
 
@@ -96,6 +97,11 @@ export class ChallengeService {
     return this.store.findByEditSecret(editSecret);
   }
 
+  /** The two counts and the live challenge the landing page shows. */
+  overview(): Promise<Overview> {
+    return this.store.overview();
+  }
+
   /**
    * Records a reported result against the challenge the secret opens.
    *
@@ -158,7 +164,12 @@ function writeFor(
     idempotencyKey: report.idempotencyKey,
     result: report.result,
     mode: report.mode,
-    at: report.at
+    at: report.at,
+    // Recorded when it happens, because counting finished challenges any
+    // other way means replaying every one of them.
+    ...(after.status === 'complete' && before.status !== 'complete'
+      ? {completesAt: report.at}
+      : {})
   };
 
   if (after.run.number !== before.run.number) {

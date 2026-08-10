@@ -2,8 +2,8 @@ import {getTranslations, setRequestLocale} from 'next-intl/server';
 import {getDisplayPrefs} from '@/lib/display.server';
 import {SiteNav} from '@/components/SiteNav';
 import {LivesMeter} from '@/components/LivesMeter';
-import {Link} from '@/i18n/navigation';
-import {getDemoChallenge} from '@/lib/demo';
+import {StartChallenge} from '@/components/StartChallenge';
+import {landing} from '@/lib/landing.server';
 import {GEAR_SLOTS} from '@/domain/types';
 import type {Locale} from '@/i18n/routing';
 
@@ -22,9 +22,20 @@ export default async function LandingPage({
   const tr = await getTranslations('rules');
   const td = await getTranslations('dashboard');
   const prefs = await getDisplayPrefs();
-  const {draw, progress, run, handle, site} = await getDemoChallenge(
-    locale as Locale
-  );
+  const page = await landing(locale as Locale);
+
+  // What the roll card shows: somebody's live run when there is one, and an
+  // example draw when the site is empty. Everything below reads from `card`,
+  // so the two cases differ in their label and their footer only.
+  const card =
+    page.kind === 'live'
+      ? {
+          label: t('nowRolling', {handle: page.challenge.handle}),
+          draw: page.challenge.draw,
+          progress: page.challenge.progress,
+          run: page.challenge.run
+        }
+      : {label: t('sampleDraw'), draw: page.draw, progress: null, run: null};
 
   return (
     <>
@@ -32,53 +43,50 @@ export default async function LandingPage({
         prefs={prefs}
         links={[
           {key: 'rules', href: '/'},
-          {key: 'runs', href: '/edit/demo'},
+          {key: 'runs', href: '/'},
           {key: 'leaderboard', href: '/'}
         ]}
-        action={{key: 'startRun', href: '/edit/demo'}}
       />
 
       <main id="main" className="page">
         <div className="hero">
           <div>
             <span className="kicker">
-              {t('stats', {runs: site.runs, completed: site.completed})}
+              {t('stats', {runs: page.runs, completed: page.completed})}
             </span>
             <h1 className="hero-title">{t('headline')}</h1>
             <p className="hero-body">
-              {t('body')} {t('record', {count: progress.best})}
+              {t('body')}{' '}
+              {page.kind === 'live'
+                ? t('record', {count: page.challenge.progress.best})
+                : t('nobodyYet')}
             </p>
-            <div className="hero-actions">
-              <Link href="/edit/demo" className="btn btn-primary">
-                {t('rollFirst')}
-              </Link>
-              <Link href="/r/demo" className="btn btn-secondary">
-                {t('seeRecord')}
-              </Link>
-            </div>
+            <StartChallenge />
           </div>
 
           <div className="roll-card">
             <div className="roll-head">
-              <span className="text-muted">{t('nowRolling', {handle})}</span>
-              <span
-                className="tnum"
-                style={{color: 'var(--color-accent-text)'}}
-              >
-                {t('progress', {
-                  cleared: progress.cleared,
-                  total: progress.total
-                })}
-              </span>
+              <span className="text-muted">{card.label}</span>
+              {card.progress ? (
+                <span
+                  className="tnum"
+                  style={{color: 'var(--color-accent-text)'}}
+                >
+                  {t('progress', {
+                    cleared: card.progress.cleared,
+                    total: card.progress.total
+                  })}
+                </span>
+              ) : null}
             </div>
 
             <div className="roll-weapon">
               <span className="roll-badge" aria-hidden="true">
-                {draw.weapon.name.slice(0, 2).toUpperCase()}
+                {card.draw.weapon.name.slice(0, 2).toUpperCase()}
               </span>
               <div style={{minWidth: 0}}>
-                <p className="roll-name">{draw.weapon.name}</p>
-                <p className="roll-class">{draw.weapon.className}</p>
+                <p className="roll-name">{card.draw.weapon.name}</p>
+                <p className="roll-class">{card.draw.weapon.className}</p>
               </div>
             </div>
 
@@ -86,15 +94,20 @@ export default async function LandingPage({
               {GEAR_SLOTS.map((slot) => (
                 <div className="gear-slot" key={slot}>
                   <dt>{td(slot)}</dt>
-                  <dd>{draw.gear[slot].name}</dd>
+                  <dd>{card.draw.gear[slot].name}</dd>
                 </div>
               ))}
             </dl>
 
-            <div className="roll-foot">
-              <span>{t('lives')}</span>
-              <LivesMeter lives={run.lives} max={progress.livesMax} />
-            </div>
+            {card.run && card.progress ? (
+              <div className="roll-foot">
+                <span>{t('lives')}</span>
+                <LivesMeter
+                  lives={card.run.lives}
+                  max={card.progress.livesMax}
+                />
+              </div>
+            ) : null}
           </div>
         </div>
 

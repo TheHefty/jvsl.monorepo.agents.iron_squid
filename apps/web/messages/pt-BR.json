@@ -27,7 +27,13 @@
     "rulesHeading": "As regras",
     "conditionsHeading": "Condições",
     "conditionSkip": "Não é permitido pular arma nem gear; é preciso vencer com cada um deles.",
-    "conditionShare": "O progresso é registrado aqui, e compartilhar a própria run é incentivado."
+    "conditionShare": "O progresso é registrado aqui, e compartilhar a própria run é incentivado.",
+    "handleLabel": "Escolha um nome",
+    "handleHint": "Qualquer um pode usar qualquer nome. Nada aqui é verificado, e nada exige conta.",
+    "creating": "Sorteando…",
+    "createFailed": "Não deu certo. Tente de novo.",
+    "sampleDraw": "Um sorteio de exemplo",
+    "nobodyYet": "Ninguém sorteou ainda. Seja o primeiro."
   },
   "rules": {
     "roll": {

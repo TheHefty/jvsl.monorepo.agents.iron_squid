@@ -28,6 +28,7 @@ type Row = {
   secretHash: string;
   handle: string;
   createdAt: string;
+  completedAt: string | null;
   runs: RunRow[];
   draws: DrawRow[];
   matches: MatchRow[];
@@ -48,6 +49,7 @@ export class FakeChallengeStore implements ChallengeStore {
       secretHash: hashEditSecret(editSecret),
       handle: input.handle,
       createdAt: input.at,
+      completedAt: null,
       runs: [{number: 1, startedAt: input.at, endedAt: null}],
       draws: [{runNumber: 1, seq: 1, ...flatten(input.draw)}],
       matches: [],
@@ -92,6 +94,8 @@ export class FakeChallengeStore implements ChallengeStore {
       playedAt: write.at
     });
 
+    if (write.completesAt) row.completedAt = write.completesAt;
+
     if (write.startsRun !== undefined) {
       current.endedAt = write.at;
       row.runs.push({
@@ -112,6 +116,23 @@ export class FakeChallengeStore implements ChallengeStore {
     }
 
     return {applied: true};
+  }
+
+  async overview() {
+    const rows = [...this.rows.values()];
+    const activity = (row: Row) =>
+      Math.max(
+        ...row.matches.map((m) => Date.parse(m.playedAt)),
+        Date.parse(row.createdAt)
+      );
+
+    const latest = rows.sort((a, b) => activity(b) - activity(a))[0];
+
+    return {
+      runs: rows.reduce((total, row) => total + row.runs.length, 0),
+      completed: rows.filter((row) => row.completedAt !== null).length,
+      latest: this.view(latest)
+    };
   }
 
   private view(row: Row | undefined): StoredChallenge | null {
