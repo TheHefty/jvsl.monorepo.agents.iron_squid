@@ -1,1 +1,1 @@
-cd apps/web && npm test
+cd apps/web && npm run typecheck && npm test

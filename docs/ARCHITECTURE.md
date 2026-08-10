@@ -469,13 +469,33 @@ comes up: queries are not secrets, and no amount of hiding them substitutes for 
 Writing an injectable query in Drizzle means deliberately stepping off the normal path, while raw SQL
 makes the safe and the unsafe form equally easy to type.
 
-**No interactive transaction is used, or needed.** Reporting a match reads the state, lets the domain
-decide what happened, and then writes — a `BEGIN`, think, `COMMIT` shape that Neon's HTTP driver does
-not support. It is not needed. The read happens outside any transaction, the domain computes, and the
-writes go in one batch whose safety comes from the idempotency constraint: a replayed Background Sync
-entry hits it and is ignored, and two tabs racing hit the same one. The alternative was Neon's
-WebSocket pool, which restores interactive transactions at the cost of holding a connection open —
-handing back the property serverless was chosen for.
+**Writes are transactional, over Neon's WebSocket pool.** This reverses an earlier entry here, which
+said no interactive transaction was needed. That was written before the store was, and writing it
+showed otherwise: creating a challenge inserts into three tables, and reporting a match inserts into
+up to three. A challenge whose run never arrived cannot be rebuilt at all, and a win whose next draw
+never arrived makes the replay run out of draws and throw. Neither is a state anyone may observe.
+
+The two drivers turn out to have disjoint mechanisms, which is what decided it — checked in the
+installed source rather than taken from documentation:
+
+| | `transaction()` | `batch()` |
+| --- | --- | --- |
+| `node-postgres` | yes | absent |
+| `neon-http` | throws `No transactions support in neon-http driver` | yes, and atomic |
+
+So the choice was between one code path on `transaction()` — which means Neon's WebSocket pool in
+production, since its HTTP driver has none — and a batch of statements guarded in SQL, which keeps
+the HTTP driver but executes through a different mechanism in production than in test. The first
+wins on a single argument: the contract suite exists to stop two implementations drifting, and a
+production transport that no test exercises would reintroduce exactly that gap by another door. The
+cost is a held connection, which is what the earlier entry was protecting and is worth less than
+testing the thing that ships.
+
+Idempotency is still the `UNIQUE (challenge_id, idempotency_key)` constraint, and the transaction is
+what makes "nothing else was written" literal when it bites. The scope is the challenge rather than
+the run for a reason found the same way: a report that kills a run and starts another would, under a
+run-scoped key, be re-applied on retry, because the new run has never seen that key. A client
+retrying knows nothing about runs.
 
 **The database module imports `server-only`.** Importing it from a client component would bundle it
 for the browser, and with it any environment variable read at module scope. The package turns that

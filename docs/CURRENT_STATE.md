@@ -6,7 +6,7 @@ to — it describes the present, not the history. `git log` is the history, and
 
 Read this first when picking the project back up after a break.
 
-_Last updated: 2026-08-09._
+_Last updated: 2026-08-10._
 
 ## What runs today
 
@@ -26,7 +26,7 @@ they cannot contradict each other.
 | The weapon and gear catalogue (`src/data/`) | generated and committed, pinned to game version 1120 |
 | Database schema and migrations (`src/db/schema.ts`, `drizzle/`) | done, applied and rehearsed against Postgres 17 |
 | Identifier generation and hashing (`src/db/ids.ts`) | done, tested |
-| The challenge store | **in progress — the next thing to write** |
+| The challenge store (`src/db/store*.ts`) | done — two implementations, one shared contract |
 | Route handlers, offline queue, PWA | not started |
 | Hosting | decided (Vercel + Neon), nothing deployed |
 
@@ -37,23 +37,19 @@ here has been deployed.
 
 In order. Each one is small enough to finish in a sitting.
 
-1. **The challenge store.** Four operations — find by public id, find by the hash of an edit secret,
-   create, append a match. The boundary is decided: the store reads and writes and nothing else, and
-   a service above it does the read → `applyMatch` → write. That is what keeps the in-memory fake a
-   plain `Map`, which is what makes a handler test worth anything.
-2. **The contract suite.** The same assertions run against the fake and against a real Postgres, so
-   the two cannot drift. `vitest.config.mts` already excludes `*.contract.test.ts` from the default
-   run; the `test:db` command that runs them does not exist yet.
-3. **Route handlers.** Create a challenge, report a match. Every one tested for its happy path, its
+1. **The service above the store.** Read the challenge, call `applyMatch`, hand the store what
+   changed. It is the piece the store deliberately does not contain, and nothing else can be wired
+   until it exists.
+2. **Route handlers.** Create a challenge, report a match. Every one tested for its happy path, its
    rejected input and its idempotent replay. Read `node_modules/next/dist/docs/` first — the
    generated `apps/web/AGENTS.md` warns that this Next has breaking changes against what an agent is
    likely to assume, and Middleware being renamed to Proxy has already caught us once.
-4. **Wire the pages to the store,** replacing `demo.ts` as the source. `view()` in that file is pure
+3. **Wire the pages to the store,** replacing `demo.ts` as the source. `view()` in that file is pure
    and stays; only `play()` is replaced.
-5. **Caching the public page.** Not an optimisation: the state is rebuilt by replay on every read,
+4. **Caching the public page.** Not an optimisation: the state is rebuilt by replay on every read,
    and Neon's free tier suspends compute for the rest of the month when its CU-hours run out.
-6. **The offline queue and the PWA layer.**
-7. **The inked re-skin.** Turns 3 and 4, six screens across both themes. Half lands in
+5. **The offline queue and the PWA layer.**
+6. **The inked re-skin.** Turns 3 and 4, six screens across both themes. Half lands in
    `nocturne.css`; the blots, turf bars and stickers are new markup. Measure the light set first.
 
 ## Open questions
@@ -81,5 +77,8 @@ Learned the hard way, and cheaper to read than to rediscover.
   commit, so release-please reads each commit on the branch — and the merge commit too, which carries
   the pull request title in its body. Write that title as an ordinary sentence, not as a `feat:` or
   `fix:`, or it becomes an extra entry summarising the real ones.
+- **`npm test` does not type-check.** vitest transpiles without checking, so a type error passes it
+  and fails `next build`. One reached `master` that way. `npm run typecheck` exists for this and now
+  runs ahead of the tests on `pre-push`.
 - **`drizzle-kit` cannot resolve the `@/` alias.** `src/db/schema.ts` imports the domain relatively
   for that reason, the same trap as `scripts/generate-catalogue.mts`.
