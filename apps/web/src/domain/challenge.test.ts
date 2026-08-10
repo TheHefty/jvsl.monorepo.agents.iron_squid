@@ -484,7 +484,7 @@ describe('the mode a match was played in', () => {
     const state = applyMatch(
       startChallenge(drawsFrom(cat, firstAlways), AT),
       cat,
-      firstAlways,
+      drawsFrom(cat, firstAlways),
       {result: 'win', mode: 'clamBlitz', at: AT}
     );
 

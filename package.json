@@ -20,7 +20,9 @@
     "db:up": "npm run db:up --workspace @iron-squid/web",
     "db:down": "npm run db:down --workspace @iron-squid/web",
     "db:migrate": "npm run db:migrate --workspace @iron-squid/web",
-    "db:psql": "npm run db:psql --workspace @iron-squid/web"
+    "db:psql": "npm run db:psql --workspace @iron-squid/web",
+    "test:db": "npm run test:db --workspace @iron-squid/web",
+    "typecheck": "npm run typecheck --workspace @iron-squid/web"
   },
   "devDependencies": {
     "husky": "^9.1.7"

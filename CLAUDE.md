@@ -81,7 +81,9 @@ Product commands run from the repo root, which forwards to the `apps/web` worksp
 npm install     # wires the workspace; run once after cloning
 npm run dev     # next dev
 npm run build   # next build — runs TypeScript too
-npm test        # vitest run
+npm test        # vitest run — no database, and what pre-push runs
+npm run test:db # the contract suite, against the local Postgres in a container
+npm run typecheck # tsc --noEmit; vitest does not type-check, so this catches what it cannot
 npm run lint    # eslint
 npm run format  # prettier --write .
 ```

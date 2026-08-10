@@ -16,7 +16,9 @@
     "db:up": "./scripts/local-db.sh up",
     "db:down": "./scripts/local-db.sh down",
     "db:migrate": "./scripts/local-db.sh migrate",
-    "db:psql": "./scripts/local-db.sh psql"
+    "db:psql": "./scripts/local-db.sh psql",
+    "test:db": "./scripts/local-db.sh run npx vitest run --config vitest.db.config.mts",
+    "typecheck": "tsc --noEmit"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
