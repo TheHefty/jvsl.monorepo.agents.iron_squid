@@ -319,6 +319,30 @@
   flex-wrap: wrap;
 }
 
+/*
+ * The report block: choose a mode, then say what happened.
+ *
+ * The mode comes first because it is required — rule 3 counts a win only in
+ * Anarchy or X Battle, and naming it is the only trace the honour system
+ * leaves. `.actions` above already spaces the buttons, so this only has to
+ * close the gap the fieldset's own margin would otherwise leave.
+ */
+.report fieldset {
+  border: 0;
+  margin: var(--space-6) 0 0;
+  padding: 0;
+}
+
+.report legend {
+  padding: 0;
+  margin-bottom: var(--space-2);
+  color: var(--color-text-muted);
+}
+
+.report .actions {
+  margin-top: var(--space-4);
+}
+
 /* — armory grid — */
 .armory-grid {
   list-style: none;

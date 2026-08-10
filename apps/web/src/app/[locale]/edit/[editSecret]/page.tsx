@@ -2,9 +2,11 @@ import {getTranslations, setRequestLocale} from 'next-intl/server';
 import {getDisplayPrefs} from '@/lib/display.server';
 import {SiteNav} from '@/components/SiteNav';
 import {ArmoryGrid} from '@/components/ArmoryGrid';
+import {ReportMatch} from '@/components/ReportMatch';
 import {LivesMeter} from '@/components/LivesMeter';
 import {Link} from '@/i18n/navigation';
 import {GEAR_SLOTS} from '@/domain/types';
+import {loadModeNames} from '@/data/catalogue';
 import {editableChallenge} from '@/lib/challenge.server';
 import type {Locale} from '@/i18n/routing';
 
@@ -24,10 +26,10 @@ export default async function RunPage({
 
   const t = await getTranslations('dashboard');
   const prefs = await getDisplayPrefs();
-  const {armory, draw, progress, run, day} = await editableChallenge(
-    editSecret,
-    locale as Locale
-  );
+  const [{armory, draw, progress, run, day}, modeNames] = await Promise.all([
+    editableChallenge(editSecret, locale as Locale),
+    loadModeNames(locale as Locale)
+  ]);
   const untouched = progress.remaining - 1;
 
   return (
@@ -91,14 +93,7 @@ export default async function RunPage({
               ))}
             </dl>
 
-            <div className="actions">
-              <button type="button" className="btn btn-primary">
-                {t('iWon')}
-              </button>
-              <button type="button" className="btn btn-secondary">
-                {t('iLost')}
-              </button>
-            </div>
+            <ReportMatch editSecret={editSecret} modeNames={modeNames} />
 
             <p className="note" style={{marginTop: 'var(--space-6)'}}>
               {t('honourSystem')}

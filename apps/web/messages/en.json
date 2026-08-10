@@ -87,7 +87,9 @@
     "headBurned": "Headgear burned",
     "clothesBurned": "Clothing burned",
     "shoesBurned": "Shoes burned",
-    "honourSystem": "Reporting is on the honour system. Your run page shows every entry, so lie at your own social cost."
+    "honourSystem": "Reporting is on the honour system. Your run page shows every entry, so lie at your own social cost.",
+    "modeLabel": "Which mode?",
+    "reportFailed": "That did not go through. Try again — it will not count twice."
   },
   "armory": {
     "heading": "The armory",
