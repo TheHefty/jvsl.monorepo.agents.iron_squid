@@ -13,9 +13,9 @@ _Last updated: 2026-08-10._
 Five screens in five locales, both themes resolved on the server, the accessibility baseline and its
 four user options, and the real 162-weapon roster read from the generated catalogue.
 
-Every screen reads a **stored** challenge, and the landing can open one: its form posts to
-`/api/challenges` and lands the player on their edit page. Reporting a match is still not wired — the
-API exists and the win and loss buttons do not call it.
+**The loop is closed.** A visitor opens a challenge from the landing, lands on their edit page, picks
+a mode and reports a win or a loss, and the page comes back with the next weapon dealt. Every screen
+reads a stored challenge; nothing renders anything invented.
 
 There is no invented data left anywhere. The played challenge that used to feed the screens is now a
 test fixture in `test/played-challenge.ts`, kept because it exercises something the unit tests cannot:
@@ -52,12 +52,10 @@ In order. Each one is small enough to finish in a sitting.
 1. **Prove the production wiring.** The handlers are tested against the fake, and the store against
    a local Postgres, but nothing has run against a Neon endpoint — there is no account yet, so the
    WebSocket pool in `src/db/client.ts` is the one piece of this that has never executed.
-2. **The win and loss buttons.** The last piece of the loop: the dashboard reports a match to
-   `/api/matches` with a client-generated idempotency key. Everything behind it exists and is tested.
-3. **Caching the public page.** Not an optimisation: the state is rebuilt by replay on every read,
+2. **Caching the public page.** Not an optimisation: the state is rebuilt by replay on every read,
    and Neon's free tier suspends compute for the rest of the month when its CU-hours run out.
-4. **The offline queue and the PWA layer.**
-5. **The inked re-skin.** Turns 3 and 4, six screens across both themes. Half lands in
+3. **The offline queue and the PWA layer.**
+4. **The inked re-skin.** Turns 3 and 4, six screens across both themes. Half lands in
    `nocturne.css`; the blots, turf bars and stickers are new markup. Measure the light set first.
 
 ## Before the first deployment

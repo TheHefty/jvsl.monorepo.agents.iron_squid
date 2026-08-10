@@ -87,7 +87,9 @@
     "headBurned": "Cabeça gastas",
     "clothesBurned": "Roupas gastas",
     "shoesBurned": "Pés gastos",
-    "honourSystem": "O relato é por honra. Sua página mostra cada entrada, então minta por sua conta e risco."
+    "honourSystem": "O relato é por honra. Sua página mostra cada entrada, então minta por sua conta e risco.",
+    "modeLabel": "Qual modo?",
+    "reportFailed": "Não deu certo. Tente de novo — não vai contar duas vezes."
   },
   "armory": {
     "heading": "O arsenal",

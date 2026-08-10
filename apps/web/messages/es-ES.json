@@ -87,7 +87,9 @@
     "headBurned": "Cabeza gastadas",
     "clothesBurned": "Ropa gastada",
     "shoesBurned": "Calzado gastado",
-    "honourSystem": "El registro es por honor. Tu página muestra cada entrada, así que miente asumiendo el coste social."
+    "honourSystem": "El registro es por honor. Tu página muestra cada entrada, así que miente asumiendo el coste social.",
+    "modeLabel": "¿Qué modo?",
+    "reportFailed": "No se ha podido. Inténtalo de nuevo: no se contará dos veces."
   },
   "armory": {
     "heading": "El arsenal",
