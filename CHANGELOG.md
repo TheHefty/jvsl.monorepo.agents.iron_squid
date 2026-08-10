@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/compare/v1.3.0...v1.4.0) (2026-08-10)
+
+
+### Features
+
+* the service that joins the domain to the store ([2a75c87](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/2a75c87ddc08c3e64398ef35d0f5317995b6a300))
+
 ## [1.3.0](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/compare/v1.2.0...v1.3.0) (2026-08-10)
 
 
