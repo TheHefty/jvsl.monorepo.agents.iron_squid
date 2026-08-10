@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/compare/v1.2.0...v1.3.0) (2026-08-10)
+
+
+### Features
+
+* the challenge store's port, its fake, and the shared contract ([9d4ef98](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/9d4ef98f3f52c86b905efaf7dda82d996085d740))
+* the Postgres store, over a transaction ([782f77d](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/782f77ddaf9ab1861a26e12d93c47f0e7ebe21ba))
+
 ## [1.2.0](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/compare/v1.1.0...v1.2.0) (2026-08-09)
 
 
