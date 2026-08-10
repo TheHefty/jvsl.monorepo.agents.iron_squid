@@ -34,6 +34,16 @@ export async function generateMetadata({
   };
 }
 
+/**
+ * The whole app blocks while it renders, and that is a decision rather than an
+ * oversight: the theme comes from a cookie so the page never paints the wrong
+ * one first, and a route that reads a cookie has no static shell to produce.
+ *
+ * Placed here because this is the lowest point that covers it — every page
+ * hangs off this layout, and every page reads the same cookie through it.
+ */
+export const instant = false;
+
 export default async function LocaleLayout({
   children,
   params
