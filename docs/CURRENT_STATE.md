@@ -10,11 +10,16 @@ _Last updated: 2026-08-10._
 
 ## What runs today
 
-The interface, against a demo challenge. Five screens in five locales, both themes resolved on the
-server, the accessibility baseline and its four user options, and the real 162-weapon roster read
-from the generated catalogue.
+Five screens in five locales, both themes resolved on the server, the accessibility baseline and its
+four user options, and the real 162-weapon roster read from the generated catalogue.
 
-Nothing is persisted and no button writes anything. `src/lib/demo.ts` *plays* a fixed challenge
+The public run page and the three edit screens now read a **stored** challenge; the landing is the
+last one still rendering the demo. No button writes anything yet — the API exists and nothing calls
+it.
+
+Because those pages take their state from a database, the app no longer runs without one. In this dev
+container that means it does not run at all until there is a Neon branch: the local Postgres is not
+reachable from `next dev`, for the networking reason below. `src/lib/demo.ts` *plays* a fixed challenge
 through the domain reducer at request time, so every figure on a page derives from one state and
 they cannot contradict each other.
 
@@ -29,6 +34,7 @@ they cannot contradict each other.
 | The challenge store (`src/db/store*.ts`) | done — two implementations, one shared contract |
 | The service over it (`src/service/`) | done — creates, reads, reports; owns the clock and the CSPRNG |
 | Route handlers (`src/app/api/`) | written and tested; rate limiting decided, applied at deploy |
+| The challenge pages (`/r/…`, `/edit/…`) | reading from the store; the landing still on the demo |
 | Offline queue, PWA | not started |
 | Hosting | decided (Vercel + Neon), nothing deployed |
 
@@ -42,8 +48,10 @@ In order. Each one is small enough to finish in a sitting.
 1. **Prove the production wiring.** The handlers are tested against the fake, and the store against
    a local Postgres, but nothing has run against a Neon endpoint — there is no account yet, so the
    WebSocket pool in `src/db/client.ts` is the one piece of this that has never executed.
-2. **Wire the pages to the store,** replacing `demo.ts` as the source. `view()` in that file is pure
-   and stays; only `play()` is replaced.
+2. **The landing page.** It is the last thing reading `demo.ts`, and the only one with no real answer
+   yet: it shows a live roll card and site-wide totals, and the store has no operation that counts
+   challenges. Deciding what it shows to a visitor with no challenge — most likely a create form —
+   comes before that fifth operation.
 3. **Caching the public page.** Not an optimisation: the state is rebuilt by replay on every read,
    and Neon's free tier suspends compute for the rest of the month when its CU-hours run out.
 4. **The offline queue and the PWA layer.**

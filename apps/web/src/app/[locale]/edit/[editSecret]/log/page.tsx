@@ -6,7 +6,7 @@ import {
 import {getDisplayPrefs} from '@/lib/display.server';
 import {SiteNav} from '@/components/SiteNav';
 import {loadModeNames} from '@/data/catalogue';
-import {getDemoChallenge} from '@/lib/demo';
+import {editableChallenge} from '@/lib/challenge.server';
 import type {Locale} from '@/i18n/routing';
 
 /** Run log — design option 1g: every win, and every death. */
@@ -22,7 +22,7 @@ export default async function LogPage({
   const format = await getFormatter();
   const prefs = await getDisplayPrefs();
   const [{log, run}, modeNames] = await Promise.all([
-    getDemoChallenge(locale as Locale),
+    editableChallenge(editSecret, locale as Locale),
     loadModeNames(locale as Locale)
   ]);
 

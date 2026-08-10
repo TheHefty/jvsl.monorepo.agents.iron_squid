@@ -2,7 +2,7 @@ import {getTranslations, setRequestLocale} from 'next-intl/server';
 import {getDisplayPrefs} from '@/lib/display.server';
 import {SiteNav} from '@/components/SiteNav';
 import {ArmoryGrid} from '@/components/ArmoryGrid';
-import {getDemoChallenge} from '@/lib/demo';
+import {editableChallenge} from '@/lib/challenge.server';
 import type {Locale} from '@/i18n/routing';
 
 /** The armory — design option 1d: dense tile grid, state by fill and symbol. */
@@ -16,7 +16,10 @@ export default async function ArmoryPage({
 
   const t = await getTranslations('armory');
   const prefs = await getDisplayPrefs();
-  const {armory, progress} = await getDemoChallenge(locale as Locale);
+  const {armory, progress} = await editableChallenge(
+    editSecret,
+    locale as Locale
+  );
   const untouched = progress.remaining - 1;
 
   return (
