@@ -27,6 +27,7 @@ they cannot contradict each other.
 | Database schema and migrations (`src/db/schema.ts`, `drizzle/`) | done, applied and rehearsed against Postgres 17 |
 | Identifier generation and hashing (`src/db/ids.ts`) | done, tested |
 | The challenge store (`src/db/store*.ts`) | done — two implementations, one shared contract |
+| The service over it (`src/service/`) | done — creates, reads, reports; owns the clock and the CSPRNG |
 | Route handlers, offline queue, PWA | not started |
 | Hosting | decided (Vercel + Neon), nothing deployed |
 
@@ -37,19 +38,16 @@ here has been deployed.
 
 In order. Each one is small enough to finish in a sitting.
 
-1. **The service above the store.** Read the challenge, call `applyMatch`, hand the store what
-   changed. It is the piece the store deliberately does not contain, and nothing else can be wired
-   until it exists.
-2. **Route handlers.** Create a challenge, report a match. Every one tested for its happy path, its
+1. **Route handlers.** Create a challenge, report a match. Every one tested for its happy path, its
    rejected input and its idempotent replay. Read `node_modules/next/dist/docs/` first — the
    generated `apps/web/AGENTS.md` warns that this Next has breaking changes against what an agent is
    likely to assume, and Middleware being renamed to Proxy has already caught us once.
-3. **Wire the pages to the store,** replacing `demo.ts` as the source. `view()` in that file is pure
+2. **Wire the pages to the store,** replacing `demo.ts` as the source. `view()` in that file is pure
    and stays; only `play()` is replaced.
-4. **Caching the public page.** Not an optimisation: the state is rebuilt by replay on every read,
+3. **Caching the public page.** Not an optimisation: the state is rebuilt by replay on every read,
    and Neon's free tier suspends compute for the rest of the month when its CU-hours run out.
-5. **The offline queue and the PWA layer.**
-6. **The inked re-skin.** Turns 3 and 4, six screens across both themes. Half lands in
+4. **The offline queue and the PWA layer.**
+5. **The inked re-skin.** Turns 3 and 4, six screens across both themes. Half lands in
    `nocturne.css`; the blots, turf bars and stickers are new markup. Measure the light set first.
 
 ## Open questions
