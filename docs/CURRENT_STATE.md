@@ -38,6 +38,7 @@ they cannot contradict each other.
 | The challenge store (`src/db/store*.ts`) | done — two implementations, one shared contract |
 | The service over it (`src/service/`) | done — creates, reads, reports; owns the clock and the CSPRNG |
 | Route handlers (`src/app/api/`) | written and tested; rate limiting decided, applied at deploy |
+| Caching | the public read is cached and tag-invalidated; editing pages are not |
 | Every page, landing included | reading from the store |
 | Offline queue, PWA | not started |
 | Hosting | decided (Vercel + Neon), nothing deployed |
@@ -52,10 +53,8 @@ In order. Each one is small enough to finish in a sitting.
 1. **Prove the production wiring.** The handlers are tested against the fake, and the store against
    a local Postgres, but nothing has run against a Neon endpoint — there is no account yet, so the
    WebSocket pool in `src/db/client.ts` is the one piece of this that has never executed.
-2. **Caching the public page.** Not an optimisation: the state is rebuilt by replay on every read,
-   and Neon's free tier suspends compute for the rest of the month when its CU-hours run out.
-3. **The offline queue and the PWA layer.**
-4. **The inked re-skin.** Turns 3 and 4, six screens across both themes. Half lands in
+2. **The offline queue and the PWA layer.**
+3. **The inked re-skin.** Turns 3 and 4, six screens across both themes. Half lands in
    `nocturne.css`; the blots, turf bars and stickers are new markup. Measure the light set first.
 
 ## Before the first deployment
@@ -96,6 +95,9 @@ Learned the hard way, and cheaper to read than to rediscover.
   commit, so release-please reads each commit on the branch — and the merge commit too, which carries
   the pull request title in its body. Write that title as an ordinary sentence, not as a `feat:` or
   `fix:`, or it becomes an extra entry summarising the real ones.
+- **Only one `npm run test:db` at a time.** The suite truncates the database between cases, so two
+  concurrent runs delete each other's rows mid-test and fail in ways that look exactly like real
+  regressions. `fileParallelism: false` covers one run, not two.
 - **`npm test` does not type-check.** vitest transpiles without checking, so a type error passes it
   and fails `next build`. One reached `master` that way. `npm run typecheck` exists for this and now
   runs ahead of the tests on `pre-push`.

@@ -544,6 +544,24 @@ Together with a state rebuilt by replay on every read, that makes caching the pu
 requirement rather than an optimisation. A challenge changes only when its player reports a match;
 between reports it is static for minutes or hours.
 
+**The public page's read is cached; the editing pages' reads are not.** Cache Components is enabled
+(`cacheComponents: true`), and `src/lib/challenge.server.ts` wraps the public read in `use cache`
+with a `cacheTag` per public id. Reporting a match calls `revalidateTag` for that id, so the cache is
+invalidated by the only event that changes it; the `cacheLife('hours')` beside it is a safety net for
+an invalidation that never arrives rather than a window anyone waits out.
+
+The editing side stays uncached deliberately. A route handler can only call `revalidateTag`, which is
+stale-while-revalidate; `updateTag` expires immediately but is limited to Server Actions, and the
+write is a route handler on purpose so the rate-limit rule can reach it. A player who has just
+reported a match has to see it, and one player's own page is not what threatens the compute budget.
+
+Enabling Cache Components is not a configuration line, and the build proved that rather than a
+document claiming it: it asserts that every route produces a static shell, and ours cannot, because
+the theme is resolved from a cookie so a page never paints the wrong one first. The root layout
+carries `export const instant = false` — the documented way to say a tree blocks on purpose, placed
+at the lowest point that covers every page. The routes now build as partial prerenders, a static
+shell with the dynamic part streamed, which is better than the fully dynamic ones they were.
+
 **The seam is already cut, halfway.** `src/lib/demo.ts` separates `play(catalogue) → ChallengeState`
 from `view(catalogue) → the shape a page renders`, and only the first is what persistence replaces —
 `view` is pure and stays exactly as it is. So the repository interface is small: find by `public_id`,
