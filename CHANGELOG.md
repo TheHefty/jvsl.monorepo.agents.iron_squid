@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/compare/v1.7.0...v1.8.0) (2026-08-10)
+
+
+### Features
+
+* the win and loss buttons report a match ([a7506db](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/a7506db3f73c27aa3102074dc2330864fc98fa41))
+
 ## [1.7.0](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/compare/v1.6.0...v1.7.0) (2026-08-10)
 
 
