@@ -81,6 +81,10 @@ TypeScript strict, react-intl. From `site/`:
 - `npm run build`, then `npm run bdd`: acceptance tests, the registered `.feature` files run by
   playwright-bdd against the production build. Never against the dev server, which has no CSP.
 - `npm test` (Vitest), `npm run typecheck`, `npm run lint`.
+- **A pull request's title is its commit.** Merges are squash only and take the PR title, which the
+  required `pr-title` check holds to a conventional commit. release-please reads those commits, so
+  a `fix` titled `chore` is a release that never happens. The release PR is release-please's own;
+  merging it tags `vX.Y.Z`.
 - A story's `.feature` is listed in `site/e2e/registered-features.ts` by the task that starts it,
   after its scenarios have been seen failing. Every scenario runs under the guard in
   `site/e2e/fixtures.ts`, which fails it on any off-site request, CSP violation, missing file of the

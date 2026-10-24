@@ -1,0 +1,36 @@
+# Keeps a release pull request open with the next version and its changelog, from the conventional
+# commits on main; merging it tags the release. The pull request is opened with a GitHub App token,
+# not GITHUB_TOKEN, because a pull request opened by GITHUB_TOKEN triggers no workflow, so it would
+# carry none of the required checks and could never be merged.
+name: release-please
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-please
+  cancel-in-progress: false
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      # Fails the job if the App cannot mint a token; there is no fallback to GITHUB_TOKEN.
+      - id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ vars.RELEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          repositories: ${{ github.event.repository.name }}
+          # Asked for explicitly, so the token holds only these even if the App was granted more.
+          permission-contents: write
+          permission-pull-requests: write
+      - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
