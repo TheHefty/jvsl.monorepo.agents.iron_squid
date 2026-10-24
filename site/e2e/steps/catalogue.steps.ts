@@ -5,6 +5,7 @@ import { expect } from '@playwright/test';
 import type { Catalogue } from '../../src/catalogue/types';
 import { Given, Then, When } from '../fixtures';
 import { startDatamine } from '../support/datamine-fixture';
+import { buildState } from '../support/build-state';
 import { run } from '../support/run';
 
 let catalogue: Catalogue;
@@ -52,8 +53,6 @@ Then(
 );
 
 // A build of the site from a catalogue the scenario sets up, into a directory of its own.
-let buildEnv: Record<string, string> = {};
-let build: { status: number; output: string };
 
 Given('game data in which one gear slot has fewer pieces than there are kits', async () => {
   const dir = mkdtempSync(join(tmpdir(), 'catalogue-'));
@@ -62,20 +61,23 @@ Given('game data in which one gear slot has fewer pieces than there are kits', a
   short.gear.shoes = short.gear.shoes.slice(0, short.kits.length - 1);
   mkdirSync(join(dir, short.version));
   writeFileSync(join(dir, short.version, 'catalogue.json'), JSON.stringify(short));
-  buildEnv = { CATALOGUE_DIR: dir, BUILD_OUT_DIR: mkdtempSync(join(tmpdir(), 'build-')) };
+  buildState.env = { CATALOGUE_DIR: dir, BUILD_OUT_DIR: mkdtempSync(join(tmpdir(), 'build-')) };
 });
 
 When('the site is built', async () => {
-  build = await run('npm', ['run', 'build'], buildEnv);
+  // Into a directory of its own, never over the dist/ under test.
+  buildState.result = await run('npm', ['run', 'build'], buildState.env);
+  await buildState.after?.();
+  buildState.after = undefined;
 });
 
 Then('the build fails', async () => {
-  expect(build.status, build.output).not.toBe(0);
+  expect(buildState.result?.status, buildState.result?.output).not.toBe(0);
 });
 
 Then('the failure names the slot, how many pieces it has and how many kits there are', async () => {
   const kits = catalogue.kits.length;
-  expect(build.output).toContain(
+  expect(buildState.result?.output).toContain(
     `the shoes slot has ${kits - 1} pieces and there are ${kits} kits`,
   );
 });

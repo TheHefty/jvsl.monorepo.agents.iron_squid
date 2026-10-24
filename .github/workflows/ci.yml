@@ -67,6 +67,12 @@ jobs:
         with: { node-version: '24', cache: npm, cache-dependency-path: site/package-lock.json }
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      # Verified game images, keyed by every catalogue's image lock: a warm build downloads none.
+      - uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5.1.0
+        with:
+          path: site/.cache/game-images
+          key: game-images-${{ hashFiles('site/src/catalogue/*/images.lock.json') }}
+          restore-keys: game-images-
       # Both places the site is served from: the domain root, and the repository path on
       # github.io. A base path that is wrong for where the site lives shows only once published.
       - name: acceptance at /

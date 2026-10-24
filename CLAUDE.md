@@ -87,6 +87,10 @@ TypeScript strict, react-intl. From `site/`:
   never an image). Moving the pin is its own PR (`docs/RULES.md`): change commit, folder and game
   version, run the generator with `--record-digests`, and review the diff it prints. Version
   folders sort as text, so read the datamine's `versions.json` for the newest, not the last folder.
+- **Game images are fetched by the build, never committed.** `npm run build` downloads each image
+  in `images.lock.json`, verifies its SHA-256, caches it by digest in `site/.cache/game-images/`
+  and publishes it at `/game/<version>/<path>`. Both directories are git-ignored, and `npm test`
+  fails if any tracked file has the bytes of a game image.
 - **A pull request's title is its commit.** Merges are squash only and take the PR title, which the
   required `pr-title` check holds to a conventional commit. release-please reads those commits, so
   a `fix` titled `chore` is a release that never happens. The release PR is release-please's own;

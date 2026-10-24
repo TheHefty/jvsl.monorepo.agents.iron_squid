@@ -12,11 +12,7 @@ export const registrations: Registration[] = [
   {
     feature: 'run-in-the-browser/catalogue.feature',
     pending: {
-      'Every kit and gear piece has a name and an image': 'game-images (is-82z.3.2)',
       'The game version is shown': 'catalogue-version-shown (is-82z.3.3)',
-      'An image that does not match its digest stops the build': 'game-images (is-82z.3.2)',
-      'An image that cannot be downloaded stops the build': 'game-images (is-82z.3.2)',
-      'No game image is in the repository': 'game-images (is-82z.3.2)',
     },
   },
 ];
