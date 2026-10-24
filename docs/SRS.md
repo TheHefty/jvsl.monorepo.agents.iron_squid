@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Draft |
+| **Status** | Accepted |
 | **Date** | 2026-10-24 |
 | **Author** | João Lima, with Claude |
 
@@ -264,4 +264,7 @@ The site in English only (`en-US`), with the i18n seam already in place.
 
 ## Outcome
 
-Filled in when the status leaves `Draft`.
+Agreed on 2026-10-24 by João Lima, owner, at the SRS gate (PR #4), as written. The choices made
+while drafting were confirmed with it rather than changed: lives counted from the start or the last
+reset (FR-16), undo of the last result (FR-20), the optional display name (FR-11), a run pinned to
+its catalogue version (FR-33), and the exclusion of Hero Mode and Side Order gear (FR-2).
