@@ -9,15 +9,15 @@ import { countScenarios, countScenariosTagged, missingFromRun } from './scenario
 type Suite = { suites?: Suite[]; specs?: { tests: { projectName: string; status: string }[] }[] };
 
 const deployed = process.argv.includes('--deployed');
-const project = deployed ? 'deployed' : 'acceptance';
-const report = JSON.parse(readFileSync(`e2e/test-results/${project}.json`, 'utf8')) as Suite;
+const report = JSON.parse(
+  readFileSync(`e2e/test-results/${deployed ? 'deployed' : 'acceptance'}.json`, 'utf8'),
+) as Suite;
+// The acceptance suite runs once per colour scheme; each run must execute every scenario.
+const projects = deployed ? ['deployed'] : ['acceptance-dark', 'acceptance-light'];
 const tests = (s: Suite): { projectName: string; status: string }[] => [
   ...(s.specs ?? []).flatMap((sp) => sp.tests),
   ...(s.suites ?? []).flatMap(tests),
 ];
-const executed = tests(report).filter(
-  (t) => t.projectName === project && t.status !== 'skipped',
-).length;
 const expected = registeredFeatures
   .map((f) => readFileSync(`e2e/features/${f}`, 'utf8'))
   .map((src) =>
@@ -27,9 +27,17 @@ const expected = registeredFeatures
   )
   .reduce((a, b) => a + b, 0);
 
-const problem = missingFromRun({ expected, executed });
-if (problem) {
-  console.error(`${project}: ${problem}`);
-  process.exit(1);
+let failed = false;
+for (const project of projects) {
+  const executed = tests(report).filter(
+    (t) => t.projectName === project && t.status !== 'skipped',
+  ).length;
+  const problem = missingFromRun({ expected, executed });
+  if (problem) {
+    console.error(`${project}: ${problem}`);
+    failed = true;
+  } else {
+    console.log(`${project}: ${executed} of ${expected} expected scenario(s) executed`);
+  }
 }
-console.log(`${project}: ${executed} of ${expected} expected scenario(s) executed`);
+if (failed) process.exit(1);

@@ -19,7 +19,10 @@ export default defineConfig({
   reporter: [['list'], ['json', { outputFile: 'test-results/acceptance.json' }]],
   use: { baseURL: `http://localhost:${previewPort}${basePath}` },
   projects: [
-    { name: 'acceptance', use: { ...devices['Desktop Chrome'] } },
+    // Every scenario in both themes, so the guard's accessibility check covers each of them
+    // (task visual-foundation, failure 1).
+    { name: 'acceptance-dark', use: { ...devices['Desktop Chrome'], colorScheme: 'dark' } },
+    { name: 'acceptance-light', use: { ...devices['Desktop Chrome'], colorScheme: 'light' } },
     { name: 'guard', testDir: 'guard', use: { ...devices['Desktop Chrome'] } },
   ],
   webServer: {

@@ -19,6 +19,17 @@ describe('App', () => {
     expect(link.getAttribute('href')).toBe('/repo/en-US/');
   });
 
+  it('carries the mark of the site in a header on every page', () => {
+    for (const page of ['home', 'not-found'] as const) {
+      render(<App locale="en-US" page={page} basePath="/repo/" catalogueVersion="1.2.3" />);
+      const banners = screen.getAllByRole('banner');
+      expect(banners).toHaveLength(1);
+      const mark = screen.getByRole('link', { name: messages['site.name'] });
+      expect(mark.getAttribute('href')).toBe('/repo/en-US/');
+      cleanup();
+    }
+  });
+
   it('says on every page which game version the catalogue matches, from the catalogue', () => {
     for (const page of ['home', 'not-found'] as const) {
       render(<App locale="en-US" page={page} basePath="/" catalogueVersion="1.2.3" />);

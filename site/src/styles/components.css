@@ -1,0 +1,157 @@
+/* The pieces screens are built from, drawn after the design's "inked" rounds. Semantic HTML
+   underneath (NFR-A3); the ink and the stickers are CSS made for this site, not game art. */
+
+/* — ink: the saturated hero strip with an angular cut and a splat — */
+.ink-strip {
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-12) var(--space-6) calc(var(--space-12) * 1.5);
+  margin-inline: calc(var(--space-6) * -1);
+  color: var(--color-on-ink);
+  background: var(--color-ink);
+  clip-path: polygon(0 0, 100% 0, 100% 82%, 0 100%);
+}
+
+.ink-strip::after {
+  content: '';
+  position: absolute;
+  top: -20%;
+  right: -6%;
+  width: 22rem;
+  height: 22rem;
+  border-radius: 48% 52% 43% 57% / 55% 41% 59% 45%;
+  background: var(--color-ink-glow);
+}
+
+.ink-strip > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-title {
+  font-size: clamp(2.5rem, 8vw, 5.5rem);
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+.hero-lede {
+  max-width: 36rem;
+  font-size: 1.125rem;
+  color: var(--color-on-ink-muted);
+}
+
+/* — buttons: outlined, never filled — */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 2.75rem;
+  padding: var(--space-2) var(--space-4);
+  font: inherit;
+  font-weight: var(--font-weight-heading);
+  color: var(--color-text);
+  background: transparent;
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: var(--color-surface);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  color: var(--color-accent-text);
+  border-color: var(--color-accent);
+}
+
+.btn-primary:hover {
+  background: var(--color-accent-fill);
+}
+
+.btn-ghost {
+  color: var(--color-accent-text);
+  border-color: transparent;
+}
+
+/* — cards — */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-6);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+/* — stickers: tilted labels — */
+.sticker {
+  display: inline-block;
+  align-self: flex-start;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-on-sticker);
+  background: var(--color-sticker);
+  transform: rotate(-2deg);
+}
+
+/* — lives as drops of ink — */
+.drops {
+  display: inline-flex;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.drops > li {
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  border: 1.5px solid var(--color-accent);
+}
+
+.drops > li[data-full='true'] {
+  background: var(--color-accent);
+}
+
+/* — dialog: native, over a backdrop — */
+dialog {
+  width: min(28rem, calc(100% - 2 * var(--space-4)));
+  padding: var(--space-6);
+  border: 0;
+  border-radius: var(--radius-lg);
+  color: var(--color-text);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-lg);
+}
+
+dialog::backdrop {
+  background: var(--backdrop);
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
