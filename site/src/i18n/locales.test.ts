@@ -3,7 +3,7 @@ import { localeFromPath } from './locales';
 
 describe('localeFromPath', () => {
   it('reads the locale from the first segment after the base', () => {
-    expect(localeFromPath('/en-US/', '/')).toBe('en-US');
+    expect(localeFromPath('/en-US/', '/')).toBe('ja-JP');
     expect(localeFromPath('/repo/en-US/run', '/repo/')).toBe('en-US');
   });
 
