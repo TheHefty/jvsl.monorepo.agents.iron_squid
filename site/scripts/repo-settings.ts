@@ -27,6 +27,25 @@ type Branch = {
   };
 };
 
+type GraphqlRepo = {
+  squashMergeAllowed?: boolean;
+  mergeCommitAllowed?: boolean;
+  rebaseMergeAllowed?: boolean;
+  squashMergeCommitTitle?: string;
+};
+
+// The REST API hides the merge settings from a token without admin rights, which GITHUB_TOKEN never
+// has; GraphQL returns them to anyone who can read the repository.
+export function fromGraphql(r: GraphqlRepo): Repo {
+  const repo: Repo = {};
+  if (r.squashMergeAllowed !== undefined) repo.allow_squash_merge = r.squashMergeAllowed;
+  if (r.mergeCommitAllowed !== undefined) repo.allow_merge_commit = r.mergeCommitAllowed;
+  if (r.rebaseMergeAllowed !== undefined) repo.allow_rebase_merge = r.rebaseMergeAllowed;
+  if (r.squashMergeCommitTitle !== undefined)
+    repo.squash_merge_commit_title = r.squashMergeCommitTitle;
+  return repo;
+}
+
 export function settingsProblems(repo: Repo, branch: Branch): string[] {
   const problems: string[] = [];
   if (repo.squash_merge_commit_title !== 'PR_TITLE') {
@@ -63,14 +82,30 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     console.error('repo-settings: set GITHUB_REPOSITORY (owner/name) and GITHUB_TOKEN');
     process.exit(1);
   }
-  const get = async (path: string) => {
-    const res = await fetch(`https://api.github.com/repos/${repository}${path}`, {
-      headers: { authorization: `Bearer ${token}`, accept: 'application/vnd.github+json' },
-    });
-    if (!res.ok) throw new Error(`repo-settings: GET ${path} answered ${res.status}`);
-    return res.json();
-  };
-  const problems = settingsProblems(await get(''), await get('/branches/main'));
+  const headers = { authorization: `Bearer ${token}`, accept: 'application/vnd.github+json' };
+  const branchRes = await fetch(`https://api.github.com/repos/${repository}/branches/main`, {
+    headers,
+  });
+  if (!branchRes.ok)
+    throw new Error(`repo-settings: GET branches/main answered ${branchRes.status}`);
+  const [owner, name] = repository.split('/');
+  const query = `query($owner: String!, $name: String!) { repository(owner: $owner, name: $name) {
+    squashMergeAllowed mergeCommitAllowed rebaseMergeAllowed squashMergeCommitTitle } }`;
+  const gqlRes = await fetch('https://api.github.com/graphql', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ query, variables: { owner, name } }),
+  });
+  const gql = (await gqlRes.json()) as { data?: { repository?: GraphqlRepo }; errors?: unknown };
+  if (!gqlRes.ok || gql.errors) {
+    throw new Error(
+      `repo-settings: GraphQL answered ${gqlRes.status} ${JSON.stringify(gql.errors ?? '')}`,
+    );
+  }
+  const problems = settingsProblems(
+    fromGraphql(gql.data?.repository ?? {}),
+    await branchRes.json(),
+  );
   for (const p of problems) console.error(`repo-settings: ${p}`);
   if (problems.length > 0) process.exit(1);
   console.log(`repo-settings: ${repository} has the settings the release discipline relies on`);

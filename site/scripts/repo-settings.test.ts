@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { requiredChecks, settingsProblems } from './repo-settings';
+import { fromGraphql, requiredChecks, settingsProblems } from './repo-settings';
 
 const goodRepo = {
   allow_squash_merge: true,
@@ -68,5 +68,24 @@ describe('settingsProblems', () => {
       'rebase merges are allowed; only squash merges keep main conventional',
       'main is not protected',
     ]);
+  });
+});
+
+describe('fromGraphql', () => {
+  it('reads the merge settings from the GraphQL repository fields', () => {
+    expect(
+      fromGraphql({
+        squashMergeAllowed: true,
+        mergeCommitAllowed: false,
+        rebaseMergeAllowed: false,
+        squashMergeCommitTitle: 'PR_TITLE',
+      }),
+    ).toEqual(goodRepo);
+  });
+
+  it('leaves out what GraphQL did not return, so the check says it is not visible', () => {
+    expect(settingsProblems(fromGraphql({}), goodBranch)[0]).toBe(
+      'squash_merge_commit_title is "<not visible>", expected "PR_TITLE"',
+    );
   });
 });
