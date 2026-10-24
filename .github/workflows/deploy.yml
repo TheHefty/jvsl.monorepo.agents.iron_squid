@@ -1,0 +1,77 @@
+# Publishes main to GitHub Pages. Every check runs again on the merged commit first, because two
+# pull requests that were green on their own can be red together. After publishing, the @deployed
+# scenarios run against the live site and wait for it to carry this commit.
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  # From any branch, to try the workflow: everything but the publication itself runs.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Deployments queue rather than overlap, and one under way is never cut off halfway.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    uses: ./.github/workflows/ci.yml
+
+  build:
+    needs: verify
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site
+    env:
+      BASE_PATH: /jvsl.monorepo.agents.iron_squid/
+      BUILD_SHA: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version: '24', cache: npm, cache-dependency-path: site/package-lock.json }
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with: { path: site/dist }
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+  smoke:
+    needs: deploy
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site
+    env:
+      SITE_URL: ${{ needs.deploy.outputs.page_url }}
+      EXPECTED_BUILD: ${{ github.sha }}
+      DEPLOY_WAIT_SECONDS: '600'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version: '24', cache: npm, cache-dependency-path: site/package-lock.json }
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run bdd:deployed
+      - if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with: { name: smoke-report, path: site/e2e/test-results, retention-days: 7 }
