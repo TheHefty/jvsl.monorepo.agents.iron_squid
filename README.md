@@ -1,4 +1,4 @@
-# jvsl.monorepo.agents.iron_squid
+# Iron Squid
 
 The project is being initialized: its purpose and scope will be stated in
 [`docs/CHARTER.md`](docs/CHARTER.md) once the charter is agreed.
