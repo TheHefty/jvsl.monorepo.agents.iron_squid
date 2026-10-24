@@ -4,3 +4,9 @@
 # exist is a hard failure. The extension warns on every open while this is
 # missing.
 .devcontainer/devcontainer.json
+# Beads / Dolt files (added by bd init)
+.dolt/
+*.db
+.beads-credential-key
+.beads/proxieddb/
+*.gate.lock*

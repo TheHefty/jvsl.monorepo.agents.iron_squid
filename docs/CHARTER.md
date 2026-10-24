@@ -81,6 +81,11 @@ how well they play with *everything*, not only with their main.
   and search over what was already decided; it costs prompts and tool excerpts captured to disk, on
   this machine and for this project only. No LLM provider is configured, so nothing leaves the
   machine.
+- **Work tracker — beads.** Epics, stories and tasks are items in `bd`, not files under
+  `docs/PLANNING/`, and the tracker travels with the repository as `refs/dolt/data`. Chosen on
+  2026-10-24, before the first line of code. A dependency graph and `bd ready` beat reading thirteen
+  `OVERVIEW.md` files to find what is unblocked. The cost is that planning stops being a PR diff:
+  its history lives in the tracker, and a reader of the GitHub repository alone does not see it.
 - **Licence — MIT**, for the code and the documentation, chosen while the project is one author and
   relicensing costs nothing. **It does not cover Nintendo's assets**: the weapon and gear images and
   names belong to Nintendo, cannot be relicensed by this project, and are excluded from it
@@ -108,3 +113,7 @@ unchanged. What the grilling settled along the way: the name is **Iron Squid** (
 Squid Objective"), and Brazilian Portuguese keeps the English names for weapons and gear, because the
 game has no Portuguese ones. What counts as a weapon, where the images come from and where the
 catalogue comes from were answered at the same time and go in the SRS, where they are constraints.
+
+Amended on 2026-10-24 by João Lima: the project adopts the beads work tracker. The question was
+not part of initialization and should have been asked there; it was raised after the stories were
+agreed and before any code.

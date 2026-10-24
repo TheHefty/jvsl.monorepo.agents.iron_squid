@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "jvsl_monorepo_agents_iron_squid",
+  "project_id": "e1332399-8e29-45e2-8e1c-d2205166a985"
+}

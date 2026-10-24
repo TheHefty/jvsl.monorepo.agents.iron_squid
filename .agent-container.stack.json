@@ -3,5 +3,6 @@
   "limits": {
     "memory": "6g",
     "memorySwap": "6g"
-  }
+  },
+  "beads": true
 }
