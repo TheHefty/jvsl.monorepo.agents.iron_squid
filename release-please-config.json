@@ -5,11 +5,26 @@
   "packages": {
     ".": {
       "release-type": "simple",
+      "initial-version": "0.1.0",
+      "bump-minor-pre-major": true,
+      "bump-patch-for-minor-pre-major": false,
       "changelog-path": "CHANGELOG.md",
       "extra-files": [
-        { "type": "json", "path": "site/package.json", "jsonpath": "$.version" },
-        { "type": "json", "path": "site/package-lock.json", "jsonpath": "$.version" },
-        { "type": "json", "path": "site/package-lock.json", "jsonpath": "$.packages[''].version" }
+        {
+          "type": "json",
+          "path": "site/package.json",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "json",
+          "path": "site/package-lock.json",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "json",
+          "path": "site/package-lock.json",
+          "jsonpath": "$.packages[''].version"
+        }
       ]
     }
   }
