@@ -1,5 +1,5 @@
 import { ESLint } from 'eslint';
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 // The lint rules this project's own rules lean on must keep biting: a literal in JSX breaks the
 // i18n seam (NFR-I1), a control with no name breaks accessibility (NFR-A3). This is also the
@@ -11,6 +11,11 @@ const rulesHit = async (code: string) => {
 };
 
 describe('lint', () => {
+  // The first lint loads ESLint's config and every plugin, about 3.5 s on its own: done once here,
+  // with room to spare, so no test's 5 s budget is spent on loading and a busy machine cannot time
+  // one out.
+  beforeAll(() => eslint.lintText('', { filePath: 'src/Warmup.tsx' }), 60_000);
+
   it('fails text written directly in JSX', async () => {
     expect(await rulesHit('export const P = () => <p>Hello</p>;\n')).toContain(
       'react/jsx-no-literals',
