@@ -299,7 +299,7 @@ cosmetic replicas, one more than first counted (*Plastic-Bottle Shot Replica*). 
 since 9.3.0 are Sheldon's Picks. The datamine pin is unchanged; its data folder is `1130`. The
 stories' scenarios that quoted 130 kits or version 9.3.0 change with this amendment.
 
-Amended on 2026-10-24 when the visual design was adopted (PR #43): the design proposed a run log,
+Amended on 2026-10-24 when the visual design was adopted (PR #42): the design proposed a run log,
 every win and every loss of the run in order, which fits the charter (it lives in the browser with
 the run) but no requirement covered. FR-24 and the `run-log` story add it. The design's other
 additions — a leaderboard, community progress, following runs, handles, a history of past runs and
