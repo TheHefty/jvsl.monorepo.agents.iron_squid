@@ -10,3 +10,10 @@
 .beads-credential-key
 .beads/proxieddb/
 *.gate.lock*
+# The site's dependencies and everything its build and tests produce.
+site/node_modules/
+site/dist/
+site/e2e/.features-gen/
+site/e2e/test-results/
+site/e2e/playwright-report/
+site/test-results/

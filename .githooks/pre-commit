@@ -1,0 +1,8 @@
+#!/bin/sh
+# Enabled per clone with: git config core.hooksPath .githooks
+# A reminder for the author, not a gate: it can be skipped, and CI is what the repository enforces.
+if command -v check-md-size >/dev/null 2>&1; then
+  check-md-size || exit 1
+else
+  echo "pre-commit: check-md-size is not on PATH (it ships with the agent container); Markdown size not checked." >&2
+fi

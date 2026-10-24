@@ -8,6 +8,30 @@ The site draws your weapon and gear, holds you to the rules, keeps your progress
 gives you a link to share your run. It is in development; see [`docs/CHARTER.md`](docs/CHARTER.md)
 for what it is for and [`docs/SRS.md`](docs/SRS.md) for what it will do.
 
+## Working on it
+
+The site lives in [`site/`](site/). It needs Node 24.
+
+```sh
+cd site
+npm ci
+npx playwright install chromium   # once, for the acceptance tests
+npm run dev          # the dev server (no Content Security Policy; see below)
+npm run build        # the production build, one page per locale, in dist/
+npm run typecheck
+npm run lint
+npm test             # unit tests (Vitest)
+npm run bdd          # acceptance tests: the stories' .feature files, against the build in dist/
+npm run bdd:manual   # the scenarios CI does not run, and why
+```
+
+The acceptance tests run against the production build and never the dev server, because the dev
+server has no Content Security Policy. Build first. Set `BASE_PATH` the same way for both commands
+to test the site under a sub-path.
+
+To check Markdown sizes before each commit, enable the hook once per clone:
+`git config core.hooksPath .githooks`.
+
 ## Licence
 
 The code and documentation are under the [MIT licence](LICENSE).
