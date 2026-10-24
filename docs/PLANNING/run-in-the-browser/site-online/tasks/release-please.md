@@ -2,7 +2,7 @@
 status: Draft
 story: run-in-the-browser/site-online
 epic: run-in-the-browser
-pr:
+pr: 23
 depends-on: [project-scaffold]
 ---
 
