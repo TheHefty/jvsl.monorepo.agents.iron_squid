@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Draft |
+| **Status** | Accepted |
 | **Epic** | `run-in-the-browser` |
 | **Date** | 2026-10-24 |
 
@@ -35,4 +35,5 @@ Written once every story of this round is agreed.
 
 ## Outcome
 
-Filled in when the status leaves `Draft`.
+Agreed on 2026-10-24 by João Lima at the story gate (PR #10), with its scenarios as written. What
+shipped is recorded here when the story is done.
