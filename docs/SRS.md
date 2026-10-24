@@ -73,6 +73,10 @@ could look at the running site and say whether it holds.
   next life, the current set, and the number of resets so far.
 - **FR-23** After a win, the site shows the set just conquered, and the next set appears when the
   player asks for it.
+- **FR-24** The run keeps a log of every reported match, in the order played: the set, the result,
+  the lives left after it, whether it was a replay, and when it was reported; a reset is marked
+  where it happened. The player can read the whole log, newest first. Undoing a result (FR-20)
+  removes its entry.
 
 ### Keeping progress
 
@@ -183,7 +187,7 @@ policy texts that follow from it will not have been either.
 
 | Data | Why | Where it lives | Who processes it | How long |
 |---|---|---|---|---|
-| Run state: sets, results, lives, resets | To play the run (FR-30) | The player's browser storage | The player's own browser; never sent | Until the player starts another run or clears site data |
+| Run state: sets, results, lives, resets, and the log of matches with the date each was reported | To play the run (FR-30) and read it back (FR-24) | The player's browser storage | The player's own browser; never sent | Until the player starts another run or clears site data |
 | Run display name (optional) | To show on a shared run (FR-11) | The player's browser storage, and any link the player makes | Only whoever the player sends the link to | As above; in a link, for as long as the link exists wherever it was pasted |
 | Language choice | To remember it (NFR-I5) | The player's browser storage | The player's own browser | Until site data is cleared |
 | Exported run file | To move a run (FR-31) | Wherever the player saves it | The player | The player's decision |
@@ -240,6 +244,7 @@ The site in English only (`en-US`), with the i18n seam already in place.
 - **`finish-a-run`** — Conquering the last kit ends the run and says what it took. (FR-21)
 - **`keep-progress`** — A run survives the browser closing, and moves between devices as a file.
   (FR-30–FR-33)
+- **`run-log`** — A player can read every match of their run, wins and losses, in order. (FR-24)
 
 ### `share-a-run` — Anyone can see a player's run from a link they were sent.
 
@@ -293,3 +298,10 @@ the newest; the newest is `1130`. Game version 11.3.0 has 160 kits: 174 versus w
 cosmetic replicas, one more than first counted (*Plastic-Bottle Shot Replica*). The 30 kits added
 since 9.3.0 are Sheldon's Picks. The datamine pin is unchanged; its data folder is `1130`. The
 stories' scenarios that quoted 130 kits or version 9.3.0 change with this amendment.
+
+Amended on 2026-10-24 when the visual design was adopted (PR #42): the design proposed a run log,
+every win and every loss of the run in order, which fits the charter (it lives in the browser with
+the run) but no requirement covered. FR-24 and the `run-log` story add it. The design's other
+additions — a leaderboard, community progress, following runs, handles, a history of past runs and
+a re-roll button — were left out: the first five need a server the charter rules out, and a re-roll
+breaks FR-14.
