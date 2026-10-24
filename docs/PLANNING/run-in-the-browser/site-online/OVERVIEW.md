@@ -23,11 +23,12 @@ In [`site-online.feature`](site-online.feature), beside this file.
 
 ## Tasks
 
-Written once every story of this round is agreed.
-
 | Order | Task | Status |
 |---|---|---|
-| — | — | — |
+| 1 | [`tasks/project-scaffold.md`](tasks/project-scaffold.md) | Draft |
+| 2 | [`tasks/pages-deploy.md`](tasks/pages-deploy.md) | Draft |
+| 3 | [`tasks/custom-domain.md`](tasks/custom-domain.md) | Draft |
+| 4 | [`tasks/release-please.md`](tasks/release-please.md) | Draft |
 
 ## Out of scope
 
