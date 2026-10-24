@@ -28,6 +28,11 @@ describe('countScenarios', () => {
   it('counts every scenario CI should run, expanding outlines and leaving out tagged ones', () => {
     expect(countScenarios(feature, ['manual', 'deployed'])).toBe(4);
   });
+
+  it('leaves out the scenarios a registration marks as pending, outlines included', () => {
+    expect(countScenarios(feature, ['manual', 'deployed'], ['many'])).toBe(1);
+    expect(countScenarios(feature, ['manual', 'deployed'], ['plain'])).toBe(3);
+  });
 });
 
 describe('countScenariosTagged', () => {

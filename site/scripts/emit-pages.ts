@@ -59,11 +59,12 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     readFileSync(new URL(`../src/i18n/messages/${defaultLocale}.json`, import.meta.url), 'utf8'),
   ) as Record<string, string>;
   emitPages({
-    distDir: 'dist',
+    // Scenarios that build the site build it elsewhere, never over the dist/ under test.
+    distDir: process.env.BUILD_OUT_DIR ?? 'dist',
     basePath: process.env.BASE_PATH ?? '/',
     locales,
     defaultLocale,
     messages,
   });
-  console.log(`emit-pages: ${locales.length} locale page(s), root and 404 written to dist/`);
+  console.log(`emit-pages: ${locales.length} locale page(s), root and 404 written`);
 }

@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 import { defineBddConfig } from 'playwright-bdd';
-import { registeredFeatures } from './registered-features';
+import { pendingPattern, registeredFeatures } from './registered-features';
 import { basePath, previewPort } from './site-under-test';
 
 const testDir = defineBddConfig({
@@ -15,6 +15,7 @@ const testDir = defineBddConfig({
 export default defineConfig({
   testDir,
   forbidOnly: !!process.env.CI,
+  grepInvert: pendingPattern,
   reporter: [['list'], ['json', { outputFile: 'test-results/acceptance.json' }]],
   use: { baseURL: `http://localhost:${previewPort}${basePath}` },
   projects: [
