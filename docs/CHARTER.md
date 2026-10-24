@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Draft |
+| **Status** | Accepted |
 | **Date** | 2026-10-24 |
 | **Author** | João Lima, with Claude |
 | **Kind** | new |
@@ -103,4 +103,8 @@ how well they play with *everything*, not only with their main.
 
 ## Outcome
 
-Filled in when the status leaves `Draft`.
+Agreed on 2026-10-24 by João Lima, owner, at the charter gate (PR #3), with the sections above
+unchanged. What the grilling settled along the way: the name is **Iron Squid** (first given as "Iron
+Squid Objective"), and Brazilian Portuguese keeps the English names for weapons and gear, because the
+game has no Portuguese ones. What counts as a weapon, where the images come from and where the
+catalogue comes from were answered at the same time and go in the SRS, where they are constraints.
