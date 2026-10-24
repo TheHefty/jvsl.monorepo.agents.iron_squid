@@ -45,14 +45,16 @@ could look at the running site and say whether it holds.
 
 - **FR-10** A player can start a run. Starting one while another is in progress asks for
   confirmation and says that the current run will be discarded.
-- **FR-11** A player may give the run a display name. It is optional, and the site works the same
-  without one.
+- **FR-11** A player may give the run a display name of up to 30 characters. It is optional, and
+  the site works the same without one.
 - **FR-12** Each new set is drawn at random: a kit not yet conquered in this run, and one headgear,
   one clothing and one shoes piece not yet used in this run.
 - **FR-13** A gear piece, once drawn, is never drawn again in the same run. That includes after a
   reset: a conquered set keeps its gear.
 - **FR-14** A drawn set cannot be re-drawn, skipped or swapped. Reloading the page, closing the
-  browser or opening the site in a new tab shows the same set.
+  browser or opening the site in a new tab shows the same set. The order of every draw in a run is
+  fixed when the run starts, so undoing and re-reporting a result (FR-20) never changes which set
+  comes next.
 - **FR-15** The player reports the result of each match as a win or a loss.
 - **FR-16** A run starts with **1 life**. The player earns **1 life for every 10 wins** since the
   run started or since its last reset, whichever is later. Wins during a replay count.
@@ -68,6 +70,8 @@ could look at the running site and say whether it holds.
   and shows the number of matches, wins, losses and resets it took.
 - **FR-22** At any moment the site shows: kits conquered out of the total, lives, wins towards the
   next life, the current set, and the number of resets so far.
+- **FR-23** After a win, the site shows the set just conquered, and the next set appears when the
+  player asks for it.
 
 ### Keeping progress
 
@@ -75,12 +79,13 @@ could look at the running site and say whether it holds.
   device being restarted, on the same browser.
 - **FR-31** The player can export the run to a file and import it on another browser or device,
   where it continues exactly where it was.
-- **FR-32** Importing a file that is not a valid run, or that was made from another catalogue
-  version, is refused with a message that says which of the two it is. An import never
+- **FR-32** Importing a file that is not a valid run, or that names a catalogue version the site
+  does not carry, is refused with a message that says which of the two it is. An import never
   overwrites the current run without confirmation.
 - **FR-33** If the catalogue version changes while a run is in progress — the site was rebuilt from
   newer game data — the run continues against the catalogue version it was started with. The site
-  says so, and kits added since are not part of that run.
+  says so, and kits added since are not part of that run. The site therefore carries every
+  catalogue version it has ever been built from.
 
 ### Sharing a run
 
@@ -121,6 +126,7 @@ could look at the running site and say whether it holds.
   `main`.
 - **NFR-D6** The build checks that each gear slot has at least as many pieces as there are kits, so
   that FR-13 can always be satisfied, and fails if it does not.
+- **NFR-D7** The site is served from the project's own domain, over HTTPS only, through GitHub Pages.
 
 ### Performance
 
@@ -159,6 +165,9 @@ could look at the running site and say whether it holds.
   `en-US` otherwise. The player can change it on every page, and the choice is remembered.
 - **NFR-I6** Numbers and dates are formatted for the active locale.
 - **NFR-I7** The build fails if a locale is missing a key the default locale has.
+- **NFR-I8** Every locale has its own address (`/en-US/`, `/ja-JP/`, `/pt-BR/`…), and the site's
+  root sends a visitor to one by NFR-I5. A link to an address in a locale opens in that locale,
+  whatever the visitor's remembered choice.
 
 ## Data and legal
 
@@ -177,6 +186,7 @@ policy texts that follow from it will not have been either.
 | Run display name (optional) | To show on a shared run (FR-11) | The player's browser storage, and any link the player makes | Only whoever the player sends the link to | As above; in a link, for as long as the link exists wherever it was pasted |
 | Language choice | To remember it (NFR-I5) | The player's browser storage | The player's own browser | Until site data is cleared |
 | Exported run file | To move a run (FR-31) | Wherever the player saves it | The player | The player's decision |
+| DNS queries for the domain | Resolving the domain | The DNS provider for the domain | The provider, which sees resolvers rather than visitors' requests; named once the domain is registered | The provider's retention |
 | IP address, user agent, requested URL | Serving the site | GitHub's infrastructure | **GitHub**, as host, under its own privacy statement; the project has no access to these logs | GitHub's retention |
 
 - **The run is carried in the link's fragment** (`#…`), not in its path or query string. A browser
@@ -216,14 +226,14 @@ Three epics, in the order they are built.
 The site in English only (`en-US`), with the i18n seam already in place.
 
 - **`site-online`** — The site is published on GitHub Pages from `main`, with the build, the tests and
-  the accessibility check gating every pull request. (NFR-D1, NFR-D2, NFR-D5, NFR-A8)
+  the accessibility check gating every pull request. (NFR-D1, NFR-D2, NFR-D5, NFR-D7, NFR-A8)
 - **`notices`** — The terms of use, privacy notice and fan disclaimer are reachable from every page.
   (FR-50, FR-51)
 - **`catalogue`** — The site knows every kit and gear piece, with names and images, from the pinned
   datamine. (FR-1–FR-4, NFR-D3, NFR-D4, NFR-D6)
 - **`draw-a-set`** — A player starts a run and gets a set they cannot skip or re-draw. (FR-10–FR-14)
 - **`report-a-match`** — A player reports wins and losses, earns and loses lives, and can undo the last
-  report. (FR-15–FR-17, FR-20, FR-22)
+  report. (FR-15–FR-17, FR-20, FR-22, FR-23)
 - **`reset-and-replay`** — Losing the last life sends the run back through every conquered set.
   (FR-18, FR-19)
 - **`finish-a-run`** — Conquering the last kit ends the run and says what it took. (FR-21)
@@ -239,7 +249,7 @@ The site in English only (`en-US`), with the i18n seam already in place.
 ### `every-language` — The site can be used in every language Splatoon 3 ships in, and in Brazilian Portuguese.
 
 - **`choose-language`** — The first visit follows the browser's language, and the player can change it
-  anywhere. (NFR-I5)
+  anywhere. (NFR-I5, NFR-I8)
 - **`localized-names`** — Kits and gear carry their official names in every locale. (NFR-I3)
 - **`translate-interface`** — The interface is translated into every offered locale, with unreviewed
   translations marked. (NFR-I2, NFR-I4, NFR-I6, NFR-I7)
@@ -268,3 +278,10 @@ Agreed on 2026-10-24 by João Lima, owner, at the SRS gate (PR #4), as written. 
 while drafting were confirmed with it rather than changed: lives counted from the start or the last
 reset (FR-16), undo of the last result (FR-20), the optional display name (FR-11), a run pinned to
 its catalogue version (FR-33), and the exclusion of Hero Mode and Side Order gear (FR-2).
+
+Amended on 2026-10-24 at the story grilling (PR #6): the custom domain (NFR-D7), an address per
+locale (NFR-I8), a draw order fixed at the start of the run (FR-14), the next set on request
+(FR-23), a 30-character limit on the display name (FR-11), and FR-32 reworded to agree with FR-33,
+which now says the site carries every catalogue version it was built from. The amendment closed a
+gap the grilling found: undo, as first written, let a player re-roll a set by undoing a win and
+reporting it again.
