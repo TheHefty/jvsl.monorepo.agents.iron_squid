@@ -1,0 +1,5 @@
+dist
+e2e/.features-gen
+playwright-report
+test-results
+package-lock.json

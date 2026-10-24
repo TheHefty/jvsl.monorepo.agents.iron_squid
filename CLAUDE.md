@@ -75,5 +75,13 @@ the prefix `is-` (`bd list`, `bd show <id>`). A story's acceptance criteria are 
 field, mirrored as Gherkin at `site/e2e/features/<epic>/<story>.feature`, which its `--spec-id`
 points to. A draft is a deferred item labelled `proposed` until it is agreed.
 
-The stack is Node 24 (`.agent-container.stack.json`). Build and test commands go here once the
-`site-online` story has created them.
+The stack is Node 24 (`.agent-container.stack.json`). The site is in `site/`: Vite, React 19,
+TypeScript strict, react-intl. From `site/`:
+
+- `npm run build`, then `npm run bdd`: acceptance tests, the registered `.feature` files run by
+  playwright-bdd against the production build. Never against the dev server, which has no CSP.
+- `npm test` (Vitest), `npm run typecheck`, `npm run lint`.
+- A story's `.feature` is listed in `site/e2e/registered-features.ts` by the task that starts it,
+  after its scenarios have been seen failing. Every scenario runs under the guard in
+  `site/e2e/fixtures.ts`, which fails it on any off-site request, CSP violation, missing file of the
+  site's own or WCAG 2.2 A/AA violation.
