@@ -17,7 +17,12 @@ function build(basePath = '/repo/') {
     basePath,
     locales: ['en-US', 'ja-JP'],
     defaultLocale: 'en-US',
-    messages: { 'root.continue': 'Continue to Iron Squid', 'site.name': 'Iron Squid' },
+    catalogueVersion: '1.2.3',
+    messages: {
+      'root.continue': 'Continue to Iron Squid',
+      'site.name': 'Iron Squid',
+      'catalogue.version': 'Weapons and gear from Splatoon 3 {version}',
+    },
   });
   const read = (p: string) => readFileSync(join(dist, p), 'utf8');
   return { dist, read };
@@ -48,6 +53,13 @@ describe('emitPages', () => {
     expect(root).not.toContain('<script');
   });
 
+  it('says on the root page which game version the catalogue matches', () => {
+    const { read } = build();
+    expect(read('index.html')).toContain(
+      '<footer><p>Weapons and gear from Splatoon 3 1.2.3</p></footer>',
+    );
+  });
+
   it('writes a 404 page that the app renders as "not found"', () => {
     const { read } = build();
     const page = read('404.html');
@@ -64,6 +76,7 @@ describe('emitPages', () => {
         basePath: '/',
         locales: ['en-US'],
         defaultLocale: 'en-US',
+        catalogueVersion: '1.2.3',
         messages: {},
       }),
     ).toThrow(/no built index\.html/);

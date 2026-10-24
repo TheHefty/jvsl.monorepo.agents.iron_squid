@@ -97,7 +97,7 @@ TypeScript strict, react-intl. From `site/`:
   merging it tags `vX.Y.Z`.
 - A story's `.feature` is listed in `site/e2e/registered-features.ts` by the task that starts it,
   after its scenarios have been seen failing. Scenarios a later task of the same story turns green
-  are listed there as `pending`, with that task's name; CI leaves them out, and their steps in
-  `site/e2e/steps/pending.steps.ts` fail on purpose if they ever run. Every scenario runs under the guard in
+  are listed there as `pending`, with that task's name; CI leaves them out, and their steps go in
+  `site/e2e/steps/pending.steps.ts` and fail on purpose, naming the task, if they ever run. Every scenario runs under the guard in
   `site/e2e/fixtures.ts`, which fails it on any off-site request, CSP violation, missing file of the
   site's own or WCAG 2.2 A/AA violation.

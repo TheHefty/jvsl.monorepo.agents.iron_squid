@@ -9,12 +9,7 @@ export type Registration = { feature: string; pending?: Record<string, string> }
 
 export const registrations: Registration[] = [
   { feature: 'run-in-the-browser/site-online.feature' },
-  {
-    feature: 'run-in-the-browser/catalogue.feature',
-    pending: {
-      'The game version is shown': 'catalogue-version-shown (is-82z.3.3)',
-    },
-  },
+  { feature: 'run-in-the-browser/catalogue.feature' },
 ];
 
 export const registeredFeatures = registrations.map((r) => r.feature);
