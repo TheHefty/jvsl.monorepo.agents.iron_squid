@@ -28,7 +28,7 @@ jobs:
       run:
         working-directory: site
     env:
-      BASE_PATH: /jvsl.monorepo.agents.iron_squid/
+      BASE_PATH: /
       BUILD_SHA: ${{ github.sha }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -61,6 +61,9 @@ jobs:
     defaults:
       run:
         working-directory: site
+    permissions:
+      contents: read
+      pages: read
     env:
       SITE_URL: ${{ needs.deploy.outputs.page_url }}
       EXPECTED_BUILD: ${{ github.sha }}
@@ -71,6 +74,14 @@ jobs:
         with: { node-version: '24', cache: npm, cache-dependency-path: site/package-lock.json }
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      # The domain is what every shared link carries: its DNS, and the Pages settings behind it,
+      # are checked on every deployment, so drift shows up here rather than in a player's browser.
+      - run: npm run check-dns
+      - name: Pages serves the domain over HTTPS only
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: |
+          pages=$(gh api "repos/${{ github.repository }}/pages" --jq '"\(.cname) \(.https_enforced)"')
+          [ "$pages" = "iron-squid.top true" ] || { echo "Pages is \"$pages\", expected \"iron-squid.top true\""; exit 1; }
       - run: npm run bdd:deployed
       - if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
