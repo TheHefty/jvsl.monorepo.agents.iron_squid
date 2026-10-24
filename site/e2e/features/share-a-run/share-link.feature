@@ -18,7 +18,7 @@ Feature: Share link
     And the link has no query string
 
   Scenario: A link to a complete run is short enough to paste anywhere
-    Given a complete run of 130 kits with a display name of 30 characters
+    Given a complete run of 160 kits with a display name of 30 characters
     When the player copies the link to the run
     Then the link is at most 2000 characters long
 

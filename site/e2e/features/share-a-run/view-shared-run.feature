@@ -2,9 +2,9 @@ Feature: View a shared run
   A link shows someone else's run without touching the visitor's own.
 
   Scenario: Opening a shared run
-    When a visitor opens a link to a run named "Inkling Ivo" with 12 of 130 kits conquered
+    When a visitor opens a link to a run named "Inkling Ivo" with 12 of 160 kits conquered
     Then the visitor sees the run named "Inkling Ivo"
-    And 12 of 130 kits conquered
+    And 12 of 160 kits conquered
     And the conquered sets, in the order they were conquered
     And the run's lives and resets
     And whether the run is complete

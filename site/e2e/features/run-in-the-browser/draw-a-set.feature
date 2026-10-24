@@ -7,7 +7,7 @@ Feature: Draw a set
     When the player starts a run
     Then the player is shown a kit, a headgear, a clothing piece and a shoes piece
     And the player has 1 life
-    And 0 of 130 kits are conquered
+    And 0 of 160 kits are conquered
 
   Scenario: Naming the run
     Given a player starting a run

@@ -2,7 +2,7 @@ Feature: Finish a run
   A run ends when every kit in the game has been won with.
 
   Scenario: Winning with the last kit completes the run
-    Given a player with 129 of 130 kits conquered
+    Given a player with 159 of 160 kits conquered
     When the player reports a win with the last kit
     Then the player is told the run is complete
     And the player is shown how many matches, wins, losses and resets it took

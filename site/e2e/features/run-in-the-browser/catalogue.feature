@@ -3,19 +3,20 @@ Feature: The catalogue
   taken from a pinned copy of the game data.
 
   Background:
-    Given the site is built from the game data for version 9.3.0
+    Given the site is built from the game data for version 11.3.0
 
   Scenario: Every kit available online is in the catalogue
-    Then the catalogue has 130 kits
+    Then the catalogue has 160 kits
 
   Scenario Outline: Replicas are not kits
     Then the catalogue does not contain the <replica>
 
     Examples:
-      | replica           |
-      | Hero Shot Replica |
-      | Octo Shot Replica |
-      | Order Shot Replica |
+      | replica                     |
+      | Hero Shot Replica           |
+      | Octo Shot Replica           |
+      | Order Shot Replica          |
+      | Plastic-Bottle Shot Replica |
 
   Scenario: Gear that cannot be worn online is not in the catalogue
     Then the catalogue contains no gear the game marks as unobtainable for online battles
@@ -27,7 +28,7 @@ Feature: The catalogue
 
   Scenario: The game version is shown
     When a visitor opens any page
-    Then the page says the catalogue matches Splatoon 3 version 9.3.0
+    Then the page says the catalogue matches Splatoon 3 version 11.3.0
 
   Scenario: An image that does not match its digest stops the build
     Given an image whose content differs from the digest recorded for it
