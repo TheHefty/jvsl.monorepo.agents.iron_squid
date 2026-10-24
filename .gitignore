@@ -10,8 +10,9 @@
 .beads-credential-key
 .beads/proxieddb/
 *.gate.lock*
-# The site's dependencies and everything its build and tests produce.
-site/node_modules/
+# Dependencies, wherever a package is installed in this monorepo.
+node_modules/
+# Everything the site's build and tests produce.
 site/dist/
 site/e2e/.features-gen/
 site/e2e/test-results/
