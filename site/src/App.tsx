@@ -1,3 +1,4 @@
+import { createElement } from 'react';
 import { FormattedMessage, IntlProvider } from 'react-intl';
 import type { Locale } from './i18n/locales';
 import enUS from './i18n/messages/en-US.json';
@@ -25,6 +26,7 @@ function Home() {
       <p>
         <FormattedMessage id="home.tagline" />
       </p>
+      {createElement('button')}
     </>
   );
 }
