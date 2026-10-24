@@ -5,4 +5,7 @@ The project is being initialized: its purpose and scope will be stated in
 
 ## Licence
 
-[MIT](LICENSE).
+The code and documentation are under the [MIT licence](LICENSE).
+
+Splatoon, its weapon and gear names and its images are the property of Nintendo. They are **not**
+covered by that licence, and this project is not affiliated with or endorsed by Nintendo.
