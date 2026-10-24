@@ -81,11 +81,19 @@ TypeScript strict, react-intl. From `site/`:
 - `npm run build`, then `npm run bdd`: acceptance tests, the registered `.feature` files run by
   playwright-bdd against the production build. Never against the dev server, which has no CSP.
 - `npm test` (Vitest), `npm run typecheck`, `npm run lint`.
+- **The catalogue is generated, never edited.** `site/catalogue.pin.json` pins the datamine
+  (`Leanny/splat3`) to a commit and a data folder, with a digest per source file;
+  `npm run catalogue:generate` writes `site/src/catalogue/<version>/` (names and image digests,
+  never an image). Moving the pin is its own PR (`docs/RULES.md`): change commit, folder and game
+  version, run the generator with `--record-digests`, and review the diff it prints. Version
+  folders sort as text, so read the datamine's `versions.json` for the newest, not the last folder.
 - **A pull request's title is its commit.** Merges are squash only and take the PR title, which the
   required `pr-title` check holds to a conventional commit. release-please reads those commits, so
   a `fix` titled `chore` is a release that never happens. The release PR is release-please's own;
   merging it tags `vX.Y.Z`.
 - A story's `.feature` is listed in `site/e2e/registered-features.ts` by the task that starts it,
-  after its scenarios have been seen failing. Every scenario runs under the guard in
+  after its scenarios have been seen failing. Scenarios a later task of the same story turns green
+  are listed there as `pending`, with that task's name; CI leaves them out, and their steps in
+  `site/e2e/steps/pending.steps.ts` fail on purpose if they ever run. Every scenario runs under the guard in
   `site/e2e/fixtures.ts`, which fails it on any off-site request, CSP violation, missing file of the
   site's own or WCAG 2.2 A/AA violation.

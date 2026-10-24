@@ -20,7 +20,10 @@ Feature: The catalogue
 
   Scenario: Gear that cannot be worn online is not in the catalogue
     Then the catalogue contains no gear the game marks as unobtainable for online battles
-    And it contains no Hero Mode or Side Order gear
+    And it contains no gear that exists only inside Hero Mode or Side Order
+
+  Scenario: Gear earned in Hero Mode or Side Order is in the catalogue
+    Then the catalogue contains the Hero Mode and Side Order rewards a player can wear online
 
   Scenario: Every kit and gear piece has a name and an image
     Then every kit in the catalogue has its official en-US name and its image

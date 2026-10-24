@@ -20,9 +20,15 @@ function scenarios(source: string) {
   );
 }
 
-export function countScenarios(source: string, excludedTags: readonly string[]): number {
+export function countScenarios(
+  source: string,
+  excludedTags: readonly string[],
+  pendingNames: readonly string[] = [],
+): number {
   return scenarios(source)
-    .filter((s) => !has([...s.featureTags, ...s.tags], excludedTags))
+    .filter(
+      (s) => !has([...s.featureTags, ...s.tags], excludedTags) && !pendingNames.includes(s.name),
+    )
     .reduce((n, s) => {
       if (s.examples.length === 0) return n + 1;
       const rows = s.examples

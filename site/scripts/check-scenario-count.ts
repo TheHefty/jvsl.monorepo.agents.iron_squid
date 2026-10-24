@@ -3,7 +3,7 @@
 // fails the job instead of leaving it green with nothing tested. With --deployed, it checks the
 // smoke run against the published site, which executes only the @deployed scenarios.
 import { readFileSync } from 'node:fs';
-import { registeredFeatures } from '../e2e/registered-features';
+import { pendingScenarios, registeredFeatures } from '../e2e/registered-features';
 import { countScenarios, countScenariosTagged, missingFromRun } from './scenarios';
 
 type Suite = { suites?: Suite[]; specs?: { tests: { projectName: string; status: string }[] }[] };
@@ -21,7 +21,9 @@ const executed = tests(report).filter(
 const expected = registeredFeatures
   .map((f) => readFileSync(`e2e/features/${f}`, 'utf8'))
   .map((src) =>
-    deployed ? countScenariosTagged(src, 'deployed') : countScenarios(src, ['manual', 'deployed']),
+    deployed
+      ? countScenariosTagged(src, 'deployed')
+      : countScenarios(src, ['manual', 'deployed'], pendingScenarios),
   )
   .reduce((a, b) => a + b, 0);
 

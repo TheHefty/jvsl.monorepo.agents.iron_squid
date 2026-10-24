@@ -1,0 +1,13 @@
+{
+  "repo": "Leanny/splat3",
+  "commit": "7280ff9cde8bb1c5dcef46c700c326471584d2e6",
+  "dataFolder": "1130",
+  "gameVersion": "11.3.0",
+  "sources": {
+    "data/mush/1130/GearInfoShoes.json": "63653f7226ab12ed082fde2016fd5cbc48be7c95b55b7af2667ea984b7508f15",
+    "data/mush/1130/GearInfoHead.json": "19df7ad69d2e2bec7a34439e78db1f56a64b0ce41f86c07cc060312006db3506",
+    "data/mush/1130/GearInfoClothes.json": "9124f2bb1c55807eb49ec6efe8e18b54f431dfb14b8e7ba326e852f69fc8751f",
+    "data/mush/1130/WeaponInfoMain.json": "53641c4b4c96d56d3ed4ca8d4c7426d83a0bf28af6f85e9eafc391b2ae9f663e",
+    "data/language/USen.json": "73c51d21d8827ca0fe0d3eb9f6a795d1aa7ca5e352ef36046c5eef02a9745ceb"
+  }
+}

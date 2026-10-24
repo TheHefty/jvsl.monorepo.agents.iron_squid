@@ -1,0 +1,7363 @@
+{
+  "version": "11.3.0",
+  "datamine": {
+    "repo": "Leanny/splat3",
+    "commit": "7280ff9cde8bb1c5dcef46c700c326471584d2e6",
+    "dataFolder": "1130"
+  },
+  "kits": [
+    {
+      "id": "Blaster_LightLong_00",
+      "name": {
+        "en-US": "Rapid Blaster Pro"
+      },
+      "image": "weapon/Wst_Blaster_LightLong_00.png"
+    },
+    {
+      "id": "Blaster_LightLong_01",
+      "name": {
+        "en-US": "Rapid Blaster Pro Deco"
+      },
+      "image": "weapon/Wst_Blaster_LightLong_01.png"
+    },
+    {
+      "id": "Blaster_LightLong_02",
+      "name": {
+        "en-US": "Rapid Blaster Pro WNT-R"
+      },
+      "image": "weapon/Wst_Blaster_LightLong_02.png"
+    },
+    {
+      "id": "Blaster_LightShort_00",
+      "name": {
+        "en-US": "Clash Blaster"
+      },
+      "image": "weapon/Wst_Blaster_LightShort_00.png"
+    },
+    {
+      "id": "Blaster_LightShort_01",
+      "name": {
+        "en-US": "Clash Blaster Neo"
+      },
+      "image": "weapon/Wst_Blaster_LightShort_01.png"
+    },
+    {
+      "id": "Blaster_Light_00",
+      "name": {
+        "en-US": "Rapid Blaster"
+      },
+      "image": "weapon/Wst_Blaster_Light_00.png"
+    },
+    {
+      "id": "Blaster_Light_01",
+      "name": {
+        "en-US": "Rapid Blaster Deco"
+      },
+      "image": "weapon/Wst_Blaster_Light_01.png"
+    },
+    {
+      "id": "Blaster_Long_00",
+      "name": {
+        "en-US": "Range Blaster"
+      },
+      "image": "weapon/Wst_Blaster_Long_00.png"
+    },
+    {
+      "id": "Blaster_Long_01",
+      "name": {
+        "en-US": "Custom Range Blaster"
+      },
+      "image": "weapon/Wst_Blaster_Long_01.png"
+    },
+    {
+      "id": "Blaster_Middle_00",
+      "name": {
+        "en-US": "Blaster"
+      },
+      "image": "weapon/Wst_Blaster_Middle_00.png"
+    },
+    {
+      "id": "Blaster_Middle_01",
+      "name": {
+        "en-US": "Custom Blaster"
+      },
+      "image": "weapon/Wst_Blaster_Middle_01.png"
+    },
+    {
+      "id": "Blaster_Middle_02",
+      "name": {
+        "en-US": "Gleamz Blaster"
+      },
+      "image": "weapon/Wst_Blaster_Middle_02.png"
+    },
+    {
+      "id": "Blaster_Precision_00",
+      "name": {
+        "en-US": "S-BLAST '92"
+      },
+      "image": "weapon/Wst_Blaster_Precision_00.png"
+    },
+    {
+      "id": "Blaster_Precision_01",
+      "name": {
+        "en-US": "S-BLAST '91"
+      },
+      "image": "weapon/Wst_Blaster_Precision_01.png"
+    },
+    {
+      "id": "Blaster_Short_00",
+      "name": {
+        "en-US": "Luna Blaster"
+      },
+      "image": "weapon/Wst_Blaster_Short_00.png"
+    },
+    {
+      "id": "Blaster_Short_01",
+      "name": {
+        "en-US": "Luna Blaster Neo"
+      },
+      "image": "weapon/Wst_Blaster_Short_01.png"
+    },
+    {
+      "id": "Brush_Heavy_00",
+      "name": {
+        "en-US": "Painbrush"
+      },
+      "image": "weapon/Wst_Brush_Heavy_00.png"
+    },
+    {
+      "id": "Brush_Heavy_01",
+      "name": {
+        "en-US": "Painbrush Nouveau"
+      },
+      "image": "weapon/Wst_Brush_Heavy_01.png"
+    },
+    {
+      "id": "Brush_Heavy_02",
+      "name": {
+        "en-US": "Painbrush BRN-Z"
+      },
+      "image": "weapon/Wst_Brush_Heavy_02.png"
+    },
+    {
+      "id": "Brush_Mini_00",
+      "name": {
+        "en-US": "Inkbrush"
+      },
+      "image": "weapon/Wst_Brush_Mini_00.png"
+    },
+    {
+      "id": "Brush_Mini_01",
+      "name": {
+        "en-US": "Inkbrush Nouveau"
+      },
+      "image": "weapon/Wst_Brush_Mini_01.png"
+    },
+    {
+      "id": "Brush_Normal_00",
+      "name": {
+        "en-US": "Octobrush"
+      },
+      "image": "weapon/Wst_Brush_Normal_00.png"
+    },
+    {
+      "id": "Brush_Normal_01",
+      "name": {
+        "en-US": "Octobrush Nouveau"
+      },
+      "image": "weapon/Wst_Brush_Normal_01.png"
+    },
+    {
+      "id": "Brush_Normal_02",
+      "name": {
+        "en-US": "Cometz Octobrush"
+      },
+      "image": "weapon/Wst_Brush_Normal_02.png"
+    },
+    {
+      "id": "Charger_Keeper_00",
+      "name": {
+        "en-US": "Goo Tuber"
+      },
+      "image": "weapon/Wst_Charger_Keeper_00.png"
+    },
+    {
+      "id": "Charger_Keeper_01",
+      "name": {
+        "en-US": "Custom Goo Tuber"
+      },
+      "image": "weapon/Wst_Charger_Keeper_01.png"
+    },
+    {
+      "id": "Charger_Light_00",
+      "name": {
+        "en-US": "Bamboozler 14 Mk I"
+      },
+      "image": "weapon/Wst_Charger_Light_00.png"
+    },
+    {
+      "id": "Charger_Light_01",
+      "name": {
+        "en-US": "Bamboozler 14 Mk II"
+      },
+      "image": "weapon/Wst_Charger_Light_01.png"
+    },
+    {
+      "id": "Charger_LongScope_00",
+      "name": {
+        "en-US": "E-liter 4K Scope"
+      },
+      "image": "weapon/Wst_Charger_LongScope_00.png"
+    },
+    {
+      "id": "Charger_LongScope_01",
+      "name": {
+        "en-US": "Custom E-liter 4K Scope"
+      },
+      "image": "weapon/Wst_Charger_LongScope_01.png"
+    },
+    {
+      "id": "Charger_Long_00",
+      "name": {
+        "en-US": "E-liter 4K"
+      },
+      "image": "weapon/Wst_Charger_Long_00.png"
+    },
+    {
+      "id": "Charger_Long_01",
+      "name": {
+        "en-US": "Custom E-liter 4K"
+      },
+      "image": "weapon/Wst_Charger_Long_01.png"
+    },
+    {
+      "id": "Charger_NormalScope_00",
+      "name": {
+        "en-US": "Splatterscope"
+      },
+      "image": "weapon/Wst_Charger_NormalScope_00.png"
+    },
+    {
+      "id": "Charger_NormalScope_01",
+      "name": {
+        "en-US": "Z+F Splatterscope"
+      },
+      "image": "weapon/Wst_Charger_NormalScope_01.png"
+    },
+    {
+      "id": "Charger_NormalScope_02",
+      "name": {
+        "en-US": "Splatterscope CAM-O"
+      },
+      "image": "weapon/Wst_Charger_NormalScope_02.png"
+    },
+    {
+      "id": "Charger_Normal_00",
+      "name": {
+        "en-US": "Splat Charger"
+      },
+      "image": "weapon/Wst_Charger_Normal_00.png"
+    },
+    {
+      "id": "Charger_Normal_01",
+      "name": {
+        "en-US": "Z+F Splat Charger"
+      },
+      "image": "weapon/Wst_Charger_Normal_01.png"
+    },
+    {
+      "id": "Charger_Normal_02",
+      "name": {
+        "en-US": "Splat Charger CAM-O"
+      },
+      "image": "weapon/Wst_Charger_Normal_02.png"
+    },
+    {
+      "id": "Charger_Pencil_00",
+      "name": {
+        "en-US": "Snipewriter 5H"
+      },
+      "image": "weapon/Wst_Charger_Pencil_00.png"
+    },
+    {
+      "id": "Charger_Pencil_01",
+      "name": {
+        "en-US": "Snipewriter 5B"
+      },
+      "image": "weapon/Wst_Charger_Pencil_01.png"
+    },
+    {
+      "id": "Charger_Quick_00",
+      "name": {
+        "en-US": "Classic Squiffer"
+      },
+      "image": "weapon/Wst_Charger_Quick_00.png"
+    },
+    {
+      "id": "Charger_Quick_01",
+      "name": {
+        "en-US": "New Squiffer"
+      },
+      "image": "weapon/Wst_Charger_Quick_01.png"
+    },
+    {
+      "id": "Maneuver_Dual_00",
+      "name": {
+        "en-US": "Dualie Squelchers"
+      },
+      "image": "weapon/Wst_Maneuver_Dual_00.png"
+    },
+    {
+      "id": "Maneuver_Dual_01",
+      "name": {
+        "en-US": "Custom Dualie Squelchers"
+      },
+      "image": "weapon/Wst_Maneuver_Dual_01.png"
+    },
+    {
+      "id": "Maneuver_Dual_02",
+      "name": {
+        "en-US": "Hoofz Dualie Squelchers"
+      },
+      "image": "weapon/Wst_Maneuver_Dual_02.png"
+    },
+    {
+      "id": "Maneuver_Gallon_00",
+      "name": {
+        "en-US": "Glooga Dualies"
+      },
+      "image": "weapon/Wst_Maneuver_Gallon_00.png"
+    },
+    {
+      "id": "Maneuver_Gallon_01",
+      "name": {
+        "en-US": "Glooga Dualies Deco"
+      },
+      "image": "weapon/Wst_Maneuver_Gallon_01.png"
+    },
+    {
+      "id": "Maneuver_Long_00",
+      "name": {
+        "en-US": "Douser Dualies FF"
+      },
+      "image": "weapon/Wst_Maneuver_Long_00.png"
+    },
+    {
+      "id": "Maneuver_Long_01",
+      "name": {
+        "en-US": "Custom Douser Dualies FF"
+      },
+      "image": "weapon/Wst_Maneuver_Long_01.png"
+    },
+    {
+      "id": "Maneuver_Normal_00",
+      "name": {
+        "en-US": "Splat Dualies"
+      },
+      "image": "weapon/Wst_Maneuver_Normal_00.png"
+    },
+    {
+      "id": "Maneuver_Normal_01",
+      "name": {
+        "en-US": "Enperry Splat Dualies"
+      },
+      "image": "weapon/Wst_Maneuver_Normal_01.png"
+    },
+    {
+      "id": "Maneuver_Normal_02",
+      "name": {
+        "en-US": "Twinklez Splat Dualies"
+      },
+      "image": "weapon/Wst_Maneuver_Normal_02.png"
+    },
+    {
+      "id": "Maneuver_Short_00",
+      "name": {
+        "en-US": "Dapple Dualies"
+      },
+      "image": "weapon/Wst_Maneuver_Short_00.png"
+    },
+    {
+      "id": "Maneuver_Short_01",
+      "name": {
+        "en-US": "Dapple Dualies Nouveau"
+      },
+      "image": "weapon/Wst_Maneuver_Short_01.png"
+    },
+    {
+      "id": "Maneuver_Short_02",
+      "name": {
+        "en-US": "Dapple Dualies NOC-T"
+      },
+      "image": "weapon/Wst_Maneuver_Short_02.png"
+    },
+    {
+      "id": "Maneuver_Stepper_00",
+      "name": {
+        "en-US": "Dark Tetra Dualies"
+      },
+      "image": "weapon/Wst_Maneuver_Stepper_00.png"
+    },
+    {
+      "id": "Maneuver_Stepper_01",
+      "name": {
+        "en-US": "Light Tetra Dualies"
+      },
+      "image": "weapon/Wst_Maneuver_Stepper_01.png"
+    },
+    {
+      "id": "Roller_Compact_00",
+      "name": {
+        "en-US": "Carbon Roller"
+      },
+      "image": "weapon/Wst_Roller_Compact_00.png"
+    },
+    {
+      "id": "Roller_Compact_01",
+      "name": {
+        "en-US": "Carbon Roller Deco"
+      },
+      "image": "weapon/Wst_Roller_Compact_01.png"
+    },
+    {
+      "id": "Roller_Compact_02",
+      "name": {
+        "en-US": "Carbon Roller ANG-L"
+      },
+      "image": "weapon/Wst_Roller_Compact_02.png"
+    },
+    {
+      "id": "Roller_Heavy_00",
+      "name": {
+        "en-US": "Dynamo Roller"
+      },
+      "image": "weapon/Wst_Roller_Heavy_00.png"
+    },
+    {
+      "id": "Roller_Heavy_01",
+      "name": {
+        "en-US": "Gold Dynamo Roller"
+      },
+      "image": "weapon/Wst_Roller_Heavy_01.png"
+    },
+    {
+      "id": "Roller_Heavy_02",
+      "name": {
+        "en-US": "Starz Dynamo Roller"
+      },
+      "image": "weapon/Wst_Roller_Heavy_02.png"
+    },
+    {
+      "id": "Roller_Hunter_00",
+      "name": {
+        "en-US": "Flingza Roller"
+      },
+      "image": "weapon/Wst_Roller_Hunter_00.png"
+    },
+    {
+      "id": "Roller_Hunter_01",
+      "name": {
+        "en-US": "Foil Flingza Roller"
+      },
+      "image": "weapon/Wst_Roller_Hunter_01.png"
+    },
+    {
+      "id": "Roller_Normal_00",
+      "name": {
+        "en-US": "Splat Roller"
+      },
+      "image": "weapon/Wst_Roller_Normal_00.png"
+    },
+    {
+      "id": "Roller_Normal_01",
+      "name": {
+        "en-US": "Krak-On Splat Roller"
+      },
+      "image": "weapon/Wst_Roller_Normal_01.png"
+    },
+    {
+      "id": "Roller_Wide_00",
+      "name": {
+        "en-US": "Big Swig Roller"
+      },
+      "image": "weapon/Wst_Roller_Wide_00.png"
+    },
+    {
+      "id": "Roller_Wide_01",
+      "name": {
+        "en-US": "Big Swig Roller Express"
+      },
+      "image": "weapon/Wst_Roller_Wide_01.png"
+    },
+    {
+      "id": "Roller_Wide_02",
+      "name": {
+        "en-US": "Planetz Big Swig Roller"
+      },
+      "image": "weapon/Wst_Roller_Wide_02.png"
+    },
+    {
+      "id": "Saber_Heavy_00",
+      "name": {
+        "en-US": "Mint Decavitator"
+      },
+      "image": "weapon/Wst_Saber_Heavy_00.png"
+    },
+    {
+      "id": "Saber_Heavy_01",
+      "name": {
+        "en-US": "Charcoal Decavitator"
+      },
+      "image": "weapon/Wst_Saber_Heavy_01.png"
+    },
+    {
+      "id": "Saber_Lite_00",
+      "name": {
+        "en-US": "Splatana Wiper"
+      },
+      "image": "weapon/Wst_Saber_Lite_00.png"
+    },
+    {
+      "id": "Saber_Lite_01",
+      "name": {
+        "en-US": "Splatana Wiper Deco"
+      },
+      "image": "weapon/Wst_Saber_Lite_01.png"
+    },
+    {
+      "id": "Saber_Lite_02",
+      "name": {
+        "en-US": "Splatana Wiper RUS-T"
+      },
+      "image": "weapon/Wst_Saber_Lite_02.png"
+    },
+    {
+      "id": "Saber_Normal_00",
+      "name": {
+        "en-US": "Splatana Stamper"
+      },
+      "image": "weapon/Wst_Saber_Normal_00.png"
+    },
+    {
+      "id": "Saber_Normal_01",
+      "name": {
+        "en-US": "Splatana Stamper Nouveau"
+      },
+      "image": "weapon/Wst_Saber_Normal_01.png"
+    },
+    {
+      "id": "Saber_Normal_02",
+      "name": {
+        "en-US": "Stickerz Splatana Stamper"
+      },
+      "image": "weapon/Wst_Saber_Normal_02.png"
+    },
+    {
+      "id": "Shelter_Compact_00",
+      "name": {
+        "en-US": "Undercover Brella"
+      },
+      "image": "weapon/Wst_Shelter_Compact_00.png"
+    },
+    {
+      "id": "Shelter_Compact_01",
+      "name": {
+        "en-US": "Undercover Sorella Brella"
+      },
+      "image": "weapon/Wst_Shelter_Compact_01.png"
+    },
+    {
+      "id": "Shelter_Compact_02",
+      "name": {
+        "en-US": "Patternz Undercover Brella"
+      },
+      "image": "weapon/Wst_Shelter_Compact_02.png"
+    },
+    {
+      "id": "Shelter_Focus_00",
+      "name": {
+        "en-US": "Recycled Brella 24 Mk I"
+      },
+      "image": "weapon/Wst_Shelter_Focus_00.png"
+    },
+    {
+      "id": "Shelter_Focus_01",
+      "name": {
+        "en-US": "Recycled Brella 24 Mk II"
+      },
+      "image": "weapon/Wst_Shelter_Focus_01.png"
+    },
+    {
+      "id": "Shelter_Normal_00",
+      "name": {
+        "en-US": "Splat Brella"
+      },
+      "image": "weapon/Wst_Shelter_Normal_00.png"
+    },
+    {
+      "id": "Shelter_Normal_01",
+      "name": {
+        "en-US": "Sorella Brella"
+      },
+      "image": "weapon/Wst_Shelter_Normal_01.png"
+    },
+    {
+      "id": "Shelter_Wide_00",
+      "name": {
+        "en-US": "Tenta Brella"
+      },
+      "image": "weapon/Wst_Shelter_Wide_00.png"
+    },
+    {
+      "id": "Shelter_Wide_01",
+      "name": {
+        "en-US": "Tenta Sorella Brella"
+      },
+      "image": "weapon/Wst_Shelter_Wide_01.png"
+    },
+    {
+      "id": "Shelter_Wide_02",
+      "name": {
+        "en-US": "Tenta Brella CRE-M"
+      },
+      "image": "weapon/Wst_Shelter_Wide_02.png"
+    },
+    {
+      "id": "Shooter_Blaze_00",
+      "name": {
+        "en-US": "Aerospray MG"
+      },
+      "image": "weapon/Wst_Shooter_Blaze_00.png"
+    },
+    {
+      "id": "Shooter_Blaze_01",
+      "name": {
+        "en-US": "Aerospray RG"
+      },
+      "image": "weapon/Wst_Shooter_Blaze_01.png"
+    },
+    {
+      "id": "Shooter_Blaze_02",
+      "name": {
+        "en-US": "Colorz Aerospray"
+      },
+      "image": "weapon/Wst_Shooter_Blaze_02.png"
+    },
+    {
+      "id": "Shooter_Expert_00",
+      "name": {
+        "en-US": "Splattershot Pro"
+      },
+      "image": "weapon/Wst_Shooter_Expert_00.png"
+    },
+    {
+      "id": "Shooter_Expert_01",
+      "name": {
+        "en-US": "Forge Splattershot Pro"
+      },
+      "image": "weapon/Wst_Shooter_Expert_01.png"
+    },
+    {
+      "id": "Shooter_Expert_02",
+      "name": {
+        "en-US": "Splattershot Pro FRZ-N"
+      },
+      "image": "weapon/Wst_Shooter_Expert_02.png"
+    },
+    {
+      "id": "Shooter_First_00",
+      "name": {
+        "en-US": "Splattershot Jr."
+      },
+      "image": "weapon/Wst_Shooter_First_00.png"
+    },
+    {
+      "id": "Shooter_First_01",
+      "name": {
+        "en-US": "Custom Splattershot Jr."
+      },
+      "image": "weapon/Wst_Shooter_First_01.png"
+    },
+    {
+      "id": "Shooter_Flash_00",
+      "name": {
+        "en-US": "Squeezer"
+      },
+      "image": "weapon/Wst_Shooter_Flash_00.png"
+    },
+    {
+      "id": "Shooter_Flash_01",
+      "name": {
+        "en-US": "Foil Squeezer"
+      },
+      "image": "weapon/Wst_Shooter_Flash_01.png"
+    },
+    {
+      "id": "Shooter_Gravity_00",
+      "name": {
+        "en-US": ".52 Gal"
+      },
+      "image": "weapon/Wst_Shooter_Gravity_00.png"
+    },
+    {
+      "id": "Shooter_Gravity_01",
+      "name": {
+        "en-US": ".52 Gal Deco"
+      },
+      "image": "weapon/Wst_Shooter_Gravity_01.png"
+    },
+    {
+      "id": "Shooter_Heavy_00",
+      "name": {
+        "en-US": ".96 Gal"
+      },
+      "image": "weapon/Wst_Shooter_Heavy_00.png"
+    },
+    {
+      "id": "Shooter_Heavy_01",
+      "name": {
+        "en-US": ".96 Gal Deco"
+      },
+      "image": "weapon/Wst_Shooter_Heavy_01.png"
+    },
+    {
+      "id": "Shooter_Heavy_02",
+      "name": {
+        "en-US": "Clawz .96 Gal"
+      },
+      "image": "weapon/Wst_Shooter_Heavy_02.png"
+    },
+    {
+      "id": "Shooter_Long_00",
+      "name": {
+        "en-US": "Jet Squelcher"
+      },
+      "image": "weapon/Wst_Shooter_Long_00.png"
+    },
+    {
+      "id": "Shooter_Long_01",
+      "name": {
+        "en-US": "Custom Jet Squelcher"
+      },
+      "image": "weapon/Wst_Shooter_Long_01.png"
+    },
+    {
+      "id": "Shooter_Long_02",
+      "name": {
+        "en-US": "Jet Squelcher COB-R"
+      },
+      "image": "weapon/Wst_Shooter_Long_02.png"
+    },
+    {
+      "id": "Shooter_Normal_00",
+      "name": {
+        "en-US": "Splattershot"
+      },
+      "image": "weapon/Wst_Shooter_Normal_00.png"
+    },
+    {
+      "id": "Shooter_Normal_01",
+      "name": {
+        "en-US": "Tentatek Splattershot"
+      },
+      "image": "weapon/Wst_Shooter_Normal_01.png"
+    },
+    {
+      "id": "Shooter_Normal_02",
+      "name": {
+        "en-US": "Glamorz Splattershot"
+      },
+      "image": "weapon/Wst_Shooter_Normal_02.png"
+    },
+    {
+      "id": "Shooter_Precision_00",
+      "name": {
+        "en-US": "Splash-o-matic"
+      },
+      "image": "weapon/Wst_Shooter_Precision_00.png"
+    },
+    {
+      "id": "Shooter_Precision_01",
+      "name": {
+        "en-US": "Neo Splash-o-matic"
+      },
+      "image": "weapon/Wst_Shooter_Precision_01.png"
+    },
+    {
+      "id": "Shooter_Precision_02",
+      "name": {
+        "en-US": "Splash-o-matic GCK-O"
+      },
+      "image": "weapon/Wst_Shooter_Precision_02.png"
+    },
+    {
+      "id": "Shooter_QuickLong_00",
+      "name": {
+        "en-US": "Splattershot Nova"
+      },
+      "image": "weapon/Wst_Shooter_QuickLong_00.png"
+    },
+    {
+      "id": "Shooter_QuickLong_01",
+      "name": {
+        "en-US": "Annaki Splattershot Nova"
+      },
+      "image": "weapon/Wst_Shooter_QuickLong_01.png"
+    },
+    {
+      "id": "Shooter_QuickMiddle_00",
+      "name": {
+        "en-US": "N-ZAP '85"
+      },
+      "image": "weapon/Wst_Shooter_QuickMiddle_00.png"
+    },
+    {
+      "id": "Shooter_QuickMiddle_01",
+      "name": {
+        "en-US": "N-ZAP '89"
+      },
+      "image": "weapon/Wst_Shooter_QuickMiddle_01.png"
+    },
+    {
+      "id": "Shooter_Short_00",
+      "name": {
+        "en-US": "Sploosh-o-matic"
+      },
+      "image": "weapon/Wst_Shooter_Short_00.png"
+    },
+    {
+      "id": "Shooter_Short_01",
+      "name": {
+        "en-US": "Neo Sploosh-o-matic"
+      },
+      "image": "weapon/Wst_Shooter_Short_01.png"
+    },
+    {
+      "id": "Shooter_TripleMiddle_00",
+      "name": {
+        "en-US": "H-3 Nozzlenose"
+      },
+      "image": "weapon/Wst_Shooter_TripleMiddle_00.png"
+    },
+    {
+      "id": "Shooter_TripleMiddle_01",
+      "name": {
+        "en-US": "H-3 Nozzlenose D"
+      },
+      "image": "weapon/Wst_Shooter_TripleMiddle_01.png"
+    },
+    {
+      "id": "Shooter_TripleMiddle_02",
+      "name": {
+        "en-US": "H-3 Nozzlenose VIP-R"
+      },
+      "image": "weapon/Wst_Shooter_TripleMiddle_02.png"
+    },
+    {
+      "id": "Shooter_TripleQuick_00",
+      "name": {
+        "en-US": "L-3 Nozzlenose"
+      },
+      "image": "weapon/Wst_Shooter_TripleQuick_00.png"
+    },
+    {
+      "id": "Shooter_TripleQuick_01",
+      "name": {
+        "en-US": "L-3 Nozzlenose D"
+      },
+      "image": "weapon/Wst_Shooter_TripleQuick_01.png"
+    },
+    {
+      "id": "Shooter_TripleQuick_02",
+      "name": {
+        "en-US": "Glitterz L-3 Nozzlenose"
+      },
+      "image": "weapon/Wst_Shooter_TripleQuick_02.png"
+    },
+    {
+      "id": "Slosher_Bathtub_00",
+      "name": {
+        "en-US": "Bloblobber"
+      },
+      "image": "weapon/Wst_Slosher_Bathtub_00.png"
+    },
+    {
+      "id": "Slosher_Bathtub_01",
+      "name": {
+        "en-US": "Bloblobber Deco"
+      },
+      "image": "weapon/Wst_Slosher_Bathtub_01.png"
+    },
+    {
+      "id": "Slosher_Diffusion_00",
+      "name": {
+        "en-US": "Tri-Slosher"
+      },
+      "image": "weapon/Wst_Slosher_Diffusion_00.png"
+    },
+    {
+      "id": "Slosher_Diffusion_01",
+      "name": {
+        "en-US": "Tri-Slosher Nouveau"
+      },
+      "image": "weapon/Wst_Slosher_Diffusion_01.png"
+    },
+    {
+      "id": "Slosher_Diffusion_02",
+      "name": {
+        "en-US": "Tri-Slosher ASH-N"
+      },
+      "image": "weapon/Wst_Slosher_Diffusion_02.png"
+    },
+    {
+      "id": "Slosher_Double_00",
+      "name": {
+        "en-US": "Dread Wringer"
+      },
+      "image": "weapon/Wst_Slosher_Double_00.png"
+    },
+    {
+      "id": "Slosher_Double_01",
+      "name": {
+        "en-US": "Dread Wringer D"
+      },
+      "image": "weapon/Wst_Slosher_Double_01.png"
+    },
+    {
+      "id": "Slosher_Double_02",
+      "name": {
+        "en-US": "Hornz Dread Wringer"
+      },
+      "image": "weapon/Wst_Slosher_Double_02.png"
+    },
+    {
+      "id": "Slosher_Launcher_00",
+      "name": {
+        "en-US": "Sloshing Machine"
+      },
+      "image": "weapon/Wst_Slosher_Launcher_00.png"
+    },
+    {
+      "id": "Slosher_Launcher_01",
+      "name": {
+        "en-US": "Sloshing Machine Neo"
+      },
+      "image": "weapon/Wst_Slosher_Launcher_01.png"
+    },
+    {
+      "id": "Slosher_Strong_00",
+      "name": {
+        "en-US": "Slosher"
+      },
+      "image": "weapon/Wst_Slosher_Strong_00.png"
+    },
+    {
+      "id": "Slosher_Strong_01",
+      "name": {
+        "en-US": "Slosher Deco"
+      },
+      "image": "weapon/Wst_Slosher_Strong_01.png"
+    },
+    {
+      "id": "Slosher_Washtub_00",
+      "name": {
+        "en-US": "Explosher"
+      },
+      "image": "weapon/Wst_Slosher_Washtub_00.png"
+    },
+    {
+      "id": "Slosher_Washtub_01",
+      "name": {
+        "en-US": "Custom Explosher"
+      },
+      "image": "weapon/Wst_Slosher_Washtub_01.png"
+    },
+    {
+      "id": "Spinner_Downpour_00",
+      "name": {
+        "en-US": "Ballpoint Splatling"
+      },
+      "image": "weapon/Wst_Spinner_Downpour_00.png"
+    },
+    {
+      "id": "Spinner_Downpour_01",
+      "name": {
+        "en-US": "Ballpoint Splatling Nouveau"
+      },
+      "image": "weapon/Wst_Spinner_Downpour_01.png"
+    },
+    {
+      "id": "Spinner_HyperShort_00",
+      "name": {
+        "en-US": "Heavy Edit Splatling"
+      },
+      "image": "weapon/Wst_Spinner_HyperShort_00.png"
+    },
+    {
+      "id": "Spinner_HyperShort_01",
+      "name": {
+        "en-US": "Heavy Edit Splatling Nouveau"
+      },
+      "image": "weapon/Wst_Spinner_HyperShort_01.png"
+    },
+    {
+      "id": "Spinner_Hyper_00",
+      "name": {
+        "en-US": "Hydra Splatling"
+      },
+      "image": "weapon/Wst_Spinner_Hyper_00.png"
+    },
+    {
+      "id": "Spinner_Hyper_01",
+      "name": {
+        "en-US": "Custom Hydra Splatling"
+      },
+      "image": "weapon/Wst_Spinner_Hyper_01.png"
+    },
+    {
+      "id": "Spinner_Hyper_02",
+      "name": {
+        "en-US": "Torrentz Hydra Splatling"
+      },
+      "image": "weapon/Wst_Spinner_Hyper_02.png"
+    },
+    {
+      "id": "Spinner_Quick_00",
+      "name": {
+        "en-US": "Mini Splatling"
+      },
+      "image": "weapon/Wst_Spinner_Quick_00.png"
+    },
+    {
+      "id": "Spinner_Quick_01",
+      "name": {
+        "en-US": "Zink Mini Splatling"
+      },
+      "image": "weapon/Wst_Spinner_Quick_01.png"
+    },
+    {
+      "id": "Spinner_Quick_02",
+      "name": {
+        "en-US": "Mini Splatling RTL-R"
+      },
+      "image": "weapon/Wst_Spinner_Quick_02.png"
+    },
+    {
+      "id": "Spinner_Serein_00",
+      "name": {
+        "en-US": "Nautilus 47"
+      },
+      "image": "weapon/Wst_Spinner_Serein_00.png"
+    },
+    {
+      "id": "Spinner_Serein_01",
+      "name": {
+        "en-US": "Nautilus 79"
+      },
+      "image": "weapon/Wst_Spinner_Serein_01.png"
+    },
+    {
+      "id": "Spinner_Standard_00",
+      "name": {
+        "en-US": "Heavy Splatling"
+      },
+      "image": "weapon/Wst_Spinner_Standard_00.png"
+    },
+    {
+      "id": "Spinner_Standard_01",
+      "name": {
+        "en-US": "Heavy Splatling Deco"
+      },
+      "image": "weapon/Wst_Spinner_Standard_01.png"
+    },
+    {
+      "id": "Stringer_Explosion_00",
+      "name": {
+        "en-US": "Wellstring V"
+      },
+      "image": "weapon/Wst_Stringer_Explosion_00.png"
+    },
+    {
+      "id": "Stringer_Explosion_01",
+      "name": {
+        "en-US": "Custom Wellstring V"
+      },
+      "image": "weapon/Wst_Stringer_Explosion_01.png"
+    },
+    {
+      "id": "Stringer_Normal_00",
+      "name": {
+        "en-US": "Tri-Stringer"
+      },
+      "image": "weapon/Wst_Stringer_Normal_00.png"
+    },
+    {
+      "id": "Stringer_Normal_01",
+      "name": {
+        "en-US": "Inkline Tri-Stringer"
+      },
+      "image": "weapon/Wst_Stringer_Normal_01.png"
+    },
+    {
+      "id": "Stringer_Normal_02",
+      "name": {
+        "en-US": "Bulbz Tri-Stringer"
+      },
+      "image": "weapon/Wst_Stringer_Normal_02.png"
+    },
+    {
+      "id": "Stringer_Short_00",
+      "name": {
+        "en-US": "REEF-LUX 450"
+      },
+      "image": "weapon/Wst_Stringer_Short_00.png"
+    },
+    {
+      "id": "Stringer_Short_01",
+      "name": {
+        "en-US": "REEF-LUX 450 Deco"
+      },
+      "image": "weapon/Wst_Stringer_Short_01.png"
+    },
+    {
+      "id": "Stringer_Short_02",
+      "name": {
+        "en-US": "REEF-LUX 450 MIL-K"
+      },
+      "image": "weapon/Wst_Stringer_Short_02.png"
+    }
+  ],
+  "gear": {
+    "head": [
+      {
+        "id": "Hed_ACC003",
+        "name": {
+          "en-US": "Tentaclinger Earring"
+        },
+        "image": "gear/Hed_ACC003.png"
+      },
+      {
+        "id": "Hed_AMB000",
+        "name": {
+          "en-US": "Squid Hairclip"
+        },
+        "image": "gear/Hed_AMB000.png"
+      },
+      {
+        "id": "Hed_AMB001",
+        "name": {
+          "en-US": "Samurai Helmet"
+        },
+        "image": "gear/Hed_AMB001.png"
+      },
+      {
+        "id": "Hed_AMB002",
+        "name": {
+          "en-US": "Power Mask"
+        },
+        "image": "gear/Hed_AMB002.png"
+      },
+      {
+        "id": "Hed_AMB003",
+        "name": {
+          "en-US": "Squid Clip-Ons"
+        },
+        "image": "gear/Hed_AMB003.png"
+      },
+      {
+        "id": "Hed_AMB004",
+        "name": {
+          "en-US": "Squinja Mask Mk II"
+        },
+        "image": "gear/Hed_AMB004.png"
+      },
+      {
+        "id": "Hed_AMB005",
+        "name": {
+          "en-US": "Power Mask Mk I"
+        },
+        "image": "gear/Hed_AMB005.png"
+      },
+      {
+        "id": "Hed_AMB006",
+        "name": {
+          "en-US": "Pearlescent Crown S"
+        },
+        "image": "gear/Hed_AMB006.png"
+      },
+      {
+        "id": "Hed_AMB007",
+        "name": {
+          "en-US": "Marinated Headphones"
+        },
+        "image": "gear/Hed_AMB007.png"
+      },
+      {
+        "id": "Hed_AMB008",
+        "name": {
+          "en-US": "Enchanted Hat"
+        },
+        "image": "gear/Hed_AMB008.png"
+      },
+      {
+        "id": "Hed_AMB009",
+        "name": {
+          "en-US": "Steel Helm"
+        },
+        "image": "gear/Hed_AMB009.png"
+      },
+      {
+        "id": "Hed_AMB010",
+        "name": {
+          "en-US": "Fresh Fish Head"
+        },
+        "image": "gear/Hed_AMB010.png"
+      },
+      {
+        "id": "Hed_AMB011",
+        "name": {
+          "en-US": "Boss Floss"
+        },
+        "image": "gear/Hed_AMB011.png"
+      },
+      {
+        "id": "Hed_AMB012",
+        "name": {
+          "en-US": "Sushi Sous-Chef Band"
+        },
+        "image": "gear/Hed_AMB012.png"
+      },
+      {
+        "id": "Hed_AMB013",
+        "name": {
+          "en-US": "Chaos Helm"
+        },
+        "image": "gear/Hed_AMB013.png"
+      },
+      {
+        "id": "Hed_AMB016",
+        "name": {
+          "en-US": "Squinja Mask Mk I"
+        },
+        "image": "gear/Hed_AMB016.png"
+      },
+      {
+        "id": "Hed_AMB017",
+        "name": {
+          "en-US": "Pearlescent Crown L"
+        },
+        "image": "gear/Hed_AMB017.png"
+      },
+      {
+        "id": "Hed_AMB018",
+        "name": {
+          "en-US": "Hohojiro Mask"
+        },
+        "image": "gear/Hed_AMB018.png"
+      },
+      {
+        "id": "Hed_AMB019",
+        "name": {
+          "en-US": "Onaga Mask"
+        },
+        "image": "gear/Hed_AMB019.png"
+      },
+      {
+        "id": "Hed_AMB020",
+        "name": {
+          "en-US": "Manta Mask"
+        },
+        "image": "gear/Hed_AMB020.png"
+      },
+      {
+        "id": "Hed_AMB021",
+        "name": {
+          "en-US": "World Tour Crown"
+        },
+        "image": "gear/Hed_AMB021.png"
+      },
+      {
+        "id": "Hed_AMB022",
+        "name": {
+          "en-US": "World Tour Headphones"
+        },
+        "image": "gear/Hed_AMB022.png"
+      },
+      {
+        "id": "Hed_CAP000",
+        "name": {
+          "en-US": "Urchins Cap"
+        },
+        "image": "gear/Hed_CAP000.png"
+      },
+      {
+        "id": "Hed_CAP001",
+        "name": {
+          "en-US": "Lightweight Cap"
+        },
+        "image": "gear/Hed_CAP001.png"
+      },
+      {
+        "id": "Hed_CAP002",
+        "name": {
+          "en-US": "Takoroka Mesh"
+        },
+        "image": "gear/Hed_CAP002.png"
+      },
+      {
+        "id": "Hed_CAP003",
+        "name": {
+          "en-US": "Streetstyle Cap"
+        },
+        "image": "gear/Hed_CAP003.png"
+      },
+      {
+        "id": "Hed_CAP004",
+        "name": {
+          "en-US": "Squid-Stitch Cap"
+        },
+        "image": "gear/Hed_CAP004.png"
+      },
+      {
+        "id": "Hed_CAP005",
+        "name": {
+          "en-US": "Squidvader Cap"
+        },
+        "image": "gear/Hed_CAP005.png"
+      },
+      {
+        "id": "Hed_CAP006",
+        "name": {
+          "en-US": "Camo Mesh"
+        },
+        "image": "gear/Hed_CAP006.png"
+      },
+      {
+        "id": "Hed_CAP007",
+        "name": {
+          "en-US": "Five-Panel Cap"
+        },
+        "image": "gear/Hed_CAP007.png"
+      },
+      {
+        "id": "Hed_CAP008",
+        "name": {
+          "en-US": "Zekko Mesh"
+        },
+        "image": "gear/Hed_CAP008.png"
+      },
+      {
+        "id": "Hed_CAP009",
+        "name": {
+          "en-US": "Backward Cap"
+        },
+        "image": "gear/Hed_CAP009.png"
+      },
+      {
+        "id": "Hed_CAP010",
+        "name": {
+          "en-US": "Two-Stripe Mesh"
+        },
+        "image": "gear/Hed_CAP010.png"
+      },
+      {
+        "id": "Hed_CAP011",
+        "name": {
+          "en-US": "Jet Cap"
+        },
+        "image": "gear/Hed_CAP011.png"
+      },
+      {
+        "id": "Hed_CAP012",
+        "name": {
+          "en-US": "Cycling Cap"
+        },
+        "image": "gear/Hed_CAP012.png"
+      },
+      {
+        "id": "Hed_CAP014",
+        "name": {
+          "en-US": "Cycle King Cap"
+        },
+        "image": "gear/Hed_CAP014.png"
+      },
+      {
+        "id": "Hed_CAP018",
+        "name": {
+          "en-US": "Long-Billed Cap"
+        },
+        "image": "gear/Hed_CAP018.png"
+      },
+      {
+        "id": "Hed_CAP019",
+        "name": {
+          "en-US": "King Flip Mesh"
+        },
+        "image": "gear/Hed_CAP019.png"
+      },
+      {
+        "id": "Hed_CAP020",
+        "name": {
+          "en-US": "Hickory Work Cap"
+        },
+        "image": "gear/Hed_CAP020.png"
+      },
+      {
+        "id": "Hed_CAP021",
+        "name": {
+          "en-US": "Woolly Urchins Classic"
+        },
+        "image": "gear/Hed_CAP021.png"
+      },
+      {
+        "id": "Hed_CAP023",
+        "name": {
+          "en-US": "Jellyvader Cap"
+        },
+        "image": "gear/Hed_CAP023.png"
+      },
+      {
+        "id": "Hed_CAP024",
+        "name": {
+          "en-US": "House-Tag Denim Cap"
+        },
+        "image": "gear/Hed_CAP024.png"
+      },
+      {
+        "id": "Hed_CAP025",
+        "name": {
+          "en-US": "Blowfish Newsie"
+        },
+        "image": "gear/Hed_CAP025.png"
+      },
+      {
+        "id": "Hed_CAP026",
+        "name": {
+          "en-US": "Do-Rag, Cap & Glasses"
+        },
+        "image": "gear/Hed_CAP026.png"
+      },
+      {
+        "id": "Hed_CAP027",
+        "name": {
+          "en-US": "Pilot Hat"
+        },
+        "image": "gear/Hed_CAP027.png"
+      },
+      {
+        "id": "Hed_CAP028",
+        "name": {
+          "en-US": "Ink-Black Flap Cap"
+        },
+        "image": "gear/Hed_CAP028.png"
+      },
+      {
+        "id": "Hed_CAP029",
+        "name": {
+          "en-US": "Coral Cap"
+        },
+        "image": "gear/Hed_CAP029.png"
+      },
+      {
+        "id": "Hed_CAP030",
+        "name": {
+          "en-US": "Barrelfish Baseball Hat"
+        },
+        "image": "gear/Hed_CAP030.png"
+      },
+      {
+        "id": "Hed_CAP031",
+        "name": {
+          "en-US": "Cap'n Cap"
+        },
+        "image": "gear/Hed_CAP031.png"
+      },
+      {
+        "id": "Hed_CAP032",
+        "name": {
+          "en-US": "Vintage Biker Cap"
+        },
+        "image": "gear/Hed_CAP032.png"
+      },
+      {
+        "id": "Hed_CAP033",
+        "name": {
+          "en-US": "Flounder Flap Cap"
+        },
+        "image": "gear/Hed_CAP033.png"
+      },
+      {
+        "id": "Hed_CAP034",
+        "name": {
+          "en-US": "Dustcloud Cap"
+        },
+        "image": "gear/Hed_CAP034.png"
+      },
+      {
+        "id": "Hed_CAP035",
+        "name": {
+          "en-US": "Seafoam Cap"
+        },
+        "image": "gear/Hed_CAP035.png"
+      },
+      {
+        "id": "Hed_CAP036",
+        "name": {
+          "en-US": "Wharfside Cap"
+        },
+        "image": "gear/Hed_CAP036.png"
+      },
+      {
+        "id": "Hed_CAP037",
+        "name": {
+          "en-US": "Clue-Detecting Cap"
+        },
+        "image": "gear/Hed_CAP037.png"
+      },
+      {
+        "id": "Hed_CAP038",
+        "name": {
+          "en-US": "Headlamp Hat"
+        },
+        "image": "gear/Hed_CAP038.png"
+      },
+      {
+        "id": "Hed_CAP039",
+        "name": {
+          "en-US": "Swim Cap"
+        },
+        "image": "gear/Hed_CAP039.png"
+      },
+      {
+        "id": "Hed_COP100",
+        "name": {
+          "en-US": "Headlamp Helmet"
+        },
+        "image": "gear/Hed_COP100.png"
+      },
+      {
+        "id": "Hed_COP101",
+        "name": {
+          "en-US": "Dust Blocker 2000"
+        },
+        "image": "gear/Hed_COP101.png"
+      },
+      {
+        "id": "Hed_COP102",
+        "name": {
+          "en-US": "Welding Mask"
+        },
+        "image": "gear/Hed_COP102.png"
+      },
+      {
+        "id": "Hed_COP103",
+        "name": {
+          "en-US": "Beekeeper Hat"
+        },
+        "image": "gear/Hed_COP103.png"
+      },
+      {
+        "id": "Hed_COP104",
+        "name": {
+          "en-US": "Octoleet Goggles"
+        },
+        "image": "gear/Hed_COP104.png"
+      },
+      {
+        "id": "Hed_COP105",
+        "name": {
+          "en-US": "Cap of Legend"
+        },
+        "image": "gear/Hed_COP105.png"
+      },
+      {
+        "id": "Hed_COP107",
+        "name": {
+          "en-US": "Worker's Head Towel"
+        },
+        "image": "gear/Hed_COP107.png"
+      },
+      {
+        "id": "Hed_COP108",
+        "name": {
+          "en-US": "Worker's Cap"
+        },
+        "image": "gear/Hed_COP108.png"
+      },
+      {
+        "id": "Hed_COP109",
+        "name": {
+          "en-US": "Sailor Cap"
+        },
+        "image": "gear/Hed_COP109.png"
+      },
+      {
+        "id": "Hed_COP110",
+        "name": {
+          "en-US": "Bream-Brim Cap"
+        },
+        "image": "gear/Hed_COP110.png"
+      },
+      {
+        "id": "Hed_COP111",
+        "name": {
+          "en-US": "Lo-Vis Visor"
+        },
+        "image": "gear/Hed_COP111.png"
+      },
+      {
+        "id": "Hed_COP112",
+        "name": {
+          "en-US": "Five-Alarm Helmet"
+        },
+        "image": "gear/Hed_COP112.png"
+      },
+      {
+        "id": "Hed_COP113",
+        "name": {
+          "en-US": "Astro Helm"
+        },
+        "image": "gear/Hed_COP113.png"
+      },
+      {
+        "id": "Hed_COP114",
+        "name": {
+          "en-US": "360 All-Scopes"
+        },
+        "image": "gear/Hed_COP114.png"
+      },
+      {
+        "id": "Hed_COP115",
+        "name": {
+          "en-US": "Brain Strainer"
+        },
+        "image": "gear/Hed_COP115.png"
+      },
+      {
+        "id": "Hed_COP116",
+        "name": {
+          "en-US": "Deep Sinker Helm"
+        },
+        "image": "gear/Hed_COP116.png"
+      },
+      {
+        "id": "Hed_COP117",
+        "name": {
+          "en-US": "Commander Cap"
+        },
+        "image": "gear/Hed_COP117.png"
+      },
+      {
+        "id": "Hed_COP118",
+        "name": {
+          "en-US": "See-an-Enemy HUD"
+        },
+        "image": "gear/Hed_COP118.png"
+      },
+      {
+        "id": "Hed_COP119",
+        "name": {
+          "en-US": "Retro Future Helmet"
+        },
+        "image": "gear/Hed_COP119.png"
+      },
+      {
+        "id": "Hed_COP120",
+        "name": {
+          "en-US": "3D Glasses"
+        },
+        "image": "gear/Hed_COP120.png"
+      },
+      {
+        "id": "Hed_COP121",
+        "name": {
+          "en-US": "El Rey Calamar"
+        },
+        "image": "gear/Hed_COP121.png"
+      },
+      {
+        "id": "Hed_COP122",
+        "name": {
+          "en-US": "Octavio Dome"
+        },
+        "image": "gear/Hed_COP122.png"
+      },
+      {
+        "id": "Hed_COP123",
+        "name": {
+          "en-US": "Hard Hat Replica"
+        },
+        "image": "gear/Hed_COP123.png"
+      },
+      {
+        "id": "Hed_EYE000",
+        "name": {
+          "en-US": "Retro Specs"
+        },
+        "image": "gear/Hed_EYE000.png"
+      },
+      {
+        "id": "Hed_EYE001",
+        "name": {
+          "en-US": "Splash Goggles"
+        },
+        "image": "gear/Hed_EYE001.png"
+      },
+      {
+        "id": "Hed_EYE002",
+        "name": {
+          "en-US": "Pilot Goggles"
+        },
+        "image": "gear/Hed_EYE002.png"
+      },
+      {
+        "id": "Hed_EYE003",
+        "name": {
+          "en-US": "Tinted Shades"
+        },
+        "image": "gear/Hed_EYE003.png"
+      },
+      {
+        "id": "Hed_EYE004",
+        "name": {
+          "en-US": "Black Arrowbands"
+        },
+        "image": "gear/Hed_EYE004.png"
+      },
+      {
+        "id": "Hed_EYE005",
+        "name": {
+          "en-US": "Snorkel Mask"
+        },
+        "image": "gear/Hed_EYE005.png"
+      },
+      {
+        "id": "Hed_EYE006",
+        "name": {
+          "en-US": "White Arrowbands"
+        },
+        "image": "gear/Hed_EYE006.png"
+      },
+      {
+        "id": "Hed_EYE007",
+        "name": {
+          "en-US": "Fake Contacts"
+        },
+        "image": "gear/Hed_EYE007.png"
+      },
+      {
+        "id": "Hed_EYE008",
+        "name": {
+          "en-US": "18K Aviators"
+        },
+        "image": "gear/Hed_EYE008.png"
+      },
+      {
+        "id": "Hed_EYE009",
+        "name": {
+          "en-US": "Full-Moon Glasses"
+        },
+        "image": "gear/Hed_EYE009.png"
+      },
+      {
+        "id": "Hed_EYE010",
+        "name": {
+          "en-US": "Octoglasses"
+        },
+        "image": "gear/Hed_EYE010.png"
+      },
+      {
+        "id": "Hed_EYE011",
+        "name": {
+          "en-US": "Half-Rim Glasses"
+        },
+        "image": "gear/Hed_EYE011.png"
+      },
+      {
+        "id": "Hed_EYE012",
+        "name": {
+          "en-US": "Double Egg Shades"
+        },
+        "image": "gear/Hed_EYE012.png"
+      },
+      {
+        "id": "Hed_EYE013",
+        "name": {
+          "en-US": "Zekko Cap"
+        },
+        "image": "gear/Hed_EYE013.png"
+      },
+      {
+        "id": "Hed_EYE014",
+        "name": {
+          "en-US": "SV925 Circle Shades"
+        },
+        "image": "gear/Hed_EYE014.png"
+      },
+      {
+        "id": "Hed_EYE015",
+        "name": {
+          "en-US": "Annaki Beret & Glasses"
+        },
+        "image": "gear/Hed_EYE015.png"
+      },
+      {
+        "id": "Hed_EYE016",
+        "name": {
+          "en-US": "Swim Goggles"
+        },
+        "image": "gear/Hed_EYE016.png"
+      },
+      {
+        "id": "Hed_EYE017",
+        "name": {
+          "en-US": "Ink-Guard Goggles"
+        },
+        "image": "gear/Hed_EYE017.png"
+      },
+      {
+        "id": "Hed_EYE018",
+        "name": {
+          "en-US": "Toni Kensa Goggles"
+        },
+        "image": "gear/Hed_EYE018.png"
+      },
+      {
+        "id": "Hed_EYE021",
+        "name": {
+          "en-US": "Ink-Tinted Goggles"
+        },
+        "image": "gear/Hed_EYE021.png"
+      },
+      {
+        "id": "Hed_EYE022",
+        "name": {
+          "en-US": "Retro Framers"
+        },
+        "image": "gear/Hed_EYE022.png"
+      },
+      {
+        "id": "Hed_EYE023",
+        "name": {
+          "en-US": "Glassless Glasses"
+        },
+        "image": "gear/Hed_EYE023.png"
+      },
+      {
+        "id": "Hed_EYE024",
+        "name": {
+          "en-US": "Triple-Deck Specs"
+        },
+        "image": "gear/Hed_EYE024.png"
+      },
+      {
+        "id": "Hed_EYE025",
+        "name": {
+          "en-US": "Invisifloats"
+        },
+        "image": "gear/Hed_EYE025.png"
+      },
+      {
+        "id": "Hed_EYE026",
+        "name": {
+          "en-US": "Moto Shades"
+        },
+        "image": "gear/Hed_EYE026.png"
+      },
+      {
+        "id": "Hed_EYE027",
+        "name": {
+          "en-US": "Annaki Charms"
+        },
+        "image": "gear/Hed_EYE027.png"
+      },
+      {
+        "id": "Hed_EYE028",
+        "name": {
+          "en-US": "Glam Clam Specs"
+        },
+        "image": "gear/Hed_EYE028.png"
+      },
+      {
+        "id": "Hed_EYE029",
+        "name": {
+          "en-US": "Retro BluFocals"
+        },
+        "image": "gear/Hed_EYE029.png"
+      },
+      {
+        "id": "Hed_EYE030",
+        "name": {
+          "en-US": "Sea-Me-Nots"
+        },
+        "image": "gear/Hed_EYE030.png"
+      },
+      {
+        "id": "Hed_EYE031",
+        "name": {
+          "en-US": "Hipster Horn-Rims"
+        },
+        "image": "gear/Hed_EYE031.png"
+      },
+      {
+        "id": "Hed_EYE032",
+        "name": {
+          "en-US": "Deluxury Sleep Mask"
+        },
+        "image": "gear/Hed_EYE032.png"
+      },
+      {
+        "id": "Hed_FST000",
+        "name": {
+          "en-US": "White Headband"
+        },
+        "image": "gear/Hed_FST000.png"
+      },
+      {
+        "id": "Hed_HAP000",
+        "name": {
+          "en-US": "Kyonshi Hat"
+        },
+        "image": "gear/Hed_HAP000.png"
+      },
+      {
+        "id": "Hed_HAP001",
+        "name": {
+          "en-US": "Li'l Devil Horns"
+        },
+        "image": "gear/Hed_HAP001.png"
+      },
+      {
+        "id": "Hed_HAP002",
+        "name": {
+          "en-US": "Hockey Mask"
+        },
+        "image": "gear/Hed_HAP002.png"
+      },
+      {
+        "id": "Hed_HAP003",
+        "name": {
+          "en-US": "Anglerfish Mask"
+        },
+        "image": "gear/Hed_HAP003.png"
+      },
+      {
+        "id": "Hed_HAP004",
+        "name": {
+          "en-US": "Festive Party Cone"
+        },
+        "image": "gear/Hed_HAP004.png"
+      },
+      {
+        "id": "Hed_HAP005",
+        "name": {
+          "en-US": "New Year's Glasses DX"
+        },
+        "image": "gear/Hed_HAP005.png"
+      },
+      {
+        "id": "Hed_HAP006",
+        "name": {
+          "en-US": "Twisty Headband"
+        },
+        "image": "gear/Hed_HAP006.png"
+      },
+      {
+        "id": "Hed_HAP007",
+        "name": {
+          "en-US": "Eel-Cake Hat"
+        },
+        "image": "gear/Hed_HAP007.png"
+      },
+      {
+        "id": "Hed_HAP008",
+        "name": {
+          "en-US": "Purple Novelty Visor"
+        },
+        "image": "gear/Hed_HAP008.png"
+      },
+      {
+        "id": "Hed_HAP009",
+        "name": {
+          "en-US": "Green Novelty Visor"
+        },
+        "image": "gear/Hed_HAP009.png"
+      },
+      {
+        "id": "Hed_HAP010",
+        "name": {
+          "en-US": "Orange Novelty Visor"
+        },
+        "image": "gear/Hed_HAP010.png"
+      },
+      {
+        "id": "Hed_HAP011",
+        "name": {
+          "en-US": "Pink Novelty Visor"
+        },
+        "image": "gear/Hed_HAP011.png"
+      },
+      {
+        "id": "Hed_HAP012",
+        "name": {
+          "en-US": "Jetflame Crest"
+        },
+        "image": "gear/Hed_HAP012.png"
+      },
+      {
+        "id": "Hed_HAP013",
+        "name": {
+          "en-US": "Fierce Fishskull"
+        },
+        "image": "gear/Hed_HAP013.png"
+      },
+      {
+        "id": "Hed_HAP014",
+        "name": {
+          "en-US": "Hivemind Antenna"
+        },
+        "image": "gear/Hed_HAP014.png"
+      },
+      {
+        "id": "Hed_HAP015",
+        "name": {
+          "en-US": "Eye of Justice"
+        },
+        "image": "gear/Hed_HAP015.png"
+      },
+      {
+        "id": "Hed_HAP016",
+        "name": {
+          "en-US": "Undead Head"
+        },
+        "image": "gear/Hed_HAP016.png"
+      },
+      {
+        "id": "Hed_HAP017",
+        "name": {
+          "en-US": "The Plankton Walker"
+        },
+        "image": "gear/Hed_HAP017.png"
+      },
+      {
+        "id": "Hed_HAP018",
+        "name": {
+          "en-US": "Swim Reaper"
+        },
+        "image": "gear/Hed_HAP018.png"
+      },
+      {
+        "id": "Hed_HAP019",
+        "name": {
+          "en-US": "Bleak Beak"
+        },
+        "image": "gear/Hed_HAP019.png"
+      },
+      {
+        "id": "Hed_HAP020",
+        "name": {
+          "en-US": "Dapperdasher Hat"
+        },
+        "image": "gear/Hed_HAP020.png"
+      },
+      {
+        "id": "Hed_HAP021",
+        "name": {
+          "en-US": "Coral Wreath"
+        },
+        "image": "gear/Hed_HAP021.png"
+      },
+      {
+        "id": "Hed_HAP022",
+        "name": {
+          "en-US": "Golden Gala Masque"
+        },
+        "image": "gear/Hed_HAP022.png"
+      },
+      {
+        "id": "Hed_HAP023",
+        "name": {
+          "en-US": "Octopearl Crown"
+        },
+        "image": "gear/Hed_HAP023.png"
+      },
+      {
+        "id": "Hed_HAP024",
+        "name": {
+          "en-US": "Teal Pinhole Shades"
+        },
+        "image": "gear/Hed_HAP024.png"
+      },
+      {
+        "id": "Hed_HAP025",
+        "name": {
+          "en-US": "Green Pinhole Shades"
+        },
+        "image": "gear/Hed_HAP025.png"
+      },
+      {
+        "id": "Hed_HAP026",
+        "name": {
+          "en-US": "Pink Pinhole Shades"
+        },
+        "image": "gear/Hed_HAP026.png"
+      },
+      {
+        "id": "Hed_HAP027",
+        "name": {
+          "en-US": "Yellow Pinhole Shades"
+        },
+        "image": "gear/Hed_HAP027.png"
+      },
+      {
+        "id": "Hed_HAP028",
+        "name": {
+          "en-US": "Lionfish Funface"
+        },
+        "image": "gear/Hed_HAP028.png"
+      },
+      {
+        "id": "Hed_HAP029",
+        "name": {
+          "en-US": "Cowfish Funface"
+        },
+        "image": "gear/Hed_HAP029.png"
+      },
+      {
+        "id": "Hed_HAP030",
+        "name": {
+          "en-US": "ZedFry Funface"
+        },
+        "image": "gear/Hed_HAP030.png"
+      },
+      {
+        "id": "Hed_HAP031",
+        "name": {
+          "en-US": "Monkey-Crab Funface"
+        },
+        "image": "gear/Hed_HAP031.png"
+      },
+      {
+        "id": "Hed_HAP032",
+        "name": {
+          "en-US": "Fox Funface"
+        },
+        "image": "gear/Hed_HAP032.png"
+      },
+      {
+        "id": "Hed_HAP033",
+        "name": {
+          "en-US": "Cartoony Funface"
+        },
+        "image": "gear/Hed_HAP033.png"
+      },
+      {
+        "id": "Hed_HAP034",
+        "name": {
+          "en-US": "Now or Never Spikes"
+        },
+        "image": "gear/Hed_HAP034.png"
+      },
+      {
+        "id": "Hed_HAP035",
+        "name": {
+          "en-US": "Now or Never Crown"
+        },
+        "image": "gear/Hed_HAP035.png"
+      },
+      {
+        "id": "Hed_HAP036",
+        "name": {
+          "en-US": "Now or Never Cap"
+        },
+        "image": "gear/Hed_HAP036.png"
+      },
+      {
+        "id": "Hed_HAP037",
+        "name": {
+          "en-US": "Now or Never Earrings"
+        },
+        "image": "gear/Hed_HAP037.png"
+      },
+      {
+        "id": "Hed_HAP038",
+        "name": {
+          "en-US": "Now or Never Barrette"
+        },
+        "image": "gear/Hed_HAP038.png"
+      },
+      {
+        "id": "Hed_HAP039",
+        "name": {
+          "en-US": "Now or Never Horns"
+        },
+        "image": "gear/Hed_HAP039.png"
+      },
+      {
+        "id": "Hed_HAP040",
+        "name": {
+          "en-US": "Now or Never Headdress"
+        },
+        "image": "gear/Hed_HAP040.png"
+      },
+      {
+        "id": "Hed_HAT000",
+        "name": {
+          "en-US": "Safari Hat"
+        },
+        "image": "gear/Hed_HAT000.png"
+      },
+      {
+        "id": "Hed_HAT001",
+        "name": {
+          "en-US": "Jungle Hat"
+        },
+        "image": "gear/Hed_HAT001.png"
+      },
+      {
+        "id": "Hed_HAT002",
+        "name": {
+          "en-US": "Camping Hat"
+        },
+        "image": "gear/Hed_HAT002.png"
+      },
+      {
+        "id": "Hed_HAT003",
+        "name": {
+          "en-US": "Blowfish Bell Hat"
+        },
+        "image": "gear/Hed_HAT003.png"
+      },
+      {
+        "id": "Hed_HAT004",
+        "name": {
+          "en-US": "Bamboo Hat"
+        },
+        "image": "gear/Hed_HAT004.png"
+      },
+      {
+        "id": "Hed_HAT005",
+        "name": {
+          "en-US": "Straw Boater"
+        },
+        "image": "gear/Hed_HAT005.png"
+      },
+      {
+        "id": "Hed_HAT006",
+        "name": {
+          "en-US": "Classic Straw Boater"
+        },
+        "image": "gear/Hed_HAT006.png"
+      },
+      {
+        "id": "Hed_HAT007",
+        "name": {
+          "en-US": "Treasure Hunter"
+        },
+        "image": "gear/Hed_HAT007.png"
+      },
+      {
+        "id": "Hed_HAT008",
+        "name": {
+          "en-US": "Bucket Hat"
+        },
+        "image": "gear/Hed_HAT008.png"
+      },
+      {
+        "id": "Hed_HAT009",
+        "name": {
+          "en-US": "Patched Hat"
+        },
+        "image": "gear/Hed_HAT009.png"
+      },
+      {
+        "id": "Hed_HAT010",
+        "name": {
+          "en-US": "Tulip Parasol"
+        },
+        "image": "gear/Hed_HAT010.png"
+      },
+      {
+        "id": "Hed_HAT011",
+        "name": {
+          "en-US": "Fugu Bell Hat"
+        },
+        "image": "gear/Hed_HAT011.png"
+      },
+      {
+        "id": "Hed_HAT012",
+        "name": {
+          "en-US": "Seashell Bamboo Hat"
+        },
+        "image": "gear/Hed_HAT012.png"
+      },
+      {
+        "id": "Hed_HAT013",
+        "name": {
+          "en-US": "Hothouse Hat"
+        },
+        "image": "gear/Hed_HAT013.png"
+      },
+      {
+        "id": "Hed_HAT014",
+        "name": {
+          "en-US": "Mountie Hat"
+        },
+        "image": "gear/Hed_HAT014.png"
+      },
+      {
+        "id": "Hed_HAT015",
+        "name": {
+          "en-US": "Classic Bowler"
+        },
+        "image": "gear/Hed_HAT015.png"
+      },
+      {
+        "id": "Hed_HAT016",
+        "name": {
+          "en-US": "Jean Dream Bucket"
+        },
+        "image": "gear/Hed_HAT016.png"
+      },
+      {
+        "id": "Hed_HAT017",
+        "name": {
+          "en-US": "Howdy Hat"
+        },
+        "image": "gear/Hed_HAT017.png"
+      },
+      {
+        "id": "Hed_HAT018",
+        "name": {
+          "en-US": "Urchin Understitch"
+        },
+        "image": "gear/Hed_HAT018.png"
+      },
+      {
+        "id": "Hed_HAT019",
+        "name": {
+          "en-US": "Beachcomber"
+        },
+        "image": "gear/Hed_HAT019.png"
+      },
+      {
+        "id": "Hed_HAT020",
+        "name": {
+          "en-US": "Z+F Flair Bowler"
+        },
+        "image": "gear/Hed_HAT020.png"
+      },
+      {
+        "id": "Hed_HAT021",
+        "name": {
+          "en-US": "Hat-Trick Bell Hat"
+        },
+        "image": "gear/Hed_HAT021.png"
+      },
+      {
+        "id": "Hed_HAT022",
+        "name": {
+          "en-US": "Sauna Hat"
+        },
+        "image": "gear/Hed_HAT022.png"
+      },
+      {
+        "id": "Hed_HAT023",
+        "name": {
+          "en-US": "Sea-Lily Hat"
+        },
+        "image": "gear/Hed_HAT023.png"
+      },
+      {
+        "id": "Hed_HBD001",
+        "name": {
+          "en-US": "B-ball Headband"
+        },
+        "image": "gear/Hed_HBD001.png"
+      },
+      {
+        "id": "Hed_HBD002",
+        "name": {
+          "en-US": "Squash Headband"
+        },
+        "image": "gear/Hed_HBD002.png"
+      },
+      {
+        "id": "Hed_HBD003",
+        "name": {
+          "en-US": "Tennis Headband"
+        },
+        "image": "gear/Hed_HBD003.png"
+      },
+      {
+        "id": "Hed_HBD004",
+        "name": {
+          "en-US": "Jogging Headband"
+        },
+        "image": "gear/Hed_HBD004.png"
+      },
+      {
+        "id": "Hed_HBD005",
+        "name": {
+          "en-US": "Soccer Headband"
+        },
+        "image": "gear/Hed_HBD005.png"
+      },
+      {
+        "id": "Hed_HBD007",
+        "name": {
+          "en-US": "FishFry Biscuit Bandana"
+        },
+        "image": "gear/Hed_HBD007.png"
+      },
+      {
+        "id": "Hed_HBD008",
+        "name": {
+          "en-US": "Black FishFry Bandana"
+        },
+        "image": "gear/Hed_HBD008.png"
+      },
+      {
+        "id": "Hed_HBD009",
+        "name": {
+          "en-US": "Squidband"
+        },
+        "image": "gear/Hed_HBD009.png"
+      },
+      {
+        "id": "Hed_HDP000",
+        "name": {
+          "en-US": "Studio Headphones"
+        },
+        "image": "gear/Hed_HDP000.png"
+      },
+      {
+        "id": "Hed_HDP001",
+        "name": {
+          "en-US": "Designer Headphones"
+        },
+        "image": "gear/Hed_HDP001.png"
+      },
+      {
+        "id": "Hed_HDP002",
+        "name": {
+          "en-US": "Noise Cancelers"
+        },
+        "image": "gear/Hed_HDP002.png"
+      },
+      {
+        "id": "Hed_HDP003",
+        "name": {
+          "en-US": "Squidfin Hook Cans"
+        },
+        "image": "gear/Hed_HDP003.png"
+      },
+      {
+        "id": "Hed_HDP004",
+        "name": {
+          "en-US": "Squidlife Headphones"
+        },
+        "image": "gear/Hed_HDP004.png"
+      },
+      {
+        "id": "Hed_HDP007",
+        "name": {
+          "en-US": "Ocho OctoPhones"
+        },
+        "image": "gear/Hed_HDP007.png"
+      },
+      {
+        "id": "Hed_HDP008",
+        "name": {
+          "en-US": "Cephalo Pods"
+        },
+        "image": "gear/Hed_HDP008.png"
+      },
+      {
+        "id": "Hed_HDP009",
+        "name": {
+          "en-US": "Ocho OctoPhones Blancos"
+        },
+        "image": "gear/Hed_HDP009.png"
+      },
+      {
+        "id": "Hed_HDP010",
+        "name": {
+          "en-US": "Aux Boxes"
+        },
+        "image": "gear/Hed_HDP010.png"
+      },
+      {
+        "id": "Hed_HDP011",
+        "name": {
+          "en-US": "Dustcloud 'Phones"
+        },
+        "image": "gear/Hed_HDP011.png"
+      },
+      {
+        "id": "Hed_HDP012",
+        "name": {
+          "en-US": "Seafoam 'Phones"
+        },
+        "image": "gear/Hed_HDP012.png"
+      },
+      {
+        "id": "Hed_MET000",
+        "name": {
+          "en-US": "Bike Helmet"
+        },
+        "image": "gear/Hed_MET000.png"
+      },
+      {
+        "id": "Hed_MET002",
+        "name": {
+          "en-US": "Stealth Goggles"
+        },
+        "image": "gear/Hed_MET002.png"
+      },
+      {
+        "id": "Hed_MET004",
+        "name": {
+          "en-US": "Skate Helmet"
+        },
+        "image": "gear/Hed_MET004.png"
+      },
+      {
+        "id": "Hed_MET005",
+        "name": {
+          "en-US": "Visor Skate Helmet"
+        },
+        "image": "gear/Hed_MET005.png"
+      },
+      {
+        "id": "Hed_MET006",
+        "name": {
+          "en-US": "MTB Helmet"
+        },
+        "image": "gear/Hed_MET006.png"
+      },
+      {
+        "id": "Hed_MET007",
+        "name": {
+          "en-US": "Hockey Helmet"
+        },
+        "image": "gear/Hed_MET007.png"
+      },
+      {
+        "id": "Hed_MET008",
+        "name": {
+          "en-US": "Matte Bike Helmet"
+        },
+        "image": "gear/Hed_MET008.png"
+      },
+      {
+        "id": "Hed_MET009",
+        "name": {
+          "en-US": "Octo Tackle Helmet Deco"
+        },
+        "image": "gear/Hed_MET009.png"
+      },
+      {
+        "id": "Hed_MET011",
+        "name": {
+          "en-US": "Deca Tackle Visor Helmet"
+        },
+        "image": "gear/Hed_MET011.png"
+      },
+      {
+        "id": "Hed_MET012",
+        "name": {
+          "en-US": "Winkle Stripe Helm"
+        },
+        "image": "gear/Hed_MET012.png"
+      },
+      {
+        "id": "Hed_MET013",
+        "name": {
+          "en-US": "Party Hard Hat"
+        },
+        "image": "gear/Hed_MET013.png"
+      },
+      {
+        "id": "Hed_MET014",
+        "name": {
+          "en-US": "Home-Team Catcher"
+        },
+        "image": "gear/Hed_MET014.png"
+      },
+      {
+        "id": "Hed_MET015",
+        "name": {
+          "en-US": "Away-Team Catcher"
+        },
+        "image": "gear/Hed_MET015.png"
+      },
+      {
+        "id": "Hed_MET016",
+        "name": {
+          "en-US": "Scrum Cap"
+        },
+        "image": "gear/Hed_MET016.png"
+      },
+      {
+        "id": "Hed_MET017",
+        "name": {
+          "en-US": "Barrelfish Headgear"
+        },
+        "image": "gear/Hed_MET017.png"
+      },
+      {
+        "id": "Hed_MET018",
+        "name": {
+          "en-US": "Barrelfish Home Helmet"
+        },
+        "image": "gear/Hed_MET018.png"
+      },
+      {
+        "id": "Hed_MET019",
+        "name": {
+          "en-US": "ZedFry Helmet"
+        },
+        "image": "gear/Hed_MET019.png"
+      },
+      {
+        "id": "Hed_MET020",
+        "name": {
+          "en-US": "Slipstream Helmet Pro"
+        },
+        "image": "gear/Hed_MET020.png"
+      },
+      {
+        "id": "Hed_MET021",
+        "name": {
+          "en-US": "Slipstream Helmet"
+        },
+        "image": "gear/Hed_MET021.png"
+      },
+      {
+        "id": "Hed_MSK000",
+        "name": {
+          "en-US": "Gas Mask"
+        },
+        "image": "gear/Hed_MSK000.png"
+      },
+      {
+        "id": "Hed_MSK001",
+        "name": {
+          "en-US": "Paintball Mask"
+        },
+        "image": "gear/Hed_MSK001.png"
+      },
+      {
+        "id": "Hed_MSK002",
+        "name": {
+          "en-US": "Paisley Bandana"
+        },
+        "image": "gear/Hed_MSK002.png"
+      },
+      {
+        "id": "Hed_MSK003",
+        "name": {
+          "en-US": "Skull Bandana"
+        },
+        "image": "gear/Hed_MSK003.png"
+      },
+      {
+        "id": "Hed_MSK004",
+        "name": {
+          "en-US": "Painter's Mask"
+        },
+        "image": "gear/Hed_MSK004.png"
+      },
+      {
+        "id": "Hed_MSK005",
+        "name": {
+          "en-US": "Annaki Mask"
+        },
+        "image": "gear/Hed_MSK005.png"
+      },
+      {
+        "id": "Hed_MSK006",
+        "name": {
+          "en-US": "Octoking Facemask"
+        },
+        "image": "gear/Hed_MSK006.png"
+      },
+      {
+        "id": "Hed_MSK007",
+        "name": {
+          "en-US": "Squid Facemask"
+        },
+        "image": "gear/Hed_MSK007.png"
+      },
+      {
+        "id": "Hed_MSK008",
+        "name": {
+          "en-US": "Firefin Facemask"
+        },
+        "image": "gear/Hed_MSK008.png"
+      },
+      {
+        "id": "Hed_MSK009",
+        "name": {
+          "en-US": "King Facemask"
+        },
+        "image": "gear/Hed_MSK009.png"
+      },
+      {
+        "id": "Hed_MSK010",
+        "name": {
+          "en-US": "Motocross Nose Guard"
+        },
+        "image": "gear/Hed_MSK010.png"
+      },
+      {
+        "id": "Hed_MSK011",
+        "name": {
+          "en-US": "Forge Mask"
+        },
+        "image": "gear/Hed_MSK011.png"
+      },
+      {
+        "id": "Hed_MSK012",
+        "name": {
+          "en-US": "Digi-Camo Forge Mask"
+        },
+        "image": "gear/Hed_MSK012.png"
+      },
+      {
+        "id": "Hed_MSK014",
+        "name": {
+          "en-US": "BlobMob Mask"
+        },
+        "image": "gear/Hed_MSK014.png"
+      },
+      {
+        "id": "Hed_MSK015",
+        "name": {
+          "en-US": "Air Gills DX"
+        },
+        "image": "gear/Hed_MSK015.png"
+      },
+      {
+        "id": "Hed_MSK016",
+        "name": {
+          "en-US": "Squidbeak Shield"
+        },
+        "image": "gear/Hed_MSK016.png"
+      },
+      {
+        "id": "Hed_MSK017",
+        "name": {
+          "en-US": "Meetcha Mask"
+        },
+        "image": "gear/Hed_MSK017.png"
+      },
+      {
+        "id": "Hed_MSK018",
+        "name": {
+          "en-US": "Stealth Squidbeak Shield"
+        },
+        "image": "gear/Hed_MSK018.png"
+      },
+      {
+        "id": "Hed_MSK019",
+        "name": {
+          "en-US": "Snaxolotl Hood"
+        },
+        "image": "gear/Hed_MSK019.png"
+      },
+      {
+        "id": "Hed_MSN000",
+        "name": {
+          "en-US": "Hero Headset Replica"
+        },
+        "image": "gear/Hed_MSN000.png"
+      },
+      {
+        "id": "Hed_MSN004",
+        "name": {
+          "en-US": "Armor Helmet Replica"
+        },
+        "image": "gear/Hed_MSN004.png"
+      },
+      {
+        "id": "Hed_MSN109",
+        "name": {
+          "en-US": "Teddy Band"
+        },
+        "image": "gear/Hed_MSN109.png"
+      },
+      {
+        "id": "Hed_MSN306",
+        "name": {
+          "en-US": "Hero Mindset Replica"
+        },
+        "image": "gear/Hed_MSN306.png"
+      },
+      {
+        "id": "Hed_MSN307",
+        "name": {
+          "en-US": "Hero Grip Replica"
+        },
+        "image": "gear/Hed_MSN307.png"
+      },
+      {
+        "id": "Hed_MSN311",
+        "name": {
+          "en-US": "Captain's Cap Replica"
+        },
+        "image": "gear/Hed_MSN311.png"
+      },
+      {
+        "id": "Hed_NCP000",
+        "name": {
+          "en-US": "Bobble Hat"
+        },
+        "image": "gear/Hed_NCP000.png"
+      },
+      {
+        "id": "Hed_NCP001",
+        "name": {
+          "en-US": "Short Beanie"
+        },
+        "image": "gear/Hed_NCP001.png"
+      },
+      {
+        "id": "Hed_NCP002",
+        "name": {
+          "en-US": "Striped Beanie"
+        },
+        "image": "gear/Hed_NCP002.png"
+      },
+      {
+        "id": "Hed_NCP003",
+        "name": {
+          "en-US": "Sporty Bobble Hat"
+        },
+        "image": "gear/Hed_NCP003.png"
+      },
+      {
+        "id": "Hed_NCP004",
+        "name": {
+          "en-US": "Special-Forces Beret"
+        },
+        "image": "gear/Hed_NCP004.png"
+      },
+      {
+        "id": "Hed_NCP005",
+        "name": {
+          "en-US": "Squid Nordic"
+        },
+        "image": "gear/Hed_NCP005.png"
+      },
+      {
+        "id": "Hed_NCP008",
+        "name": {
+          "en-US": "Knitted Hat"
+        },
+        "image": "gear/Hed_NCP008.png"
+      },
+      {
+        "id": "Hed_NCP009",
+        "name": {
+          "en-US": "Annaki Beret"
+        },
+        "image": "gear/Hed_NCP009.png"
+      },
+      {
+        "id": "Hed_NCP010",
+        "name": {
+          "en-US": "Yamagiri Beanie"
+        },
+        "image": "gear/Hed_NCP010.png"
+      },
+      {
+        "id": "Hed_NCP011",
+        "name": {
+          "en-US": "Sneaky Beanie"
+        },
+        "image": "gear/Hed_NCP011.png"
+      },
+      {
+        "id": "Hed_NCP012",
+        "name": {
+          "en-US": "Anglerfish Knit"
+        },
+        "image": "gear/Hed_NCP012.png"
+      },
+      {
+        "id": "Hed_NCP013",
+        "name": {
+          "en-US": "ZedFry Beanie"
+        },
+        "image": "gear/Hed_NCP013.png"
+      },
+      {
+        "id": "Hed_SDODR200",
+        "name": {
+          "en-US": "Order Earring Replica"
+        },
+        "image": "gear/Hed_SDODR200.png"
+      },
+      {
+        "id": "Hed_SDODR201",
+        "name": {
+          "en-US": "Order Regulator Replica"
+        },
+        "image": "gear/Hed_SDODR201.png"
+      },
+      {
+        "id": "Hed_SDODR202",
+        "name": {
+          "en-US": "Controller VM"
+        },
+        "image": "gear/Hed_SDODR202.png"
+      },
+      {
+        "id": "Hed_SDODR203",
+        "name": {
+          "en-US": "Parallel Mask"
+        },
+        "image": "gear/Hed_SDODR203.png"
+      },
+      {
+        "id": "Hed_SDODR204",
+        "name": {
+          "en-US": "Pearl Plushie"
+        },
+        "image": "gear/Hed_SDODR204.png"
+      },
+      {
+        "id": "Hed_TRG000",
+        "name": {
+          "en-US": "Stay Crusty Cap"
+        },
+        "image": "gear/Hed_TRG000.png"
+      },
+      {
+        "id": "Hed_TRG001",
+        "name": {
+          "en-US": "Judicial Hearing"
+        },
+        "image": "gear/Hed_TRG001.png"
+      },
+      {
+        "id": "Hed_VIS000",
+        "name": {
+          "en-US": "Golf Visor"
+        },
+        "image": "gear/Hed_VIS000.png"
+      },
+      {
+        "id": "Hed_VIS001",
+        "name": {
+          "en-US": "FishFry Visor"
+        },
+        "image": "gear/Hed_VIS001.png"
+      },
+      {
+        "id": "Hed_VIS002",
+        "name": {
+          "en-US": "Sun Visor"
+        },
+        "image": "gear/Hed_VIS002.png"
+      },
+      {
+        "id": "Hed_VIS003",
+        "name": {
+          "en-US": "Takoroka Visor"
+        },
+        "image": "gear/Hed_VIS003.png"
+      },
+      {
+        "id": "Hed_VIS004",
+        "name": {
+          "en-US": "Face Visor"
+        },
+        "image": "gear/Hed_VIS004.png"
+      },
+      {
+        "id": "Hed_VIS005",
+        "name": {
+          "en-US": "Crust Bucket Visor"
+        },
+        "image": "gear/Hed_VIS005.png"
+      },
+      {
+        "id": "Hed_VIS006",
+        "name": {
+          "en-US": "Tee Time Visor"
+        },
+        "image": "gear/Hed_VIS006.png"
+      }
+    ],
+    "clothes": [
+      {
+        "id": "Clt_AMB000",
+        "name": {
+          "en-US": "School Uniform A"
+        },
+        "image": "gear/Clt_AMB000.png"
+      },
+      {
+        "id": "Clt_AMB001",
+        "name": {
+          "en-US": "Samurai Jacket"
+        },
+        "image": "gear/Clt_AMB001.png"
+      },
+      {
+        "id": "Clt_AMB002",
+        "name": {
+          "en-US": "Power Armor"
+        },
+        "image": "gear/Clt_AMB002.png"
+      },
+      {
+        "id": "Clt_AMB003",
+        "name": {
+          "en-US": "School Cardigan A"
+        },
+        "image": "gear/Clt_AMB003.png"
+      },
+      {
+        "id": "Clt_AMB004",
+        "name": {
+          "en-US": "Squinja Suit"
+        },
+        "image": "gear/Clt_AMB004.png"
+      },
+      {
+        "id": "Clt_AMB005",
+        "name": {
+          "en-US": "Power Armor Mk I"
+        },
+        "image": "gear/Clt_AMB005.png"
+      },
+      {
+        "id": "Clt_AMB006",
+        "name": {
+          "en-US": "Pearlescent Hoodie"
+        },
+        "image": "gear/Clt_AMB006.png"
+      },
+      {
+        "id": "Clt_AMB007",
+        "name": {
+          "en-US": "Marinated Top"
+        },
+        "image": "gear/Clt_AMB007.png"
+      },
+      {
+        "id": "Clt_AMB008",
+        "name": {
+          "en-US": "Enchanted Robe A"
+        },
+        "image": "gear/Clt_AMB008.png"
+      },
+      {
+        "id": "Clt_AMB009",
+        "name": {
+          "en-US": "Steel Platemail"
+        },
+        "image": "gear/Clt_AMB009.png"
+      },
+      {
+        "id": "Clt_AMB010",
+        "name": {
+          "en-US": "Fresh Fish Gloves"
+        },
+        "image": "gear/Clt_AMB010.png"
+      },
+      {
+        "id": "Clt_AMB011",
+        "name": {
+          "en-US": "Schoolyard Scrap Jack"
+        },
+        "image": "gear/Clt_AMB011.png"
+      },
+      {
+        "id": "Clt_AMB012",
+        "name": {
+          "en-US": "Black-Belt Gi"
+        },
+        "image": "gear/Clt_AMB012.png"
+      },
+      {
+        "id": "Clt_AMB013",
+        "name": {
+          "en-US": "Chaos Commander Suit"
+        },
+        "image": "gear/Clt_AMB013.png"
+      },
+      {
+        "id": "Clt_AMB014",
+        "name": {
+          "en-US": "School Uniform B"
+        },
+        "image": "gear/Clt_AMB014.png"
+      },
+      {
+        "id": "Clt_AMB015",
+        "name": {
+          "en-US": "School Cardigan B"
+        },
+        "image": "gear/Clt_AMB015.png"
+      },
+      {
+        "id": "Clt_AMB017",
+        "name": {
+          "en-US": "Enchanted Robe B"
+        },
+        "image": "gear/Clt_AMB017.png"
+      },
+      {
+        "id": "Clt_AMB018",
+        "name": {
+          "en-US": "Chomp Top"
+        },
+        "image": "gear/Clt_AMB018.png"
+      },
+      {
+        "id": "Clt_AMB019",
+        "name": {
+          "en-US": "Eelneck Tank"
+        },
+        "image": "gear/Clt_AMB019.png"
+      },
+      {
+        "id": "Clt_AMB020",
+        "name": {
+          "en-US": "Big Slick"
+        },
+        "image": "gear/Clt_AMB020.png"
+      },
+      {
+        "id": "Clt_AMB021",
+        "name": {
+          "en-US": "World Tour Puffy Coat"
+        },
+        "image": "gear/Clt_AMB021.png"
+      },
+      {
+        "id": "Clt_AMB022",
+        "name": {
+          "en-US": "World Tour Jacket"
+        },
+        "image": "gear/Clt_AMB022.png"
+      },
+      {
+        "id": "Clt_COP100",
+        "name": {
+          "en-US": "Squiddor Polo"
+        },
+        "image": "gear/Clt_COP100.png"
+      },
+      {
+        "id": "Clt_COP101",
+        "name": {
+          "en-US": "Anchor Life Vest"
+        },
+        "image": "gear/Clt_COP101.png"
+      },
+      {
+        "id": "Clt_COP102",
+        "name": {
+          "en-US": "Juice Parka"
+        },
+        "image": "gear/Clt_COP102.png"
+      },
+      {
+        "id": "Clt_COP103",
+        "name": {
+          "en-US": "Garden Gear"
+        },
+        "image": "gear/Clt_COP103.png"
+      },
+      {
+        "id": "Clt_COP104",
+        "name": {
+          "en-US": "Crustwear XXL"
+        },
+        "image": "gear/Clt_COP104.png"
+      },
+      {
+        "id": "Clt_COP105",
+        "name": {
+          "en-US": "North-Country Parka"
+        },
+        "image": "gear/Clt_COP105.png"
+      },
+      {
+        "id": "Clt_COP106",
+        "name": {
+          "en-US": "Octoleet Armor"
+        },
+        "image": "gear/Clt_COP106.png"
+      },
+      {
+        "id": "Clt_COP108",
+        "name": {
+          "en-US": "Dev Uniform"
+        },
+        "image": "gear/Clt_COP108.png"
+      },
+      {
+        "id": "Clt_COP109",
+        "name": {
+          "en-US": "Office Attire"
+        },
+        "image": "gear/Clt_COP109.png"
+      },
+      {
+        "id": "Clt_COP110",
+        "name": {
+          "en-US": "SRL Coat"
+        },
+        "image": "gear/Clt_COP110.png"
+      },
+      {
+        "id": "Clt_COP111",
+        "name": {
+          "en-US": "Commander Tunic"
+        },
+        "image": "gear/Clt_COP111.png"
+      },
+      {
+        "id": "Clt_COP112",
+        "name": {
+          "en-US": "Astro Wear"
+        },
+        "image": "gear/Clt_COP112.png"
+      },
+      {
+        "id": "Clt_COP113",
+        "name": {
+          "en-US": "Retro Future Suit"
+        },
+        "image": "gear/Clt_COP113.png"
+      },
+      {
+        "id": "Clt_COP114",
+        "name": {
+          "en-US": "Brinestone Jacket"
+        },
+        "image": "gear/Clt_COP114.png"
+      },
+      {
+        "id": "Clt_COP115",
+        "name": {
+          "en-US": "SplatJack 5000"
+        },
+        "image": "gear/Clt_COP115.png"
+      },
+      {
+        "id": "Clt_COP116",
+        "name": {
+          "en-US": "Hacker Jacket"
+        },
+        "image": "gear/Clt_COP116.png"
+      },
+      {
+        "id": "Clt_COP117",
+        "name": {
+          "en-US": "Cooler Jacket"
+        },
+        "image": "gear/Clt_COP117.png"
+      },
+      {
+        "id": "Clt_FST001",
+        "name": {
+          "en-US": "Basic Tee"
+        },
+        "image": "gear/Clt_FST001.png"
+      },
+      {
+        "id": "Clt_FST002",
+        "name": {
+          "en-US": "Fresh Octo Tee"
+        },
+        "image": "gear/Clt_FST002.png"
+      },
+      {
+        "id": "Clt_HAP001",
+        "name": {
+          "en-US": "Splatfest Tee"
+        },
+        "image": "gear/Clt_HAP001.png"
+      },
+      {
+        "id": "Clt_JKT000",
+        "name": {
+          "en-US": "Olive Ski Jacket"
+        },
+        "image": "gear/Clt_JKT000.png"
+      },
+      {
+        "id": "Clt_JKT001",
+        "name": {
+          "en-US": "Takoroka Nylon Vintage"
+        },
+        "image": "gear/Clt_JKT001.png"
+      },
+      {
+        "id": "Clt_JKT002",
+        "name": {
+          "en-US": "Berry Ski Jacket"
+        },
+        "image": "gear/Clt_JKT002.png"
+      },
+      {
+        "id": "Clt_JKT003",
+        "name": {
+          "en-US": "Varsity Jacket"
+        },
+        "image": "gear/Clt_JKT003.png"
+      },
+      {
+        "id": "Clt_JKT004",
+        "name": {
+          "en-US": "School Jersey"
+        },
+        "image": "gear/Clt_JKT004.png"
+      },
+      {
+        "id": "Clt_JKT005",
+        "name": {
+          "en-US": "Green Cardigan"
+        },
+        "image": "gear/Clt_JKT005.png"
+      },
+      {
+        "id": "Clt_JKT006",
+        "name": {
+          "en-US": "Black Inky Rider"
+        },
+        "image": "gear/Clt_JKT006.png"
+      },
+      {
+        "id": "Clt_JKT007",
+        "name": {
+          "en-US": "White Inky Rider"
+        },
+        "image": "gear/Clt_JKT007.png"
+      },
+      {
+        "id": "Clt_JKT008",
+        "name": {
+          "en-US": "Retro Gamer Jersey"
+        },
+        "image": "gear/Clt_JKT008.png"
+      },
+      {
+        "id": "Clt_JKT009",
+        "name": {
+          "en-US": "Orange Cardigan"
+        },
+        "image": "gear/Clt_JKT009.png"
+      },
+      {
+        "id": "Clt_JKT010",
+        "name": {
+          "en-US": "Forge Inkling Parka"
+        },
+        "image": "gear/Clt_JKT010.png"
+      },
+      {
+        "id": "Clt_JKT011",
+        "name": {
+          "en-US": "Forge Octarian Jacket"
+        },
+        "image": "gear/Clt_JKT011.png"
+      },
+      {
+        "id": "Clt_JKT012",
+        "name": {
+          "en-US": "Blue Sailor Suit"
+        },
+        "image": "gear/Clt_JKT012.png"
+      },
+      {
+        "id": "Clt_JKT013",
+        "name": {
+          "en-US": "White Sailor Suit"
+        },
+        "image": "gear/Clt_JKT013.png"
+      },
+      {
+        "id": "Clt_JKT014",
+        "name": {
+          "en-US": "Squid Satin Jacket"
+        },
+        "image": "gear/Clt_JKT014.png"
+      },
+      {
+        "id": "Clt_JKT015",
+        "name": {
+          "en-US": "Zapfish Satin Jacket"
+        },
+        "image": "gear/Clt_JKT015.png"
+      },
+      {
+        "id": "Clt_JKT016",
+        "name": {
+          "en-US": "Krak-On 528"
+        },
+        "image": "gear/Clt_JKT016.png"
+      },
+      {
+        "id": "Clt_JKT017",
+        "name": {
+          "en-US": "Chilly Mountain Coat"
+        },
+        "image": "gear/Clt_JKT017.png"
+      },
+      {
+        "id": "Clt_JKT018",
+        "name": {
+          "en-US": "Takoroka Windcrusher"
+        },
+        "image": "gear/Clt_JKT018.png"
+      },
+      {
+        "id": "Clt_JKT019",
+        "name": {
+          "en-US": "Matcha Down Jacket"
+        },
+        "image": "gear/Clt_JKT019.png"
+      },
+      {
+        "id": "Clt_JKT020",
+        "name": {
+          "en-US": "FA-01 Jacket"
+        },
+        "image": "gear/Clt_JKT020.png"
+      },
+      {
+        "id": "Clt_JKT021",
+        "name": {
+          "en-US": "FA-01 Reversed"
+        },
+        "image": "gear/Clt_JKT021.png"
+      },
+      {
+        "id": "Clt_JKT022",
+        "name": {
+          "en-US": "Pullover Coat"
+        },
+        "image": "gear/Clt_JKT022.png"
+      },
+      {
+        "id": "Clt_JKT023",
+        "name": {
+          "en-US": "Kensa Coat"
+        },
+        "image": "gear/Clt_JKT023.png"
+      },
+      {
+        "id": "Clt_JKT024",
+        "name": {
+          "en-US": "Birded Corduroy Jacket"
+        },
+        "image": "gear/Clt_JKT024.png"
+      },
+      {
+        "id": "Clt_JKT025",
+        "name": {
+          "en-US": "Deep-Octo Satin Jacket"
+        },
+        "image": "gear/Clt_JKT025.png"
+      },
+      {
+        "id": "Clt_JKT026",
+        "name": {
+          "en-US": "Zekko Redleaf Coat"
+        },
+        "image": "gear/Clt_JKT026.png"
+      },
+      {
+        "id": "Clt_JKT027",
+        "name": {
+          "en-US": "Lemon Mountain Coat"
+        },
+        "image": "gear/Clt_JKT027.png"
+      },
+      {
+        "id": "Clt_JKT028",
+        "name": {
+          "en-US": "Zekko Jade Coat"
+        },
+        "image": "gear/Clt_JKT028.png"
+      },
+      {
+        "id": "Clt_JKT029",
+        "name": {
+          "en-US": "Light Bomber Jacket"
+        },
+        "image": "gear/Clt_JKT029.png"
+      },
+      {
+        "id": "Clt_JKT033",
+        "name": {
+          "en-US": "Navy Eminence Jacket"
+        },
+        "image": "gear/Clt_JKT033.png"
+      },
+      {
+        "id": "Clt_JKT034",
+        "name": {
+          "en-US": "Tumeric Zekko Coat"
+        },
+        "image": "gear/Clt_JKT034.png"
+      },
+      {
+        "id": "Clt_JKT035",
+        "name": {
+          "en-US": "Custom Painted F-3 "
+        },
+        "image": "gear/Clt_JKT035.png"
+      },
+      {
+        "id": "Clt_JKT036",
+        "name": {
+          "en-US": "Dark Bomber Jacket"
+        },
+        "image": "gear/Clt_JKT036.png"
+      },
+      {
+        "id": "Clt_JKT038",
+        "name": {
+          "en-US": "White Leather F-3"
+        },
+        "image": "gear/Clt_JKT038.png"
+      },
+      {
+        "id": "Clt_JKT039",
+        "name": {
+          "en-US": "Chili-Pepper Ski Jacket"
+        },
+        "image": "gear/Clt_JKT039.png"
+      },
+      {
+        "id": "Clt_JKT040",
+        "name": {
+          "en-US": "Whale-Knit Sweater"
+        },
+        "image": "gear/Clt_JKT040.png"
+      },
+      {
+        "id": "Clt_JKT041",
+        "name": {
+          "en-US": "Rockin' Leather Jacket"
+        },
+        "image": "gear/Clt_JKT041.png"
+      },
+      {
+        "id": "Clt_JKT042",
+        "name": {
+          "en-US": "Kung-Fu Zip-Up"
+        },
+        "image": "gear/Clt_JKT042.png"
+      },
+      {
+        "id": "Clt_JKT043",
+        "name": {
+          "en-US": "Panda Kung-Fu Zip-Up"
+        },
+        "image": "gear/Clt_JKT043.png"
+      },
+      {
+        "id": "Clt_JKT045",
+        "name": {
+          "en-US": "Arctic Monster Parka"
+        },
+        "image": "gear/Clt_JKT045.png"
+      },
+      {
+        "id": "Clt_JKT046",
+        "name": {
+          "en-US": "Barazushi Anorak"
+        },
+        "image": "gear/Clt_JKT046.png"
+      },
+      {
+        "id": "Clt_JKT047",
+        "name": {
+          "en-US": "Patchwork Bomber"
+        },
+        "image": "gear/Clt_JKT047.png"
+      },
+      {
+        "id": "Clt_JKT048",
+        "name": {
+          "en-US": "Airflow & Hustle Jacket"
+        },
+        "image": "gear/Clt_JKT048.png"
+      },
+      {
+        "id": "Clt_JKT049",
+        "name": {
+          "en-US": "Ink-Black Paddle Jack"
+        },
+        "image": "gear/Clt_JKT049.png"
+      },
+      {
+        "id": "Clt_JKT050",
+        "name": {
+          "en-US": "Orca Bolero"
+        },
+        "image": "gear/Clt_JKT050.png"
+      },
+      {
+        "id": "Clt_JKT051",
+        "name": {
+          "en-US": "Cream Tundra Fleece"
+        },
+        "image": "gear/Clt_JKT051.png"
+      },
+      {
+        "id": "Clt_JKT052",
+        "name": {
+          "en-US": "Rugby Fleece"
+        },
+        "image": "gear/Clt_JKT052.png"
+      },
+      {
+        "id": "Clt_JKT053",
+        "name": {
+          "en-US": "Annaki Anchored Coat"
+        },
+        "image": "gear/Clt_JKT053.png"
+      },
+      {
+        "id": "Clt_JKT054",
+        "name": {
+          "en-US": "Dusty Field Jacket"
+        },
+        "image": "gear/Clt_JKT054.png"
+      },
+      {
+        "id": "Clt_JKT055",
+        "name": {
+          "en-US": "Light-Bright Paddle Jack"
+        },
+        "image": "gear/Clt_JKT055.png"
+      },
+      {
+        "id": "Clt_JKT056",
+        "name": {
+          "en-US": "Penguin Bolero"
+        },
+        "image": "gear/Clt_JKT056.png"
+      },
+      {
+        "id": "Clt_JKT057",
+        "name": {
+          "en-US": "Barazushi Tuff Duffel"
+        },
+        "image": "gear/Clt_JKT057.png"
+      },
+      {
+        "id": "Clt_JKT058",
+        "name": {
+          "en-US": "Barazushi Peacoat"
+        },
+        "image": "gear/Clt_JKT058.png"
+      },
+      {
+        "id": "Clt_JKT059",
+        "name": {
+          "en-US": "Indigo Boss Haori"
+        },
+        "image": "gear/Clt_JKT059.png"
+      },
+      {
+        "id": "Clt_JKT060",
+        "name": {
+          "en-US": "Lime Ski Jacket"
+        },
+        "image": "gear/Clt_JKT060.png"
+      },
+      {
+        "id": "Clt_JKT061",
+        "name": {
+          "en-US": "Takoroka Nineties Nylon"
+        },
+        "image": "gear/Clt_JKT061.png"
+      },
+      {
+        "id": "Clt_JKT062",
+        "name": {
+          "en-US": "Barazushi Liner Shell"
+        },
+        "image": "gear/Clt_JKT062.png"
+      },
+      {
+        "id": "Clt_JKT063",
+        "name": {
+          "en-US": "Tenured Turtleneck"
+        },
+        "image": "gear/Clt_JKT063.png"
+      },
+      {
+        "id": "Clt_JKT064",
+        "name": {
+          "en-US": "Annaki Tuff Duffel"
+        },
+        "image": "gear/Clt_JKT064.png"
+      },
+      {
+        "id": "Clt_JKT065",
+        "name": {
+          "en-US": "Chompers Varsity Jacket"
+        },
+        "image": "gear/Clt_JKT065.png"
+      },
+      {
+        "id": "Clt_MSN000",
+        "name": {
+          "en-US": "Hero Jacket Replica"
+        },
+        "image": "gear/Clt_MSN000.png"
+      },
+      {
+        "id": "Clt_MSN004",
+        "name": {
+          "en-US": "Armor Jacket Replica"
+        },
+        "image": "gear/Clt_MSN004.png"
+      },
+      {
+        "id": "Clt_MSN306",
+        "name": {
+          "en-US": "Hero Suit Replica"
+        },
+        "image": "gear/Clt_MSN306.png"
+      },
+      {
+        "id": "Clt_MSN307",
+        "name": {
+          "en-US": "Survival Suit Replica"
+        },
+        "image": "gear/Clt_MSN307.png"
+      },
+      {
+        "id": "Clt_MSN311",
+        "name": {
+          "en-US": "Captain's Poncho Replica"
+        },
+        "image": "gear/Clt_MSN311.png"
+      },
+      {
+        "id": "Clt_PLO000",
+        "name": {
+          "en-US": "Shrimp-Pink Polo"
+        },
+        "image": "gear/Clt_PLO000.png"
+      },
+      {
+        "id": "Clt_PLO001",
+        "name": {
+          "en-US": "Striped Rugby"
+        },
+        "image": "gear/Clt_PLO001.png"
+      },
+      {
+        "id": "Clt_PLO002",
+        "name": {
+          "en-US": "Tricolor Rugby"
+        },
+        "image": "gear/Clt_PLO002.png"
+      },
+      {
+        "id": "Clt_PLO003",
+        "name": {
+          "en-US": "Sage Polo"
+        },
+        "image": "gear/Clt_PLO003.png"
+      },
+      {
+        "id": "Clt_PLO004",
+        "name": {
+          "en-US": "Black Polo"
+        },
+        "image": "gear/Clt_PLO004.png"
+      },
+      {
+        "id": "Clt_PLO005",
+        "name": {
+          "en-US": "Cycling Shirt"
+        },
+        "image": "gear/Clt_PLO005.png"
+      },
+      {
+        "id": "Clt_PLO006",
+        "name": {
+          "en-US": "Cycle King Jersey"
+        },
+        "image": "gear/Clt_PLO006.png"
+      },
+      {
+        "id": "Clt_PLO007",
+        "name": {
+          "en-US": "Slipstream United"
+        },
+        "image": "gear/Clt_PLO007.png"
+      },
+      {
+        "id": "Clt_PLO008",
+        "name": {
+          "en-US": "FC Albacore"
+        },
+        "image": "gear/Clt_PLO008.png"
+      },
+      {
+        "id": "Clt_PLO009",
+        "name": {
+          "en-US": "Rugby King 10"
+        },
+        "image": "gear/Clt_PLO009.png"
+      },
+      {
+        "id": "Clt_PLO010",
+        "name": {
+          "en-US": "Rugby King 08"
+        },
+        "image": "gear/Clt_PLO010.png"
+      },
+      {
+        "id": "Clt_PRK000",
+        "name": {
+          "en-US": "Camo Zip Hoodie"
+        },
+        "image": "gear/Clt_PRK000.png"
+      },
+      {
+        "id": "Clt_PRK001",
+        "name": {
+          "en-US": "Green Zip Hoodie"
+        },
+        "image": "gear/Clt_PRK001.png"
+      },
+      {
+        "id": "Clt_PRK002",
+        "name": {
+          "en-US": "Zekko Hoodie"
+        },
+        "image": "gear/Clt_PRK002.png"
+      },
+      {
+        "id": "Clt_PRK004",
+        "name": {
+          "en-US": "Shirt with Blue Hoodie"
+        },
+        "image": "gear/Clt_PRK004.png"
+      },
+      {
+        "id": "Clt_PRK005",
+        "name": {
+          "en-US": "Grape Hoodie"
+        },
+        "image": "gear/Clt_PRK005.png"
+      },
+      {
+        "id": "Clt_PRK006",
+        "name": {
+          "en-US": "Gray Hoodie"
+        },
+        "image": "gear/Clt_PRK006.png"
+      },
+      {
+        "id": "Clt_PRK007",
+        "name": {
+          "en-US": "Hothouse Hoodie"
+        },
+        "image": "gear/Clt_PRK007.png"
+      },
+      {
+        "id": "Clt_PRK008",
+        "name": {
+          "en-US": "Pink Hoodie"
+        },
+        "image": "gear/Clt_PRK008.png"
+      },
+      {
+        "id": "Clt_PRK009",
+        "name": {
+          "en-US": "Olive Zekko Parka"
+        },
+        "image": "gear/Clt_PRK009.png"
+      },
+      {
+        "id": "Clt_PRK010",
+        "name": {
+          "en-US": "Black Hoodie"
+        },
+        "image": "gear/Clt_PRK010.png"
+      },
+      {
+        "id": "Clt_PRK012",
+        "name": {
+          "en-US": "Sudadera Roja"
+        },
+        "image": "gear/Clt_PRK012.png"
+      },
+      {
+        "id": "Clt_PRK013",
+        "name": {
+          "en-US": "Dustcloud Hoodie"
+        },
+        "image": "gear/Clt_PRK013.png"
+      },
+      {
+        "id": "Clt_PRK014",
+        "name": {
+          "en-US": "Sudadera Celeste"
+        },
+        "image": "gear/Clt_PRK014.png"
+      },
+      {
+        "id": "Clt_PRK015",
+        "name": {
+          "en-US": "Seafoam Hoodie"
+        },
+        "image": "gear/Clt_PRK015.png"
+      },
+      {
+        "id": "Clt_SDODR200",
+        "name": {
+          "en-US": "Order Suit Replica"
+        },
+        "image": "gear/Clt_SDODR200.png"
+      },
+      {
+        "id": "Clt_SHT000",
+        "name": {
+          "en-US": "Lumberjack Shirt"
+        },
+        "image": "gear/Clt_SHT000.png"
+      },
+      {
+        "id": "Clt_SHT001",
+        "name": {
+          "en-US": "Rodeo Shirt"
+        },
+        "image": "gear/Clt_SHT001.png"
+      },
+      {
+        "id": "Clt_SHT002",
+        "name": {
+          "en-US": "Green-Check Shirt"
+        },
+        "image": "gear/Clt_SHT002.png"
+      },
+      {
+        "id": "Clt_SHT003",
+        "name": {
+          "en-US": "White Shirt"
+        },
+        "image": "gear/Clt_SHT003.png"
+      },
+      {
+        "id": "Clt_SHT004",
+        "name": {
+          "en-US": "Urchins Jersey"
+        },
+        "image": "gear/Clt_SHT004.png"
+      },
+      {
+        "id": "Clt_SHT005",
+        "name": {
+          "en-US": "Aloha Shirt"
+        },
+        "image": "gear/Clt_SHT005.png"
+      },
+      {
+        "id": "Clt_SHT006",
+        "name": {
+          "en-US": "Red-Check Shirt"
+        },
+        "image": "gear/Clt_SHT006.png"
+      },
+      {
+        "id": "Clt_SHT007",
+        "name": {
+          "en-US": "Baby-Jelly Shirt"
+        },
+        "image": "gear/Clt_SHT007.png"
+      },
+      {
+        "id": "Clt_SHT008",
+        "name": {
+          "en-US": "Baseball Jersey"
+        },
+        "image": "gear/Clt_SHT008.png"
+      },
+      {
+        "id": "Clt_SHT009",
+        "name": {
+          "en-US": "Gray Mixed Shirt"
+        },
+        "image": "gear/Clt_SHT009.png"
+      },
+      {
+        "id": "Clt_SHT010",
+        "name": {
+          "en-US": "Vintage Check Shirt"
+        },
+        "image": "gear/Clt_SHT010.png"
+      },
+      {
+        "id": "Clt_SHT011",
+        "name": {
+          "en-US": "Round-Collar Shirt"
+        },
+        "image": "gear/Clt_SHT011.png"
+      },
+      {
+        "id": "Clt_SHT012",
+        "name": {
+          "en-US": "Logo Aloha Shirt"
+        },
+        "image": "gear/Clt_SHT012.png"
+      },
+      {
+        "id": "Clt_SHT013",
+        "name": {
+          "en-US": "Striped Shirt"
+        },
+        "image": "gear/Clt_SHT013.png"
+      },
+      {
+        "id": "Clt_SHT014",
+        "name": {
+          "en-US": "Linen Shirt"
+        },
+        "image": "gear/Clt_SHT014.png"
+      },
+      {
+        "id": "Clt_SHT015",
+        "name": {
+          "en-US": "Shirt & Tie"
+        },
+        "image": "gear/Clt_SHT015.png"
+      },
+      {
+        "id": "Clt_SHT017",
+        "name": {
+          "en-US": "Hula Punk Shirt"
+        },
+        "image": "gear/Clt_SHT017.png"
+      },
+      {
+        "id": "Clt_SHT018",
+        "name": {
+          "en-US": "Octobowler Shirt"
+        },
+        "image": "gear/Clt_SHT018.png"
+      },
+      {
+        "id": "Clt_SHT019",
+        "name": {
+          "en-US": "Inkfall Shirt"
+        },
+        "image": "gear/Clt_SHT019.png"
+      },
+      {
+        "id": "Clt_SHT020",
+        "name": {
+          "en-US": "Crimson Parashooter"
+        },
+        "image": "gear/Clt_SHT020.png"
+      },
+      {
+        "id": "Clt_SHT021",
+        "name": {
+          "en-US": "Baby-Jelly Shirt & Tie"
+        },
+        "image": "gear/Clt_SHT021.png"
+      },
+      {
+        "id": "Clt_SHT022",
+        "name": {
+          "en-US": "Prune Parashooter"
+        },
+        "image": "gear/Clt_SHT022.png"
+      },
+      {
+        "id": "Clt_SHT023",
+        "name": {
+          "en-US": "Red Hula Punk with Tie"
+        },
+        "image": "gear/Clt_SHT023.png"
+      },
+      {
+        "id": "Clt_SHT024",
+        "name": {
+          "en-US": "Chili Octo Aloha"
+        },
+        "image": "gear/Clt_SHT024.png"
+      },
+      {
+        "id": "Clt_SHT025",
+        "name": {
+          "en-US": "Annaki Flannel Hoodie"
+        },
+        "image": "gear/Clt_SHT025.png"
+      },
+      {
+        "id": "Clt_SHT026",
+        "name": {
+          "en-US": "Ink-Wash Shirt"
+        },
+        "image": "gear/Clt_SHT026.png"
+      },
+      {
+        "id": "Clt_SHT027",
+        "name": {
+          "en-US": "Dots-on-Dots Shirt"
+        },
+        "image": "gear/Clt_SHT027.png"
+      },
+      {
+        "id": "Clt_SHT028",
+        "name": {
+          "en-US": "Toni K. Baseball Jersey"
+        },
+        "image": "gear/Clt_SHT028.png"
+      },
+      {
+        "id": "Clt_SHT030",
+        "name": {
+          "en-US": "Seahorse Shoreliner"
+        },
+        "image": "gear/Clt_SHT030.png"
+      },
+      {
+        "id": "Clt_SHT031",
+        "name": {
+          "en-US": "Button-Clown Shirt"
+        },
+        "image": "gear/Clt_SHT031.png"
+      },
+      {
+        "id": "Clt_SHT032",
+        "name": {
+          "en-US": "Trooper Top"
+        },
+        "image": "gear/Clt_SHT032.png"
+      },
+      {
+        "id": "Clt_SHT033",
+        "name": {
+          "en-US": "Business Animal"
+        },
+        "image": "gear/Clt_SHT033.png"
+      },
+      {
+        "id": "Clt_SHT034",
+        "name": {
+          "en-US": "Fancyfish Stitch"
+        },
+        "image": "gear/Clt_SHT034.png"
+      },
+      {
+        "id": "Clt_SHT035",
+        "name": {
+          "en-US": "Dark Splash Shirt"
+        },
+        "image": "gear/Clt_SHT035.png"
+      },
+      {
+        "id": "Clt_SHT036",
+        "name": {
+          "en-US": "Fashion Splash Shirt"
+        },
+        "image": "gear/Clt_SHT036.png"
+      },
+      {
+        "id": "Clt_SHT037",
+        "name": {
+          "en-US": "Hype Stripe Button Up"
+        },
+        "image": "gear/Clt_SHT037.png"
+      },
+      {
+        "id": "Clt_SHT038",
+        "name": {
+          "en-US": "Base White Button Up"
+        },
+        "image": "gear/Clt_SHT038.png"
+      },
+      {
+        "id": "Clt_SHT039",
+        "name": {
+          "en-US": "Rad Plaid Casual"
+        },
+        "image": "gear/Clt_SHT039.png"
+      },
+      {
+        "id": "Clt_SHT040",
+        "name": {
+          "en-US": "Urban Upcycle Top"
+        },
+        "image": "gear/Clt_SHT040.png"
+      },
+      {
+        "id": "Clt_SHT041",
+        "name": {
+          "en-US": "Barrelfish Baseball Uni"
+        },
+        "image": "gear/Clt_SHT041.png"
+      },
+      {
+        "id": "Clt_SHT042",
+        "name": {
+          "en-US": "Coral Bloom Aloha"
+        },
+        "image": "gear/Clt_SHT042.png"
+      },
+      {
+        "id": "Clt_SHT043",
+        "name": {
+          "en-US": "Kelp Trooper Top"
+        },
+        "image": "gear/Clt_SHT043.png"
+      },
+      {
+        "id": "Clt_SWT000",
+        "name": {
+          "en-US": "Gray College Sweat"
+        },
+        "image": "gear/Clt_SWT000.png"
+      },
+      {
+        "id": "Clt_SWT001",
+        "name": {
+          "en-US": "Squidmark Sweat"
+        },
+        "image": "gear/Clt_SWT001.png"
+      },
+      {
+        "id": "Clt_SWT002",
+        "name": {
+          "en-US": "Retro Sweat"
+        },
+        "image": "gear/Clt_SWT002.png"
+      },
+      {
+        "id": "Clt_SWT003",
+        "name": {
+          "en-US": "Firefin Navy Sweat"
+        },
+        "image": "gear/Clt_SWT003.png"
+      },
+      {
+        "id": "Clt_SWT004",
+        "name": {
+          "en-US": "Navy College Sweat"
+        },
+        "image": "gear/Clt_SWT004.png"
+      },
+      {
+        "id": "Clt_SWT005",
+        "name": {
+          "en-US": "Reel Sweat"
+        },
+        "image": "gear/Clt_SWT005.png"
+      },
+      {
+        "id": "Clt_SWT006",
+        "name": {
+          "en-US": "Anchor Sweat"
+        },
+        "image": "gear/Clt_SWT006.png"
+      },
+      {
+        "id": "Clt_SWT007",
+        "name": {
+          "en-US": "Negative Longcuff Sweater"
+        },
+        "image": "gear/Clt_SWT007.png"
+      },
+      {
+        "id": "Clt_SWT008",
+        "name": {
+          "en-US": "Short Knit Layers"
+        },
+        "image": "gear/Clt_SWT008.png"
+      },
+      {
+        "id": "Clt_SWT009",
+        "name": {
+          "en-US": "Positive Longcuff Sweater"
+        },
+        "image": "gear/Clt_SWT009.png"
+      },
+      {
+        "id": "Clt_SWT010",
+        "name": {
+          "en-US": "Annaki Blue Cuff"
+        },
+        "image": "gear/Clt_SWT010.png"
+      },
+      {
+        "id": "Clt_SWT011",
+        "name": {
+          "en-US": "Annaki Yellow Cuff"
+        },
+        "image": "gear/Clt_SWT011.png"
+      },
+      {
+        "id": "Clt_SWT012",
+        "name": {
+          "en-US": "Annaki Red Cuff"
+        },
+        "image": "gear/Clt_SWT012.png"
+      },
+      {
+        "id": "Clt_SWT013",
+        "name": {
+          "en-US": "N-Pacer Sweat"
+        },
+        "image": "gear/Clt_SWT013.png"
+      },
+      {
+        "id": "Clt_SWT014",
+        "name": {
+          "en-US": "Octarian Retro"
+        },
+        "image": "gear/Clt_SWT014.png"
+      },
+      {
+        "id": "Clt_SWT015",
+        "name": {
+          "en-US": "Takoroka Jersey"
+        },
+        "image": "gear/Clt_SWT015.png"
+      },
+      {
+        "id": "Clt_SWT016",
+        "name": {
+          "en-US": "Manatee Swag Sweat"
+        },
+        "image": "gear/Clt_SWT016.png"
+      },
+      {
+        "id": "Clt_SWT017",
+        "name": {
+          "en-US": "Apex Sweater"
+        },
+        "image": "gear/Clt_SWT017.png"
+      },
+      {
+        "id": "Clt_SWT018",
+        "name": {
+          "en-US": "Octo Jumper Away"
+        },
+        "image": "gear/Clt_SWT018.png"
+      },
+      {
+        "id": "Clt_SWT019",
+        "name": {
+          "en-US": "Octo Jumper Home"
+        },
+        "image": "gear/Clt_SWT019.png"
+      },
+      {
+        "id": "Clt_SWT020",
+        "name": {
+          "en-US": "Moby Knit"
+        },
+        "image": "gear/Clt_SWT020.png"
+      },
+      {
+        "id": "Clt_SWT021",
+        "name": {
+          "en-US": "Lemon Hoodless"
+        },
+        "image": "gear/Clt_SWT021.png"
+      },
+      {
+        "id": "Clt_SWT022",
+        "name": {
+          "en-US": "Motley Hoodless"
+        },
+        "image": "gear/Clt_SWT022.png"
+      },
+      {
+        "id": "Clt_SWT023",
+        "name": {
+          "en-US": "Lime Hoodless"
+        },
+        "image": "gear/Clt_SWT023.png"
+      },
+      {
+        "id": "Clt_SWT024",
+        "name": {
+          "en-US": "Fuzzly Sweater"
+        },
+        "image": "gear/Clt_SWT024.png"
+      },
+      {
+        "id": "Clt_SWT025",
+        "name": {
+          "en-US": "Fringehead Hoodless"
+        },
+        "image": "gear/Clt_SWT025.png"
+      },
+      {
+        "id": "Clt_TEL000",
+        "name": {
+          "en-US": "White Striped LS"
+        },
+        "image": "gear/Clt_TEL000.png"
+      },
+      {
+        "id": "Clt_TEL001",
+        "name": {
+          "en-US": "Black LS"
+        },
+        "image": "gear/Clt_TEL001.png"
+      },
+      {
+        "id": "Clt_TEL002",
+        "name": {
+          "en-US": "Purple Camo LS"
+        },
+        "image": "gear/Clt_TEL002.png"
+      },
+      {
+        "id": "Clt_TEL003",
+        "name": {
+          "en-US": "Navy Striped LS"
+        },
+        "image": "gear/Clt_TEL003.png"
+      },
+      {
+        "id": "Clt_TEL004",
+        "name": {
+          "en-US": "Zekko Baseball LS"
+        },
+        "image": "gear/Clt_TEL004.png"
+      },
+      {
+        "id": "Clt_TEL005",
+        "name": {
+          "en-US": "Varsity Baseball LS"
+        },
+        "image": "gear/Clt_TEL005.png"
+      },
+      {
+        "id": "Clt_TEL006",
+        "name": {
+          "en-US": "Black Baseball LS"
+        },
+        "image": "gear/Clt_TEL006.png"
+      },
+      {
+        "id": "Clt_TEL007",
+        "name": {
+          "en-US": "White Baseball LS"
+        },
+        "image": "gear/Clt_TEL007.png"
+      },
+      {
+        "id": "Clt_TEL008",
+        "name": {
+          "en-US": "White LS"
+        },
+        "image": "gear/Clt_TEL008.png"
+      },
+      {
+        "id": "Clt_TEL009",
+        "name": {
+          "en-US": "Green Striped LS"
+        },
+        "image": "gear/Clt_TEL009.png"
+      },
+      {
+        "id": "Clt_TEL010",
+        "name": {
+          "en-US": "Squidmark LS"
+        },
+        "image": "gear/Clt_TEL010.png"
+      },
+      {
+        "id": "Clt_TEL011",
+        "name": {
+          "en-US": "Zink LS"
+        },
+        "image": "gear/Clt_TEL011.png"
+      },
+      {
+        "id": "Clt_TEL012",
+        "name": {
+          "en-US": "Striped Peaks LS"
+        },
+        "image": "gear/Clt_TEL012.png"
+      },
+      {
+        "id": "Clt_TEL013",
+        "name": {
+          "en-US": "Pink Easy-Stripe Shirt"
+        },
+        "image": "gear/Clt_TEL013.png"
+      },
+      {
+        "id": "Clt_TEL014",
+        "name": {
+          "en-US": "Inkopolis Squaps Jersey"
+        },
+        "image": "gear/Clt_TEL014.png"
+      },
+      {
+        "id": "Clt_TEL015",
+        "name": {
+          "en-US": "Annaki Drive Tee "
+        },
+        "image": "gear/Clt_TEL015.png"
+      },
+      {
+        "id": "Clt_TEL016",
+        "name": {
+          "en-US": "Lime Easy-Stripe Shirt"
+        },
+        "image": "gear/Clt_TEL016.png"
+      },
+      {
+        "id": "Clt_TEL017",
+        "name": {
+          "en-US": "Annaki Evolution Tee"
+        },
+        "image": "gear/Clt_TEL017.png"
+      },
+      {
+        "id": "Clt_TEL018",
+        "name": {
+          "en-US": "Zekko Long Carrot Tee"
+        },
+        "image": "gear/Clt_TEL018.png"
+      },
+      {
+        "id": "Clt_TEL019",
+        "name": {
+          "en-US": "Zekko Long Radish Tee"
+        },
+        "image": "gear/Clt_TEL019.png"
+      },
+      {
+        "id": "Clt_TEL020",
+        "name": {
+          "en-US": "Black Cuttlegear LS"
+        },
+        "image": "gear/Clt_TEL020.png"
+      },
+      {
+        "id": "Clt_TEL021",
+        "name": {
+          "en-US": "Takoroka Crazy Baseball LS"
+        },
+        "image": "gear/Clt_TEL021.png"
+      },
+      {
+        "id": "Clt_TEL022",
+        "name": {
+          "en-US": "Red Cuttlegear LS"
+        },
+        "image": "gear/Clt_TEL022.png"
+      },
+      {
+        "id": "Clt_TEL023",
+        "name": {
+          "en-US": "Khaki 16-Bit FishFry"
+        },
+        "image": "gear/Clt_TEL023.png"
+      },
+      {
+        "id": "Clt_TEL024",
+        "name": {
+          "en-US": "Blue 16-Bit FishFry"
+        },
+        "image": "gear/Clt_TEL024.png"
+      },
+      {
+        "id": "Clt_TEL026",
+        "name": {
+          "en-US": "Ink-Black Tangle Top"
+        },
+        "image": "gear/Clt_TEL026.png"
+      },
+      {
+        "id": "Clt_TEL027",
+        "name": {
+          "en-US": "Deepsea Tangle Top"
+        },
+        "image": "gear/Clt_TEL027.png"
+      },
+      {
+        "id": "Clt_TEL028",
+        "name": {
+          "en-US": "Sharkfin Raglan"
+        },
+        "image": "gear/Clt_TEL028.png"
+      },
+      {
+        "id": "Clt_TES000",
+        "name": {
+          "en-US": "White Tee"
+        },
+        "image": "gear/Clt_TES000.png"
+      },
+      {
+        "id": "Clt_TES001",
+        "name": {
+          "en-US": "Black Squideye"
+        },
+        "image": "gear/Clt_TES001.png"
+      },
+      {
+        "id": "Clt_TES003",
+        "name": {
+          "en-US": "Sky-Blue Squideye"
+        },
+        "image": "gear/Clt_TES003.png"
+      },
+      {
+        "id": "Clt_TES004",
+        "name": {
+          "en-US": "Rockenberg White"
+        },
+        "image": "gear/Clt_TES004.png"
+      },
+      {
+        "id": "Clt_TES005",
+        "name": {
+          "en-US": "Rockenberg Black"
+        },
+        "image": "gear/Clt_TES005.png"
+      },
+      {
+        "id": "Clt_TES006",
+        "name": {
+          "en-US": "Black Tee"
+        },
+        "image": "gear/Clt_TES006.png"
+      },
+      {
+        "id": "Clt_TES007",
+        "name": {
+          "en-US": "Sunny-Day Tee"
+        },
+        "image": "gear/Clt_TES007.png"
+      },
+      {
+        "id": "Clt_TES008",
+        "name": {
+          "en-US": "Rainy-Day Tee"
+        },
+        "image": "gear/Clt_TES008.png"
+      },
+      {
+        "id": "Clt_TES009",
+        "name": {
+          "en-US": "Reggae Tee"
+        },
+        "image": "gear/Clt_TES009.png"
+      },
+      {
+        "id": "Clt_TES010",
+        "name": {
+          "en-US": "Fugu Tee"
+        },
+        "image": "gear/Clt_TES010.png"
+      },
+      {
+        "id": "Clt_TES011",
+        "name": {
+          "en-US": "Mint Tee"
+        },
+        "image": "gear/Clt_TES011.png"
+      },
+      {
+        "id": "Clt_TES012",
+        "name": {
+          "en-US": "Grape Tee"
+        },
+        "image": "gear/Clt_TES012.png"
+      },
+      {
+        "id": "Clt_TES013",
+        "name": {
+          "en-US": "Red Vector Tee"
+        },
+        "image": "gear/Clt_TES013.png"
+      },
+      {
+        "id": "Clt_TES014",
+        "name": {
+          "en-US": "Gray Vector Tee"
+        },
+        "image": "gear/Clt_TES014.png"
+      },
+      {
+        "id": "Clt_TES015",
+        "name": {
+          "en-US": "Blue Peaks Tee"
+        },
+        "image": "gear/Clt_TES015.png"
+      },
+      {
+        "id": "Clt_TES016",
+        "name": {
+          "en-US": "Ivory Peaks Tee"
+        },
+        "image": "gear/Clt_TES016.png"
+      },
+      {
+        "id": "Clt_TES017",
+        "name": {
+          "en-US": "Squid-Stitch Tee"
+        },
+        "image": "gear/Clt_TES017.png"
+      },
+      {
+        "id": "Clt_TES018",
+        "name": {
+          "en-US": "Pirate-Stripe Tee"
+        },
+        "image": "gear/Clt_TES018.png"
+      },
+      {
+        "id": "Clt_TES019",
+        "name": {
+          "en-US": "Sailor-Stripe Tee"
+        },
+        "image": "gear/Clt_TES019.png"
+      },
+      {
+        "id": "Clt_TES020",
+        "name": {
+          "en-US": "White 8-Bit FishFry"
+        },
+        "image": "gear/Clt_TES020.png"
+      },
+      {
+        "id": "Clt_TES021",
+        "name": {
+          "en-US": "Black 8-Bit FishFry"
+        },
+        "image": "gear/Clt_TES021.png"
+      },
+      {
+        "id": "Clt_TES022",
+        "name": {
+          "en-US": "White Anchor Tee"
+        },
+        "image": "gear/Clt_TES022.png"
+      },
+      {
+        "id": "Clt_TES023",
+        "name": {
+          "en-US": "Black Anchor Tee"
+        },
+        "image": "gear/Clt_TES023.png"
+      },
+      {
+        "id": "Clt_TES026",
+        "name": {
+          "en-US": "Carnivore Tee"
+        },
+        "image": "gear/Clt_TES026.png"
+      },
+      {
+        "id": "Clt_TES027",
+        "name": {
+          "en-US": "Pearl Tee"
+        },
+        "image": "gear/Clt_TES027.png"
+      },
+      {
+        "id": "Clt_TES028",
+        "name": {
+          "en-US": "Octo Tee"
+        },
+        "image": "gear/Clt_TES028.png"
+      },
+      {
+        "id": "Clt_TES029",
+        "name": {
+          "en-US": "Herbivore Tee"
+        },
+        "image": "gear/Clt_TES029.png"
+      },
+      {
+        "id": "Clt_TES030",
+        "name": {
+          "en-US": "Black V-Neck Tee"
+        },
+        "image": "gear/Clt_TES030.png"
+      },
+      {
+        "id": "Clt_TES031",
+        "name": {
+          "en-US": "White Deca Logo Tee"
+        },
+        "image": "gear/Clt_TES031.png"
+      },
+      {
+        "id": "Clt_TES032",
+        "name": {
+          "en-US": "Half-Sleeve Sweater"
+        },
+        "image": "gear/Clt_TES032.png"
+      },
+      {
+        "id": "Clt_TES033",
+        "name": {
+          "en-US": "King Jersey"
+        },
+        "image": "gear/Clt_TES033.png"
+      },
+      {
+        "id": "Clt_TES034",
+        "name": {
+          "en-US": "Gray 8-Bit FishFry"
+        },
+        "image": "gear/Clt_TES034.png"
+      },
+      {
+        "id": "Clt_TES035",
+        "name": {
+          "en-US": "White V-Neck Tee"
+        },
+        "image": "gear/Clt_TES035.png"
+      },
+      {
+        "id": "Clt_TES036",
+        "name": {
+          "en-US": "White Urchin Rock Tee"
+        },
+        "image": "gear/Clt_TES036.png"
+      },
+      {
+        "id": "Clt_TES037",
+        "name": {
+          "en-US": "Black Urchin Rock Tee"
+        },
+        "image": "gear/Clt_TES037.png"
+      },
+      {
+        "id": "Clt_TES038",
+        "name": {
+          "en-US": "Wet Floor Band Tee"
+        },
+        "image": "gear/Clt_TES038.png"
+      },
+      {
+        "id": "Clt_TES039",
+        "name": {
+          "en-US": "Squid Squad Band Tee"
+        },
+        "image": "gear/Clt_TES039.png"
+      },
+      {
+        "id": "Clt_TES040",
+        "name": {
+          "en-US": "Navy Deca Logo Tee"
+        },
+        "image": "gear/Clt_TES040.png"
+      },
+      {
+        "id": "Clt_TES041",
+        "name": {
+          "en-US": "Mister Shrug Tee"
+        },
+        "image": "gear/Clt_TES041.png"
+      },
+      {
+        "id": "Clt_TES042",
+        "name": {
+          "en-US": "Chirpy Chips Band Tee"
+        },
+        "image": "gear/Clt_TES042.png"
+      },
+      {
+        "id": "Clt_TES043",
+        "name": {
+          "en-US": "Hightide Era Band Tee"
+        },
+        "image": "gear/Clt_TES043.png"
+      },
+      {
+        "id": "Clt_TES046",
+        "name": {
+          "en-US": "ω-3 Tee"
+        },
+        "image": "gear/Clt_TES046.png"
+      },
+      {
+        "id": "Clt_TES047",
+        "name": {
+          "en-US": "Annaki Polpo-Pic Tank"
+        },
+        "image": "gear/Clt_TES047.png"
+      },
+      {
+        "id": "Clt_TES048",
+        "name": {
+          "en-US": "Firewave Tee"
+        },
+        "image": "gear/Clt_TES048.png"
+      },
+      {
+        "id": "Clt_TES049",
+        "name": {
+          "en-US": "Takoroka Galactic Tie Dye"
+        },
+        "image": "gear/Clt_TES049.png"
+      },
+      {
+        "id": "Clt_TES050",
+        "name": {
+          "en-US": "Takoroka Rainbow Tie Dye"
+        },
+        "image": "gear/Clt_TES050.png"
+      },
+      {
+        "id": "Clt_TES051",
+        "name": {
+          "en-US": "Missus Shrug Tee"
+        },
+        "image": "gear/Clt_TES051.png"
+      },
+      {
+        "id": "Clt_TES052",
+        "name": {
+          "en-US": "League Tee"
+        },
+        "image": "gear/Clt_TES052.png"
+      },
+      {
+        "id": "Clt_TES053",
+        "name": {
+          "en-US": "Friend Tee"
+        },
+        "image": "gear/Clt_TES053.png"
+      },
+      {
+        "id": "Clt_TES054",
+        "name": {
+          "en-US": "Tentatek Slogan Tee"
+        },
+        "image": "gear/Clt_TES054.png"
+      },
+      {
+        "id": "Clt_TES055",
+        "name": {
+          "en-US": "Icewave Tee"
+        },
+        "image": "gear/Clt_TES055.png"
+      },
+      {
+        "id": "Clt_TES056",
+        "name": {
+          "en-US": "Octoking HK Jersey"
+        },
+        "image": "gear/Clt_TES056.png"
+      },
+      {
+        "id": "Clt_TES057",
+        "name": {
+          "en-US": "Dakro Nana Tee"
+        },
+        "image": "gear/Clt_TES057.png"
+      },
+      {
+        "id": "Clt_TES058",
+        "name": {
+          "en-US": "Dakro Golden Tee"
+        },
+        "image": "gear/Clt_TES058.png"
+      },
+      {
+        "id": "Clt_TES059",
+        "name": {
+          "en-US": "Black Velour Octoking Tee "
+        },
+        "image": "gear/Clt_TES059.png"
+      },
+      {
+        "id": "Clt_TES060",
+        "name": {
+          "en-US": "Green Velour Octoking Tee"
+        },
+        "image": "gear/Clt_TES060.png"
+      },
+      {
+        "id": "Clt_TES063",
+        "name": {
+          "en-US": "Tri-Shred Tee"
+        },
+        "image": "gear/Clt_TES063.png"
+      },
+      {
+        "id": "Clt_TES064",
+        "name": {
+          "en-US": "Tentatek Tandem"
+        },
+        "image": "gear/Clt_TES064.png"
+      },
+      {
+        "id": "Clt_TES066",
+        "name": {
+          "en-US": "Annaki Choker Tee"
+        },
+        "image": "gear/Clt_TES066.png"
+      },
+      {
+        "id": "Clt_TES067",
+        "name": {
+          "en-US": "Annaki Bracelet Tee"
+        },
+        "image": "gear/Clt_TES067.png"
+      },
+      {
+        "id": "Clt_TES068",
+        "name": {
+          "en-US": "White Retro Tee"
+        },
+        "image": "gear/Clt_TES068.png"
+      },
+      {
+        "id": "Clt_TES069",
+        "name": {
+          "en-US": "Blue Retro Tee"
+        },
+        "image": "gear/Clt_TES069.png"
+      },
+      {
+        "id": "Clt_TES070",
+        "name": {
+          "en-US": "Tan Retro Tee"
+        },
+        "image": "gear/Clt_TES070.png"
+      },
+      {
+        "id": "Clt_TES071",
+        "name": {
+          "en-US": "Barazushi Wrap"
+        },
+        "image": "gear/Clt_TES071.png"
+      },
+      {
+        "id": "Clt_TES072",
+        "name": {
+          "en-US": "Barazushi Rice Tee"
+        },
+        "image": "gear/Clt_TES072.png"
+      },
+      {
+        "id": "Clt_TES073",
+        "name": {
+          "en-US": "Barazushi Black Tee"
+        },
+        "image": "gear/Clt_TES073.png"
+      },
+      {
+        "id": "Clt_TES074",
+        "name": {
+          "en-US": "Barazushi Sakura Tee"
+        },
+        "image": "gear/Clt_TES074.png"
+      },
+      {
+        "id": "Clt_TES075",
+        "name": {
+          "en-US": "Octosquid Tandem Tee"
+        },
+        "image": "gear/Clt_TES075.png"
+      },
+      {
+        "id": "Clt_TES076",
+        "name": {
+          "en-US": "Tri-Squid Tee"
+        },
+        "image": "gear/Clt_TES076.png"
+      },
+      {
+        "id": "Clt_TES077",
+        "name": {
+          "en-US": "Tri-Octo Tee"
+        },
+        "image": "gear/Clt_TES077.png"
+      },
+      {
+        "id": "Clt_TES078",
+        "name": {
+          "en-US": "Takoroka \\m/ Crab"
+        },
+        "image": "gear/Clt_TES078.png"
+      },
+      {
+        "id": "Clt_TES079",
+        "name": {
+          "en-US": "Takoroka \\m/ Alien"
+        },
+        "image": "gear/Clt_TES079.png"
+      },
+      {
+        "id": "Clt_TES081",
+        "name": {
+          "en-US": "Takoroka Tandem"
+        },
+        "image": "gear/Clt_TES081.png"
+      },
+      {
+        "id": "Clt_TES082",
+        "name": {
+          "en-US": "Pineapple Ringer"
+        },
+        "image": "gear/Clt_TES082.png"
+      },
+      {
+        "id": "Clt_TES083",
+        "name": {
+          "en-US": "Apple Ringer"
+        },
+        "image": "gear/Clt_TES083.png"
+      },
+      {
+        "id": "Clt_TES084",
+        "name": {
+          "en-US": "Vaporwave Tee"
+        },
+        "image": "gear/Clt_TES084.png"
+      },
+      {
+        "id": "Clt_TES085",
+        "name": {
+          "en-US": "Duskwave Tee"
+        },
+        "image": "gear/Clt_TES085.png"
+      },
+      {
+        "id": "Clt_TES086",
+        "name": {
+          "en-US": "Lyco-P Streetstyle Tee"
+        },
+        "image": "gear/Clt_TES086.png"
+      },
+      {
+        "id": "Clt_TES087",
+        "name": {
+          "en-US": "Slate Streetstyle Tee"
+        },
+        "image": "gear/Clt_TES087.png"
+      },
+      {
+        "id": "Clt_TES088",
+        "name": {
+          "en-US": "Eelzebub Tee"
+        },
+        "image": "gear/Clt_TES088.png"
+      },
+      {
+        "id": "Clt_TES089",
+        "name": {
+          "en-US": "Zontal Ztripe Tee"
+        },
+        "image": "gear/Clt_TES089.png"
+      },
+      {
+        "id": "Clt_TES090",
+        "name": {
+          "en-US": "Lime BlobMob Tee"
+        },
+        "image": "gear/Clt_TES090.png"
+      },
+      {
+        "id": "Clt_TES091",
+        "name": {
+          "en-US": "Berry BlobMob Tee"
+        },
+        "image": "gear/Clt_TES091.png"
+      },
+      {
+        "id": "Clt_TES092",
+        "name": {
+          "en-US": "White Z+F Tee"
+        },
+        "image": "gear/Clt_TES092.png"
+      },
+      {
+        "id": "Clt_TES093",
+        "name": {
+          "en-US": "Navy Z+F Tee"
+        },
+        "image": "gear/Clt_TES093.png"
+      },
+      {
+        "id": "Clt_TES094",
+        "name": {
+          "en-US": "Plum Barazushi Wrap"
+        },
+        "image": "gear/Clt_TES094.png"
+      },
+      {
+        "id": "Clt_TES095",
+        "name": {
+          "en-US": "King Mesh Tee"
+        },
+        "image": "gear/Clt_TES095.png"
+      },
+      {
+        "id": "Clt_TLY000",
+        "name": {
+          "en-US": "White Layered LS"
+        },
+        "image": "gear/Clt_TLY000.png"
+      },
+      {
+        "id": "Clt_TLY001",
+        "name": {
+          "en-US": "Yellow Layered LS"
+        },
+        "image": "gear/Clt_TLY001.png"
+      },
+      {
+        "id": "Clt_TLY002",
+        "name": {
+          "en-US": "Camo Layered LS"
+        },
+        "image": "gear/Clt_TLY002.png"
+      },
+      {
+        "id": "Clt_TLY003",
+        "name": {
+          "en-US": "Black Layered LS"
+        },
+        "image": "gear/Clt_TLY003.png"
+      },
+      {
+        "id": "Clt_TLY004",
+        "name": {
+          "en-US": "Zink Layered LS"
+        },
+        "image": "gear/Clt_TLY004.png"
+      },
+      {
+        "id": "Clt_TLY005",
+        "name": {
+          "en-US": "Layered Anchor LS"
+        },
+        "image": "gear/Clt_TLY005.png"
+      },
+      {
+        "id": "Clt_TLY006",
+        "name": {
+          "en-US": "Choco Layered LS"
+        },
+        "image": "gear/Clt_TLY006.png"
+      },
+      {
+        "id": "Clt_TLY007",
+        "name": {
+          "en-US": "Part-Time Pirate"
+        },
+        "image": "gear/Clt_TLY007.png"
+      },
+      {
+        "id": "Clt_TLY008",
+        "name": {
+          "en-US": "Layered Vector LS"
+        },
+        "image": "gear/Clt_TLY008.png"
+      },
+      {
+        "id": "Clt_TLY009",
+        "name": {
+          "en-US": "Green Tee"
+        },
+        "image": "gear/Clt_TLY009.png"
+      },
+      {
+        "id": "Clt_TLY010",
+        "name": {
+          "en-US": "Red Tentatek Tee"
+        },
+        "image": "gear/Clt_TLY010.png"
+      },
+      {
+        "id": "Clt_TLY011",
+        "name": {
+          "en-US": "Blue Tentatek Tee"
+        },
+        "image": "gear/Clt_TLY011.png"
+      },
+      {
+        "id": "Clt_TLY013",
+        "name": {
+          "en-US": "Squid Yellow Layered LS"
+        },
+        "image": "gear/Clt_TLY013.png"
+      },
+      {
+        "id": "Clt_TNK000",
+        "name": {
+          "en-US": "B-ball Jersey (Home)"
+        },
+        "image": "gear/Clt_TNK000.png"
+      },
+      {
+        "id": "Clt_TNK001",
+        "name": {
+          "en-US": "B-ball Jersey (Away)"
+        },
+        "image": "gear/Clt_TNK001.png"
+      },
+      {
+        "id": "Clt_TNK003",
+        "name": {
+          "en-US": "White King Tank"
+        },
+        "image": "gear/Clt_TNK003.png"
+      },
+      {
+        "id": "Clt_TNK004",
+        "name": {
+          "en-US": "Slash King Tank"
+        },
+        "image": "gear/Clt_TNK004.png"
+      },
+      {
+        "id": "Clt_TNK005",
+        "name": {
+          "en-US": "Navy King Tank"
+        },
+        "image": "gear/Clt_TNK005.png"
+      },
+      {
+        "id": "Clt_TNK006",
+        "name": {
+          "en-US": "Lob-Stars Jersey"
+        },
+        "image": "gear/Clt_TNK006.png"
+      },
+      {
+        "id": "Clt_TNK007",
+        "name": {
+          "en-US": "Umibozu Road Jersey"
+        },
+        "image": "gear/Clt_TNK007.png"
+      },
+      {
+        "id": "Clt_TNK008",
+        "name": {
+          "en-US": "Umibozu Home Jersey"
+        },
+        "image": "gear/Clt_TNK008.png"
+      },
+      {
+        "id": "Clt_TRG000",
+        "name": {
+          "en-US": "Crispy Crustume"
+        },
+        "image": "gear/Clt_TRG000.png"
+      },
+      {
+        "id": "Clt_TRG001",
+        "name": {
+          "en-US": "Frivolous Paw Suit"
+        },
+        "image": "gear/Clt_TRG001.png"
+      },
+      {
+        "id": "Clt_VST000",
+        "name": {
+          "en-US": "Mountain Vest"
+        },
+        "image": "gear/Clt_VST000.png"
+      },
+      {
+        "id": "Clt_VST001",
+        "name": {
+          "en-US": "Forest Vest"
+        },
+        "image": "gear/Clt_VST001.png"
+      },
+      {
+        "id": "Clt_VST002",
+        "name": {
+          "en-US": "Dark Urban Vest"
+        },
+        "image": "gear/Clt_VST002.png"
+      },
+      {
+        "id": "Clt_VST003",
+        "name": {
+          "en-US": "Yellow Urban Vest"
+        },
+        "image": "gear/Clt_VST003.png"
+      },
+      {
+        "id": "Clt_VST004",
+        "name": {
+          "en-US": "Squid-Pattern Waistcoat"
+        },
+        "image": "gear/Clt_VST004.png"
+      },
+      {
+        "id": "Clt_VST005",
+        "name": {
+          "en-US": "Squidstar Waistcoat"
+        },
+        "image": "gear/Clt_VST005.png"
+      },
+      {
+        "id": "Clt_VST007",
+        "name": {
+          "en-US": "Fishing Vest"
+        },
+        "image": "gear/Clt_VST007.png"
+      },
+      {
+        "id": "Clt_VST008",
+        "name": {
+          "en-US": "Front-Zip Vest"
+        },
+        "image": "gear/Clt_VST008.png"
+      },
+      {
+        "id": "Clt_VST009",
+        "name": {
+          "en-US": "Silver Tentatek Vest"
+        },
+        "image": "gear/Clt_VST009.png"
+      },
+      {
+        "id": "Clt_VST010",
+        "name": {
+          "en-US": "Khaki Ranger Vest"
+        },
+        "image": "gear/Clt_VST010.png"
+      },
+      {
+        "id": "Clt_VST011",
+        "name": {
+          "en-US": "Red Battlecrab Shell"
+        },
+        "image": "gear/Clt_VST011.png"
+      },
+      {
+        "id": "Clt_VST012",
+        "name": {
+          "en-US": "Lime Battlecrab Shell"
+        },
+        "image": "gear/Clt_VST012.png"
+      },
+      {
+        "id": "Clt_VST013",
+        "name": {
+          "en-US": "Distressed Vest"
+        },
+        "image": "gear/Clt_VST013.png"
+      },
+      {
+        "id": "Clt_VST014",
+        "name": {
+          "en-US": "Black Ranger Vest"
+        },
+        "image": "gear/Clt_VST014.png"
+      },
+      {
+        "id": "Clt_VST015",
+        "name": {
+          "en-US": "Dark Distressed Vest"
+        },
+        "image": "gear/Clt_VST015.png"
+      },
+      {
+        "id": "Clt_VST016",
+        "name": {
+          "en-US": "Tentatek Slipstream Vest"
+        },
+        "image": "gear/Clt_VST016.png"
+      },
+      {
+        "id": "Clt_VST017",
+        "name": {
+          "en-US": "Teal Body Warmer"
+        },
+        "image": "gear/Clt_VST017.png"
+      }
+    ],
+    "shoes": [
+      {
+        "id": "Shs_AMB000",
+        "name": {
+          "en-US": "School Shoes + Hi Socks"
+        },
+        "image": "gear/Shs_AMB000.png"
+      },
+      {
+        "id": "Shs_AMB001",
+        "name": {
+          "en-US": "Samurai Shoes"
+        },
+        "image": "gear/Shs_AMB001.png"
+      },
+      {
+        "id": "Shs_AMB002",
+        "name": {
+          "en-US": "Power Boots"
+        },
+        "image": "gear/Shs_AMB002.png"
+      },
+      {
+        "id": "Shs_AMB003",
+        "name": {
+          "en-US": "Baggy-Sock Fringe Loafs"
+        },
+        "image": "gear/Shs_AMB003.png"
+      },
+      {
+        "id": "Shs_AMB004",
+        "name": {
+          "en-US": "Squinja Boots"
+        },
+        "image": "gear/Shs_AMB004.png"
+      },
+      {
+        "id": "Shs_AMB005",
+        "name": {
+          "en-US": "Power Boots Mk I"
+        },
+        "image": "gear/Shs_AMB005.png"
+      },
+      {
+        "id": "Shs_AMB006",
+        "name": {
+          "en-US": "Pearlescent Kicks"
+        },
+        "image": "gear/Shs_AMB006.png"
+      },
+      {
+        "id": "Shs_AMB007",
+        "name": {
+          "en-US": "Marinated Slip-Ons"
+        },
+        "image": "gear/Shs_AMB007.png"
+      },
+      {
+        "id": "Shs_AMB008",
+        "name": {
+          "en-US": "Enchanted Boots"
+        },
+        "image": "gear/Shs_AMB008.png"
+      },
+      {
+        "id": "Shs_AMB009",
+        "name": {
+          "en-US": "Steel Greaves"
+        },
+        "image": "gear/Shs_AMB009.png"
+      },
+      {
+        "id": "Shs_AMB010",
+        "name": {
+          "en-US": "Fresh Fish Feet"
+        },
+        "image": "gear/Shs_AMB010.png"
+      },
+      {
+        "id": "Shs_AMB011",
+        "name": {
+          "en-US": "Knotty Bois"
+        },
+        "image": "gear/Shs_AMB011.png"
+      },
+      {
+        "id": "Shs_AMB012",
+        "name": {
+          "en-US": "Kick Dampeners"
+        },
+        "image": "gear/Shs_AMB012.png"
+      },
+      {
+        "id": "Shs_AMB013",
+        "name": {
+          "en-US": "Chaos Kicks"
+        },
+        "image": "gear/Shs_AMB013.png"
+      },
+      {
+        "id": "Shs_AMB014",
+        "name": {
+          "en-US": "Base School Shoes"
+        },
+        "image": "gear/Shs_AMB014.png"
+      },
+      {
+        "id": "Shs_AMB015",
+        "name": {
+          "en-US": "Base Fringed Loafers"
+        },
+        "image": "gear/Shs_AMB015.png"
+      },
+      {
+        "id": "Shs_AMB018",
+        "name": {
+          "en-US": "Faux Sharkskin Platfins"
+        },
+        "image": "gear/Shs_AMB018.png"
+      },
+      {
+        "id": "Shs_AMB019",
+        "name": {
+          "en-US": "Eel Heel Socks"
+        },
+        "image": "gear/Shs_AMB019.png"
+      },
+      {
+        "id": "Shs_AMB020",
+        "name": {
+          "en-US": "Big Muds"
+        },
+        "image": "gear/Shs_AMB020.png"
+      },
+      {
+        "id": "Shs_AMB021",
+        "name": {
+          "en-US": "World Tour Boots"
+        },
+        "image": "gear/Shs_AMB021.png"
+      },
+      {
+        "id": "Shs_AMB022",
+        "name": {
+          "en-US": "World Tour Heels"
+        },
+        "image": "gear/Shs_AMB022.png"
+      },
+      {
+        "id": "Shs_BOT000",
+        "name": {
+          "en-US": "Moto Boots"
+        },
+        "image": "gear/Shs_BOT000.png"
+      },
+      {
+        "id": "Shs_BOT001",
+        "name": {
+          "en-US": "Tan Work Boots"
+        },
+        "image": "gear/Shs_BOT001.png"
+      },
+      {
+        "id": "Shs_BOT002",
+        "name": {
+          "en-US": "Red Work Boots"
+        },
+        "image": "gear/Shs_BOT002.png"
+      },
+      {
+        "id": "Shs_BOT003",
+        "name": {
+          "en-US": "Blue Moto Boots"
+        },
+        "image": "gear/Shs_BOT003.png"
+      },
+      {
+        "id": "Shs_BOT004",
+        "name": {
+          "en-US": "Green Rain Boots"
+        },
+        "image": "gear/Shs_BOT004.png"
+      },
+      {
+        "id": "Shs_BOT005",
+        "name": {
+          "en-US": "Acerola Rain Boots"
+        },
+        "image": "gear/Shs_BOT005.png"
+      },
+      {
+        "id": "Shs_BOT006",
+        "name": {
+          "en-US": "Punk Whites"
+        },
+        "image": "gear/Shs_BOT006.png"
+      },
+      {
+        "id": "Shs_BOT007",
+        "name": {
+          "en-US": "Punk Cherries"
+        },
+        "image": "gear/Shs_BOT007.png"
+      },
+      {
+        "id": "Shs_BOT008",
+        "name": {
+          "en-US": "Punk Yellows"
+        },
+        "image": "gear/Shs_BOT008.png"
+      },
+      {
+        "id": "Shs_BOT009",
+        "name": {
+          "en-US": "Bubble Rain Boots"
+        },
+        "image": "gear/Shs_BOT009.png"
+      },
+      {
+        "id": "Shs_BOT010",
+        "name": {
+          "en-US": "Snowy Down Boots"
+        },
+        "image": "gear/Shs_BOT010.png"
+      },
+      {
+        "id": "Shs_BOT011",
+        "name": {
+          "en-US": "Icy Down Boots"
+        },
+        "image": "gear/Shs_BOT011.png"
+      },
+      {
+        "id": "Shs_BOT012",
+        "name": {
+          "en-US": "Hunting Boots"
+        },
+        "image": "gear/Shs_BOT012.png"
+      },
+      {
+        "id": "Shs_BOT013",
+        "name": {
+          "en-US": "Punk Nights"
+        },
+        "image": "gear/Shs_BOT013.png"
+      },
+      {
+        "id": "Shs_BOT014",
+        "name": {
+          "en-US": "Deepsea Leather Boots"
+        },
+        "image": "gear/Shs_BOT014.png"
+      },
+      {
+        "id": "Shs_BOT016",
+        "name": {
+          "en-US": "Annaki Arachno Boots"
+        },
+        "image": "gear/Shs_BOT016.png"
+      },
+      {
+        "id": "Shs_BOT017",
+        "name": {
+          "en-US": "New-Leaf Leather Boots"
+        },
+        "image": "gear/Shs_BOT017.png"
+      },
+      {
+        "id": "Shs_BOT018",
+        "name": {
+          "en-US": "Tea-Green Hunting Boots"
+        },
+        "image": "gear/Shs_BOT018.png"
+      },
+      {
+        "id": "Shs_BOT019",
+        "name": {
+          "en-US": "Blu-Shift Moto Boots"
+        },
+        "image": "gear/Shs_BOT019.png"
+      },
+      {
+        "id": "Shs_BOT020",
+        "name": {
+          "en-US": "Skipjack Work Boots"
+        },
+        "image": "gear/Shs_BOT020.png"
+      },
+      {
+        "id": "Shs_BOT021",
+        "name": {
+          "en-US": "Arctic Duck Boots"
+        },
+        "image": "gear/Shs_BOT021.png"
+      },
+      {
+        "id": "Shs_BOT022",
+        "name": {
+          "en-US": "Field Duck Boots"
+        },
+        "image": "gear/Shs_BOT022.png"
+      },
+      {
+        "id": "Shs_BOT023",
+        "name": {
+          "en-US": "Red Hammertreads"
+        },
+        "image": "gear/Shs_BOT023.png"
+      },
+      {
+        "id": "Shs_BOT024",
+        "name": {
+          "en-US": "Dappled Hammertreads"
+        },
+        "image": "gear/Shs_BOT024.png"
+      },
+      {
+        "id": "Shs_BOT025",
+        "name": {
+          "en-US": "Punk Pinks"
+        },
+        "image": "gear/Shs_BOT025.png"
+      },
+      {
+        "id": "Shs_BOT026",
+        "name": {
+          "en-US": "Fuzzy Boots"
+        },
+        "image": "gear/Shs_BOT026.png"
+      },
+      {
+        "id": "Shs_BOT027",
+        "name": {
+          "en-US": "Transom Note Boots"
+        },
+        "image": "gear/Shs_BOT027.png"
+      },
+      {
+        "id": "Shs_BOT028",
+        "name": {
+          "en-US": "Red-Shift Moto Boots"
+        },
+        "image": "gear/Shs_BOT028.png"
+      },
+      {
+        "id": "Shs_BOT029",
+        "name": {
+          "en-US": "Spiked Duck Boots"
+        },
+        "image": "gear/Shs_BOT029.png"
+      },
+      {
+        "id": "Shs_BOT030",
+        "name": {
+          "en-US": "Buckle-Down Boots"
+        },
+        "image": "gear/Shs_BOT030.png"
+      },
+      {
+        "id": "Shs_CFS000",
+        "name": {
+          "en-US": "Blueberry Casuals"
+        },
+        "image": "gear/Shs_CFS000.png"
+      },
+      {
+        "id": "Shs_CFS001",
+        "name": {
+          "en-US": "Plum Casuals"
+        },
+        "image": "gear/Shs_CFS001.png"
+      },
+      {
+        "id": "Shs_COP101",
+        "name": {
+          "en-US": "Angry Rain Boots"
+        },
+        "image": "gear/Shs_COP101.png"
+      },
+      {
+        "id": "Shs_COP102",
+        "name": {
+          "en-US": "Nonslip Senseis"
+        },
+        "image": "gear/Shs_COP102.png"
+      },
+      {
+        "id": "Shs_COP103",
+        "name": {
+          "en-US": "Octoleet Boots"
+        },
+        "image": "gear/Shs_COP103.png"
+      },
+      {
+        "id": "Shs_COP104",
+        "name": {
+          "en-US": "Friendship Bracelet"
+        },
+        "image": "gear/Shs_COP104.png"
+      },
+      {
+        "id": "Shs_COP105",
+        "name": {
+          "en-US": "Flipper Floppers"
+        },
+        "image": "gear/Shs_COP105.png"
+      },
+      {
+        "id": "Shs_COP106",
+        "name": {
+          "en-US": "Wooden Sandals"
+        },
+        "image": "gear/Shs_COP106.png"
+      },
+      {
+        "id": "Shs_COP107",
+        "name": {
+          "en-US": "Trevally Derby Rollers"
+        },
+        "image": "gear/Shs_COP107.png"
+      },
+      {
+        "id": "Shs_COP108",
+        "name": {
+          "en-US": "Brinestone Boots"
+        },
+        "image": "gear/Shs_COP108.png"
+      },
+      {
+        "id": "Shs_COP109",
+        "name": {
+          "en-US": "Knockout Boots"
+        },
+        "image": "gear/Shs_COP109.png"
+      },
+      {
+        "id": "Shs_FST000",
+        "name": {
+          "en-US": "Cream Basics"
+        },
+        "image": "gear/Shs_FST000.png"
+      },
+      {
+        "id": "Shs_HAP000",
+        "name": {
+          "en-US": "Pearl-Scout Lace-Ups"
+        },
+        "image": "gear/Shs_HAP000.png"
+      },
+      {
+        "id": "Shs_HAP001",
+        "name": {
+          "en-US": "Pearlescent Squidkid IV"
+        },
+        "image": "gear/Shs_HAP001.png"
+      },
+      {
+        "id": "Shs_HAP002",
+        "name": {
+          "en-US": "Pearl Punk Crowns"
+        },
+        "image": "gear/Shs_HAP002.png"
+      },
+      {
+        "id": "Shs_HAP003",
+        "name": {
+          "en-US": "New-Day Arrows"
+        },
+        "image": "gear/Shs_HAP003.png"
+      },
+      {
+        "id": "Shs_HAP004",
+        "name": {
+          "en-US": "Marination Lace-Ups"
+        },
+        "image": "gear/Shs_HAP004.png"
+      },
+      {
+        "id": "Shs_HAP005",
+        "name": {
+          "en-US": "Rina Squidkid IV"
+        },
+        "image": "gear/Shs_HAP005.png"
+      },
+      {
+        "id": "Shs_HAP006",
+        "name": {
+          "en-US": "Trooper Power Stripes"
+        },
+        "image": "gear/Shs_HAP006.png"
+      },
+      {
+        "id": "Shs_HAP007",
+        "name": {
+          "en-US": "Midnight Slip-Ons"
+        },
+        "image": "gear/Shs_HAP007.png"
+      },
+      {
+        "id": "Shs_HAP008",
+        "name": {
+          "en-US": "Shivery Squidkid III"
+        },
+        "image": "gear/Shs_HAP008.png"
+      },
+      {
+        "id": "Shs_HAP009",
+        "name": {
+          "en-US": "Fried Squidkid III"
+        },
+        "image": "gear/Shs_HAP009.png"
+      },
+      {
+        "id": "Shs_HAP010",
+        "name": {
+          "en-US": "Big Squidkid III"
+        },
+        "image": "gear/Shs_HAP010.png"
+      },
+      {
+        "id": "Shs_HAP011",
+        "name": {
+          "en-US": "Chained DC Toejamz"
+        },
+        "image": "gear/Shs_HAP011.png"
+      },
+      {
+        "id": "Shs_HAP012",
+        "name": {
+          "en-US": "Jeweled DC Toejamz"
+        },
+        "image": "gear/Shs_HAP012.png"
+      },
+      {
+        "id": "Shs_HAP013",
+        "name": {
+          "en-US": "Swirled DC Toejamz"
+        },
+        "image": "gear/Shs_HAP013.png"
+      },
+      {
+        "id": "Shs_HAP014",
+        "name": {
+          "en-US": "Trifecta Duck Boots"
+        },
+        "image": "gear/Shs_HAP014.png"
+      },
+      {
+        "id": "Shs_HAP015",
+        "name": {
+          "en-US": "Trifecta Hi-Tops"
+        },
+        "image": "gear/Shs_HAP015.png"
+      },
+      {
+        "id": "Shs_HAP016",
+        "name": {
+          "en-US": "Trifecta Sandals"
+        },
+        "image": "gear/Shs_HAP016.png"
+      },
+      {
+        "id": "Shs_LTS000",
+        "name": {
+          "en-US": "White Kicks"
+        },
+        "image": "gear/Shs_LTS000.png"
+      },
+      {
+        "id": "Shs_LTS001",
+        "name": {
+          "en-US": "Cherry Kicks"
+        },
+        "image": "gear/Shs_LTS001.png"
+      },
+      {
+        "id": "Shs_LTS002",
+        "name": {
+          "en-US": "Turquoise Kicks"
+        },
+        "image": "gear/Shs_LTS002.png"
+      },
+      {
+        "id": "Shs_LTS003",
+        "name": {
+          "en-US": "Squink Wingtips"
+        },
+        "image": "gear/Shs_LTS003.png"
+      },
+      {
+        "id": "Shs_LTS004",
+        "name": {
+          "en-US": "Roasted Brogues"
+        },
+        "image": "gear/Shs_LTS004.png"
+      },
+      {
+        "id": "Shs_LTS005",
+        "name": {
+          "en-US": "Kid Clams"
+        },
+        "image": "gear/Shs_LTS005.png"
+      },
+      {
+        "id": "Shs_LTS006",
+        "name": {
+          "en-US": "Smoky Wingtips"
+        },
+        "image": "gear/Shs_LTS006.png"
+      },
+      {
+        "id": "Shs_LTS007",
+        "name": {
+          "en-US": "Navy Red-Soled Wingtips"
+        },
+        "image": "gear/Shs_LTS007.png"
+      },
+      {
+        "id": "Shs_LTS008",
+        "name": {
+          "en-US": "Gray Yellow-Soled Wingtips"
+        },
+        "image": "gear/Shs_LTS008.png"
+      },
+      {
+        "id": "Shs_LTS009",
+        "name": {
+          "en-US": "Inky Kid Clams"
+        },
+        "image": "gear/Shs_LTS009.png"
+      },
+      {
+        "id": "Shs_LTS010",
+        "name": {
+          "en-US": "Annaki Habaneros"
+        },
+        "image": "gear/Shs_LTS010.png"
+      },
+      {
+        "id": "Shs_LTS011",
+        "name": {
+          "en-US": "Annaki Tigers"
+        },
+        "image": "gear/Shs_LTS011.png"
+      },
+      {
+        "id": "Shs_LTS013",
+        "name": {
+          "en-US": "Desert Chukkas"
+        },
+        "image": "gear/Shs_LTS013.png"
+      },
+      {
+        "id": "Shs_LTS014",
+        "name": {
+          "en-US": "Dark-Roast Boaties"
+        },
+        "image": "gear/Shs_LTS014.png"
+      },
+      {
+        "id": "Shs_LTS015",
+        "name": {
+          "en-US": "Tricolor Boaties"
+        },
+        "image": "gear/Shs_LTS015.png"
+      },
+      {
+        "id": "Shs_LTS016",
+        "name": {
+          "en-US": "Bit 'n' Bridle Loafers"
+        },
+        "image": "gear/Shs_LTS016.png"
+      },
+      {
+        "id": "Shs_MSN000",
+        "name": {
+          "en-US": "Hero Runner Replicas"
+        },
+        "image": "gear/Shs_MSN000.png"
+      },
+      {
+        "id": "Shs_MSN004",
+        "name": {
+          "en-US": "Armor Boot Replicas"
+        },
+        "image": "gear/Shs_MSN004.png"
+      },
+      {
+        "id": "Shs_MSN306",
+        "name": {
+          "en-US": "Hero Boot Replicas"
+        },
+        "image": "gear/Shs_MSN306.png"
+      },
+      {
+        "id": "Shs_MSN307",
+        "name": {
+          "en-US": "Survival Footwrap Replicas"
+        },
+        "image": "gear/Shs_MSN307.png"
+      },
+      {
+        "id": "Shs_MSN311",
+        "name": {
+          "en-US": "Captain's Flip-Flop Replicas"
+        },
+        "image": "gear/Shs_MSN311.png"
+      },
+      {
+        "id": "Shs_SDL000",
+        "name": {
+          "en-US": "Oyster Clogs"
+        },
+        "image": "gear/Shs_SDL000.png"
+      },
+      {
+        "id": "Shs_SDL001",
+        "name": {
+          "en-US": "Choco Clogs"
+        },
+        "image": "gear/Shs_SDL001.png"
+      },
+      {
+        "id": "Shs_SDL003",
+        "name": {
+          "en-US": "Neon Delta Straps"
+        },
+        "image": "gear/Shs_SDL003.png"
+      },
+      {
+        "id": "Shs_SDL004",
+        "name": {
+          "en-US": "Black Flip-Flops"
+        },
+        "image": "gear/Shs_SDL004.png"
+      },
+      {
+        "id": "Shs_SDL005",
+        "name": {
+          "en-US": "Snow Delta Straps"
+        },
+        "image": "gear/Shs_SDL005.png"
+      },
+      {
+        "id": "Shs_SDL006",
+        "name": {
+          "en-US": "Luminous Delta Straps"
+        },
+        "image": "gear/Shs_SDL006.png"
+      },
+      {
+        "id": "Shs_SDL007",
+        "name": {
+          "en-US": "Red FishFry Sandals"
+        },
+        "image": "gear/Shs_SDL007.png"
+      },
+      {
+        "id": "Shs_SDL008",
+        "name": {
+          "en-US": "Yellow FishFry Sandals"
+        },
+        "image": "gear/Shs_SDL008.png"
+      },
+      {
+        "id": "Shs_SDL009",
+        "name": {
+          "en-US": "Musselforge Flip-Flops"
+        },
+        "image": "gear/Shs_SDL009.png"
+      },
+      {
+        "id": "Shs_SDL010",
+        "name": {
+          "en-US": "Cuttlefish Sandies"
+        },
+        "image": "gear/Shs_SDL010.png"
+      },
+      {
+        "id": "Shs_SDL011",
+        "name": {
+          "en-US": "Arrow Toesies Blu"
+        },
+        "image": "gear/Shs_SDL011.png"
+      },
+      {
+        "id": "Shs_SDL012",
+        "name": {
+          "en-US": "BlobMob Flip-Flops"
+        },
+        "image": "gear/Shs_SDL012.png"
+      },
+      {
+        "id": "Shs_SDL013",
+        "name": {
+          "en-US": "Orange Dadfoot Sandals"
+        },
+        "image": "gear/Shs_SDL013.png"
+      },
+      {
+        "id": "Shs_SDL014",
+        "name": {
+          "en-US": "Arrow Toesies Purp"
+        },
+        "image": "gear/Shs_SDL014.png"
+      },
+      {
+        "id": "Shs_SDL015",
+        "name": {
+          "en-US": "Annaki Strappy Sandals"
+        },
+        "image": "gear/Shs_SDL015.png"
+      },
+      {
+        "id": "Shs_SDL016",
+        "name": {
+          "en-US": "Squid Bone Unslips"
+        },
+        "image": "gear/Shs_SDL016.png"
+      },
+      {
+        "id": "Shs_SDL017",
+        "name": {
+          "en-US": "Pink Dadfoot Sandals"
+        },
+        "image": "gear/Shs_SDL017.png"
+      },
+      {
+        "id": "Shs_SDL018",
+        "name": {
+          "en-US": "Cyan Dadfoot Sandals"
+        },
+        "image": "gear/Shs_SDL018.png"
+      },
+      {
+        "id": "Shs_SDL019",
+        "name": {
+          "en-US": "Navy Toejamz"
+        },
+        "image": "gear/Shs_SDL019.png"
+      },
+      {
+        "id": "Shs_SDL020",
+        "name": {
+          "en-US": "Red Toejamz"
+        },
+        "image": "gear/Shs_SDL020.png"
+      },
+      {
+        "id": "Shs_SDL021",
+        "name": {
+          "en-US": "Yellow Toejamz"
+        },
+        "image": "gear/Shs_SDL021.png"
+      },
+      {
+        "id": "Shs_SDL022",
+        "name": {
+          "en-US": "Green Toejamz"
+        },
+        "image": "gear/Shs_SDL022.png"
+      },
+      {
+        "id": "Shs_SDL023",
+        "name": {
+          "en-US": "Skirmish Sabots"
+        },
+        "image": "gear/Shs_SDL023.png"
+      },
+      {
+        "id": "Shs_SDL024",
+        "name": {
+          "en-US": "Fishbone Sabots"
+        },
+        "image": "gear/Shs_SDL024.png"
+      },
+      {
+        "id": "Shs_SDODR200",
+        "name": {
+          "en-US": "Order Boot Replicas"
+        },
+        "image": "gear/Shs_SDODR200.png"
+      },
+      {
+        "id": "Shs_SHI000",
+        "name": {
+          "en-US": "Red Hi-Horses"
+        },
+        "image": "gear/Shs_SHI000.png"
+      },
+      {
+        "id": "Shs_SHI001",
+        "name": {
+          "en-US": "Zombie Hi-Horses"
+        },
+        "image": "gear/Shs_SHI001.png"
+      },
+      {
+        "id": "Shs_SHI002",
+        "name": {
+          "en-US": "Cream Hi-Tops"
+        },
+        "image": "gear/Shs_SHI002.png"
+      },
+      {
+        "id": "Shs_SHI003",
+        "name": {
+          "en-US": "Purple Hi-Horses"
+        },
+        "image": "gear/Shs_SHI003.png"
+      },
+      {
+        "id": "Shs_SHI004",
+        "name": {
+          "en-US": "Hunter Hi-Tops"
+        },
+        "image": "gear/Shs_SHI004.png"
+      },
+      {
+        "id": "Shs_SHI005",
+        "name": {
+          "en-US": "Red Hi-Tops"
+        },
+        "image": "gear/Shs_SHI005.png"
+      },
+      {
+        "id": "Shs_SHI006",
+        "name": {
+          "en-US": "Gold Hi-Horses"
+        },
+        "image": "gear/Shs_SHI006.png"
+      },
+      {
+        "id": "Shs_SHI008",
+        "name": {
+          "en-US": "Shark Moccasins"
+        },
+        "image": "gear/Shs_SHI008.png"
+      },
+      {
+        "id": "Shs_SHI009",
+        "name": {
+          "en-US": "Mawcasins"
+        },
+        "image": "gear/Shs_SHI009.png"
+      },
+      {
+        "id": "Shs_SHI010",
+        "name": {
+          "en-US": "Chocolate Dakroniks"
+        },
+        "image": "gear/Shs_SHI010.png"
+      },
+      {
+        "id": "Shs_SHI011",
+        "name": {
+          "en-US": "Cyan Dakroniks"
+        },
+        "image": "gear/Shs_SHI011.png"
+      },
+      {
+        "id": "Shs_SHI012",
+        "name": {
+          "en-US": "Black Dakroniks"
+        },
+        "image": "gear/Shs_SHI012.png"
+      },
+      {
+        "id": "Shs_SHI013",
+        "name": {
+          "en-US": "Piranha Moccasins"
+        },
+        "image": "gear/Shs_SHI013.png"
+      },
+      {
+        "id": "Shs_SHI014",
+        "name": {
+          "en-US": "White Norimaki 750s"
+        },
+        "image": "gear/Shs_SHI014.png"
+      },
+      {
+        "id": "Shs_SHI015",
+        "name": {
+          "en-US": "Black Norimaki 750s"
+        },
+        "image": "gear/Shs_SHI015.png"
+      },
+      {
+        "id": "Shs_SHI016",
+        "name": {
+          "en-US": "Sunset Orca Hi-Tops"
+        },
+        "image": "gear/Shs_SHI016.png"
+      },
+      {
+        "id": "Shs_SHI017",
+        "name": {
+          "en-US": "Red & Black Squidkid IV"
+        },
+        "image": "gear/Shs_SHI017.png"
+      },
+      {
+        "id": "Shs_SHI018",
+        "name": {
+          "en-US": "Blue & Black Squidkid IV"
+        },
+        "image": "gear/Shs_SHI018.png"
+      },
+      {
+        "id": "Shs_SHI019",
+        "name": {
+          "en-US": "Gray Sea-Slug Hi-Tops"
+        },
+        "image": "gear/Shs_SHI019.png"
+      },
+      {
+        "id": "Shs_SHI020",
+        "name": {
+          "en-US": "Orca Hi-Tops"
+        },
+        "image": "gear/Shs_SHI020.png"
+      },
+      {
+        "id": "Shs_SHI022",
+        "name": {
+          "en-US": "Navy Enperrials"
+        },
+        "image": "gear/Shs_SHI022.png"
+      },
+      {
+        "id": "Shs_SHI023",
+        "name": {
+          "en-US": "Amber Sea Slug Hi-Tops"
+        },
+        "image": "gear/Shs_SHI023.png"
+      },
+      {
+        "id": "Shs_SHI024",
+        "name": {
+          "en-US": "Yellow Iromaki 750s"
+        },
+        "image": "gear/Shs_SHI024.png"
+      },
+      {
+        "id": "Shs_SHI025",
+        "name": {
+          "en-US": "Red & White Squidkid V"
+        },
+        "image": "gear/Shs_SHI025.png"
+      },
+      {
+        "id": "Shs_SHI026",
+        "name": {
+          "en-US": "Honey & Orange Squidkid V"
+        },
+        "image": "gear/Shs_SHI026.png"
+      },
+      {
+        "id": "Shs_SHI027",
+        "name": {
+          "en-US": "Sun & Shade Squidkid IV"
+        },
+        "image": "gear/Shs_SHI027.png"
+      },
+      {
+        "id": "Shs_SHI028",
+        "name": {
+          "en-US": "Orca Woven Hi-Tops"
+        },
+        "image": "gear/Shs_SHI028.png"
+      },
+      {
+        "id": "Shs_SHI029",
+        "name": {
+          "en-US": "Green Iromaki 750s"
+        },
+        "image": "gear/Shs_SHI029.png"
+      },
+      {
+        "id": "Shs_SHI030",
+        "name": {
+          "en-US": "Purple Iromaki 750s"
+        },
+        "image": "gear/Shs_SHI030.png"
+      },
+      {
+        "id": "Shs_SHI031",
+        "name": {
+          "en-US": "Red Iromaki 750s"
+        },
+        "image": "gear/Shs_SHI031.png"
+      },
+      {
+        "id": "Shs_SHI032",
+        "name": {
+          "en-US": "Blue Iromaki 750s"
+        },
+        "image": "gear/Shs_SHI032.png"
+      },
+      {
+        "id": "Shs_SHI033",
+        "name": {
+          "en-US": "Orange Iromaki 750s"
+        },
+        "image": "gear/Shs_SHI033.png"
+      },
+      {
+        "id": "Shs_SHI034",
+        "name": {
+          "en-US": "Red Power Stripes"
+        },
+        "image": "gear/Shs_SHI034.png"
+      },
+      {
+        "id": "Shs_SHI035",
+        "name": {
+          "en-US": "Blue Power Stripes"
+        },
+        "image": "gear/Shs_SHI035.png"
+      },
+      {
+        "id": "Shs_SHI036",
+        "name": {
+          "en-US": "Toni Kensa Black Hi-Tops"
+        },
+        "image": "gear/Shs_SHI036.png"
+      },
+      {
+        "id": "Shs_SHI037",
+        "name": {
+          "en-US": "Sesame Salt 270s"
+        },
+        "image": "gear/Shs_SHI037.png"
+      },
+      {
+        "id": "Shs_SHI038",
+        "name": {
+          "en-US": "Black & Blue Squidkid V"
+        },
+        "image": "gear/Shs_SHI038.png"
+      },
+      {
+        "id": "Shs_SHI039",
+        "name": {
+          "en-US": "Orca Passion Hi-Tops"
+        },
+        "image": "gear/Shs_SHI039.png"
+      },
+      {
+        "id": "Shs_SHI040",
+        "name": {
+          "en-US": "Truffle Canvas Hi-Tops"
+        },
+        "image": "gear/Shs_SHI040.png"
+      },
+      {
+        "id": "Shs_SHI042",
+        "name": {
+          "en-US": "Force ReBoots"
+        },
+        "image": "gear/Shs_SHI042.png"
+      },
+      {
+        "id": "Shs_SHI043",
+        "name": {
+          "en-US": "Tenya OctoReds"
+        },
+        "image": "gear/Shs_SHI043.png"
+      },
+      {
+        "id": "Shs_SHI044",
+        "name": {
+          "en-US": "Tenya OctoPurps"
+        },
+        "image": "gear/Shs_SHI044.png"
+      },
+      {
+        "id": "Shs_SHI045",
+        "name": {
+          "en-US": "Pearl 01STERs"
+        },
+        "image": "gear/Shs_SHI045.png"
+      },
+      {
+        "id": "Shs_SHI046",
+        "name": {
+          "en-US": "Zebrafish Hi-Tops"
+        },
+        "image": "gear/Shs_SHI046.png"
+      },
+      {
+        "id": "Shs_SHI047",
+        "name": {
+          "en-US": "Dustcloud Hi-Tops"
+        },
+        "image": "gear/Shs_SHI047.png"
+      },
+      {
+        "id": "Shs_SHI048",
+        "name": {
+          "en-US": "Seafoam Hi-Tops"
+        },
+        "image": "gear/Shs_SHI048.png"
+      },
+      {
+        "id": "Shs_SHI049",
+        "name": {
+          "en-US": "White Lo-Vert Hi-Tops"
+        },
+        "image": "gear/Shs_SHI049.png"
+      },
+      {
+        "id": "Shs_SHI050",
+        "name": {
+          "en-US": "Blue & Black Squidkid III"
+        },
+        "image": "gear/Shs_SHI050.png"
+      },
+      {
+        "id": "Shs_SHI051",
+        "name": {
+          "en-US": "Red & White Squidkid III"
+        },
+        "image": "gear/Shs_SHI051.png"
+      },
+      {
+        "id": "Shs_SHI052",
+        "name": {
+          "en-US": "Onyx 01STERs"
+        },
+        "image": "gear/Shs_SHI052.png"
+      },
+      {
+        "id": "Shs_SHI053",
+        "name": {
+          "en-US": "Crab-Trap Squidkid III"
+        },
+        "image": "gear/Shs_SHI053.png"
+      },
+      {
+        "id": "Shs_SHT000",
+        "name": {
+          "en-US": "Pink Trainers"
+        },
+        "image": "gear/Shs_SHT000.png"
+      },
+      {
+        "id": "Shs_SHT001",
+        "name": {
+          "en-US": "Orange Arrows"
+        },
+        "image": "gear/Shs_SHT001.png"
+      },
+      {
+        "id": "Shs_SHT002",
+        "name": {
+          "en-US": "Neon Sea Slugs"
+        },
+        "image": "gear/Shs_SHT002.png"
+      },
+      {
+        "id": "Shs_SHT003",
+        "name": {
+          "en-US": "White Arrows"
+        },
+        "image": "gear/Shs_SHT003.png"
+      },
+      {
+        "id": "Shs_SHT004",
+        "name": {
+          "en-US": "Cyan Trainers"
+        },
+        "image": "gear/Shs_SHT004.png"
+      },
+      {
+        "id": "Shs_SHT005",
+        "name": {
+          "en-US": "Blue Sea Slugs"
+        },
+        "image": "gear/Shs_SHT005.png"
+      },
+      {
+        "id": "Shs_SHT006",
+        "name": {
+          "en-US": "Red Sea Slugs"
+        },
+        "image": "gear/Shs_SHT006.png"
+      },
+      {
+        "id": "Shs_SHT007",
+        "name": {
+          "en-US": "Purple Sea Slugs"
+        },
+        "image": "gear/Shs_SHT007.png"
+      },
+      {
+        "id": "Shs_SHT008",
+        "name": {
+          "en-US": "Crazy Arrows"
+        },
+        "image": "gear/Shs_SHT008.png"
+      },
+      {
+        "id": "Shs_SHT009",
+        "name": {
+          "en-US": "Black Trainers"
+        },
+        "image": "gear/Shs_SHT009.png"
+      },
+      {
+        "id": "Shs_SHT010",
+        "name": {
+          "en-US": "Violet Trainers"
+        },
+        "image": "gear/Shs_SHT010.png"
+      },
+      {
+        "id": "Shs_SHT011",
+        "name": {
+          "en-US": "Canary Trainers"
+        },
+        "image": "gear/Shs_SHT011.png"
+      },
+      {
+        "id": "Shs_SHT012",
+        "name": {
+          "en-US": "Yellow-Mesh Sneakers"
+        },
+        "image": "gear/Shs_SHT012.png"
+      },
+      {
+        "id": "Shs_SHT013",
+        "name": {
+          "en-US": "Arrow Pull-Ons"
+        },
+        "image": "gear/Shs_SHT013.png"
+      },
+      {
+        "id": "Shs_SHT014",
+        "name": {
+          "en-US": "Orange-Mesh Sneakers"
+        },
+        "image": "gear/Shs_SHT014.png"
+      },
+      {
+        "id": "Shs_SHT015",
+        "name": {
+          "en-US": "N-Pacer CaO"
+        },
+        "image": "gear/Shs_SHT015.png"
+      },
+      {
+        "id": "Shs_SHT016",
+        "name": {
+          "en-US": "N-Pacer Ag"
+        },
+        "image": "gear/Shs_SHT016.png"
+      },
+      {
+        "id": "Shs_SHT017",
+        "name": {
+          "en-US": "N-Pacer Au"
+        },
+        "image": "gear/Shs_SHT017.png"
+      },
+      {
+        "id": "Shs_SHT018",
+        "name": {
+          "en-US": "Sea Slug Volt 95s"
+        },
+        "image": "gear/Shs_SHT018.png"
+      },
+      {
+        "id": "Shs_SHT019",
+        "name": {
+          "en-US": "Athletic Arrows"
+        },
+        "image": "gear/Shs_SHT019.png"
+      },
+      {
+        "id": "Shs_SHT020",
+        "name": {
+          "en-US": "U Jellys"
+        },
+        "image": "gear/Shs_SHT020.png"
+      },
+      {
+        "id": "Shs_SHT021",
+        "name": {
+          "en-US": "Hyper Guppies"
+        },
+        "image": "gear/Shs_SHT021.png"
+      },
+      {
+        "id": "Shs_SHT022",
+        "name": {
+          "en-US": "Turbo Tabi Red"
+        },
+        "image": "gear/Shs_SHT022.png"
+      },
+      {
+        "id": "Shs_SHT023",
+        "name": {
+          "en-US": "E-JECT 30XX"
+        },
+        "image": "gear/Shs_SHT023.png"
+      },
+      {
+        "id": "Shs_SHT024",
+        "name": {
+          "en-US": "Slamgerine Slip-Ons"
+        },
+        "image": "gear/Shs_SHT024.png"
+      },
+      {
+        "id": "Shs_SHT025",
+        "name": {
+          "en-US": "Mako Bucket Hi-Tops"
+        },
+        "image": "gear/Shs_SHT025.png"
+      },
+      {
+        "id": "Shs_SHT026",
+        "name": {
+          "en-US": "Blue Shrimpsiders"
+        },
+        "image": "gear/Shs_SHT026.png"
+      },
+      {
+        "id": "Shs_SHT027",
+        "name": {
+          "en-US": "E-JECT 30VV"
+        },
+        "image": "gear/Shs_SHT027.png"
+      },
+      {
+        "id": "Shs_SHT028",
+        "name": {
+          "en-US": "OB Gaiter Waders"
+        },
+        "image": "gear/Shs_SHT028.png"
+      },
+      {
+        "id": "Shs_SHT029",
+        "name": {
+          "en-US": "AG Gaiter Waders"
+        },
+        "image": "gear/Shs_SHT029.png"
+      },
+      {
+        "id": "Shs_SHT030",
+        "name": {
+          "en-US": "Noir Guppies"
+        },
+        "image": "gear/Shs_SHT030.png"
+      },
+      {
+        "id": "Shs_SHT031",
+        "name": {
+          "en-US": "LT-CL0WN"
+        },
+        "image": "gear/Shs_SHT031.png"
+      },
+      {
+        "id": "Shs_SLO000",
+        "name": {
+          "en-US": "Blue Lo-Tops"
+        },
+        "image": "gear/Shs_SLO000.png"
+      },
+      {
+        "id": "Shs_SLO001",
+        "name": {
+          "en-US": "Banana Basics"
+        },
+        "image": "gear/Shs_SLO001.png"
+      },
+      {
+        "id": "Shs_SLO002",
+        "name": {
+          "en-US": "LE Lo-Tops"
+        },
+        "image": "gear/Shs_SLO002.png"
+      },
+      {
+        "id": "Shs_SLO003",
+        "name": {
+          "en-US": "White Seahorses"
+        },
+        "image": "gear/Shs_SLO003.png"
+      },
+      {
+        "id": "Shs_SLO004",
+        "name": {
+          "en-US": "Orange Lo-Tops"
+        },
+        "image": "gear/Shs_SLO004.png"
+      },
+      {
+        "id": "Shs_SLO005",
+        "name": {
+          "en-US": "Black Seahorses"
+        },
+        "image": "gear/Shs_SLO005.png"
+      },
+      {
+        "id": "Shs_SLO006",
+        "name": {
+          "en-US": "Clownfish Basics"
+        },
+        "image": "gear/Shs_SLO006.png"
+      },
+      {
+        "id": "Shs_SLO007",
+        "name": {
+          "en-US": "Yellow Seahorses"
+        },
+        "image": "gear/Shs_SLO007.png"
+      },
+      {
+        "id": "Shs_SLO008",
+        "name": {
+          "en-US": "White 3-Straps"
+        },
+        "image": "gear/Shs_SLO008.png"
+      },
+      {
+        "id": "Shs_SLO009",
+        "name": {
+          "en-US": "Red 3-Straps"
+        },
+        "image": "gear/Shs_SLO009.png"
+      },
+      {
+        "id": "Shs_SLO010",
+        "name": {
+          "en-US": "Soccer Shoes"
+        },
+        "image": "gear/Shs_SLO010.png"
+      },
+      {
+        "id": "Shs_SLO011",
+        "name": {
+          "en-US": "LE Soccer Shoes"
+        },
+        "image": "gear/Shs_SLO011.png"
+      },
+      {
+        "id": "Shs_SLO012",
+        "name": {
+          "en-US": "Sunny Climbing Shoes"
+        },
+        "image": "gear/Shs_SLO012.png"
+      },
+      {
+        "id": "Shs_SLO013",
+        "name": {
+          "en-US": "Birch Climbing Shoes"
+        },
+        "image": "gear/Shs_SLO013.png"
+      },
+      {
+        "id": "Shs_SLO014",
+        "name": {
+          "en-US": "Green Lace-Ups"
+        },
+        "image": "gear/Shs_SLO014.png"
+      },
+      {
+        "id": "Shs_SLO015",
+        "name": {
+          "en-US": "White Laceless Dakroniks"
+        },
+        "image": "gear/Shs_SLO015.png"
+      },
+      {
+        "id": "Shs_SLO016",
+        "name": {
+          "en-US": "Blue Laceless Dakroniks"
+        },
+        "image": "gear/Shs_SLO016.png"
+      },
+      {
+        "id": "Shs_SLO017",
+        "name": {
+          "en-US": "Suede Gray Lace-Ups"
+        },
+        "image": "gear/Shs_SLO017.png"
+      },
+      {
+        "id": "Shs_SLO018",
+        "name": {
+          "en-US": "Suede Nation Lace-Ups"
+        },
+        "image": "gear/Shs_SLO018.png"
+      },
+      {
+        "id": "Shs_SLO019",
+        "name": {
+          "en-US": "Suede Marine Lace-Ups"
+        },
+        "image": "gear/Shs_SLO019.png"
+      },
+      {
+        "id": "Shs_SLO020",
+        "name": {
+          "en-US": "Toni Kensa Soccer Shoes"
+        },
+        "image": "gear/Shs_SLO020.png"
+      },
+      {
+        "id": "Shs_SLO021",
+        "name": {
+          "en-US": "Wasabi Tabi"
+        },
+        "image": "gear/Shs_SLO021.png"
+      },
+      {
+        "id": "Shs_SLO022",
+        "name": {
+          "en-US": "Suede Basics"
+        },
+        "image": "gear/Shs_SLO022.png"
+      },
+      {
+        "id": "Shs_SLO023",
+        "name": {
+          "en-US": "Ink-Black Clam 600s"
+        },
+        "image": "gear/Shs_SLO023.png"
+      },
+      {
+        "id": "Shs_SLO024",
+        "name": {
+          "en-US": "Suede Bosses"
+        },
+        "image": "gear/Shs_SLO024.png"
+      },
+      {
+        "id": "Shs_SLO025",
+        "name": {
+          "en-US": "White Clam 600s"
+        },
+        "image": "gear/Shs_SLO025.png"
+      },
+      {
+        "id": "Shs_SLO026",
+        "name": {
+          "en-US": "Stamina Cycling Shoes"
+        },
+        "image": "gear/Shs_SLO026.png"
+      },
+      {
+        "id": "Shs_SLO027",
+        "name": {
+          "en-US": "Energy Cycling Shoes"
+        },
+        "image": "gear/Shs_SLO027.png"
+      },
+      {
+        "id": "Shs_SLP000",
+        "name": {
+          "en-US": "Blue Slip-Ons"
+        },
+        "image": "gear/Shs_SLP000.png"
+      },
+      {
+        "id": "Shs_SLP001",
+        "name": {
+          "en-US": "Red Slip-Ons"
+        },
+        "image": "gear/Shs_SLP001.png"
+      },
+      {
+        "id": "Shs_SLP002",
+        "name": {
+          "en-US": "Squid-Stitch Slip-Ons"
+        },
+        "image": "gear/Shs_SLP002.png"
+      },
+      {
+        "id": "Shs_SLP003",
+        "name": {
+          "en-US": "Polka-Dot Slip-Ons"
+        },
+        "image": "gear/Shs_SLP003.png"
+      },
+      {
+        "id": "Shs_SLP004",
+        "name": {
+          "en-US": "ZedFry Slip-Ons"
+        },
+        "image": "gear/Shs_SLP004.png"
+      },
+      {
+        "id": "Shs_TRG000",
+        "name": {
+          "en-US": "Fry Tops"
+        },
+        "image": "gear/Shs_TRG000.png"
+      },
+      {
+        "id": "Shs_TRG001",
+        "name": {
+          "en-US": "Burden of Floof"
+        },
+        "image": "gear/Shs_TRG001.png"
+      },
+      {
+        "id": "Shs_TRS000",
+        "name": {
+          "en-US": "Trail Boots"
+        },
+        "image": "gear/Shs_TRS000.png"
+      },
+      {
+        "id": "Shs_TRS001",
+        "name": {
+          "en-US": "Custom Trail Boots"
+        },
+        "image": "gear/Shs_TRS001.png"
+      },
+      {
+        "id": "Shs_TRS002",
+        "name": {
+          "en-US": "Pro Trail Boots"
+        },
+        "image": "gear/Shs_TRS002.png"
+      }
+    ]
+  },
+  "excluded": {
+    "replicas": [
+      {
+        "id": "Blaster_Short_O",
+        "copies": "Blaster_Short_00"
+      },
+      {
+        "id": "Brush_Normal_O",
+        "copies": "Brush_Normal_00"
+      },
+      {
+        "id": "Charger_Normal_O",
+        "copies": "Charger_Normal_00"
+      },
+      {
+        "id": "Maneuver_Normal_O",
+        "copies": "Maneuver_Normal_00"
+      },
+      {
+        "id": "Roller_Normal_O",
+        "copies": "Roller_Normal_00"
+      },
+      {
+        "id": "Saber_Normal_O",
+        "copies": "Saber_Normal_00"
+      },
+      {
+        "id": "Shelter_Normal_O",
+        "copies": "Shelter_Normal_00"
+      },
+      {
+        "id": "Shooter_Normal_H",
+        "copies": "Shooter_Normal_00"
+      },
+      {
+        "id": "Shooter_Normal_O",
+        "copies": "Shooter_Normal_00"
+      },
+      {
+        "id": "Shooter_Normal_Oct",
+        "copies": "Shooter_Normal_01"
+      },
+      {
+        "id": "Shooter_Normal_S",
+        "copies": "Shooter_Normal_01"
+      },
+      {
+        "id": "Slosher_Strong_O",
+        "copies": "Slosher_Strong_00"
+      },
+      {
+        "id": "Spinner_Standard_O",
+        "copies": "Spinner_Standard_00"
+      },
+      {
+        "id": "Stringer_Normal_O",
+        "copies": "Stringer_Normal_00"
+      }
+    ],
+    "unobtainable": [
+      "Hed_COP001",
+      "Hed_COP002",
+      "Hed_COP003",
+      "Hed_COP004",
+      "Hed_COP005",
+      "Hed_COP006",
+      "Hed_COP007",
+      "Hed_COP008",
+      "Hed_COP009",
+      "Hed_COP010",
+      "Hed_COP011",
+      "Hed_COP012",
+      "Hed_COP013",
+      "Hed_COP014",
+      "Hed_COP015",
+      "Hed_COP016",
+      "Hed_COP017",
+      "Hed_COP018",
+      "Hed_COP019",
+      "Hed_COP020",
+      "Hed_COP021",
+      "Hed_INV000",
+      "Hed_MSN110",
+      "Hed_MSN111",
+      "Hed_MSN301",
+      "Hed_MSN302",
+      "Hed_MSN303",
+      "Hed_MSN304",
+      "Hed_MSN305",
+      "Hed_MSN310",
+      "Hed_SDODR000",
+      "Hed_SDODR001",
+      "Hed_SDODR100",
+      "Hed_SDODR101",
+      "Clt_COP001",
+      "Clt_COP002",
+      "Clt_COP003",
+      "Clt_COP004",
+      "Clt_COP005",
+      "Clt_COP006",
+      "Clt_COP007",
+      "Clt_COP008",
+      "Clt_COP009",
+      "Clt_COP010",
+      "Clt_COP011",
+      "Clt_COP012",
+      "Clt_COP013",
+      "Clt_COP014",
+      "Clt_COP015",
+      "Clt_COP016",
+      "Clt_COP017",
+      "Clt_COP018",
+      "Clt_COP019",
+      "Clt_COP020",
+      "Clt_COP021",
+      "Clt_MSN110",
+      "Clt_MSN200",
+      "Clt_MSN301",
+      "Clt_MSN302",
+      "Clt_MSN303",
+      "Clt_MSN304",
+      "Clt_MSN305",
+      "Clt_MSN310",
+      "Clt_SDODR000",
+      "Shs_MSN110",
+      "Shs_MSN200",
+      "Shs_MSN301",
+      "Shs_MSN302",
+      "Shs_MSN303",
+      "Shs_MSN304",
+      "Shs_MSN305",
+      "Shs_MSN310",
+      "Shs_SDODR000"
+    ]
+  }
+}
