@@ -4,5 +4,6 @@
   "root.continue": "Continue to Iron Squid",
   "notFound.title": "Page not found",
   "notFound.body": "There is no page at this address.",
-  "notFound.home": "Back to the home page"
+  "notFound.home": "Back to the home page",
+  "catalogue.version": "Weapons and gear from Splatoon 3 {version}"
 }

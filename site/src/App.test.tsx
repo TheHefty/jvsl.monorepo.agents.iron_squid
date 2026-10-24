@@ -18,4 +18,14 @@ describe('App', () => {
     const link = screen.getByRole('link', { name: messages['notFound.home'] });
     expect(link.getAttribute('href')).toBe('/repo/en-US/');
   });
+
+  it('says on every page which game version the catalogue matches, from the catalogue', () => {
+    for (const page of ['home', 'not-found'] as const) {
+      render(<App locale="en-US" page={page} basePath="/" catalogueVersion="1.2.3" />);
+      const footers = screen.getAllByRole('contentinfo');
+      expect(footers).toHaveLength(1);
+      expect(footers[0]?.textContent).toBe('Weapons and gear from Splatoon 3 1.2.3');
+      cleanup();
+    }
+  });
 });

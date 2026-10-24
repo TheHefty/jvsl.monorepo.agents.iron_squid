@@ -1,7 +1,7 @@
-import { readdirSync, readFileSync } from 'node:fs';
-import { join, relative, resolve } from 'node:path';
+import { readFileSync } from 'node:fs';
 import { expect } from '@playwright/test';
 import { accessibilityViolations, Given, Then, When } from '../fixtures';
+import { pagesOfBuild } from '../support/pages';
 
 const catalogue = JSON.parse(
   readFileSync(new URL('../../src/i18n/messages/en-US.json', import.meta.url), 'utf8'),
@@ -12,7 +12,6 @@ const message = (id: string): string => {
   return text;
 };
 const missingAddress = 'no-such-page/';
-const siteDir = resolve(process.env.SITE_DIR ?? 'dist');
 
 When('a visitor opens the root of the domain', async ({ page }) => {
   await page.goto('./');
@@ -59,20 +58,8 @@ Given('the published site', async () => {
   // The build under test: every HTML page it contains is a page a visitor can reach.
 });
 
-function pagesOf(dir: string): string[] {
-  return readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
-    e.isDirectory()
-      ? pagesOf(join(dir, e.name))
-      : e.name.endsWith('.html')
-        ? [join(dir, e.name)]
-        : [],
-  );
-}
-
 When('a visitor loads every page', async ({ page, guard, baseURL }) => {
-  const pages = pagesOf(siteDir).map((f) =>
-    relative(siteDir, f).replace(/(^|\/)index\.html$/, '$1'),
-  );
+  const pages = pagesOfBuild();
   expect(pages.length, 'pages in the build').toBeGreaterThan(0);
   for (const p of pages) {
     const url = new URL(p, baseURL);
