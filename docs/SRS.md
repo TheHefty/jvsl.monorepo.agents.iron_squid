@@ -186,7 +186,7 @@ policy texts that follow from it will not have been either.
 | Run display name (optional) | To show on a shared run (FR-11) | The player's browser storage, and any link the player makes | Only whoever the player sends the link to | As above; in a link, for as long as the link exists wherever it was pasted |
 | Language choice | To remember it (NFR-I5) | The player's browser storage | The player's own browser | Until site data is cleared |
 | Exported run file | To move a run (FR-31) | Wherever the player saves it | The player | The player's decision |
-| DNS queries for the domain | Resolving the domain | The DNS provider for the domain | The provider, which sees resolvers rather than visitors' requests; named once the domain is registered | The provider's retention |
+| DNS queries for `iron-squid.top` | Resolving the domain | Cloudflare's nameservers; HostGator is the registrar | **Cloudflare**, as DNS provider, under its own privacy policy. Every record is DNS only, never proxied, so Cloudflare sees the resolvers' queries and never a visitor's requests to the site | Cloudflare's retention |
 | IP address, user agent, requested URL | Serving the site | GitHub's infrastructure | **GitHub**, as host, under its own privacy statement; the project has no access to these logs | GitHub's retention |
 
 - **The run is carried in the link's fragment** (`#…`), not in its path or query string. A browser
