@@ -32,6 +32,14 @@ describe('release-please configuration', () => {
     ]);
   });
 
+  it('starts at 0.1.0 and stays in 0.x until 1.0.0 is chosen on purpose', () => {
+    const pkg = config.packages['.'];
+    expect(pkg['initial-version']).toBe('0.1.0');
+    // Before 1.0.0, a feat bumps the minor and a breaking change does too, never the major.
+    expect(pkg['bump-minor-pre-major']).toBe(true);
+    expect(pkg['bump-patch-for-minor-pre-major']).toBe(false);
+  });
+
   it('tags releases as vX.Y.Z, with no component prefix', () => {
     expect(config['include-component-in-tag']).toBe(false);
     expect(config['include-v-in-tag']).toBe(true);
