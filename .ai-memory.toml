@@ -1,0 +1,10 @@
+# The marker is the switch: ai-memory is off in a project that does not carry
+# this file, and nothing listens. Its presence is read at boot, by the service
+# and by the hook that registers with the agent's CLI, so the container has to
+# be restarted after it is added — and after it is removed.
+#
+# What it costs: prompts and tool excerpts are captured to disk, on this
+# machine, for this project only. No LLM provider is configured, so nothing
+# captured leaves the machine. Delete this file to switch it off.
+[project]
+project_strategy = "repo-root"

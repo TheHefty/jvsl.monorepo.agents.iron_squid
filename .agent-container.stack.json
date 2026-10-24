@@ -1,0 +1,7 @@
+{
+  "node": "24",
+  "limits": {
+    "memory": "6g",
+    "memorySwap": "6g"
+  }
+}
