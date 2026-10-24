@@ -70,5 +70,10 @@ Read before anything else:
 - [`docs/SRS.md`](docs/SRS.md) — the numbered requirements, the data map, and the epics and stories.
 - [`docs/RULES.md`](docs/RULES.md) — this project's standing rules (imported above).
 
+**Planning lives in the beads tracker, not in files.** Epics, stories and tasks are `bd` items with
+the prefix `is-` (`bd list`, `bd show <id>`). A story's acceptance criteria are its `--acceptance`
+field, mirrored as Gherkin at `site/e2e/features/<epic>/<story>.feature`, which its `--spec-id`
+points to. A draft is a deferred item labelled `proposed` until it is agreed.
+
 The stack is Node 24 (`.agent-container.stack.json`). Build and test commands go here once the
 `site-online` story has created them.

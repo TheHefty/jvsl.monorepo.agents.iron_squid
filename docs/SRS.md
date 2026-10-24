@@ -8,8 +8,8 @@
 
 What Iron Squid must do, agreed before any story is written. It is built against the
 [charter](CHARTER.md), and where the two disagree the charter wins until it is re-grilled. This
-document is also the source of truth for the epics and stories: `docs/PLANNING/` mirrors the last
-section, and when the two disagree, this document is right.
+document is also the source of truth for the epics and stories: the work tracker (`bd`) mirrors the
+last section, and when the two disagree, this document is right.
 
 Requirements are numbered so stories and tasks can cite them. A requirement is stated so that someone
 could look at the running site and say whether it holds.
