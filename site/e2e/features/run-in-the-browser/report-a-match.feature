@@ -2,10 +2,10 @@ Feature: Report a match
   The player says how each match went, and the run follows the rules.
 
   Scenario: A win conquers the set
-    Given a player playing a set with 1 life and 3 of 130 kits conquered
+    Given a player playing a set with 1 life and 3 of 160 kits conquered
     When the player reports a win
     Then the set is conquered
-    And 4 of 130 kits are conquered
+    And 4 of 160 kits are conquered
     And the player is shown the set they just conquered
 
   Scenario: Every tenth win earns a life

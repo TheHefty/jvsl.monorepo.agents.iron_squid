@@ -41,9 +41,9 @@ Feature: Keep progress
     And the player is told which catalogue version the file needs
 
   Scenario: A run continues on its catalogue after the site is updated
-    Given a player with a run started on catalogue version 9.3.0
+    Given a player with a run started on catalogue version 11.3.0
     And the site has since been rebuilt from a newer catalogue version
     When the player opens the site
-    Then the run continues against catalogue version 9.3.0
+    Then the run continues against catalogue version 11.3.0
     And the player is told the run is on an older catalogue
     And kits added since are not part of the run

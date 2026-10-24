@@ -19,21 +19,22 @@ could look at the running site and say whether it holds.
 - **Kit** — a weapon as the game's weapon select shows it: a main weapon with its fixed sub and
   special. *Splattershot* and *Tentatek Splattershot* are two kits.
 - **Replica** — a kit that is cosmetically different but identical in play to another kit: the Order
-  replicas, *Hero Shot Replica* and *Octo Shot Replica*. Replicas are not kits for the challenge.
+  replicas, *Hero Shot Replica*, *Octo Shot Replica* and *Plastic-Bottle Shot Replica*. Replicas
+  are not kits for the challenge.
 - **Gear piece** — one headgear, clothing or shoes item.
 - **Set** — a kit and the three gear pieces drawn with it.
 - **Conquered** — a set the player has won with in the current run.
 - **Run** — one attempt at the challenge, from the first draw until every kit is conquered.
 - **Reset** — what happens when the last life is lost: the run returns to its first set.
 - **Catalogue version** — the game data the site was built from, named by the game version it
-  matches (for example `9.3.0`).
+  matches (for example `11.3.0`).
 
 ## Functional requirements
 
 ### Catalogue
 
 - **FR-1** The site knows every kit available in online battles in the catalogue version it was
-  built from, with replicas excluded. For the current data (game version 9.3.0) that is **130 kits**.
+  built from, with replicas excluded. For the current data (game version 11.3.0) that is **160 kits**.
 - **FR-2** The site knows every headgear, clothing and shoes piece a player can wear in online
   battles. Gear the game marks as unobtainable for multiplayer — such as Hero Mode and Side Order
   gear — is excluded.
@@ -285,3 +286,10 @@ locale (NFR-I8), a draw order fixed at the start of the run (FR-14), the next se
 which now says the site carries every catalogue version it was built from. The amendment closed a
 gap the grilling found: undo, as first written, let a player re-roll a set by undoing a win and
 reporting it again.
+
+Amended on 2026-10-24 when the catalogue story started (PR #35): the counts in FR-1 were read from
+game version 9.3.0, because the datamine's version folders were sorted as text and `930` looked like
+the newest; the newest is `1130`. Game version 11.3.0 has 160 kits: 174 versus weapons, less 14
+cosmetic replicas, one more than first counted (*Plastic-Bottle Shot Replica*). The 30 kits added
+since 9.3.0 are Sheldon's Picks. The datamine pin is unchanged; its data folder is `1130`. The
+stories' scenarios that quoted 130 kits or version 9.3.0 change with this amendment.
