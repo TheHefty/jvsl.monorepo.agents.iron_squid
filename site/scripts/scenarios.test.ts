@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { countScenarios, missingFromRun, scenariosTagged } from './scenarios';
+import { countScenarios, countScenariosTagged, missingFromRun, scenariosTagged } from './scenarios';
 
 const feature = `Feature: F
 
@@ -30,6 +30,13 @@ describe('countScenarios', () => {
   });
 });
 
+describe('countScenariosTagged', () => {
+  it('counts only the scenarios carrying a tag, for the run that executes them', () => {
+    expect(countScenariosTagged(feature, 'deployed')).toBe(1);
+    expect(countScenariosTagged(feature, 'nothing')).toBe(0);
+  });
+});
+
 describe('scenariosTagged', () => {
   it('lists the scenarios carrying a tag, by name', () => {
     expect(scenariosTagged(feature, 'manual')).toEqual(['by hand']);
@@ -40,7 +47,7 @@ describe('missingFromRun', () => {
   it('says how many expected scenarios a run did not execute', () => {
     expect(missingFromRun({ expected: 4, executed: 4 })).toBeUndefined();
     expect(missingFromRun({ expected: 4, executed: 0 })).toBe(
-      'acceptance: 4 scenario(s) expected from the registered features, 0 executed',
+      '4 scenario(s) expected from the registered features, 0 executed',
     );
   });
 });

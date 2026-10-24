@@ -32,6 +32,18 @@ export function countScenarios(source: string, excludedTags: readonly string[]):
     }, 0);
 }
 
+export function countScenariosTagged(source: string, tag: string): number {
+  const tagged = (s: ReturnType<typeof scenarios>[number]) =>
+    has([...s.featureTags, ...s.tags], [tag]);
+  return scenarios(source)
+    .filter(tagged)
+    .reduce(
+      (n, s) =>
+        n + (s.examples.length === 0 ? 1 : s.examples.reduce((m, e) => m + e.tableBody.length, 0)),
+      0,
+    );
+}
+
 export function scenariosTagged(source: string, tag: string): string[] {
   return scenarios(source)
     .filter((s) => has([...s.featureTags, ...s.tags], [tag]))
@@ -40,5 +52,5 @@ export function scenariosTagged(source: string, tag: string): string[] {
 
 export function missingFromRun({ expected, executed }: { expected: number; executed: number }) {
   if (executed >= expected) return undefined;
-  return `acceptance: ${expected} scenario(s) expected from the registered features, ${executed} executed`;
+  return `${expected} scenario(s) expected from the registered features, ${executed} executed`;
 }

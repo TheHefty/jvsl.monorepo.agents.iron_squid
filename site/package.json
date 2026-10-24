@@ -17,7 +17,8 @@
     "format": "prettier --write .",
     "test": "vitest run",
     "bdd": "bddgen -c e2e/playwright.config.ts && playwright test -c e2e/playwright.config.ts && tsx scripts/check-scenario-count.ts",
-    "bdd:manual": "tsx scripts/list-manual-scenarios.ts"
+    "bdd:manual": "tsx scripts/list-manual-scenarios.ts",
+    "bdd:deployed": "bddgen -c e2e/playwright.deployed.config.ts && playwright test -c e2e/playwright.deployed.config.ts && tsx scripts/check-scenario-count.ts --deployed"
   },
   "dependencies": {
     "react": "19.3.0",

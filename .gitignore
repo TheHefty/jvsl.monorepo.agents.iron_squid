@@ -17,3 +17,4 @@ site/e2e/.features-gen/
 site/e2e/test-results/
 site/e2e/playwright-report/
 site/test-results/
+site/e2e/.features-gen-deployed/

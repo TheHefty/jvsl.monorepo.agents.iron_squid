@@ -3,3 +3,4 @@ e2e/.features-gen
 playwright-report
 test-results
 package-lock.json
+e2e/.features-gen-deployed

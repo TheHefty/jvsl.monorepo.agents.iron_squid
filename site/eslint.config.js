@@ -7,7 +7,15 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist', 'e2e/.features-gen', 'playwright-report', 'test-results'] },
+  {
+    ignores: [
+      'dist',
+      'e2e/.features-gen',
+      'e2e/.features-gen-deployed',
+      'playwright-report',
+      'test-results',
+    ],
+  },
   js.configs.recommended,
   tseslint.configs.strict,
   {
