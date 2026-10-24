@@ -40,8 +40,7 @@ after it.
 
 The documents read when they are relevant — `INITIALIZATION.md`, `WORKFLOW.md`, the charter, SRS,
 story, task and debt templates — ship with the image at `/opt/jvsl/docs/agent/en/`, with
-`/opt/jvsl/docs/agent/pt-BR/` beside it. **While initialization is unfinished, read
-`/opt/jvsl/docs/agent/en/INITIALIZATION.md` first**, and delete this sentence when it is done.
+`/opt/jvsl/docs/agent/pt-BR/` beside it.
 
 ## The gates, which are in this file on purpose
 
@@ -59,5 +58,17 @@ them; work found along the way is planned whole too, before its own code.
 
 ## This project
 
-Replace this section. It is where what makes this repository different belongs — what it is, what
-it builds, the commands that matter, and the facts somebody needs before reading anything else.
+**Iron Squid** is a static React website that runs a Splatoon 3 challenge: win with every weapon kit
+in the game, each with randomly drawn gear, and replay everything already won when the last life is
+lost. Progress stays in the player's browser and is shared as a link. Published on GitHub Pages
+from `main`; repository `TheHefty/jvsl.monorepo.agents.iron_squid`, public, MIT for the code and not
+for Nintendo's assets.
+
+Read before anything else:
+
+- [`docs/CHARTER.md`](docs/CHARTER.md) — what the project is for, and what it deliberately is not.
+- [`docs/SRS.md`](docs/SRS.md) — the numbered requirements, the data map, and the epics and stories.
+- [`docs/RULES.md`](docs/RULES.md) — this project's standing rules (imported above).
+
+The stack is Node 24 (`.agent-container.stack.json`). Build and test commands go here once the
+`site-online` story has created them.
