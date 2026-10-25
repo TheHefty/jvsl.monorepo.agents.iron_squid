@@ -15,7 +15,15 @@ export function Layout({ catalogueVersion, home, children }: Props) {
           {intl.formatMessage({ id: 'site.name' })}
         </a>
       </header>
-      <main>{children}</main>
+      <main>
+        {intl.messages['translation.status'] === 'unreviewed' && (
+          // A translation nobody fluent has checked says so, in its own language (NFR-I4).
+          <p className="notice translation-notice">
+            <FormattedMessage id="translation.unreviewed" />
+          </p>
+        )}
+        {children}
+      </main>
       <footer className="site-footer">
         <nav aria-label={intl.formatMessage({ id: 'footer.label' })}>
           <ul className="footer-links">

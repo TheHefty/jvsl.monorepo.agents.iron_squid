@@ -6,15 +6,24 @@ import { PrivacyNotice, TermsOfUse } from './notices/Notices';
 import type { Page } from './pages';
 import { RunPage } from './run/RunPage';
 import { SharedRunPage } from './share/SharedRunPage';
-import enUS from './i18n/messages/en-US.json';
 
-const catalogues: Record<Locale, Record<string, string>> = { 'en-US': enUS };
+type Props = {
+  locale: Locale;
+  messages: Record<string, string>;
+  page: Page;
+  basePath: string;
+  catalogueVersion?: string;
+};
 
-type Props = { locale: Locale; page: Page; basePath: string; catalogueVersion?: string };
-
-export function App({ locale, page, basePath, catalogueVersion = currentVersion }: Props) {
+export function App({
+  locale,
+  messages,
+  page,
+  basePath,
+  catalogueVersion = currentVersion,
+}: Props) {
   return (
-    <IntlProvider locale={locale} messages={catalogues[locale]}>
+    <IntlProvider locale={locale} messages={messages}>
       <Layout catalogueVersion={catalogueVersion} home={`${basePath}${locale}/`}>
         {page === 'home' && <RunPage newestVersion={catalogueVersion} />}
         {page === 'shared' && <SharedRunPage home={`${basePath}${locale}/`} />}
