@@ -14,3 +14,6 @@ export function latestVersion(versions: readonly string[]): string {
   if (!newest) throw new Error('catalogue: no catalogue version');
   return newest;
 }
+
+// The version a catalogue's path names: the folder that holds its catalogue.json.
+export const versionOf = (path: string) => /([^/]+)\/catalogue\.json$/.exec(path)?.[1] ?? '';

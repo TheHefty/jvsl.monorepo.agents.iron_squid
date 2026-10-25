@@ -96,5 +96,6 @@
   "import.confirm": "Replace it",
   "import.notARun": "This file is not a valid Iron Squid run.",
   "import.unknownCatalogue": "This run needs the weapons and gear of Splatoon 3 {version}, which this site does not have.",
-  "storage.notKept": "This browser is not keeping your run: it will be lost when this page closes. Export it to keep a copy."
+  "storage.notKept": "This browser is not keeping your run: it will be lost when this page closes. Export it to keep a copy.",
+  "run.olderCatalogue": "This run uses the weapons and gear of Splatoon 3 {version}; the site now has {newest}. Weapons added since are not part of this run."
 }

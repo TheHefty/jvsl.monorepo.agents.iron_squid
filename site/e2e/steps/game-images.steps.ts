@@ -85,6 +85,7 @@ async function badImage(serve: 'altered' | 'missing') {
     DATAMINE_BASE_URL: base,
     GAME_IMAGES_CACHE: mkdtempSync(join(tmpdir(), 'cache-')),
     BUILD_OUT_DIR: mkdtempSync(join(tmpdir(), 'build-')),
+    PUBLIC_DIR: mkdtempSync(join(tmpdir(), 'public-')),
   };
   buildState.after = () => new Promise<void>((r) => server.close(() => r()));
   buildState.expected = {

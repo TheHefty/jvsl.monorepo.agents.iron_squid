@@ -61,7 +61,11 @@ Given('game data in which one gear slot has fewer pieces than there are kits', a
   short.gear.shoes = short.gear.shoes.slice(0, short.kits.length - 1);
   mkdirSync(join(dir, short.version));
   writeFileSync(join(dir, short.version, 'catalogue.json'), JSON.stringify(short));
-  buildState.env = { CATALOGUE_DIR: dir, BUILD_OUT_DIR: mkdtempSync(join(tmpdir(), 'build-')) };
+  buildState.env = {
+    CATALOGUE_DIR: dir,
+    BUILD_OUT_DIR: mkdtempSync(join(tmpdir(), 'build-')),
+    PUBLIC_DIR: mkdtempSync(join(tmpdir(), 'public-')),
+  };
 });
 
 When('the site is built', async () => {

@@ -1,8 +1,16 @@
-import { readFileSync } from 'node:fs';
+import { cpSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import type { AddressInfo } from 'node:net';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { expect, type Page } from '@playwright/test';
 import { IntlMessageFormat } from 'intl-messageformat';
 import { Given, Then, When } from '../fixtures';
-import { playRun, seedRun, winsThenPlaying } from '../support/seed';
+import { createPagesServer } from '../../scripts/pages-server';
+import type { Catalogue } from '../../src/catalogue/types';
+import type { RunState } from '../../src/run/engine';
+import { basePath } from '../site-under-test';
+import { run } from '../support/run';
+import { playRun, seedRun, seedRunScript, setNames, winsThenPlaying } from '../support/seed';
 
 const catalogue = JSON.parse(readFileSync('src/i18n/messages/en-US.json', 'utf8')) as Record<
   string,
@@ -185,4 +193,90 @@ Then('the player is offered to export it instead', async ({ page, browser, baseU
   await other.goto('./en-US/');
   await importInto(other, file);
   expect(await snapshot(other)).toEqual(before);
+});
+
+// A run on an older catalogue, and a site rebuilt with a newer one beside it (FR-33).
+const added = 'Iron Squid Test Kit';
+
+Given(
+  'a player with a run started on catalogue version {word}',
+  async ({ page, world }, version: string) => {
+    const state = playRun(winsThenPlaying(3));
+    expect(state.catalogueVersion).toBe(version);
+    world.state = state;
+    await seedRunScript(page, state);
+  },
+);
+
+Given(
+  'the site has since been rebuilt from a newer catalogue version',
+  async ({ page, baseURL }) => {
+    // 11.3.0 as published, and an invented 12.0.0: the same data with one kit added, whose image is
+    // one already locked, so the build fetches nothing new.
+    const dir = mkdtempSync(join(tmpdir(), 'catalogue-'));
+    cpSync('src/catalogue/11.3.0', join(dir, '11.3.0'), { recursive: true });
+    const newer = JSON.parse(
+      readFileSync('src/catalogue/11.3.0/catalogue.json', 'utf8'),
+    ) as Catalogue;
+    const [first] = newer.kits;
+    if (!first) throw new Error('steps: the 11.3.0 catalogue has no kits');
+    newer.version = '12.0.0';
+    newer.kits.push({ id: 'Test_Added_00', name: { 'en-US': added }, image: first.image });
+    mkdirSync(join(dir, newer.version));
+    writeFileSync(join(dir, newer.version, 'catalogue.json'), JSON.stringify(newer));
+    cpSync('src/catalogue/11.3.0/images.lock.json', join(dir, newer.version, 'images.lock.json'));
+    const out = mkdtempSync(join(tmpdir(), 'build-'));
+    const built = await run('npm', ['run', 'build'], {
+      CATALOGUE_DIR: dir,
+      PUBLIC_DIR: mkdtempSync(join(tmpdir(), 'public-')),
+      BUILD_OUT_DIR: out,
+    });
+    expect(built.status, built.output).toBe(0);
+
+    // Served at the address under test, so the guard and the CSP apply to it as to any page.
+    const server = createPagesServer({ root: out, basePath });
+    await new Promise<void>((r) => server.listen(0, r));
+    page.context().on('close', () => server.close());
+    const port = (server.address() as AddressInfo).port;
+    const origin = new URL(baseURL ?? '').origin;
+    await page.route(
+      (url) => url.origin === origin,
+      async (route) => {
+        const url = new URL(route.request().url());
+        url.host = `localhost:${port}`;
+        await route.fulfill({ response: await route.fetch({ url: url.href, maxRedirects: 0 }) });
+      },
+    );
+  },
+);
+
+Then(
+  'the run continues against catalogue version {word}',
+  async ({ page, world }, version: string) => {
+    const state = world.state as RunState;
+    // The rebuilt site is the one answering, and the run is still drawn from its own catalogue.
+    await expect(page.getByRole('contentinfo')).toContainText(
+      message('catalogue.version', { version: '12.0.0' }),
+    );
+    expect(await readSet(page)).toEqual(setNames(state, state.cursor));
+    const sources = await page
+      .getByRole('region', { name: message('set.label') })
+      .getByRole('img')
+      .evaluateAll((imgs) => imgs.map((i) => (i as HTMLImageElement).getAttribute('src') ?? ''));
+    for (const src of sources) expect(src).toContain(`/game/${version}/`);
+  },
+);
+
+Then('the player is told the run is on an older catalogue', async ({ page }) => {
+  await expect(
+    page.getByText(message('run.olderCatalogue', { version: '11.3.0', newest: '12.0.0' })),
+  ).toBeVisible();
+});
+
+Then('kits added since are not part of the run', async ({ page, world }) => {
+  const state = world.state as RunState;
+  await expect(page.locator('.run-conquered')).toHaveText(
+    message('run.conquered', { conquered: state.conquered, total: 160 }),
+  );
+  await expect(page.getByText(added)).toHaveCount(0);
 });
