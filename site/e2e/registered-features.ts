@@ -24,12 +24,7 @@ export const registrations: Registration[] = [
   { feature: 'release-gate/deploy-on-release.feature' },
   { feature: 'site-identity/logo-and-favicon.feature' },
   { feature: 'site-identity/theme-switch.feature' },
-  {
-    feature: 'site-identity/design-alignment.feature',
-    pending: {
-      'A shared run leads with a headline': 'inked-shared-run (is-o8k.3.3)',
-    },
-  },
+  { feature: 'site-identity/design-alignment.feature' },
   {
     feature: 'every-language/translate-interface.feature',
   },

@@ -3,7 +3,7 @@
 // it, so a pending scenario that somehow runs turns red with its reason instead of passing. The task
 // replaces its steps here with real ones and removes its scenarios from the pending list.
 
-import { Then, When } from '../fixtures';
+import { Given, Then, When } from '../fixtures';
 
 // Used as `Given('…', pending('<task> (<id>)'))`.
 export const pending = (task: string) => () => {
@@ -18,10 +18,5 @@ export const pendingWith =
     pending(task)();
   };
 
-const sharedRun = pending('inked-shared-run (is-o8k.3.3)');
-When(
-  'a visitor opens a link to a run with {int} kits conquered',
-  pendingWith('inked-shared-run (is-o8k.3.3)'),
-);
-Then('the page leads with a headline about the run', sharedRun);
-Then('its kits conquered, kits to go, lives and resets stand in one row', sharedRun);
+// No scenario is pending at the moment; these are what a task's pending steps are written with.
+void [Given, Then, When];

@@ -132,5 +132,9 @@
   "rules.endTitle": "Het einde",
   "log.markWin": "Winst",
   "log.markLoss": "Verlies",
-  "rules.sticker": "{number} · {title}"
+  "rules.sticker": "{number} · {title}",
+  "shared.statConquered": "Veroverde wapens",
+  "shared.statToGo": "Nog te gaan",
+  "shared.statLives": "Levens",
+  "shared.statResets": "Herstarts"
 }
