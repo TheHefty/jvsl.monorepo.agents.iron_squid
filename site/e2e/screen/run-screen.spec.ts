@@ -197,3 +197,53 @@ test('after a reset during a replay, the strip and the card match a fresh load',
   await expect(button(page, 'run.won')).toBeVisible();
   expect(await read()).toEqual(shown);
 });
+
+// A run saved before format 2 existed opens, plays on and is stored in format 2, its log starting
+// the day it was read (task run-log-format, failure 1).
+test('a run saved in format 1 loads, plays on, and is kept in format 2 with its log', async ({
+  page,
+}) => {
+  const { playRun, winsThenPlaying } = await import('../support/seed');
+  const played = playRun(winsThenPlaying(3));
+  // The same run as the site wrote it in format 1: no log, no log date.
+  const asFormat1 = (s: Record<string, unknown>) => {
+    const { log: _log, logSince: _since, previous, ...rest } = s;
+    void _log;
+    void _since;
+    return {
+      ...rest,
+      schema: 1,
+      ...(previous ? { previous: { ...(previous as Record<string, unknown>), schema: 1 } } : {}),
+    };
+  };
+  await page.addInitScript(
+    (record) => {
+      if (!sessionStorage.getItem('seeded')) {
+        localStorage.setItem('iron-squid:run', record);
+        sessionStorage.setItem('seeded', '1');
+      }
+    },
+    JSON.stringify({ revision: 1, state: asFormat1(played as unknown as Record<string, unknown>) }),
+  );
+  await page.goto('./en-US/');
+  await expect(
+    page.getByText(message('run.conquered', { conquered: 3, total: 160 }), { exact: true }),
+  ).toBeVisible();
+  await button(page, 'run.won').click();
+  await expect(
+    page.getByText(message('run.conquered', { conquered: 4, total: 160 }), { exact: true }),
+  ).toBeVisible();
+  const stored = JSON.parse(
+    (await page.evaluate(() => localStorage.getItem('iron-squid:run'))) ?? '{}',
+  );
+  expect(stored.state.schema).toBe(2);
+  expect(stored.state.log).toHaveLength(1);
+  expect(stored.state.log[0]).toMatchObject({ draw: 3, result: 'win' });
+  // The log starts when the run was read, not when it was started.
+  expect(stored.state.logSince).not.toBe(played.startedAt);
+  expect(Math.abs(Date.now() - Date.parse(stored.state.logSince))).toBeLessThan(60_000);
+  await page.reload();
+  await expect(
+    page.getByText(message('run.conquered', { conquered: 4, total: 160 }), { exact: true }),
+  ).toBeVisible();
+});

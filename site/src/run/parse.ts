@@ -2,7 +2,7 @@
 // not a run this site can play: an unknown format is never guessed into the current one, so a run
 // saved by an older or newer site is reported, not corrupted.
 import { gearSlots, type Catalogue } from '../catalogue/types';
-import type { RunState } from './engine';
+import type { LogEntry, RunState, Snapshot } from './engine';
 import { displayName } from './name';
 
 export type ParseResult =
@@ -36,19 +36,10 @@ const permutation = (v: unknown, of: string[], name: string) => {
   return v as string[];
 };
 
-function state(
-  v: unknown,
-  catalogues: Record<string, Catalogue>,
-  nested: boolean,
-): Omit<RunState, 'previous'> {
+function state(v: unknown, catalogues: Record<string, Catalogue>, schema: 1 | 2): Snapshot {
   if (!isObject(v)) throw new Refused('not-a-run', 'the run is not an object');
-  if (v.schema !== 1) {
-    if (nested) throw new Refused('not-a-run', 'the previous state is not format 1');
-    throw new Refused(
-      'unknown-schema',
-      `the run is in format ${String(v.schema)}; this site reads format 1`,
-    );
-  }
+  if (v.schema !== schema)
+    throw new Refused('not-a-run', `the previous state is not format ${schema}`);
   const version = v.catalogueVersion;
   const catalogue = typeof version === 'string' ? catalogues[version] : undefined;
   if (!catalogue)
@@ -84,7 +75,7 @@ function state(
     name = checked.name;
   }
   return {
-    schema: 1,
+    schema: 2,
     catalogueVersion: catalogue.version,
     ...(name === undefined ? {} : { name }),
     startedAt: v.startedAt,
@@ -101,22 +92,67 @@ function state(
 }
 
 // A broken previous state is a corrupted run, whatever is wrong with it.
-function previousState(v: unknown, catalogues: Record<string, Catalogue>) {
+function previousState(v: unknown, catalogues: Record<string, Catalogue>, schema: 1 | 2) {
   try {
-    return state(v, catalogues, true);
+    return state(v, catalogues, schema);
   } catch (e) {
     if (e instanceof Refused) throw new Refused('not-a-run', `the previous state: ${e.message}`);
     throw e;
   }
 }
 
-export function parseRun(input: unknown, catalogues: Record<string, Catalogue>): ParseResult {
+function logEntries(v: unknown, draws: number, matches: number): LogEntry[] {
+  if (!Array.isArray(v) || v.length > matches)
+    throw new Refused('not-a-run', 'the log is not a log');
+  return v.map((e: unknown, i) => {
+    const bad = () => new Refused('not-a-run', `log entry ${i} is not a result`);
+    if (!isObject(e)) throw bad();
+    const draw = count(e.draw, `log entry ${i} draw`, draws - 1);
+    const livesAfter = count(e.livesAfter, `log entry ${i} lives`);
+    const conqueredAfter = count(e.conqueredAfter, `log entry ${i} conquered`, draws);
+    if (typeof e.at !== 'string' || (e.result !== 'win' && e.result !== 'loss')) throw bad();
+    if (typeof e.replay !== 'boolean' || typeof e.reset !== 'boolean' || livesAfter < 1)
+      throw bad();
+    return {
+      at: e.at,
+      draw,
+      result: e.result,
+      livesAfter,
+      conqueredAfter,
+      replay: e.replay,
+      reset: e.reset,
+    };
+  });
+}
+
+// Formats 1 and 2 are read. Format 1 has no log: it is migrated, explicitly, to format 2 with an
+// empty log complete from `now`, the day it was read; nothing is invented for the matches before.
+export function parseRun(
+  input: unknown,
+  catalogues: Record<string, Catalogue>,
+  now: string = new Date().toISOString(),
+): ParseResult {
   try {
-    const run = state(input, catalogues, false);
+    if (!isObject(input)) throw new Refused('not-a-run', 'the run is not an object');
+    const schema = input.schema;
+    if (schema !== 1 && schema !== 2) {
+      throw new Refused(
+        'unknown-schema',
+        `the run is in format ${String(schema)}; this site reads formats 1 and 2`,
+      );
+    }
+    const core = state(input, catalogues, schema);
+    let log: LogEntry[] = [];
+    let logSince = now;
+    if (schema === 2) {
+      log = logEntries(input.log, core.order.kits.length, core.matches);
+      if (typeof input.logSince !== 'string')
+        throw new Refused('not-a-run', 'the run has no log date');
+      logSince = input.logSince;
+    }
     const previous =
-      isObject(input) && input.previous !== undefined
-        ? previousState(input.previous, catalogues)
-        : undefined;
+      input.previous !== undefined ? previousState(input.previous, catalogues, schema) : undefined;
+    const run: RunState = { ...core, log, logSince };
     return { ok: true, state: previous ? { ...run, previous } : run };
   } catch (e) {
     if (e instanceof Refused) return { ok: false, reason: e.reason, detail: e.message };

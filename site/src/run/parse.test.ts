@@ -3,6 +3,7 @@ import type { Catalogue } from '../catalogue/types';
 import { currentSet } from './engine';
 import catalogue from './fixtures/catalogue-0.0.1.json';
 import v1 from './fixtures/run-v1.json';
+import v2 from './fixtures/run-v2.json';
 import { parseRun } from './parse';
 
 const catalogues = { '0.0.1': catalogue as Catalogue };
@@ -28,11 +29,49 @@ describe('parseRun', () => {
   });
 
   it('refuses a format it does not know, rather than guessing a migration', () => {
-    expect(parseRun(with_({ schema: 2 }), catalogues)).toEqual({
+    expect(parseRun(with_({ schema: 3 }), catalogues)).toEqual({
       ok: false,
       reason: 'unknown-schema',
-      detail: 'the run is in format 2; this site reads format 1',
+      detail: 'the run is in format 3; this site reads formats 1 and 2',
     });
+  });
+
+  it('migrates format 1 explicitly: same run, an empty log complete from the day it was read', () => {
+    const result = parseRun(structuredClone(v1), catalogues, '2026-10-25T08:00:00.000Z');
+    expect(result).toMatchObject({
+      ok: true,
+      state: { schema: 2, log: [], logSince: '2026-10-25T08:00:00.000Z' },
+    });
+    if (result.ok) {
+      expect(result.state.startedAt).toBe(v1.startedAt);
+      expect(result.state.conquered).toBe(v1.conquered);
+      expect(result.state.previous && 'log' in result.state.previous).toBe(false);
+    }
+  });
+
+  // Format 2 is kept forever too, from the day it is first written.
+  it('reads a run saved in format 2, forever', () => {
+    const result = parseRun(structuredClone(v2), catalogues);
+    expect(result).toMatchObject({
+      ok: true,
+      state: { schema: 2, logSince: '2026-10-25T10:00:00.000Z' },
+    });
+    if (result.ok) expect(result.state.log).toEqual(v2.log);
+  });
+
+  it.each([
+    ['a log longer than the matches played', { ...structuredClone(v2), matches: 0 }],
+    [
+      'a log entry for a draw past the run',
+      { ...structuredClone(v2), log: [{ ...v2.log[0], draw: 3 }] },
+    ],
+    [
+      'a log entry with no result',
+      { ...structuredClone(v2), log: [{ ...v2.log[0], result: 'draw' }] },
+    ],
+    ['a format-2 run with no log date', { ...structuredClone(v2), logSince: undefined }],
+  ])('refuses %s', (_label, input) => {
+    expect(parseRun(input, catalogues)).toMatchObject({ ok: false, reason: 'not-a-run' });
   });
 
   it('refuses a run on a catalogue the site does not carry, naming it', () => {
