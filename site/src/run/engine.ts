@@ -213,3 +213,21 @@ export const isReplay = (s: RunState) => s.phase === 'playing' && s.cursor < s.c
 
 // Replays left before new draws, counting the one on screen: the fifth of 12 leaves 8.
 export const replaysRemaining = (s: RunState) => (isReplay(s) ? s.conquered - s.cursor : 0);
+
+// The end of a run (FR-21): every kit conquered. Only a win on a new draw raises the conquered count,
+// so a replay never ends a run, and a complete run is always on show after its final win, where no
+// result and no next set is accepted.
+export const isComplete = (s: RunState) => s.conquered === s.order.kits.length;
+
+// What the run took. Wins and losses are counted from the log; when the log does not cover the whole
+// run (a run migrated from format 1), `since` says from when, so a part is never shown as the whole.
+export function totals(s: RunState) {
+  const wins = s.log.filter((e) => e.result === 'win').length;
+  return {
+    matches: s.matches,
+    wins,
+    losses: s.log.length - wins,
+    resets: s.resets,
+    since: s.logSince > s.startedAt ? s.logSince : undefined,
+  };
+}

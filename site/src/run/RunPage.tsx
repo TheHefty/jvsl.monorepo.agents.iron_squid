@@ -8,9 +8,11 @@ import {
   reportLoss,
   replaysRemaining,
   reportWin,
+  isComplete,
   isReplay,
   startRun,
   undo,
+  totals,
   winsToNextLife,
   type RunState,
 } from './engine';
@@ -236,106 +238,113 @@ export function RunPage({ newestVersion }: { newestVersion: string }) {
           {notice}
         </p>
       )}
-      <section className="card set-card" aria-labelledby="set-heading">
-        <span className="sticker">
-          <FormattedMessage
-            id={
-              state.phase === 'conquered'
-                ? 'set.conquered'
-                : isReplay(state)
-                  ? 'set.replay'
-                  : 'set.playing'
-            }
-          />
-        </span>
-        <h2 id="set-heading" className="visually-hidden">
-          <FormattedMessage id="set.label" />
-        </h2>
-        <Piece version={catalogue.version} item={pieces.kit} kit>
-          <FormattedMessage
-            id="set.weaponNumber"
-            values={{ number: state.cursor + 1, total: state.order.kits.length }}
-          />
-        </Piece>
-        {isReplay(state) && (
-          <p className="replays-remaining">
-            {intl.formatMessage(
-              { id: 'set.replaysRemaining' },
-              { remaining: replaysRemaining(state) },
-            )}
-          </p>
-        )}
-        <div className="gear">
-          <Piece version={catalogue.version} item={pieces.head}>
-            <FormattedMessage id="set.head" />
+      {isComplete(state) ? (
+        <FinishCard state={state} onUndo={(event) => act(event, () => undo(state), announceSet)} />
+      ) : (
+        <section className="card set-card" aria-labelledby="set-heading">
+          <span className="sticker">
+            <FormattedMessage
+              id={
+                state.phase === 'conquered'
+                  ? 'set.conquered'
+                  : isReplay(state)
+                    ? 'set.replay'
+                    : 'set.playing'
+              }
+            />
+          </span>
+          <h2 id="set-heading" className="visually-hidden">
+            <FormattedMessage id="set.label" />
+          </h2>
+          <Piece version={catalogue.version} item={pieces.kit} kit>
+            <FormattedMessage
+              id="set.weaponNumber"
+              values={{ number: state.cursor + 1, total: state.order.kits.length }}
+            />
           </Piece>
-          <Piece version={catalogue.version} item={pieces.clothes}>
-            <FormattedMessage id="set.clothes" />
-          </Piece>
-          <Piece version={catalogue.version} item={pieces.shoes}>
-            <FormattedMessage id="set.shoes" />
-          </Piece>
-        </div>
-        <div className="actions">
-          {state.phase === 'playing' ? (
-            <>
+          {isReplay(state) && (
+            <p className="replays-remaining">
+              {intl.formatMessage(
+                { id: 'set.replaysRemaining' },
+                { remaining: replaysRemaining(state) },
+              )}
+            </p>
+          )}
+          <div className="gear">
+            <Piece version={catalogue.version} item={pieces.head}>
+              <FormattedMessage id="set.head" />
+            </Piece>
+            <Piece version={catalogue.version} item={pieces.clothes}>
+              <FormattedMessage id="set.clothes" />
+            </Piece>
+            <Piece version={catalogue.version} item={pieces.shoes}>
+              <FormattedMessage id="set.shoes" />
+            </Piece>
+          </div>
+          <div className="actions">
+            {state.phase === 'playing' ? (
+              <>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={(event) =>
+                    act(
+                      event,
+                      () => reportWin(state, { step: state.step, at: new Date().toISOString() }),
+                      (after) =>
+                        isComplete(after)
+                          ? setAnnouncement(intl.formatMessage({ id: 'finish.announce' }))
+                          : announceResult('announce.win', after),
+                    )
+                  }
+                >
+                  <FormattedMessage id="run.won" />
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={(event) =>
+                    act(
+                      event,
+                      () => reportLoss(state, { step: state.step, at: new Date().toISOString() }),
+                      (after) => {
+                        // A loss on the last life resets the run (FR-18); say so on the page too.
+                        if (after.resets > state.resets) {
+                          announceResult('announce.reset', after);
+                          setNotice(intl.formatMessage({ id: 'run.resetNotice' }));
+                        } else {
+                          announceResult('announce.loss', after);
+                        }
+                      },
+                    )
+                  }
+                >
+                  <FormattedMessage id="run.lost" />
+                </button>
+              </>
+            ) : (
               <button
                 type="button"
                 className="btn btn-primary"
                 onClick={(event) =>
-                  act(
-                    event,
-                    () => reportWin(state, { step: state.step, at: new Date().toISOString() }),
-                    (after) => announceResult('announce.win', after),
-                  )
+                  act(event, () => nextSet(state, { step: state.step }), announceSet)
                 }
               >
-                <FormattedMessage id="run.won" />
+                <FormattedMessage id="run.next" />
               </button>
+            )}
+            {state.previous && (
               <button
                 type="button"
-                className="btn btn-secondary"
-                onClick={(event) =>
-                  act(
-                    event,
-                    () => reportLoss(state, { step: state.step, at: new Date().toISOString() }),
-                    (after) => {
-                      // A loss on the last life resets the run (FR-18); say so on the page too.
-                      if (after.resets > state.resets) {
-                        announceResult('announce.reset', after);
-                        setNotice(intl.formatMessage({ id: 'run.resetNotice' }));
-                      } else {
-                        announceResult('announce.loss', after);
-                      }
-                    },
-                  )
-                }
+                className="btn btn-ghost"
+                onClick={(event) => act(event, () => undo(state), announceSet)}
               >
-                <FormattedMessage id="run.lost" />
+                <FormattedMessage id="run.undo" />
               </button>
-            </>
-          ) : (
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={(event) =>
-                act(event, () => nextSet(state, { step: state.step }), announceSet)
-              }
-            >
-              <FormattedMessage id="run.next" />
-            </button>
-          )}
-          {state.previous && (
-            <button
-              type="button"
-              className="btn btn-ghost"
-              onClick={(event) => act(event, () => undo(state), announceSet)}
-            >
-              <FormattedMessage id="run.undo" />
-            </button>
-          )}
-        </div>
-      </section>
+            )}
+          </div>
+        </section>
+      )}
       <RunLog state={state} catalogue={catalogue} />
       <NewRunButton
         label="run.newRun"
@@ -537,5 +546,49 @@ function RunLog({ state, catalogue }: { state: RunState; catalogue: Catalogue })
         </ol>
       )}
     </details>
+  );
+}
+
+// The end of a run (FR-21): what it took, and nothing more to play. Wins and losses come from the log;
+// when the log began after the run did, the card says so rather than show a part as the whole.
+function FinishCard({
+  state,
+  onUndo,
+}: {
+  state: RunState;
+  onUndo: (event: React.MouseEvent) => void;
+}) {
+  const intl = useIntl();
+  const t = totals(state);
+  return (
+    <section className="card set-card finish-card" aria-labelledby="finish-heading">
+      <span className="sticker">
+        <FormattedMessage id="set.conquered" />
+      </span>
+      <h2 id="finish-heading" className="finish-title">
+        <FormattedMessage id="finish.title" />
+      </h2>
+      <p>
+        {intl.formatMessage(
+          { id: 'finish.summary' },
+          { matches: t.matches, wins: t.wins, losses: t.losses, resets: t.resets },
+        )}
+      </p>
+      {t.since && (
+        <p className="field-hint">
+          {intl.formatMessage(
+            { id: 'finish.since' },
+            { date: intl.formatDate(t.since, { dateStyle: 'long' }) },
+          )}
+        </p>
+      )}
+      {state.previous && (
+        <div className="actions">
+          <button type="button" className="btn btn-ghost" onClick={onUndo}>
+            <FormattedMessage id="run.undo" />
+          </button>
+        </div>
+      )}
+    </section>
   );
 }
