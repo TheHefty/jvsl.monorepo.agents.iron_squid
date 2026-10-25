@@ -104,6 +104,8 @@ export function reportWin(s: RunState, action: { step: number; at: string }): Ru
     ...s,
     conquered: s.cursor === s.conquered ? s.conquered + 1 : s.conquered,
     phase: 'conquered',
+    // Every 10th win since the run started or was reset earns a life (FR-16); replays count.
+    lives: (s.winsSinceReset + 1) % 10 === 0 ? s.lives + 1 : s.lives,
     winsSinceReset: s.winsSinceReset + 1,
     matches: s.matches + 1,
     step: s.step + 1,
@@ -134,3 +136,29 @@ export function undo(s: RunState): RunState {
   if (!s.previous) throw new Error('run: nothing to undo');
   return { ...s.previous, step: s.step + 1 } as RunState;
 }
+
+// A loss costs a life and the same set is played again (FR-17). On the last life the run resets
+// (FR-18): back to the first conquered set with 1 life, and what was conquered stays conquered. The
+// order is fixed and the conquered kits are its prefix, so the replay is the cursor walking from 0
+// again, each set with the gear it was won with.
+export function reportLoss(s: RunState, action: { step: number; at: string }): RunState {
+  fresh(s, action);
+  if (s.phase !== 'playing')
+    throw new Error('run: a loss is reported while playing, not after a win');
+  const previous = withoutPrevious(s);
+  if (s.lives > 1)
+    return { ...s, lives: s.lives - 1, matches: s.matches + 1, step: s.step + 1, previous };
+  return {
+    ...s,
+    cursor: 0,
+    lives: 1,
+    winsSinceReset: 0,
+    resets: s.resets + 1,
+    matches: s.matches + 1,
+    step: s.step + 1,
+    previous,
+  };
+}
+
+// How many more wins earn the next life (FR-22).
+export const winsToNextLife = (s: RunState) => 10 - (s.winsSinceReset % 10);
