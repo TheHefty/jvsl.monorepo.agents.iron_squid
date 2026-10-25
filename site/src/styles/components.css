@@ -341,3 +341,26 @@ dialog::backdrop {
   font-weight: 600;
   color: var(--color-accent-text);
 }
+
+/* — the run log — */
+.run-log {
+  margin-block-end: var(--space-6);
+}
+
+.run-log summary {
+  cursor: pointer;
+  font-weight: var(--font-weight-heading);
+}
+
+.run-log ol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+  padding-inline-start: var(--space-8);
+}
+
+.run-log time {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}

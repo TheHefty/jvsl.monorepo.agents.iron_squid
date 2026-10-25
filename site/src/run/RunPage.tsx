@@ -336,6 +336,7 @@ export function RunPage({ newestVersion }: { newestVersion: string }) {
           )}
         </div>
       </section>
+      <RunLog state={state} catalogue={catalogue} />
       <NewRunButton
         label="run.newRun"
         onConfirm={() => {
@@ -490,5 +491,51 @@ function NewRunButton({ label, onConfirm }: { label: string; onConfirm: () => vo
         </div>
       </dialog>
     </>
+  );
+}
+
+// The run log (FR-24): every result, newest first, each one sentence a screen reader reads whole, with
+// the date written for the page's locale. Collapsed by default, so the set stays first on screen.
+function RunLog({ state, catalogue }: { state: RunState; catalogue: Catalogue }) {
+  const intl = useIntl();
+  const kitName = (draw: number) => nameOf(findItem(catalogue.kits, state.order.kits[draw] ?? ''));
+  const title = intl.formatMessage({ id: 'log.title' });
+  return (
+    <details className="run-log">
+      <summary>{intl.formatMessage({ id: 'log.summary' }, { count: state.log.length })}</summary>
+      {state.logSince > state.startedAt && (
+        <p className="field-hint">
+          {intl.formatMessage(
+            { id: 'log.since' },
+            { date: intl.formatDate(state.logSince, { dateStyle: 'long' }) },
+          )}
+        </p>
+      )}
+      {state.log.length === 0 ? (
+        <p>{intl.formatMessage({ id: 'log.empty' })}</p>
+      ) : (
+        <ol aria-label={title} reversed>
+          {state.log
+            .map((entry, i) => (
+              <li key={i}>
+                {intl.formatMessage(
+                  { id: 'log.entry' },
+                  {
+                    replay: String(entry.replay),
+                    result: entry.result,
+                    kit: kitName(entry.draw),
+                    conquered: entry.conqueredAfter,
+                    total: state.order.kits.length,
+                    lives: intl.formatMessage({ id: 'run.lives' }, { lives: entry.livesAfter }),
+                    reset: String(entry.reset),
+                  },
+                )}{' '}
+                <time dateTime={entry.at}>{intl.formatDate(entry.at, { dateStyle: 'long' })}</time>
+              </li>
+            ))
+            .reverse()}
+        </ol>
+      )}
+    </details>
   );
 }

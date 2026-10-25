@@ -49,5 +49,10 @@
   "announce.reset": "Lost your last life with {kit}. The run starts again from the first set you conquered, with 1 life.",
   "set.replay": "Replay",
   "set.replaysRemaining": "{remaining, plural, one {# replay} other {# replays}} before new draws",
-  "set.announceReplay": "Replay: {kit}, with {head}, {clothes} and {shoes}."
+  "set.announceReplay": "Replay: {kit}, with {head}, {clothes} and {shoes}.",
+  "log.title": "Run log",
+  "log.since": "This log starts on {date}; results before that day were not recorded.",
+  "log.empty": "No results yet.",
+  "log.entry": "{replay, select, true {Replay. } other {}}{result, select, win {Won with {kit}: {conquered} of {total} kits conquered, {lives} left.} other {Lost with {kit}: {lives} left.{reset, select, true { The run was reset to the first set conquered.} other {}}}}",
+  "log.summary": "Run log ({count})"
 }
