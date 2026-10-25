@@ -410,8 +410,17 @@ function RunView({ newestVersion, namesLoaded }: { newestVersion: string; namesL
   );
 }
 
-function Hero({ children }: { children: React.ReactNode }) {
-  return <section className="ink-strip">{children}</section>;
+// The ink strip at the top of a page: several splats of our own drawing, decorative, behind the
+// content (design-alignment, FR-62).
+export function Hero({ children }: { children: React.ReactNode }) {
+  return (
+    <section className="ink-strip">
+      {[1, 2, 3].map((n) => (
+        <span key={n} className={`splat splat-${n}`} aria-hidden="true" />
+      ))}
+      {children}
+    </section>
+  );
 }
 
 function Piece({
@@ -430,12 +439,15 @@ function Piece({
   const name = names(version, item.id);
   return (
     <figure className={kit ? 'piece piece-kit' : 'piece'}>
-      <img
-        src={imageUrl(version, item.image)}
-        alt={name}
-        width={kit ? 128 : 72}
-        height={kit ? 128 : 72}
-      />
+      {kit ? (
+        // The kit sits on a splat that tilts as it lands, still under reduced motion (NFR-A7). Keyed
+        // by the kit, so every new draw lands again.
+        <span key={item.id} className="kit-splat">
+          <img src={imageUrl(version, item.image)} alt={name} width={128} height={128} />
+        </span>
+      ) : (
+        <img src={imageUrl(version, item.image)} alt={name} width={72} height={72} />
+      )}
       <figcaption>
         <span className="piece-label tag">{children}</span>
         <span className="piece-name">{name}</span>
@@ -480,9 +492,21 @@ function StartForm({ onStart }: { onStart: (name: string | undefined) => void })
           <FormattedMessage id="rules.title" />
         </h2>
         <ol>
-          {['rules.roll', 'rules.win', 'rules.lives', 'rules.reset', 'rules.end'].map((id) => (
-            <li key={id} className="card">
-              <FormattedMessage id={id} />
+          {(['roll', 'win', 'lives', 'reset', 'end'] as const).map((rule, i) => (
+            // The rule's label is the tilted sticker; the card and its text stay straight.
+            <li key={rule} className="card">
+              <span className="sticker">
+                <FormattedMessage
+                  id="rules.sticker"
+                  values={{
+                    number: String(i + 1).padStart(2, '0'),
+                    title: <FormattedMessage id={`rules.${rule}Title`} />,
+                  }}
+                />
+              </span>
+              <p>
+                <FormattedMessage id={`rules.${rule}`} />
+              </p>
             </li>
           ))}
         </ol>
@@ -584,6 +608,15 @@ function RunLog({ state, catalogue }: { state: RunState; catalogue: Catalogue })
           {state.log
             .map((entry, i) => (
               <li key={i}>
+                {/* Read as part of the sentence after it, which already says the result. */}
+                <span
+                  className={`log-mark ${entry.result === 'win' ? 'log-mark-win' : 'log-mark-loss'}`}
+                  aria-hidden="true"
+                >
+                  {intl.formatMessage({
+                    id: entry.result === 'win' ? 'log.markWin' : 'log.markLoss',
+                  })}
+                </span>{' '}
                 {intl.formatMessage(
                   { id: 'log.entry' },
                   {

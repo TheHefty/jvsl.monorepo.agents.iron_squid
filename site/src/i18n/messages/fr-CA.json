@@ -124,5 +124,13 @@
   "theme.label": "Thème",
   "theme.light": "Clair",
   "theme.dark": "Sombre",
-  "privacy.item.theme": "Le thème clair ou sombre que vous choisissez dans l’en-tête."
+  "privacy.item.theme": "Le thème clair ou sombre que vous choisissez dans l’en-tête.",
+  "rules.rollTitle": "Le tirage",
+  "rules.winTitle": "La victoire",
+  "rules.livesTitle": "Les vies",
+  "rules.resetTitle": "La remise à zéro",
+  "rules.endTitle": "La fin",
+  "log.markWin": "Victoire",
+  "log.markLoss": "Défaite",
+  "rules.sticker": "{number} · {title}"
 }

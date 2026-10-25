@@ -124,5 +124,13 @@
   "theme.label": "テーマ",
   "theme.light": "ライト",
   "theme.dark": "ダーク",
-  "privacy.item.theme": "ヘッダーで選んだライトまたはダークのテーマ。"
+  "privacy.item.theme": "ヘッダーで選んだライトまたはダークのテーマ。",
+  "rules.rollTitle": "抽選",
+  "rules.winTitle": "勝利",
+  "rules.livesTitle": "ライフ",
+  "rules.resetTitle": "リセット",
+  "rules.endTitle": "達成",
+  "log.markWin": "勝ち",
+  "log.markLoss": "負け",
+  "rules.sticker": "{number} · {title}"
 }

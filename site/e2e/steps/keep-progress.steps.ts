@@ -211,7 +211,10 @@ Given(
 
 Given(
   'the site has since been rebuilt from a newer catalogue version',
-  async ({ page, baseURL }) => {
+  async ({ page, baseURL, $test }) => {
+    // A whole build of the site, not one page: under load it once ran past the default 30 s and
+    // failed a run for nothing, which on the release would hold the release.
+    $test.setTimeout(120_000);
     // 11.3.0 as published, and an invented 12.0.0: the same data with one kit added, whose image is
     // one already locked, so the build fetches nothing new.
     const dir = tempDir('catalogue-');

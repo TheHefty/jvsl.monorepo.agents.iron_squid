@@ -103,7 +103,8 @@ Then("every text on every page is in that locale's language", async ({ page, wor
 
 // Words a translation may keep as they are in en-US: the site's name and the catalogue's own data,
 // and words a language uses as English writes them.
-const sameInEveryLanguage = new Set(['site.name', 'translation.status']);
+// rules.sticker is a format, "{number} · {title}", with no words of its own.
+const sameInEveryLanguage = new Set(['site.name', 'translation.status', 'rules.sticker']);
 const sameIn: Record<string, string[]> = {
   // "Privacy" is the word Italian and Dutch use.
   'it-IT': ['footer.privacy', 'privacy.title'],

@@ -1,5 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 import { Given, Then, When } from '../fixtures';
+import { messageIn } from '../support/messages';
 import { playRun, seedRun, winsThenPlaying } from '../support/seed';
 
 // The angle a transform turns or skews by, in degrees, from its computed matrix.
@@ -130,4 +131,103 @@ Then('nothing on the page needs scrolling sideways', async ({ page, world }) => 
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
     world.width as number,
   );
+});
+
+When('a visitor opens the home page', async ({ page }) => {
+  await page.goto('./en-US/');
+  await expect(page.locator('.ink-strip')).toBeVisible();
+});
+
+When('the visitor opens the home page', async ({ page }) => {
+  await page.goto('./en-US/');
+  await expect(page.locator('.ink-strip')).toBeVisible();
+});
+
+Then('the ink strip at the top carries several splats', async ({ page }) => {
+  // Shapes of their own, decorative: hidden from screen readers.
+  const splats = page.locator('.ink-strip .splat');
+  expect(await splats.count()).toBeGreaterThanOrEqual(3);
+  for (const hidden of await splats.evaluateAll((els) =>
+    els.map((e) => e.getAttribute('aria-hidden')),
+  ))
+    expect(hidden).toBe('true');
+});
+
+Then('its lower edge is slanted', async ({ page }) => {
+  const clip = await page.locator('.ink-strip').evaluate((el) => getComputedStyle(el).clipPath);
+  // A polygon whose two bottom corners stand at different heights.
+  const points = (/polygon\((.*)\)/.exec(clip)?.[1] ?? '').split(',').map((p) => p.trim());
+  expect(points.length, clip).toBe(4);
+  expect(points[2]?.split(' ')[1]).not.toBe(points[3]?.split(' ')[1]);
+});
+
+Then("the kit's name is in uppercase display type", async ({ page }) => {
+  const style = await page.locator('.piece-kit .piece-name').evaluate((el) => {
+    const s = getComputedStyle(el);
+    const body = parseFloat(getComputedStyle(document.body).fontSize);
+    return {
+      transform: s.textTransform,
+      size: parseFloat(s.fontSize) / body,
+      weight: Number(s.fontWeight),
+    };
+  });
+  expect(style.transform).toBe('uppercase');
+  expect(style.size, 'times the body text').toBeGreaterThanOrEqual(1.5);
+  expect(style.weight).toBeGreaterThanOrEqual(500);
+});
+
+Then("the challenge's rules are shown as tilted stickers, in two columns", async ({ page }) => {
+  const rules = page.locator('.rules li');
+  await expect(rules).toHaveCount(5);
+  const columns = await page
+    .locator('.rules ol')
+    .evaluate((el) => getComputedStyle(el).gridTemplateColumns.split(' ').length);
+  expect(columns).toBe(2);
+  const tilts = (await transformsOf(page, '.rules li .sticker')).map((t) => angles(t).rotate);
+  expect(tilts).toHaveLength(5);
+  for (const r of tilts) expect(Math.abs(r)).toBeGreaterThanOrEqual(0.5);
+});
+
+Given('a run with a win and a loss', async ({ page }) => {
+  await seedRun(page, playRun([...winsThenPlaying(1), 'loss']));
+});
+
+Then('the win is marked with an ink blot and the loss with an outlined mark', async ({ page }) => {
+  const marks = await page.locator('.run-log li .log-mark').evaluateAll((els) =>
+    els.map((el) => {
+      const s = getComputedStyle(el);
+      return { fill: s.backgroundColor, line: parseFloat(s.borderTopWidth) };
+    }),
+  );
+  // Newest first: the loss, then the win.
+  const [loss, win] = marks;
+  expect(win?.fill).not.toBe('rgba(0, 0, 0, 0)');
+  expect(loss?.fill).toBe('rgba(0, 0, 0, 0)');
+  expect(loss?.line).toBeGreaterThan(0);
+});
+
+Then('each mark says in words whether it was a win or a loss', async ({ page }) => {
+  await expect(page.locator('.run-log li .log-mark')).toHaveText([
+    messageIn('en-US', 'log.markLoss'),
+    messageIn('en-US', 'log.markWin'),
+  ]);
+});
+
+Given('a device that asks for reduced motion', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+});
+
+When('a player is given a new set', async ({ page }) => {
+  await seedRun(page, playRun(winsThenPlaying(1)));
+  await page.getByRole('button', { name: messageIn('en-US', 'run.won') }).click();
+  await page.getByRole('button', { name: messageIn('en-US', 'run.next') }).click();
+});
+
+Then("the kit's splat does not move", async ({ page }) => {
+  const splat = page.locator('.kit-splat');
+  await expect(splat).toBeVisible();
+  // No animation is set at all: whether one is running at this instant depends on timing, since
+  // a landing lasts under half a second.
+  expect(await splat.evaluate((el) => getComputedStyle(el).animationName)).toBe('none');
+  expect(await splat.evaluate((el) => el.getAnimations().length)).toBe(0);
 });

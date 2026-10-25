@@ -124,5 +124,13 @@
   "theme.label": "Design",
   "theme.light": "Hell",
   "theme.dark": "Dunkel",
-  "privacy.item.theme": "Das helle oder dunkle Design, das du in der Kopfzeile wählst."
+  "privacy.item.theme": "Das helle oder dunkle Design, das du in der Kopfzeile wählst.",
+  "rules.rollTitle": "Die Ziehung",
+  "rules.winTitle": "Der Sieg",
+  "rules.livesTitle": "Leben",
+  "rules.resetTitle": "Der Neustart",
+  "rules.endTitle": "Das Ende",
+  "log.markWin": "Sieg",
+  "log.markLoss": "Niederlage",
+  "rules.sticker": "{number} · {title}"
 }

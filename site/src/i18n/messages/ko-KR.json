@@ -124,5 +124,13 @@
   "theme.label": "테마",
   "theme.light": "라이트",
   "theme.dark": "다크",
-  "privacy.item.theme": "헤더에서 고른 라이트 또는 다크 테마."
+  "privacy.item.theme": "헤더에서 고른 라이트 또는 다크 테마.",
+  "rules.rollTitle": "추첨",
+  "rules.winTitle": "승리",
+  "rules.livesTitle": "목숨",
+  "rules.resetTitle": "초기화",
+  "rules.endTitle": "끝",
+  "log.markWin": "승",
+  "log.markLoss": "패",
+  "rules.sticker": "{number} · {title}"
 }

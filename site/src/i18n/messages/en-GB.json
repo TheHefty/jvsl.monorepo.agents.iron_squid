@@ -124,5 +124,13 @@
   "theme.label": "Theme",
   "theme.light": "Light",
   "theme.dark": "Dark",
-  "privacy.item.theme": "The light or dark theme you choose in the header."
+  "privacy.item.theme": "The light or dark theme you choose in the header.",
+  "rules.rollTitle": "The roll",
+  "rules.winTitle": "The win",
+  "rules.livesTitle": "Lives",
+  "rules.resetTitle": "The reset",
+  "rules.endTitle": "The end",
+  "log.markWin": "Win",
+  "log.markLoss": "Loss",
+  "rules.sticker": "{number} · {title}"
 }
