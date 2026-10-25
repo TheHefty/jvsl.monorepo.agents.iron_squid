@@ -1,8 +1,8 @@
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { tempDir } from '../support/temp';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import type { AddressInfo } from 'node:net';
-import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { expect } from '@playwright/test';
 import type { Catalogue, Item } from '../../src/catalogue/types';
@@ -60,7 +60,7 @@ async function badImage(serve: 'altered' | 'missing') {
   });
   await new Promise<void>((r) => server.listen(0, r));
   const base = `http://localhost:${(server.address() as AddressInfo).port}/`;
-  const dir = mkdtempSync(join(tmpdir(), 'catalogue-'));
+  const dir = tempDir('catalogue-');
   const item = (id: string, image: string) => ({ id, image });
   const c: Catalogue = {
     version: '0.0.1',
@@ -93,9 +93,9 @@ async function badImage(serve: 'altered' | 'missing') {
   buildState.env = {
     CATALOGUE_DIR: dir,
     DATAMINE_BASE_URL: base,
-    GAME_IMAGES_CACHE: mkdtempSync(join(tmpdir(), 'cache-')),
-    BUILD_OUT_DIR: mkdtempSync(join(tmpdir(), 'build-')),
-    PUBLIC_DIR: mkdtempSync(join(tmpdir(), 'public-')),
+    GAME_IMAGES_CACHE: tempDir('cache-'),
+    BUILD_OUT_DIR: tempDir('build-'),
+    PUBLIC_DIR: tempDir('public-'),
   };
   buildState.after = () => new Promise<void>((r) => server.close(() => r()));
   buildState.expected = {

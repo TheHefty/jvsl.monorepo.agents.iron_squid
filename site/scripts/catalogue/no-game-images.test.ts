@@ -1,6 +1,6 @@
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { tempDir } from '../../e2e/support/temp';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { sha256 } from './fetch';
@@ -9,7 +9,7 @@ import { trackedGameImages } from './no-game-images';
 // A repository where one tracked file has the bytes of a locked image, as if dist/ or public/game/
 // had been committed by mistake (task game-images, failure 3).
 function repo(withImage: boolean) {
-  const dir = mkdtempSync(join(tmpdir(), 'repo-'));
+  const dir = tempDir('repo-');
   const git = (...args: string[]) => execFileSync('git', args, { cwd: dir });
   git('init', '-q');
   const image = Buffer.from('bytes of a locked image');

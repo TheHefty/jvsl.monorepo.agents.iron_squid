@@ -1,5 +1,5 @@
-import { mkdtempSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { tempDir } from '../e2e/support/temp';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { emitPages } from './emit-pages';
@@ -11,7 +11,7 @@ const shell = `<!doctype html><html lang="x"><head><meta charset="UTF-8" /><titl
 <body><div id="root"></div></body></html>`;
 
 function build(basePath = '/repo/') {
-  const dist = mkdtempSync(join(tmpdir(), 'dist-'));
+  const dist = tempDir('dist-');
   writeFileSync(join(dist, 'index.html'), shell);
   emitPages({
     rootScript: 'location.replace("/repo/ja-JP/");',
@@ -104,7 +104,7 @@ describe('emitPages', () => {
   });
 
   it('refuses a dist without a built index.html', () => {
-    const dist = mkdtempSync(join(tmpdir(), 'dist-'));
+    const dist = tempDir('dist-');
     expect(() =>
       emitPages({
         distDir: dist,

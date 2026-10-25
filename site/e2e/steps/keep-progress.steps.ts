@@ -1,6 +1,6 @@
-import { cpSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { cpSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { tempDir } from '../support/temp';
 import type { AddressInfo } from 'node:net';
-import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { expect, type Page } from '@playwright/test';
 import { IntlMessageFormat } from 'intl-messageformat';
@@ -214,7 +214,7 @@ Given(
   async ({ page, baseURL }) => {
     // 11.3.0 as published, and an invented 12.0.0: the same data with one kit added, whose image is
     // one already locked, so the build fetches nothing new.
-    const dir = mkdtempSync(join(tmpdir(), 'catalogue-'));
+    const dir = tempDir('catalogue-');
     cpSync('src/catalogue/11.3.0', join(dir, '11.3.0'), { recursive: true });
     const newer = JSON.parse(
       readFileSync('src/catalogue/11.3.0/catalogue.json', 'utf8'),
@@ -234,10 +234,10 @@ Given(
     }
     writeFileSync(join(dir, newer.version, 'catalogue.json'), JSON.stringify(newer));
     cpSync('src/catalogue/11.3.0/images.lock.json', join(dir, newer.version, 'images.lock.json'));
-    const out = mkdtempSync(join(tmpdir(), 'build-'));
+    const out = tempDir('build-');
     const built = await run('npm', ['run', 'build'], {
       CATALOGUE_DIR: dir,
-      PUBLIC_DIR: mkdtempSync(join(tmpdir(), 'public-')),
+      PUBLIC_DIR: tempDir('public-'),
       BUILD_OUT_DIR: out,
     });
     expect(built.status, built.output).toBe(0);

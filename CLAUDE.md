@@ -105,3 +105,7 @@ TypeScript strict, react-intl. From `site/`:
   `site/e2e/steps/pending.steps.ts` and fail on purpose, naming the task, if they ever run. Every scenario runs under the guard in
   `site/e2e/fixtures.ts`, which fails it on any off-site request, CSP violation, missing file of the
   site's own or WCAG 2.2 A/AA violation.
+- **A test's temporary folder comes from `tempDir` (or `suiteTempDir`) in `site/e2e/support/temp.ts`**,
+  never `mkdtempSync`: it is removed when the test ends, passed or failed. In the agent container
+  `/tmp` is memory, and folders left behind once filled it until the kernel killed the browser
+  (debt is-m2n). A unit test refuses `mkdtempSync` anywhere else.

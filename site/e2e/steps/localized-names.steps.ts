@@ -1,5 +1,5 @@
-import { cpSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { cpSync, readFileSync, writeFileSync } from 'node:fs';
+import { tempDir } from '../support/temp';
 import { join } from 'node:path';
 import { expect, type Page } from '@playwright/test';
 import type { Catalogue } from '../../src/catalogue/types';
@@ -108,7 +108,7 @@ Then("the run's kits and gear are shown with their Japanese names", async ({ wor
 
 Given('game data in which a kit has no name in one locale', async () => {
   // The site's catalogue as generated, with one kit's Korean name removed, built elsewhere.
-  const dir = mkdtempSync(join(tmpdir(), 'catalogue-'));
+  const dir = tempDir('catalogue-');
   cpSync('src/catalogue', dir, { recursive: true });
   const file = join(dir, version, 'names', 'ko-KR.json');
   const ko = JSON.parse(readFileSync(file, 'utf8')) as NamesFile;
@@ -122,8 +122,8 @@ Given('game data in which a kit has no name in one locale', async () => {
   );
   buildState.env = {
     CATALOGUE_DIR: dir,
-    BUILD_OUT_DIR: mkdtempSync(join(tmpdir(), 'build-')),
-    PUBLIC_DIR: mkdtempSync(join(tmpdir(), 'public-')),
+    BUILD_OUT_DIR: tempDir('build-'),
+    PUBLIC_DIR: tempDir('public-'),
   };
   buildState.expected = { file: kit, digest: '', address: '' };
 });

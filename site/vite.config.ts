@@ -32,5 +32,6 @@ export default defineConfig({
   test: {
     include: ['src/**/*.test.{ts,tsx}', 'scripts/**/*.test.ts', 'e2e/support/**/*.test.ts'],
     environment: 'node',
+    setupFiles: ['e2e/support/temp.vitest-setup.ts'],
   },
 });
