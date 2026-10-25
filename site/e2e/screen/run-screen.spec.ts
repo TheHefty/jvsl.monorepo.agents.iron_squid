@@ -147,3 +147,31 @@ test('a display name is shown as text, never as markup', async ({ page }) => {
   await expect(page.getByRole('heading', { name: '<b>Ivo</b>', exact: true })).toBeVisible();
   expect(await page.locator('h1 b').count()).toBe(0);
 });
+
+// The numbers on screen are the run's, not a count kept by the page (task report-screen, failure
+// 2): after a loss, an undo and a reset, the strip says what a fresh load of the same run says.
+test('after a loss, an undo and a reset, the strip matches a fresh load of the run', async ({
+  page,
+}) => {
+  const { playRun, seedRun, winsThenPlaying } = await import('../support/seed');
+  await seedRun(page, playRun(winsThenPlaying(12)));
+  const strip = page.locator('.ink-strip');
+  const freshly = async () => {
+    const shown = (await strip.innerText()).trim();
+    await page.reload();
+    await expect(button(page, 'run.won').or(button(page, 'run.next'))).toBeVisible();
+    expect((await strip.innerText()).trim()).toBe(shown);
+  };
+  await expect(button(page, 'run.won')).toBeVisible();
+  await button(page, 'run.lost').click();
+  await expect(page.getByRole('list', { name: message('run.lives', { lives: 1 }) })).toBeVisible();
+  await freshly();
+  await button(page, 'run.undo').click();
+  await expect(page.getByRole('list', { name: message('run.lives', { lives: 2 }) })).toBeVisible();
+  await freshly();
+  await button(page, 'run.lost').click();
+  await button(page, 'run.lost').click();
+  await expect(page.getByText(message('run.resets', { resets: 1 }), { exact: true })).toBeVisible();
+  await expect(page.getByText(message('run.resetNotice'))).toBeVisible();
+  await freshly();
+});
