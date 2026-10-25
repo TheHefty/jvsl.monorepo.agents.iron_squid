@@ -1,4 +1,5 @@
 {
+  "translation.status": "reviewed",
   "site.name": "Iron Squid",
   "home.tagline": "Win with every weapon in Splatoon 3. Lose your last life, and win them all again.",
   "root.continue": "Continue to Iron Squid",
@@ -84,9 +85,9 @@
   "privacy.issues": "Open an issue",
   "privacy.privateReport": "Send a private report",
   "terms.title": "Terms of use",
-  "terms.what": "Iron Squid is a free fan project that runs a Splatoon 3 challenge in your browser. It is played on the honour system: the site cannot see your matches, and keeps the results you report.",
+  "terms.what": "Iron Squid is a free fan project that runs a Splatoon 3 challenge in your browser. It is played on the honor system: the site cannot see your matches, and keeps the results you report.",
   "terms.warranty": "The site is offered as it is, with no warranty. A run lives in your browser and is lost if your browser's data is cleared.",
-  "terms.licence": "The site's code is under the MIT licence. Splatoon, its names and its images belong to Nintendo and are not covered by that licence.",
+  "terms.licence": "The site's code is under the MIT license. Splatoon, its names and its images belong to Nintendo and are not covered by that license.",
   "terms.data": "What the site keeps, and where, is in the privacy notice.",
   "terms.changes": "These terms may change; the version on this page is the one that applies.",
   "run.export": "Export my run",
@@ -114,5 +115,6 @@
   "share.share": "Share",
   "share.copied": "Link copied. Anyone who opens it sees your run as it is now.",
   "share.copyByHand": "Copy this link to share your run:",
-  "share.title": "My Iron Squid run"
+  "share.title": "My Iron Squid run",
+  "translation.unreviewed": "This translation has not been reviewed by a fluent speaker yet."
 }

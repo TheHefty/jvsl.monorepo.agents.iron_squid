@@ -3,6 +3,7 @@ import { expect, type APIRequestContext, type Page } from '@playwright/test';
 import { IntlMessageFormat } from 'intl-messageformat';
 import { links } from '../../src/notices/links';
 import { Given, Then, When } from '../fixtures';
+import { localeOfPage, messageIn } from '../support/messages';
 import { pagesOfBuild } from '../support/pages';
 
 const catalogue = JSON.parse(readFileSync('src/i18n/messages/en-US.json', 'utf8')) as Record<
@@ -15,7 +16,12 @@ const message = (id: string, values: Record<string, unknown> = {}) => {
   return String(new IntlMessageFormat(text, 'en-US').format(values));
 };
 
-type Footer = { page: string; text: string; links: { name: string; href: string }[] };
+type Footer = {
+  page: string;
+  locale: string;
+  text: string;
+  links: { name: string; href: string }[];
+};
 
 // Every page's footer, static pages read from the HTML as served (the root sends the browser on at
 // once), app pages read in the browser, with each link's name and where it resolves to.
@@ -28,6 +34,7 @@ async function footers(page: Page, request: APIRequestContext, baseURL: string):
       const footer = /<footer[^>]*>([\s\S]*?)<\/footer>/.exec(html)?.[1] ?? '';
       out.push({
         page: p || 'the root',
+        locale: localeOfPage(p),
         text: footer.replace(/<[^>]+>/g, ' '),
         links: [...footer.matchAll(/<a href="([^"]*)">([^<]*)<\/a>/g)].map((m) => ({
           href: new URL(m[1] ?? '', url).href,
@@ -41,6 +48,7 @@ async function footers(page: Page, request: APIRequestContext, baseURL: string):
     await expect(footer).toBeVisible();
     out.push({
       page: p,
+      locale: localeOfPage(p),
       text: (await footer.innerText()).replace(/\s+/g, ' '),
       links: await footer.getByRole('link').evaluateAll((as) =>
         as.map((a) => ({
@@ -71,7 +79,7 @@ Then(/^the page links to the (.+)$/, async ({ request, baseURL, world }, notice:
   if (!id) throw new Error(`steps: no notice called "${notice}"`);
   const origin = new URL(baseURL ?? '').origin;
   for (const f of world.footers as Footer[]) {
-    const link = f.links.find((l) => l.name === message(id));
+    const link = f.links.find((l) => l.name === messageIn(f.locale, id));
     expect(link, `${f.page} links to the ${notice}`).toBeDefined();
     if (!link) continue;
     if (new URL(link.href).origin === origin) {
@@ -85,16 +93,20 @@ Then(/^the page links to the (.+)$/, async ({ request, baseURL, world }, notice:
 
 Then('the page says the site is a fan project', async ({ world }) => {
   for (const f of world.footers as Footer[])
-    expect(f.text, f.page).toContain(message('footer.fan'));
+    expect(f.text, f.page).toContain(messageIn(f.locale, 'footer.fan'));
 });
 
+// What the notice says is read in en-US; every other page carries its own translation of that same
+// notice, which the step above checks.
+const english = (footers: Footer[]) => footers.filter((f) => f.locale === 'en-US');
+
 Then('it says the site is not affiliated with or endorsed by Nintendo', async ({ world }) => {
-  for (const f of world.footers as Footer[])
+  for (const f of english(world.footers as Footer[]))
     expect(f.text, f.page).toContain('not affiliated with or endorsed by Nintendo');
 });
 
 Then("it says Splatoon's names and images belong to Nintendo", async ({ world }) => {
-  for (const f of world.footers as Footer[])
+  for (const f of english(world.footers as Footer[]))
     expect(f.text, f.page).toContain('names and images belong to Nintendo');
 });
 

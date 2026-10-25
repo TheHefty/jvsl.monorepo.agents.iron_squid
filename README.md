@@ -32,6 +32,17 @@ to test the site under a sub-path.
 To check Markdown sizes before each commit, enable the hook once per clone:
 `git config core.hooksPath .githooks`.
 
+## Translations
+
+The interface is written in `en-US`. A translation is marked `unreviewed` in its catalogue
+(`site/src/i18n/messages/<locale>.json`, key `translation.status`) until a fluent speaker has
+reviewed it, and the site says so on every page in that language. These have not been reviewed yet:
+
+- `en-GB` — unreviewed
+
+To review one, read it against `en-US`, correct it, and set its status to `reviewed` in the same
+pull request that removes it from this list. A test keeps this list and the catalogues in step.
+
 ## Licence
 
 The code and documentation are under the [MIT licence](LICENSE).

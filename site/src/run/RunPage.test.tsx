@@ -15,7 +15,7 @@ describe('the run page', () => {
     vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
       throw new DOMException('The quota has been exceeded.', 'QuotaExceededError');
     });
-    render(<App locale="en-US" page="home" basePath="/" />);
+    render(<App locale="en-US" messages={messages} page="home" basePath="/" />);
     fireEvent.click(await screen.findByRole('button', { name: messages['start.roll'] }));
     const alert = await screen.findByRole('alert');
     expect(alert.textContent).toContain(messages['storage.notKept']);
@@ -27,7 +27,7 @@ describe('the run page', () => {
   });
 
   it('says nothing about storage when the browser keeps the run', async () => {
-    render(<App locale="en-US" page="home" basePath="/" />);
+    render(<App locale="en-US" messages={messages} page="home" basePath="/" />);
     fireEvent.click(await screen.findByRole('button', { name: messages['start.roll'] }));
     await screen.findByRole('button', { name: messages['run.export'] });
     expect(screen.queryByText(messages['storage.notKept'])).toBeNull();

@@ -1,14 +1,10 @@
-import { readdirSync, readFileSync } from 'node:fs';
+import { readdirSync } from 'node:fs';
 import { expect } from '@playwright/test';
-import { IntlMessageFormat } from 'intl-messageformat';
 import { latestVersion } from '../../src/catalogue/latest';
 import { Then, When } from '../fixtures';
+import { localeOfPage, messageIn } from '../support/messages';
 import { pagesOfBuild } from '../support/pages';
 
-const catalogue = JSON.parse(readFileSync('src/i18n/messages/en-US.json', 'utf8')) as Record<
-  string,
-  string
->;
 const footers = new Map<string, string>();
 
 When('a visitor opens any page', async ({ page, request, guard, baseURL }) => {
@@ -38,12 +34,12 @@ Then(
         .map((e) => e.name),
     );
     expect(built).toBe(version);
-    const line = String(
-      new IntlMessageFormat(catalogue['catalogue.version'] ?? '', 'en-US').format({ version }),
-    );
     expect(footers.size, 'pages in the build').toBeGreaterThan(0);
-    // The footer also carries the notices (FR-50, FR-51); the version line must be among them.
+    // The footer also carries the notices (FR-50, FR-51); the version line, in the page's own
+    // language, must be among them.
     for (const [p, text] of footers)
-      expect(text, `the footer of ${p || 'the root'}`).toContain(line);
+      expect(text, `the footer of ${p || 'the root'}`).toContain(
+        messageIn(localeOfPage(p), 'catalogue.version', { version }),
+      );
   },
 );

@@ -5,6 +5,8 @@ import { test } from '../fixtures';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('./en-US/');
+  // The page draws once its catalogue has loaded; each test breaks what it has drawn.
+  await page.locator('main').waitFor();
 });
 
 test('fails a scenario whose page asks another host for something', async ({ page }) => {

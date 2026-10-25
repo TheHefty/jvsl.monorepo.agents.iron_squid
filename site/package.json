@@ -10,7 +10,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsx scripts/catalogue/check.ts && tsx scripts/catalogue/fetch-images.ts && vite build && tsx scripts/emit-pages.ts",
+    "build": "tsx scripts/check-messages.ts && tsx scripts/catalogue/check.ts && tsx scripts/catalogue/fetch-images.ts && vite build && tsx scripts/emit-pages.ts",
     "preview": "vite preview",
     "typecheck": "tsc",
     "lint": "eslint . && prettier --check .",
@@ -33,6 +33,7 @@
     "@cucumber/gherkin": "38.0.0",
     "@cucumber/messages": "32.3.1",
     "@eslint/js": "9.39.5",
+    "@formatjs/icu-messageformat-parser": "3.5.21",
     "@playwright/test": "1.64.0",
     "@testing-library/jest-dom": "7.0.1",
     "@testing-library/react": "16.3.3",

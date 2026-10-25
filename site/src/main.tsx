@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './App';
+import { loadMessages } from './i18n/load';
 import { defaultLocale, localeFromPath } from './i18n/locales';
 import { pageFromPath, type Page } from './pages';
 import './styles.css';
@@ -16,8 +17,10 @@ const page: Page =
 const root = document.getElementById('root');
 if (!root) throw new Error('main: the page has no #root element');
 
+const active = locale ?? defaultLocale;
+const messages = await loadMessages(active);
 createRoot(root).render(
   <StrictMode>
-    <App locale={locale ?? defaultLocale} page={page} basePath={basePath} />
+    <App locale={active} messages={messages} page={page} basePath={basePath} />
   </StrictMode>,
 );

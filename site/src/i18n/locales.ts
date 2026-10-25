@@ -1,6 +1,6 @@
-// The locales the site is offered in. Every one has its own address (NFR-I8); the every-language
-// epic adds the other fourteen.
-export const locales = ['en-US'] as const;
+// The locales the site is offered in. Every one has its own address (NFR-I8); the task translations
+// adds the other twelve.
+export const locales = ['en-US', 'en-GB', 'pt-BR'] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = 'en-US';
 
