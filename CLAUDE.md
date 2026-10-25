@@ -83,8 +83,8 @@ TypeScript strict, react-intl. From `site/`:
 - `npm test` (Vitest), `npm run typecheck`, `npm run lint`.
 - **The catalogue is generated, never edited.** `site/catalogue.pin.json` pins the datamine
   (`Leanny/splat3`) to a commit and a data folder, with a digest per source file;
-  `npm run catalogue:generate` writes `site/src/catalogue/<version>/` (names and image digests,
-  never an image). Moving the pin is its own PR (`docs/RULES.md`): change commit, folder and game
+  `npm run catalogue:generate` writes `site/src/catalogue/<version>/` (the items, their names
+  in one `names/<locale>.json` per locale, and image digests; never an image). Moving the pin is its own PR (`docs/RULES.md`): change commit, folder and game
   version, run the generator with `--record-digests`, and review the diff it prints. The previous version's folder stays: runs
   on it may still be in players' browsers. Add the new version to `site/catalogue.versions.json` with
   the digest of its items' order (the versions test prints the one it computed). That file only grows,

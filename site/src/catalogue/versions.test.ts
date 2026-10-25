@@ -33,14 +33,11 @@ describe('the published catalogue versions', () => {
 });
 
 describe('the order digest', () => {
-  it('changes when two items swap places, and not when a name is translated', () => {
+  it('changes when two items swap places (names are kept apart and play no part)', () => {
     const c = read('11.3.0');
     const base = catalogueOrderDigest(c);
     const [a, b] = c.gear.head;
     if (!a || !b) throw new Error('test: too few head pieces');
-    const translated = structuredClone(c);
-    (translated.kits[0] as { name: Record<string, string> }).name['ja-JP'] = 'テスト';
-    expect(catalogueOrderDigest(translated)).toBe(base);
     const swapped = structuredClone(c);
     swapped.gear.head.splice(0, 2, b, a);
     expect(catalogueOrderDigest(swapped)).not.toBe(base);

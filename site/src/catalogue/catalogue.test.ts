@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import catalogue from './11.3.0/catalogue.json';
+import english from './11.3.0/names/en-US.json';
 import type { Catalogue } from './types';
 
 // The generated 11.3.0 data, as committed. If the replica rule or the gear filter were wrong, every
@@ -30,7 +31,7 @@ describe('the 11.3.0 catalogue', () => {
   });
 
   it('keeps the Hero Mode and Side Order rewards a player can wear online', () => {
-    const names = Object.values(c.gear).flatMap((slot) => slot.map((g) => g.name['en-US']));
+    const names = Object.values(c.gear).flatMap((slot) => slot.map((g) => (english.names as Record<string, string>)[g.id]));
     expect(names).toEqual(expect.arrayContaining(['Hero Headset Replica', 'Order Suit Replica']));
   });
 });

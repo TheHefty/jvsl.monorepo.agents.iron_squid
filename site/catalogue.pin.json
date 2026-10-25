@@ -8,6 +8,19 @@
     "data/mush/1130/GearInfoHead.json": "19df7ad69d2e2bec7a34439e78db1f56a64b0ce41f86c07cc060312006db3506",
     "data/mush/1130/GearInfoClothes.json": "9124f2bb1c55807eb49ec6efe8e18b54f431dfb14b8e7ba326e852f69fc8751f",
     "data/mush/1130/WeaponInfoMain.json": "53641c4b4c96d56d3ed4ca8d4c7426d83a0bf28af6f85e9eafc391b2ae9f663e",
-    "data/language/USen.json": "73c51d21d8827ca0fe0d3eb9f6a795d1aa7ca5e352ef36046c5eef02a9745ceb"
+    "data/language/USen.json": "73c51d21d8827ca0fe0d3eb9f6a795d1aa7ca5e352ef36046c5eef02a9745ceb",
+    "data/language/EUen.json": "f383e379ee17a325249025926161de668812b457a6f9448f2b52377e9d7ef1ab",
+    "data/language/EUes.json": "a9f01bab8ab52511a0c50637c9037a6a657f3083de1e4689f8c610654a6afab7",
+    "data/language/USes.json": "71e018607afdcbe85bb83a474281861d4fc06461c5759e36d8a0e582a760154d",
+    "data/language/EUfr.json": "6f7e5aa158abbf8e6bf0e64f90d186a9f599cd978b45800277e099a378560c9d",
+    "data/language/USfr.json": "1bbce87bbdd3f5e068afd074f65ae76825212bb0bfd67dbc814649070eee4e68",
+    "data/language/EUde.json": "735aceb893ab5bf02ae9a1ce7d855f65dab2342d88a5546275b59b7f2d1c2c13",
+    "data/language/EUit.json": "1be7d86b0b7923e12d23e5142b773728f3e0790136f30e597710992898f94164",
+    "data/language/EUnl.json": "22fb48c7715dda595dce171289274251d8ef2f960fcc6d6cf1c9fcf97af30c0e",
+    "data/language/EUru.json": "01c26c33de5d8a59260f796338d82c42e8d646f3e7c5b3821515e1cb03825c7f",
+    "data/language/JPja.json": "1f1d7b1b5fdc16244beb8cd08a4a2dc72e3078f182cc64454e913fd5a635df7a",
+    "data/language/KRko.json": "1bd7a111d0bcc34d1e152ae2236d2374acd2ad6d7106a390cf301a89df9e4395",
+    "data/language/CNzh.json": "3df308b0058f26adfbb94c355d604d1f6969bf57efb1175990be4d794cd4c9f5",
+    "data/language/TWzh.json": "7fcee7a8c57879141722f9a3c8fc95abd95a4b285911953f584e94d4dd7e7b44"
   }
 }

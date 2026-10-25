@@ -6,7 +6,8 @@ import { expect, type Page } from '@playwright/test';
 import { IntlMessageFormat } from 'intl-messageformat';
 import { Given, Then, When } from '../fixtures';
 import { createPagesServer } from '../../scripts/pages-server';
-import type { Catalogue } from '../../src/catalogue/types';
+import type { Catalogue, NamesFile } from '../../src/catalogue/types';
+import { locales } from '../../src/i18n/locales';
 import type { RunState } from '../../src/run/engine';
 import { basePath } from '../site-under-test';
 import { run } from '../support/run';
@@ -221,8 +222,16 @@ Given(
     const [first] = newer.kits;
     if (!first) throw new Error('steps: the 11.3.0 catalogue has no kits');
     newer.version = '12.0.0';
-    newer.kits.push({ id: 'Test_Added_00', name: { 'en-US': added }, image: first.image });
-    mkdirSync(join(dir, newer.version));
+    newer.kits.push({ id: 'Test_Added_00', image: first.image });
+    mkdirSync(join(dir, newer.version, 'names'), { recursive: true });
+    // Every locale names the added kit, as a generated catalogue would.
+    for (const locale of locales) {
+      const file = JSON.parse(
+        readFileSync(`src/catalogue/11.3.0/names/${locale}.json`, 'utf8'),
+      ) as NamesFile;
+      file.names['Test_Added_00'] = added;
+      writeFileSync(join(dir, newer.version, 'names', `${locale}.json`), JSON.stringify(file));
+    }
     writeFileSync(join(dir, newer.version, 'catalogue.json'), JSON.stringify(newer));
     cpSync('src/catalogue/11.3.0/images.lock.json', join(dir, newer.version, 'images.lock.json'));
     const out = mkdtempSync(join(tmpdir(), 'build-'));
