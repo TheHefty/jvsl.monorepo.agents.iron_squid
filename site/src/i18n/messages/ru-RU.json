@@ -120,5 +120,9 @@
   "language.label": "Язык",
   "language.current": "Язык: {name}",
   "language.unreviewed": "непроверенный перевод",
-  "header.home": "Iron Squid, главная"
+  "header.home": "Iron Squid, главная",
+  "theme.label": "Тема",
+  "theme.light": "Светлая",
+  "theme.dark": "Тёмная",
+  "privacy.item.theme": "Светлая или тёмная тема, которую вы выбираете в шапке."
 }

@@ -23,6 +23,7 @@ export const registrations: Registration[] = [
   { feature: 'every-language/choose-language.feature' },
   { feature: 'release-gate/deploy-on-release.feature' },
   { feature: 'site-identity/logo-and-favicon.feature' },
+  { feature: 'site-identity/theme-switch.feature' },
   {
     feature: 'every-language/translate-interface.feature',
   },

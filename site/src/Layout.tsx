@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { LanguageSwitcher } from './i18n/LanguageSwitcher';
 import { links } from './notices/links';
+import { ThemeSwitch } from './theme/ThemeSwitch';
 
 type Props = { catalogueVersion: string; home: string; basePath: string; children: ReactNode };
 
@@ -17,7 +18,10 @@ export function Layout({ catalogueVersion, home, basePath, children }: Props) {
           <img src={`${basePath}logo.svg`} alt="" width={28} height={28} />
           {intl.formatMessage({ id: 'site.name' })}
         </a>
-        <LanguageSwitcher basePath={basePath} />
+        <div className="header-controls">
+          <ThemeSwitch />
+          <LanguageSwitcher basePath={basePath} />
+        </div>
       </header>
       <main>
         {intl.messages['translation.status'] === 'unreviewed' && (

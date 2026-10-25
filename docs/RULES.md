@@ -14,7 +14,7 @@ not copied here. Each rule below follows from a decision in the [charter](CHARTE
   also amends the data map, the privacy notice and the charter.
 - **The run travels in the URL fragment, never in the path or the query string.** The fragment is
   the only part of a URL a browser does not send to the server (SRS, Data map).
-- **Browser storage holds the run and the language, and nothing else.** Anything more is a new row
+- **Browser storage holds the run, the language and the theme, and nothing else.** Anything more is a new row
   in the data map, and a reason to re-check whether consent is now needed.
 - **The display name is the only free text a player types, and it is never sent anywhere.** If a
   change would send it, the change is a charter change.

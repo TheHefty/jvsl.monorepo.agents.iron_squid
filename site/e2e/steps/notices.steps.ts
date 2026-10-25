@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { expect, type APIRequestContext, type Page } from '@playwright/test';
 import { IntlMessageFormat } from 'intl-messageformat';
+import { storedInBrowser } from '../../src/notices/data-map';
 import { links } from '../../src/notices/links';
 import { Given, Then, When } from '../fixtures';
 import { localeOfPage, messageIn } from '../support/messages';
@@ -125,12 +126,18 @@ When('a visitor reads the privacy notice', async ({ page }) => {
 });
 
 Then('it lists the run, the optional display name and the language choice', async ({ page }) => {
+  // Those three, and whatever else the data map lists (the theme, since theme-switch): the notice
+  // lists exactly what the site stores, in the data map's order.
   const items = privacy(page).getByRole('list').first().getByRole('listitem');
-  await expect(items).toHaveText([
-    message('privacy.item.run'),
-    message('privacy.item.name'),
-    message('privacy.item.language'),
-  ]);
+  const listed = storedInBrowser.map((item) => message(item.message));
+  expect(listed).toEqual(
+    expect.arrayContaining([
+      message('privacy.item.run'),
+      message('privacy.item.name'),
+      message('privacy.item.language'),
+    ]),
+  );
+  await expect(items).toHaveText(listed);
 });
 
 Then("it says they are kept only in the visitor's own browser", async ({ page }) => {

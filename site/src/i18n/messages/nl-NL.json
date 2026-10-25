@@ -120,5 +120,9 @@
   "language.label": "Taal",
   "language.current": "Taal: {name}",
   "language.unreviewed": "niet-nagekeken vertaling",
-  "header.home": "Iron Squid, startpagina"
+  "header.home": "Iron Squid, startpagina",
+  "theme.label": "Thema",
+  "theme.light": "Licht",
+  "theme.dark": "Donker",
+  "privacy.item.theme": "Het lichte of donkere thema dat je in de kop kiest."
 }
