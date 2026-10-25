@@ -432,6 +432,17 @@ dialog::backdrop {
   flex: none;
 }
 
+/* Kit and gear names can hold one very long word ("Wereldtourneehoofdtelefoon"): hyphenate where the
+   language allows, else break anywhere. "anywhere", unlike "break-word", also lets a flex item
+   shrink below the word, which a row beside an image needs. */
+.shared-sets span,
+.piece-name,
+.run-log li {
+  min-width: 0;
+  hyphens: auto;
+  overflow-wrap: anywhere;
+}
+
 .share-controls {
   display: flex;
   flex-wrap: wrap;
