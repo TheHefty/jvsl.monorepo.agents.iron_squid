@@ -16,6 +16,7 @@ import {
   winsToNextLife,
   type RunState,
 } from './engine';
+import { exportRun, MAX_FILE_BYTES, readRunFile } from './file';
 import { displayName } from './name';
 import { cryptoSource } from './random';
 import { browserStorage, createRunStore, type LoadResult, type RunStore } from './storage';
@@ -150,17 +151,29 @@ export function RunPage({ newestVersion }: { newestVersion: string }) {
   if (view.kind === 'start') {
     const catalogue = catalogues[newestVersion];
     return (
-      <StartForm
-        onStart={(name) => {
-          if (!catalogue) return;
-          const state = startRun(catalogue, { name }, cryptoSource, new Date().toISOString());
-          const replace = replacing.current;
-          if (commit(state, replace?.basedOn ?? 0, { replaceUnreadable: replace?.unreadable })) {
-            replacing.current = undefined;
-            announceSet(state);
-          }
-        }}
-      />
+      <>
+        <StartForm
+          onStart={(name) => {
+            if (!catalogue) return;
+            const state = startRun(catalogue, { name }, cryptoSource, new Date().toISOString());
+            const replace = replacing.current;
+            if (commit(state, replace?.basedOn ?? 0, { replaceUnreadable: replace?.unreadable })) {
+              replacing.current = undefined;
+              announceSet(state);
+            }
+          }}
+        />
+        <FileControls
+          catalogues={catalogues}
+          onImport={(state) => {
+            const replace = replacing.current;
+            if (commit(state, replace?.basedOn ?? 0, { replaceUnreadable: replace?.unreadable })) {
+              replacing.current = undefined;
+              announceSet(state);
+            }
+          }}
+        />
+      </>
     );
   }
 
@@ -346,6 +359,13 @@ export function RunPage({ newestVersion }: { newestVersion: string }) {
         </section>
       )}
       <RunLog state={state} catalogue={catalogue} />
+      <FileControls
+        run={state}
+        catalogues={catalogues}
+        onImport={(imported) => {
+          if (commit(imported, revision)) announceSet(imported);
+        }}
+      />
       <NewRunButton
         label="run.newRun"
         onConfirm={() => {
@@ -591,4 +611,114 @@ function FinishCard({
       )}
     </section>
   );
+}
+
+// Export and import of a run file (FR-31, FR-32). A file is checked whole before anything is
+// stored, and over a run in progress it is stored only after the player confirms.
+function FileControls({
+  run,
+  catalogues,
+  onImport,
+}: {
+  run?: RunState;
+  catalogues: Record<string, Catalogue>;
+  onImport: (state: RunState) => void;
+}) {
+  const intl = useIntl();
+  const [error, setError] = useState<string>();
+  const pending = useRef<RunState | undefined>(undefined);
+  const dialog = useRef<HTMLDialogElement>(null);
+
+  async function choose(file: File) {
+    setError(undefined);
+    const result =
+      file.size > MAX_FILE_BYTES
+        ? ({ ok: false, reason: 'not-a-run' } as const)
+        : readRunFile(await file.text(), catalogues);
+    if (!result.ok) {
+      setError(
+        result.reason === 'unknown-catalogue'
+          ? intl.formatMessage({ id: 'import.unknownCatalogue' }, { version: result.version })
+          : intl.formatMessage({ id: 'import.notARun' }),
+      );
+      return;
+    }
+    if (!run) {
+      onImport(result.state);
+      return;
+    }
+    pending.current = result.state;
+    dialog.current?.showModal();
+  }
+
+  return (
+    <div className="file-controls">
+      {run && (
+        <button
+          type="button"
+          className="btn btn-secondary"
+          onClick={() => download(exportRun(run, new Date().toISOString()))}
+        >
+          <FormattedMessage id="run.export" />
+        </button>
+      )}
+      <label className="btn btn-secondary">
+        <FormattedMessage id="run.import" />
+        <input
+          type="file"
+          accept="application/json,.json"
+          className="visually-hidden"
+          onChange={(e) => {
+            const file = e.currentTarget.files?.[0];
+            e.currentTarget.value = '';
+            if (file) void choose(file);
+          }}
+        />
+      </label>
+      {error && (
+        <p className="notice" role="alert">
+          {error}
+        </p>
+      )}
+      <dialog ref={dialog} aria-labelledby="import-title">
+        <h2 id="import-title">
+          <FormattedMessage id="import.title" />
+        </h2>
+        <p>
+          <FormattedMessage id="import.warning" />
+        </p>
+        <div className="dialog-actions">
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => dialog.current?.close()}
+          >
+            <FormattedMessage id="newRun.keep" />
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => {
+              dialog.current?.close();
+              const imported = pending.current;
+              pending.current = undefined;
+              if (imported) onImport(imported);
+            }}
+          >
+            <FormattedMessage id="import.confirm" />
+          </button>
+        </div>
+      </dialog>
+    </div>
+  );
+}
+
+// Hands the player a file made in the page; nothing is sent anywhere.
+function download({ name, content }: { name: string; content: string }) {
+  const url = URL.createObjectURL(new Blob([content], { type: 'application/json' }));
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = name;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 0);
 }

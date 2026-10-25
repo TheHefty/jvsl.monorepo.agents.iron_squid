@@ -88,5 +88,12 @@
   "terms.warranty": "The site is offered as it is, with no warranty. A run lives in your browser and is lost if your browser's data is cleared.",
   "terms.licence": "The site's code is under the MIT licence. Splatoon, its names and its images belong to Nintendo and are not covered by that licence.",
   "terms.data": "What the site keeps, and where, is in the privacy notice.",
-  "terms.changes": "These terms may change; the version on this page is the one that applies."
+  "terms.changes": "These terms may change; the version on this page is the one that applies.",
+  "run.export": "Export my run",
+  "run.import": "Import a run",
+  "import.title": "Replace your current run?",
+  "import.warning": "Your current run will be replaced by the run in this file.",
+  "import.confirm": "Replace it",
+  "import.notARun": "This file is not a valid Iron Squid run.",
+  "import.unknownCatalogue": "This run needs the weapons and gear of Splatoon 3 {version}, which this site does not have."
 }
