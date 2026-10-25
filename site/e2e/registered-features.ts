@@ -25,6 +25,17 @@ export const registrations: Registration[] = [
   { feature: 'site-identity/logo-and-favicon.feature' },
   { feature: 'site-identity/theme-switch.feature' },
   {
+    feature: 'site-identity/design-alignment.feature',
+    pending: {
+      'The ink strip is splattered and slanted': 'inked-run-page (is-o8k.3.2)',
+      'The drawn kit is named in display type': 'inked-run-page (is-o8k.3.2)',
+      'The rules are stickers': 'inked-run-page (is-o8k.3.2)',
+      'Wins and losses are marked in the log': 'inked-run-page (is-o8k.3.2)',
+      'A draw is still under reduced motion': 'inked-run-page (is-o8k.3.2)',
+      'A shared run leads with a headline': 'inked-shared-run (is-o8k.3.3)',
+    },
+  },
+  {
     feature: 'every-language/translate-interface.feature',
   },
 ];

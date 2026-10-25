@@ -437,7 +437,7 @@ function Piece({
         height={kit ? 128 : 72}
       />
       <figcaption>
-        <span className="piece-label">{children}</span>
+        <span className="piece-label tag">{children}</span>
         <span className="piece-name">{name}</span>
       </figcaption>
     </figure>

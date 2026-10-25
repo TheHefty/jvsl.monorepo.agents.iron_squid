@@ -84,7 +84,16 @@ main {
   display: inline-flex;
   border: 1px solid var(--color-divider);
   border-radius: var(--radius-md);
-  overflow: hidden;
+}
+
+/* The corners rounded on the buttons rather than clipped by the group: clipping would cut their
+   focus rings (design-alignment's "Focus is never cut off"). */
+.theme-switch button:first-child {
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+
+.theme-switch button:last-child {
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
 }
 
 .theme-switch button {
