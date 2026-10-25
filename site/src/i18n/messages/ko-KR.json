@@ -120,5 +120,9 @@
   "language.label": "언어",
   "language.current": "언어: {name}",
   "language.unreviewed": "검토되지 않은 번역",
-  "header.home": "Iron Squid, 홈"
+  "header.home": "Iron Squid, 홈",
+  "theme.label": "테마",
+  "theme.light": "라이트",
+  "theme.dark": "다크",
+  "privacy.item.theme": "헤더에서 고른 라이트 또는 다크 테마."
 }

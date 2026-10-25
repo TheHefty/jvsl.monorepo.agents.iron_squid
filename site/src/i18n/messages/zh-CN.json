@@ -120,5 +120,9 @@
   "language.label": "语言",
   "language.current": "语言:{name}",
   "language.unreviewed": "未经审阅的翻译",
-  "header.home": "Iron Squid,首页"
+  "header.home": "Iron Squid,首页",
+  "theme.label": "主题",
+  "theme.light": "浅色",
+  "theme.dark": "深色",
+  "privacy.item.theme": "你在页眉中选择的浅色或深色主题。"
 }

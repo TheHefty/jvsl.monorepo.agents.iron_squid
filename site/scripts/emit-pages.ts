@@ -21,6 +21,9 @@ type Options = {
   // The root's script (src/i18n/root-entry.ts, built as a classic script): it sends a visitor to
   // their language (NFR-I5) before the refresh to the default locale fires.
   rootScript: string;
+  // Every page's first script (src/theme/theme-entry.ts): sets the chosen theme before the page
+  // paints (FR-61). A classic script of the site's own, so the CSP is unchanged.
+  themeScript: string;
 };
 
 const escape = (s: string) =>
@@ -34,12 +37,24 @@ export function emitPages({
   catalogueVersion,
   messages,
   rootScript,
+  themeScript,
 }: Options): void {
   const shellPath = join(distDir, 'index.html');
   if (!existsSync(shellPath)) {
     throw new Error(`emit-pages: no built index.html in ${distDir}; run "vite build" first.`);
   }
-  const shell = readFileSync(shellPath, 'utf8');
+  // Scripts of the site's own, named by their content, like every other asset, so a cached copy is
+  // never a stale one.
+  const named = (prefix: string, code: string) => {
+    const file = `${prefix}-${createHash('sha256').update(code).digest('hex').slice(0, 12)}.js`;
+    writeFileSync(join(distDir, file), code);
+    return file;
+  };
+  const themeTag = `<script src="${basePath}${named('theme', themeScript)}"></script>`;
+  // Right after the charset, before the stylesheet and anything that paints.
+  const firstInHead = (html: string) =>
+    html.replace(/(<meta charset="UTF-8" \/>)/, `$1${themeTag}`);
+  const shell = firstInHead(readFileSync(shellPath, 'utf8'));
   const alternates = [
     ...locales.map((l) => `<link rel="alternate" hreflang="${l}" href="${basePath}${l}/" />`),
     `<link rel="alternate" hreflang="x-default" href="${basePath}" />`,
@@ -61,9 +76,7 @@ export function emitPages({
   );
 
   const target = `${basePath}${defaultLocale}/`;
-  // Named by its content, like every other asset, so a cached copy is never a stale one.
-  const rootFile = `root-${createHash('sha256').update(rootScript).digest('hex').slice(0, 12)}.js`;
-  writeFileSync(join(distDir, rootFile), rootScript);
+  const rootFile = named('root', rootScript);
   // The site's own stylesheet: the root has no app, but its footer is laid out like every page's
   // (links far enough apart to meet WCAG 2.2 target size; defect is-8qd).
   const stylesheets = (shell.match(/<link rel="stylesheet"[^>]*>/g) ?? []).join('');
@@ -85,7 +98,7 @@ export function emitPages({
   );
   writeFileSync(
     shellPath,
-    `<!doctype html><html lang="${defaultLocale}"><head><meta charset="UTF-8" />` +
+    `<!doctype html><html lang="${defaultLocale}"><head><meta charset="UTF-8" />${themeTag}` +
       `${contentSecurityPolicy}<meta name="viewport" content="width=device-width, initial-scale=1" />` +
       // A classic script runs where it stands, before the refresh below; without scripts the
       // refresh still takes the visitor to the default locale.
@@ -106,19 +119,19 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   // before the refresh below, whenever each browser chooses to apply that. A module script waits
   // for the document; it happens to beat the refresh in Chromium, but nothing promises it does.
   const { build } = await import('vite');
-  const built = (await build({
-    configFile: false,
-    logLevel: 'warn',
-    build: {
-      write: false,
-      minify: true,
-      lib: { entry: 'src/i18n/root-entry.ts', formats: ['iife'], name: 'ironSquidRoot' },
-    },
-  })) as { output: { code?: string }[] } | { output: { code?: string }[] }[];
-  const rootScript = (Array.isArray(built) ? built[0] : built)?.output[0]?.code;
-  if (!rootScript) throw new Error('emit-pages: the root script was not built');
+  const classic = async (entry: string, name: string) => {
+    const built = (await build({
+      configFile: false,
+      logLevel: 'warn',
+      build: { write: false, minify: true, lib: { entry, formats: ['iife'], name } },
+    })) as { output: { code?: string }[] } | { output: { code?: string }[] }[];
+    const code = (Array.isArray(built) ? built[0] : built)?.output[0]?.code;
+    if (!code) throw new Error(`emit-pages: ${entry} was not built`);
+    return code;
+  };
   emitPages({
-    rootScript,
+    rootScript: await classic('src/i18n/root-entry.ts', 'ironSquidRoot'),
+    themeScript: await classic('src/theme/theme-entry.ts', 'ironSquidTheme'),
     // Scenarios that build the site build it elsewhere, never over the dist/ under test.
     distDir: process.env.BUILD_OUT_DIR ?? 'dist',
     basePath: process.env.BASE_PATH ?? '/',

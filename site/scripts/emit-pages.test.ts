@@ -15,6 +15,7 @@ function build(basePath = '/repo/') {
   writeFileSync(join(dist, 'index.html'), shell);
   emitPages({
     rootScript: 'location.replace("/repo/ja-JP/");',
+    themeScript: 'document.documentElement.dataset.theme = "dark";',
     distDir: dist,
     basePath,
     locales: ['en-US', 'ja-JP'],
@@ -114,9 +115,24 @@ describe('emitPages', () => {
         catalogueVersion: '1.2.3',
         messages: {},
         rootScript: '',
+        themeScript: '',
       }),
     ).toThrow(/no built index\.html/);
     expect(existsSync(join(dist, 'en-US'))).toBe(false);
+  });
+});
+
+describe('the theme script', () => {
+  it('runs first on every page, before the stylesheet, so no page paints in the other theme (theme-switch, failure 1)', () => {
+    const { read } = build();
+    for (const page of ['en-US/index.html', 'ja-JP/privacy/index.html', '404.html', 'index.html']) {
+      const html = read(page);
+      const script = /<script src="\/repo\/(theme-[0-9a-f]{12}\.js)"><\/script>/.exec(html);
+      expect(script, page).not.toBeNull();
+      expect(read(script?.[1] ?? '')).toBe('document.documentElement.dataset.theme = "dark";');
+      expect(html.indexOf(script?.[0] ?? ''), page).toBeLessThan(html.indexOf('rel="stylesheet"'));
+      expect(html.indexOf(script?.[0] ?? ''), page).toBeGreaterThan(html.indexOf('<meta charset'));
+    }
   });
 });
 

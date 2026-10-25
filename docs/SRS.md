@@ -225,6 +225,7 @@ policy texts that follow from it will not have been either.
 | Run state: sets, results, lives, resets, and the log of matches with the date each was reported | To play the run (FR-30) and read it back (FR-24) | The player's browser storage | The player's own browser; never sent | Until the player starts another run or clears site data |
 | Run display name (optional) | To show on a shared run (FR-11) | The player's browser storage, and any link the player makes | Only whoever the player sends the link to | As above; in a link, for as long as the link exists wherever it was pasted |
 | Language choice | To remember it (NFR-I5) | The player's browser storage | The player's own browser | Until site data is cleared |
+| Theme choice (light or dark) | To remember it (FR-61) | The player's browser storage | The player's own browser | Until site data is cleared |
 | Exported run file | To move a run (FR-31) | Wherever the player saves it | The player | The player's decision |
 | DNS queries for `iron-squid.top` | Resolving the domain | Cloudflare's nameservers; HostGator is the registrar | **Cloudflare**, as DNS provider, under its own privacy policy. Every record is DNS only, never proxied, so Cloudflare sees the resolvers' queries and never a visitor's requests to the site | Cloudflare's retention |
 | IP address, user agent, requested URL | Serving the site | GitHub's infrastructure | **GitHub**, as host, under its own privacy statement; the project has no access to these logs | GitHub's retention |
@@ -234,7 +235,7 @@ policy texts that follow from it will not have been either.
 - **The display name is the only free text a player enters.** The site tells the player, where they
   type it, that it will be visible to anyone who receives a link they share. It is not checked or
   moderated, because the project never receives it.
-- **Browser storage holds only what the site needs to function** (the run and the language), so no
+- **Browser storage holds only what the site needs to function** (the run, the language and the theme), so no
   consent banner is required. Re-check this the moment anything else is stored.
 
 ### Legal baseline

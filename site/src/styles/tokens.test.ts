@@ -11,7 +11,23 @@ function tokens(block: string): Record<string, string> {
   );
 }
 const dark = tokens(css.slice(0, css.indexOf('@media')));
-const light = { ...dark, ...tokens(css.slice(css.indexOf('@media'))) };
+const lightBlock = (selector: string) => {
+  const start = css.indexOf(selector);
+  if (start < 0) throw new Error(`test: no ${selector} in tokens.css`);
+  return css.slice(start, css.indexOf('}', start));
+};
+const forSystem = lightBlock(":root:not([data-theme='dark'])");
+const chosen = lightBlock(":root[data-theme='light']");
+const light = { ...dark, ...tokens(forSystem) };
+
+describe('the light theme', () => {
+  it('is the same whether the device asks for it or the player chose it (theme-switch)', () => {
+    const declarations = (block: string) =>
+      [...block.matchAll(/(--[\w-]+|color-scheme):\s*([^;]+);/g)].map((m) => `${m[1]}: ${m[2]}`);
+    expect(declarations(chosen)).toEqual(declarations(forSystem));
+    expect(declarations(chosen).length).toBeGreaterThan(10);
+  });
+});
 
 const luminance = (hex: string) => {
   const [r, g, b] = [1, 3, 5].map((i) => {

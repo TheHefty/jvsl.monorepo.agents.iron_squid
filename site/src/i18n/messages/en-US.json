@@ -120,5 +120,9 @@
   "language.label": "Language",
   "language.current": "Language: {name}",
   "language.unreviewed": "unreviewed translation",
-  "header.home": "Iron Squid, home"
+  "header.home": "Iron Squid, home",
+  "theme.label": "Theme",
+  "theme.light": "Light",
+  "theme.dark": "Dark",
+  "privacy.item.theme": "The light or dark theme you choose in the header."
 }

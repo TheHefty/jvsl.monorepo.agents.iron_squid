@@ -3,7 +3,8 @@
  *
  * From the Nocturne design system of the Claude Design project "Iron Squid" (rounds 3 and 4,
  * "inked"), adopted on 2026-10-24. Dark is the default; the device's own setting picks the light
- * theme — there is no toggle, so nothing is stored (docs/RULES.md). The ink grounds stay saturated
+ * theme until the player chooses one in the header, which sets data-theme on the root element
+ * (theme-switch, FR-61). The ink grounds stay saturated
  * in both themes. Contrast is checked from these values by src/styles/tokens.test.ts: text pairs
  * reach 4.5:1, lines and marks 3:1, in both themes.
  */
@@ -61,8 +62,9 @@
   --backdrop: #292b3180;
 }
 
+/* Light: when the device asks for it and the player has not chosen dark (theme-switch, FR-61)... */
 @media (prefers-color-scheme: light) {
-  :root {
+  :root:not([data-theme='dark']) {
     color-scheme: light;
     --color-bg: #f3f5fe;
     --color-surface: #e4e7f5;
@@ -78,4 +80,23 @@
     --shadow-lg: 0 0 0 1px #b2b6ca, 0 16px 40px #292b3133;
     --backdrop: #292b3166;
   }
+}
+
+/* ...and when the player chose light, whatever the device asks. The same tokens as above: a test
+   (tokens.test.ts) fails if the two blocks ever differ. */
+:root[data-theme='light'] {
+  color-scheme: light;
+  --color-bg: #f3f5fe;
+  --color-surface: #e4e7f5;
+  --color-text: #292b31;
+  --color-text-muted: #595d6c;
+  --color-divider: #cfd3e5;
+  --color-accent: #796cbf;
+  --color-accent-text: #423a6a;
+  --color-accent-fill: #d2cefd;
+  --color-sticker: #5d5294;
+  --color-on-sticker: #f3f5fe;
+  --shadow-sm: 0 0 0 1px #cfd3e5;
+  --shadow-lg: 0 0 0 1px #b2b6ca, 0 16px 40px #292b3133;
+  --backdrop: #292b3166;
 }

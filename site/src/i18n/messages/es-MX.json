@@ -120,5 +120,9 @@
   "language.label": "Idioma",
   "language.current": "Idioma: {name}",
   "language.unreviewed": "traducción sin revisar",
-  "header.home": "Iron Squid, inicio"
+  "header.home": "Iron Squid, inicio",
+  "theme.label": "Tema",
+  "theme.light": "Claro",
+  "theme.dark": "Oscuro",
+  "privacy.item.theme": "El tema claro u oscuro que elijas en la cabecera."
 }
