@@ -6,7 +6,9 @@ import {
   currentSet,
   nextSet,
   reportLoss,
+  replaysRemaining,
   reportWin,
+  isReplay,
   startRun,
   undo,
   winsToNextLife,
@@ -86,7 +88,7 @@ export function RunPage({ newestVersion }: { newestVersion: string }) {
     const p = setPieces(c, s);
     setAnnouncement(
       intl.formatMessage(
-        { id: 'set.announce' },
+        { id: isReplay(s) ? 'set.announceReplay' : 'set.announce' },
         {
           kit: nameOf(p.kit),
           head: nameOf(p.head),
@@ -236,7 +238,15 @@ export function RunPage({ newestVersion }: { newestVersion: string }) {
       )}
       <section className="card set-card" aria-labelledby="set-heading">
         <span className="sticker">
-          <FormattedMessage id={state.phase === 'conquered' ? 'set.conquered' : 'set.playing'} />
+          <FormattedMessage
+            id={
+              state.phase === 'conquered'
+                ? 'set.conquered'
+                : isReplay(state)
+                  ? 'set.replay'
+                  : 'set.playing'
+            }
+          />
         </span>
         <h2 id="set-heading" className="visually-hidden">
           <FormattedMessage id="set.label" />
@@ -247,6 +257,14 @@ export function RunPage({ newestVersion }: { newestVersion: string }) {
             values={{ number: state.cursor + 1, total: state.order.kits.length }}
           />
         </Piece>
+        {isReplay(state) && (
+          <p className="replays-remaining">
+            {intl.formatMessage(
+              { id: 'set.replaysRemaining' },
+              { remaining: replaysRemaining(state) },
+            )}
+          </p>
+        )}
         <div className="gear">
           <Piece version={catalogue.version} item={pieces.head}>
             <FormattedMessage id="set.head" />

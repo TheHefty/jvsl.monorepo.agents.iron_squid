@@ -12,6 +12,7 @@ export const registrations: Registration[] = [
   { feature: 'run-in-the-browser/catalogue.feature' },
   { feature: 'run-in-the-browser/draw-a-set.feature' },
   { feature: 'run-in-the-browser/report-a-match.feature' },
+  { feature: 'run-in-the-browser/reset-and-replay.feature' },
 ];
 
 export const registeredFeatures = registrations.map((r) => r.feature);

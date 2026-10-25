@@ -42,3 +42,15 @@ export async function seedRun(page: Page, state: RunState) {
   );
   await page.goto('./en-US/');
 }
+
+// The names of draw n of a run, kit first, as the set card shows them in en-US.
+export function setNames(state: RunState, n: number): string[] {
+  const name = (items: { id: string; name: Record<string, string> }[], id: string | undefined) =>
+    items.find((i) => i.id === id)?.name['en-US'] ?? `<no item ${String(id)}>`;
+  return [
+    name(catalogue.kits, state.order.kits[n]),
+    name(catalogue.gear.head, state.order.head[n]),
+    name(catalogue.gear.clothes, state.order.clothes[n]),
+    name(catalogue.gear.shoes, state.order.shoes[n]),
+  ];
+}

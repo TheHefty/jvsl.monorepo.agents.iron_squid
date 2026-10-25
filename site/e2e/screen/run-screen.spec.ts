@@ -175,3 +175,25 @@ test('after a loss, an undo and a reset, the strip matches a fresh load of the r
   await expect(page.getByText(message('run.resetNotice'))).toBeVisible();
   await freshly();
 });
+
+// A reset during a replay is the one that matters most (task replay-screen, failure 3): after it,
+// the strip and the card say what a fresh load of the same run says.
+test('after a reset during a replay, the strip and the card match a fresh load', async ({
+  page,
+}) => {
+  const { playRun, seedRun, winsThenPlaying } = await import('../support/seed');
+  // 12 conquered, reset, then 6 replay wins: replaying the seventh, with 1 life.
+  await seedRun(page, playRun([...winsThenPlaying(12), 'loss', 'loss', ...winsThenPlaying(6)]));
+  await expect(page.getByText(message('set.replay'), { exact: true })).toBeVisible();
+  await button(page, 'run.lost').click();
+  await expect(page.getByText(message('run.resets', { resets: 2 }), { exact: true })).toBeVisible();
+  const read = async () => ({
+    strip: (await page.locator('.ink-strip').innerText()).trim(),
+    card: (await page.getByRole('region', { name: message('set.label') }).innerText()).trim(),
+  });
+  const shown = await read();
+  expect(shown.card).toContain(message('set.replaysRemaining', { remaining: 12 }));
+  await page.reload();
+  await expect(button(page, 'run.won')).toBeVisible();
+  expect(await read()).toEqual(shown);
+});

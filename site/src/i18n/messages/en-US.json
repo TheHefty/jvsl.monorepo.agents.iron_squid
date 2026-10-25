@@ -46,5 +46,8 @@
   "run.resetNotice": "Your last life is gone: you are back at the first set you conquered, with 1 life.",
   "announce.win": "Won with {kit}. {lives}.",
   "announce.loss": "Lost with {kit}. {lives} left.",
-  "announce.reset": "Lost your last life with {kit}. The run starts again from the first set you conquered, with 1 life."
+  "announce.reset": "Lost your last life with {kit}. The run starts again from the first set you conquered, with 1 life.",
+  "set.replay": "Replay",
+  "set.replaysRemaining": "{remaining, plural, one {# replay} other {# replays}} before new draws",
+  "set.announceReplay": "Replay: {kit}, with {head}, {clothes} and {shoes}."
 }
