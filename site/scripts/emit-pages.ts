@@ -6,6 +6,8 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { IntlMessageFormat } from 'intl-messageformat';
 import { latestVersion } from '../src/catalogue/latest';
+import { links } from '../src/notices/links';
+import { routes } from '../src/pages';
 import { contentSecurityPolicy } from './csp';
 
 type Options = {
@@ -43,8 +45,10 @@ export function emitPages({
       .replace('</head>', `${alternates}${extraHead}</head>`);
 
   for (const locale of locales) {
-    mkdirSync(join(distDir, locale), { recursive: true });
-    writeFileSync(join(distDir, locale, 'index.html'), page(locale));
+    for (const route of routes) {
+      mkdirSync(join(distDir, locale, route), { recursive: true });
+      writeFileSync(join(distDir, locale, route, 'index.html'), page(locale));
+    }
   }
   writeFileSync(
     join(distDir, '404.html'),
@@ -54,6 +58,12 @@ export function emitPages({
   const target = `${basePath}${defaultLocale}/`;
   const name = escape(messages['site.name'] ?? '');
   const cont = escape(messages['root.continue'] ?? '');
+  const link = (href: string, id: string) => `<a href="${href}">${escape(messages[id] ?? '')}</a>`;
+  const notices =
+    `<nav><ul><li>${link(`${target}terms/`, 'footer.terms')}</li>` +
+    `<li>${link(`${target}privacy/`, 'footer.privacy')}</li>` +
+    `<li>${link(links.securityPolicy, 'footer.security')}</li></ul></nav>` +
+    `<p>${escape(messages['footer.fan'] ?? '')}</p>`;
   const version = escape(
     String(
       new IntlMessageFormat(messages['catalogue.version'] ?? '', defaultLocale).format({
@@ -67,7 +77,7 @@ export function emitPages({
       `${contentSecurityPolicy}<meta name="viewport" content="width=device-width, initial-scale=1" />` +
       `<meta http-equiv="refresh" content="0; url=${target}" />${alternates}<title>${name}</title></head>` +
       `<body><main><p><a href="${target}">${cont}</a></p></main>` +
-      `<footer><p>${version}</p></footer></body></html>`,
+      `<footer>${notices}<p>${version}</p></footer></body></html>`,
   );
 }
 

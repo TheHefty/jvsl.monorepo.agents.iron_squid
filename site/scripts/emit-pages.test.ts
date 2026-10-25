@@ -22,6 +22,10 @@ function build(basePath = '/repo/') {
       'root.continue': 'Continue to Iron Squid',
       'site.name': 'Iron Squid',
       'catalogue.version': 'Weapons and gear from Splatoon 3 {version}',
+      'footer.terms': 'Terms of use',
+      'footer.privacy': 'Privacy',
+      'footer.security': 'Security policy',
+      'footer.fan': 'A fan project.',
     },
   });
   const read = (p: string) => readFileSync(join(dist, p), 'utf8');
@@ -34,6 +38,24 @@ describe('emitPages', () => {
     expect(read('en-US/index.html')).toContain('<html lang="en-US">');
     expect(read('ja-JP/index.html')).toContain('<html lang="ja-JP">');
     expect(read('ja-JP/index.html')).toContain('src="/repo/assets/index.js"');
+  });
+
+  it('writes the terms and privacy pages of every locale', () => {
+    const { read } = build();
+    for (const locale of ['en-US', 'ja-JP']) {
+      for (const page of ['terms', 'privacy']) {
+        expect(read(`${locale}/${page}/index.html`)).toContain(`<html lang="${locale}">`);
+      }
+    }
+  });
+
+  it('gives the root page the notices and the fan-project line', () => {
+    const { read } = build();
+    const root = read('index.html');
+    expect(root).toContain('<a href="/repo/en-US/terms/">Terms of use</a>');
+    expect(root).toContain('<a href="/repo/en-US/privacy/">Privacy</a>');
+    expect(root).toContain('Security policy</a>');
+    expect(root).toContain('A fan project.');
   });
 
   it('names every locale as an alternate of each page', () => {
@@ -55,9 +77,7 @@ describe('emitPages', () => {
 
   it('says on the root page which game version the catalogue matches', () => {
     const { read } = build();
-    expect(read('index.html')).toContain(
-      '<footer><p>Weapons and gear from Splatoon 3 1.2.3</p></footer>',
-    );
+    expect(read('index.html')).toContain('<p>Weapons and gear from Splatoon 3 1.2.3</p></footer>');
   });
 
   it('writes a 404 page that the app renders as "not found"', () => {

@@ -35,7 +35,7 @@ describe('App', () => {
       render(<App locale="en-US" page={page} basePath="/" catalogueVersion="1.2.3" />);
       const footers = screen.getAllByRole('contentinfo');
       expect(footers).toHaveLength(1);
-      expect(footers[0]?.textContent).toBe('Weapons and gear from Splatoon 3 1.2.3');
+      expect(footers[0]?.textContent).toContain('Weapons and gear from Splatoon 3 1.2.3');
       cleanup();
     }
   });
