@@ -24,6 +24,9 @@ how well they play with *everything*, not only with their main.
 
 - Each match is assigned a random weapon, and a random piece of headgear, clothing and shoes.
 - Each piece of gear is used at most once in a run.
+- Before the first match of a newly drawn set, the player may re-roll any of its gear, as often as
+  they like, when they do not have a piece. A piece re-rolled away is spent, as if it had been used.
+  The weapon is never re-rolled.
 - A win must be secured with the drawn weapon and gear before the next draw. Nothing is skipped.
 - The player starts with **1 life** and earns **1 more for every 10 wins**. Wins during a replay
   count toward that.
@@ -117,3 +120,9 @@ catalogue comes from were answered at the same time and go in the SRS, where the
 Amended on 2026-10-24 by João Lima: the project adopts the beads work tracker. The question was
 not part of initialization and should have been asked there; it was raised after the stories were
 agreed and before any code.
+
+Amended on 2026-10-25 by João Lima: the rules gain a re-roll of gear. A player who does not have a
+drawn piece could otherwise not play the set at all, and the challenge asked them to own every piece
+in the game. The re-roll costs the piece, so it is not free: a run that re-rolls often spends its
+gear faster. The weapon stays fixed, and filtering gear by what the player owns stays out of scope.
+The SRS states the rule as FR-25.
