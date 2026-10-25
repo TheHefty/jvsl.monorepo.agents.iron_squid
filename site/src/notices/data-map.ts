@@ -1,3 +1,4 @@
+import { LOCALE_KEY } from '../i18n/switch';
 import { RUN_KEY } from '../run/storage';
 
 // What the site keeps in the visitor's browser: the SRS data map, as the privacy notice states it.
@@ -7,6 +8,5 @@ export const storedInBrowser: { id: string; message: string; key?: string }[] = 
   { id: 'run', message: 'privacy.item.run', key: RUN_KEY },
   // Kept inside the run's own record, under the same key.
   { id: 'display-name', message: 'privacy.item.name' },
-  // Not stored yet: the every-language epic adds it, and will name its key here.
-  { id: 'language', message: 'privacy.item.language' },
+  { id: 'language', message: 'privacy.item.language', key: LOCALE_KEY },
 ];

@@ -71,7 +71,7 @@
   "privacy.keptTitle": "Ce qui est conservé",
   "privacy.item.run": "Votre défi : l’ordre de ses ensembles, les résultats que vous indiquez, vos vies et remises à zéro, et le journal de chaque match.",
   "privacy.item.name": "Le nom que vous donnez à un défi, si vous en donnez un.",
-  "privacy.item.language": "La langue que vous choisissez, quand le site en propose plusieurs.",
+  "privacy.item.language": "La langue que vous choisissez dans le menu des langues.",
   "privacy.where": "Tout cela est conservé uniquement dans ce navigateur, sur cet appareil. Le site n’en envoie rien nulle part : pas de serveur à nous, pas de compte, pas de cookie, pas de mesure d’audience.",
   "privacy.nameTitle": "Le nom de votre défi",
   "privacy.name": "Le nom d’un défi est visible par toute personne qui reçoit un lien vers celui-ci. Laissez-le vide si vous préférez ne pas être nommé.",
@@ -116,5 +116,8 @@
   "share.copied": "Lien copié. Toute personne qui l’ouvre voit votre défi tel qu’il est maintenant.",
   "share.copyByHand": "Copiez ce lien pour partager votre défi :",
   "share.title": "Mon défi Iron Squid",
-  "translation.unreviewed": "Cette traduction n’a pas encore été relue par une personne qui parle couramment la langue."
+  "translation.unreviewed": "Cette traduction n’a pas encore été relue par une personne qui parle couramment la langue.",
+  "language.label": "Langue",
+  "language.current": "Langue: {name}",
+  "language.unreviewed": "traduction non relue"
 }

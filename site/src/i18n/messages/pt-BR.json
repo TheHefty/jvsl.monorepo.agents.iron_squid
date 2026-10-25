@@ -71,7 +71,7 @@
   "privacy.keptTitle": "O que é guardado",
   "privacy.item.run": "Sua run: a ordem dos conjuntos, os resultados que você informa, suas vidas e recomeços, e o histórico de cada partida.",
   "privacy.item.name": "O nome que você der para uma run, se der um.",
-  "privacy.item.language": "O idioma que você escolher, quando o site oferecer mais de um.",
+  "privacy.item.language": "O idioma que você escolher no menu de idiomas.",
   "privacy.where": "Tudo isso fica guardado só neste navegador, neste aparelho. O site não envia nada disso para lugar nenhum: não temos servidor, conta, cookie nem analytics.",
   "privacy.nameTitle": "O nome da sua run",
   "privacy.name": "O nome de uma run fica visível para qualquer pessoa que receber um link dela. Deixe em branco se preferir não ser identificado.",
@@ -116,5 +116,8 @@
   "share.copied": "Link copiado. Quem abrir vai ver sua run como ela está agora.",
   "share.copyByHand": "Copie este link para compartilhar sua run:",
   "share.title": "Minha run no Iron Squid",
-  "translation.unreviewed": "Esta tradução ainda não foi revisada por um falante fluente."
+  "translation.unreviewed": "Esta tradução ainda não foi revisada por um falante fluente.",
+  "language.label": "Idioma",
+  "language.current": "Idioma: {name}",
+  "language.unreviewed": "tradução não revisada"
 }

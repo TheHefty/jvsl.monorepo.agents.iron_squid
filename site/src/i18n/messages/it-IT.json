@@ -71,7 +71,7 @@
   "privacy.keptTitle": "Cosa viene conservato",
   "privacy.item.run": "La tua sfida: l’ordine delle combinazioni, i risultati che indichi, le vite e le ripartenze, e il registro di ogni partita.",
   "privacy.item.name": "Il nome che dai a una sfida, se gliene dai uno.",
-  "privacy.item.language": "La lingua che scegli, quando il sito ne offre più di una.",
+  "privacy.item.language": "La lingua che scegli nel menu delle lingue.",
   "privacy.where": "Tutto viene conservato solo in questo browser, su questo dispositivo. Il sito non lo invia da nessuna parte: nessun nostro server, nessun account, nessun cookie, nessuna statistica.",
   "privacy.nameTitle": "Il nome della tua sfida",
   "privacy.name": "Il nome di una sfida è visibile a chiunque riceva un link alla tua sfida. Lascialo vuoto se preferisci non comparire con un nome.",
@@ -116,5 +116,8 @@
   "share.copied": "Link copiato. Chi lo apre vede la tua sfida com’è adesso.",
   "share.copyByHand": "Copia questo link per condividere la tua sfida:",
   "share.title": "La mia sfida Iron Squid",
-  "translation.unreviewed": "Questa traduzione non è ancora stata rivista da una persona che parla la lingua correntemente."
+  "translation.unreviewed": "Questa traduzione non è ancora stata rivista da una persona che parla la lingua correntemente.",
+  "language.label": "Lingua",
+  "language.current": "Lingua: {name}",
+  "language.unreviewed": "traduzione non rivista"
 }

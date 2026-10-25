@@ -71,7 +71,7 @@
   "privacy.keptTitle": "What is kept",
   "privacy.item.run": "Your run: the order of its sets, the results you report, your lives and resets, and the log of every match.",
   "privacy.item.name": "The display name you give a run, if you give one.",
-  "privacy.item.language": "The language you choose, once the site offers more than one.",
+  "privacy.item.language": "The language you choose in the language menu.",
   "privacy.where": "All of it is kept only in this browser, on this device. The site sends none of it anywhere: there is no server of ours, no account, no cookie and no analytics.",
   "privacy.nameTitle": "Your display name",
   "privacy.name": "A display name is visible to anyone who receives a link to your run. Leave it empty if you would rather not be named.",
@@ -116,5 +116,8 @@
   "share.copied": "Link copied. Anyone who opens it sees your run as it is now.",
   "share.copyByHand": "Copy this link to share your run:",
   "share.title": "My Iron Squid run",
-  "translation.unreviewed": "This translation has not been reviewed by a fluent speaker yet."
+  "translation.unreviewed": "This translation has not been reviewed by a fluent speaker yet.",
+  "language.label": "Language",
+  "language.current": "Language: {name}",
+  "language.unreviewed": "unreviewed translation"
 }

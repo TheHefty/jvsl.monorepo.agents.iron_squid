@@ -71,7 +71,7 @@
   "privacy.keptTitle": "Qué se guarda",
   "privacy.item.run": "Tu reto: el orden de sus conjuntos, los resultados que indicas, tus vidas y reinicios, y el historial de cada combate.",
   "privacy.item.name": "El nombre que le pongas a un reto, si le pones uno.",
-  "privacy.item.language": "El idioma que elijas, cuando el sitio ofrezca más de uno.",
+  "privacy.item.language": "El idioma que elijas en el menú de idiomas.",
   "privacy.where": "Todo se guarda solo en este navegador, en este dispositivo. El sitio no lo envía a ninguna parte: no tenemos servidor, ni cuentas, ni cookies, ni analítica.",
   "privacy.nameTitle": "El nombre de tu reto",
   "privacy.name": "El nombre de un reto lo puede ver cualquier persona que reciba un enlace a él. Déjalo vacío si prefieres no aparecer con nombre.",
@@ -116,5 +116,8 @@
   "share.copied": "Enlace copiado. Quien lo abra verá tu reto tal como está ahora.",
   "share.copyByHand": "Copia este enlace para compartir tu reto:",
   "share.title": "Mi reto de Iron Squid",
-  "translation.unreviewed": "Esta traducción todavía no la revisó una persona con dominio del idioma."
+  "translation.unreviewed": "Esta traducción todavía no la revisó una persona con dominio del idioma.",
+  "language.label": "Idioma",
+  "language.current": "Idioma: {name}",
+  "language.unreviewed": "traducción sin revisar"
 }

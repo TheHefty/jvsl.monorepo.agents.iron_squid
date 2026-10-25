@@ -10,8 +10,15 @@ export const pending = (task: string) => () => {
   throw new Error(`pending: this step is written by the task ${task}`);
 };
 
-const switcher = pending('language-switcher (is-8el.1.1)');
-Given('a locale whose translation no fluent speaker has reviewed', switcher);
-When("a visitor is on that locale's address", switcher);
-Then('the page says the translation has not been reviewed', switcher);
-Then('the language switcher marks that language as unreviewed', switcher);
+// A pending step that takes one parameter must declare it, or the step cannot be generated.
+const pendingWith =
+  (task: string) =>
+  async ({}, value: unknown) => {
+    void value;
+    pending(task)();
+  };
+const root = pending('root-language (is-8el.1.2)');
+Given('a browser whose preferred language is {string}', pendingWith('root-language (is-8el.1.2)'));
+When('the visitor opens the root of the site for the first time', root);
+When('the visitor later opens the root of the site', root);
+Then('the visitor arrives at the {string} address', pendingWith('root-language (is-8el.1.2)'));

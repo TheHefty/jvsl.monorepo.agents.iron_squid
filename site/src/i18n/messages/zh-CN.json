@@ -71,7 +71,7 @@
   "privacy.keptTitle": "保存的内容",
   "privacy.item.run": "你的挑战:组合的顺序、你报告的结果、你的命数和重置次数,以及每场对战的记录。",
   "privacy.item.name": "你给挑战起的名字(如果起了的话)。",
-  "privacy.item.language": "在网站提供多种语言时你选择的语言。",
+  "privacy.item.language": "你在语言菜单中选择的语言。",
   "privacy.where": "这些内容只保存在这台设备的这个浏览器里。网站不会把它们发送到任何地方:我们没有服务器、没有账号、没有 Cookie,也没有统计分析。",
   "privacy.nameTitle": "挑战的名字",
   "privacy.name": "收到你挑战链接的任何人都能看到挑战的名字。如果不想被署名,请留空。",
@@ -116,5 +116,8 @@
   "share.copied": "链接已复制。打开链接的人会看到你挑战现在的样子。",
   "share.copyByHand": "复制这个链接来分享你的挑战:",
   "share.title": "我的 Iron Squid 挑战",
-  "translation.unreviewed": "这份翻译尚未经过流利使用该语言的人审阅。"
+  "translation.unreviewed": "这份翻译尚未经过流利使用该语言的人审阅。",
+  "language.label": "语言",
+  "language.current": "语言:{name}",
+  "language.unreviewed": "未经审阅的翻译"
 }

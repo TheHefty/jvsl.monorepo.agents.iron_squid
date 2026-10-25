@@ -71,7 +71,7 @@
   "privacy.keptTitle": "저장되는 것",
   "privacy.item.run": "여러분의 도전: 세트 순서, 여러분이 알린 결과, 목숨과 초기화, 그리고 모든 배틀의 기록.",
   "privacy.item.name": "도전에 붙인 이름(붙인 경우).",
-  "privacy.item.language": "사이트가 여러 언어를 제공할 때 여러분이 고른 언어.",
+  "privacy.item.language": "언어 메뉴에서 고른 언어.",
   "privacy.where": "이 모든 것은 이 기기의 이 브라우저에만 저장됩니다. 사이트는 어디에도 보내지 않습니다. 우리 서버도, 계정도, 쿠키도, 분석 도구도 없습니다.",
   "privacy.nameTitle": "도전의 이름",
   "privacy.name": "도전의 이름은 그 링크를 받은 누구나 볼 수 있습니다. 이름을 밝히고 싶지 않다면 비워 두세요.",
@@ -116,5 +116,8 @@
   "share.copied": "링크를 복사했습니다. 링크를 연 사람은 지금 상태의 도전을 보게 됩니다.",
   "share.copyByHand": "이 링크를 복사해서 도전을 공유하세요:",
   "share.title": "나의 Iron Squid 도전",
-  "translation.unreviewed": "이 번역은 아직 그 언어를 유창하게 하는 사람의 검토를 받지 않았습니다."
+  "translation.unreviewed": "이 번역은 아직 그 언어를 유창하게 하는 사람의 검토를 받지 않았습니다.",
+  "language.label": "언어",
+  "language.current": "언어: {name}",
+  "language.unreviewed": "검토되지 않은 번역"
 }

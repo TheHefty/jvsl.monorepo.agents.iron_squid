@@ -71,7 +71,7 @@
   "privacy.keptTitle": "Was gespeichert wird",
   "privacy.item.run": "Dein Run: die Reihenfolge seiner Sets, die Ergebnisse, die du meldest, deine Leben und Neustarts sowie das Protokoll jedes Kampfes.",
   "privacy.item.name": "Der Name, den du einem Run gibst, falls du einen gibst.",
-  "privacy.item.language": "Die Sprache, die du wählst, sobald die Seite mehr als eine anbietet.",
+  "privacy.item.language": "Die Sprache, die du im Sprachmenü wählst.",
   "privacy.where": "All das wird nur in diesem Browser auf diesem Gerät gespeichert. Die Seite schickt nichts davon irgendwohin: kein eigener Server, kein Konto, kein Cookie, keine Analyse.",
   "privacy.nameTitle": "Der Name deines Runs",
   "privacy.name": "Der Name eines Runs ist für alle sichtbar, die einen Link zu deinem Run bekommen. Lass ihn leer, wenn du lieber nicht genannt werden willst.",
@@ -116,5 +116,8 @@
   "share.copied": "Link kopiert. Wer ihn öffnet, sieht deinen Run so, wie er jetzt ist.",
   "share.copyByHand": "Kopiere diesen Link, um deinen Run zu teilen:",
   "share.title": "Mein Iron-Squid-Run",
-  "translation.unreviewed": "Diese Übersetzung wurde noch nicht von einer Person mit fließenden Sprachkenntnissen geprüft."
+  "translation.unreviewed": "Diese Übersetzung wurde noch nicht von einer Person mit fließenden Sprachkenntnissen geprüft.",
+  "language.label": "Sprache",
+  "language.current": "Sprache: {name}",
+  "language.unreviewed": "ungeprüfte Übersetzung"
 }

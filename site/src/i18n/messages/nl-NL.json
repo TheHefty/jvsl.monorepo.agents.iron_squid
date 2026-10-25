@@ -71,7 +71,7 @@
   "privacy.keptTitle": "Wat er wordt bewaard",
   "privacy.item.run": "Je run: de volgorde van de sets, de resultaten die je doorgeeft, je levens en herstarts, en het logboek van elke wedstrijd.",
   "privacy.item.name": "De naam die je een run geeft, als je er een geeft.",
-  "privacy.item.language": "De taal die je kiest, zodra de site er meer dan één aanbiedt.",
+  "privacy.item.language": "De taal die je kiest in het taalmenu.",
   "privacy.where": "Alles wordt alleen in deze browser, op dit apparaat, bewaard. De site stuurt er niets van ergens heen: geen eigen server, geen account, geen cookie, geen analytics.",
   "privacy.nameTitle": "De naam van je run",
   "privacy.name": "De naam van een run is zichtbaar voor iedereen die een link naar je run krijgt. Laat hem leeg als je liever niet bij naam genoemd wordt.",
@@ -116,5 +116,8 @@
   "share.copied": "Link gekopieerd. Wie hem opent, ziet je run zoals hij nu is.",
   "share.copyByHand": "Kopieer deze link om je run te delen:",
   "share.title": "Mijn Iron Squid-run",
-  "translation.unreviewed": "Deze vertaling is nog niet nagekeken door iemand die de taal vloeiend spreekt."
+  "translation.unreviewed": "Deze vertaling is nog niet nagekeken door iemand die de taal vloeiend spreekt.",
+  "language.label": "Taal",
+  "language.current": "Taal: {name}",
+  "language.unreviewed": "niet-nagekeken vertaling"
 }
