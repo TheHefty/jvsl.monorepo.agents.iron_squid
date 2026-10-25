@@ -2,7 +2,16 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl';
 import { imageUrl, loadCatalogues } from '../catalogue/load';
 import type { Catalogue, Item } from '../catalogue/types';
-import { currentSet, nextSet, reportWin, startRun, undo, type RunState } from './engine';
+import {
+  currentSet,
+  nextSet,
+  reportLoss,
+  reportWin,
+  startRun,
+  undo,
+  winsToNextLife,
+  type RunState,
+} from './engine';
 import { displayName } from './name';
 import { cryptoSource } from './random';
 import { browserStorage, createRunStore, type LoadResult, type RunStore } from './storage';
@@ -156,6 +165,18 @@ export function RunPage({ newestVersion }: { newestVersion: string }) {
   if (!catalogue) return null;
   const pieces = setPieces(catalogue, state);
 
+  // What a result did, for screen readers (NFR-A4): the result, the kit and the lives now.
+  const announceResult = (id: string, after: RunState) =>
+    setAnnouncement(
+      intl.formatMessage(
+        { id },
+        {
+          kit: nameOf(pieces.kit),
+          lives: intl.formatMessage({ id: 'run.lives' }, { lives: after.lives }),
+        },
+      ),
+    );
+
   // Each action names the step on screen; the engine refuses one made on a state already moved on.
   //
   // After a result, the next button appears where the last one was, so the second click of a double
@@ -200,6 +221,12 @@ export function RunPage({ newestVersion }: { newestVersion: string }) {
               <li key={i} data-full={i < state.lives} />
             ))}
           </ul>
+          <p className="run-next-life">
+            {intl.formatMessage({ id: 'run.nextLife' }, { wins: winsToNextLife(state) })}
+          </p>
+          <p className="run-resets">
+            {intl.formatMessage({ id: 'run.resets' }, { resets: state.resets })}
+          </p>
         </div>
       </Hero>
       {notice && (
@@ -233,25 +260,42 @@ export function RunPage({ newestVersion }: { newestVersion: string }) {
         </div>
         <div className="actions">
           {state.phase === 'playing' ? (
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={(event) =>
-                act(
-                  event,
-                  () => reportWin(state, { step: state.step, at: new Date().toISOString() }),
-                  () =>
-                    setAnnouncement(
-                      intl.formatMessage(
-                        { id: 'set.announceConquered' },
-                        { kit: nameOf(pieces.kit) },
-                      ),
-                    ),
-                )
-              }
-            >
-              <FormattedMessage id="run.won" />
-            </button>
+            <>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={(event) =>
+                  act(
+                    event,
+                    () => reportWin(state, { step: state.step, at: new Date().toISOString() }),
+                    (after) => announceResult('announce.win', after),
+                  )
+                }
+              >
+                <FormattedMessage id="run.won" />
+              </button>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={(event) =>
+                  act(
+                    event,
+                    () => reportLoss(state, { step: state.step, at: new Date().toISOString() }),
+                    (after) => {
+                      // A loss on the last life resets the run (FR-18); say so on the page too.
+                      if (after.resets > state.resets) {
+                        announceResult('announce.reset', after);
+                        setNotice(intl.formatMessage({ id: 'run.resetNotice' }));
+                      } else {
+                        announceResult('announce.loss', after);
+                      }
+                    },
+                  )
+                }
+              >
+                <FormattedMessage id="run.lost" />
+              </button>
+            </>
           ) : (
             <button
               type="button"

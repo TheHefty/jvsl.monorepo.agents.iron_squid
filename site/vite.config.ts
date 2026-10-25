@@ -9,7 +9,7 @@ export default defineConfig({
   // Scenarios that build the site build it elsewhere, never over the dist/ under test.
   build: { outDir: process.env.BUILD_OUT_DIR ?? 'dist', emptyOutDir: true },
   test: {
-    include: ['src/**/*.test.{ts,tsx}', 'scripts/**/*.test.ts'],
+    include: ['src/**/*.test.{ts,tsx}', 'scripts/**/*.test.ts', 'e2e/support/**/*.test.ts'],
     environment: 'node',
   },
 });

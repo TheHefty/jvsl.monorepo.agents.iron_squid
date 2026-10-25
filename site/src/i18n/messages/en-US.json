@@ -36,9 +36,15 @@
   "set.shoes": "Shoes",
   "set.usedOnce": "Used once",
   "set.announce": "Your set: {kit}, with {head}, {clothes} and {shoes}.",
-  "set.announceConquered": "Conquered with {kit}.",
   "newRun.title": "Start a new run?",
   "newRun.warning": "Your current run will be discarded, with every weapon you have conquered in it.",
   "newRun.keep": "Keep my run",
-  "newRun.confirm": "Discard it and start over"
+  "newRun.confirm": "Discard it and start over",
+  "run.lost": "I lost",
+  "run.nextLife": "{wins, plural, one {# more win earns} other {# more wins earn}} the next life",
+  "run.resets": "{resets, plural, one {# reset} other {# resets}}",
+  "run.resetNotice": "Your last life is gone: you are back at the first set you conquered, with 1 life.",
+  "announce.win": "Won with {kit}. {lives}.",
+  "announce.loss": "Lost with {kit}. {lives} left.",
+  "announce.reset": "Lost your last life with {kit}. The run starts again from the first set you conquered, with 1 life."
 }

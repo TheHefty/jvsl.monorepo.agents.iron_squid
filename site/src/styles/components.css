@@ -177,6 +177,12 @@ dialog::backdrop {
   font-size: 1.125rem;
 }
 
+.run-next-life,
+.run-resets {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
 .ink-strip .drops > li {
   border-color: var(--color-on-ink);
 }
