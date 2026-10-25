@@ -155,3 +155,176 @@ dialog::backdrop {
     animation: none !important;
   }
 }
+
+/* — the run: header strip, set card, pieces, actions — */
+.run-title {
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  text-transform: uppercase;
+  /* A name of emoji has no break opportunity; it still has to fit a phone. */
+  overflow-wrap: anywhere;
+}
+
+.run-stats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-6);
+  color: var(--color-on-ink-muted);
+}
+
+.run-conquered {
+  margin: 0;
+  font-size: 1.125rem;
+}
+
+.ink-strip .drops > li {
+  border-color: var(--color-on-ink);
+}
+
+.ink-strip .drops > li[data-full='true'] {
+  background: var(--color-on-ink);
+}
+
+.notice {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-accent);
+}
+
+.set-card {
+  margin-block: var(--space-6);
+}
+
+.piece {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin: 0;
+}
+
+.piece img {
+  flex: none;
+  object-fit: contain;
+}
+
+/* Only the kit, with its large image, wraps its name under the picture on a phone; gear stays side
+   by side and lets its name wrap instead. */
+.piece-kit {
+  flex-wrap: wrap;
+}
+
+.rules {
+  margin-block-start: var(--space-8);
+}
+
+/* Long names (and the kit's large one) wrap rather than push a phone's page sideways. */
+.piece figcaption {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.piece-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.piece-name {
+  font-weight: var(--font-weight-heading);
+}
+
+.piece-kit .piece-name {
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  text-transform: uppercase;
+}
+
+.gear {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--space-3);
+}
+
+.gear .piece {
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.new-run {
+  margin-block-end: var(--space-6);
+}
+
+/* — the start: rules and the name field — */
+.rules ol {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: rule;
+}
+
+.rules li::before {
+  counter-increment: rule;
+  content: counter(rule, decimal-leading-zero);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-accent-text);
+}
+
+.start-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  max-width: 28rem;
+  margin-block: var(--space-8);
+}
+
+.input {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: var(--space-2) var(--space-3);
+  font: inherit;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-md);
+}
+
+.input[aria-invalid='true'] {
+  border-color: var(--color-accent);
+}
+
+.field-hint {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.field-error {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-accent-text);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
