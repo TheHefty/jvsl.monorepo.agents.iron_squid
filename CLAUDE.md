@@ -61,7 +61,7 @@ them; work found along the way is planned whole too, before its own code.
 **Iron Squid** is a static React website that runs a Splatoon 3 challenge: win with every weapon kit
 in the game, each with randomly drawn gear, and replay everything already won when the last life is
 lost. Progress stays in the player's browser and is shared as a link. Published on GitHub Pages
-from `main`; repository `TheHefty/jvsl.monorepo.agents.iron_squid`, public, MIT for the code and not
+from release tags cut on `main`, never from an ordinary merge; repository `TheHefty/jvsl.monorepo.agents.iron_squid`, public, MIT for the code and not
 for Nintendo's assets.
 
 Read before anything else:
@@ -98,7 +98,13 @@ TypeScript strict, react-intl. From `site/`:
 - **A pull request's title is its commit.** Merges are squash only and take the PR title, which the
   required `pr-title` check holds to a conventional commit. release-please reads those commits, so
   a `fix` titled `chore` is a release that never happens. The release PR is release-please's own;
-  merging it tags `vX.Y.Z`.
+  merging it tags `vX.Y.Z` and publishes that version (`deploy.yml`, on the release).
+- **Acceptance gates the release, not every pull request.** An ordinary pull request must pass
+  `build`, `typecheck`, `lint`, `unit`, `pr-title` and `repo-settings`; its `acceptance` job is
+  skipped by its own `if`, which GitHub counts as passing. On release-please's pull request it runs
+  in full, and the deploy runs it again on the release before publishing. A change that breaks a
+  scenario can therefore reach `main` and is found when the version is cut, so run the scenarios a
+  change touches before opening its pull request.
 - A story's `.feature` is listed in `site/e2e/registered-features.ts` by the task that starts it,
   after its scenarios have been seen failing. Scenarios a later task of the same story turns green
   are listed there as `pending`, with that task's name; CI leaves them out, and their steps go in

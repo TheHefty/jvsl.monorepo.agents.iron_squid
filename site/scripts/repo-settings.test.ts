@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { fromGraphql, requiredChecks, settingsProblems } from './repo-settings';
+import {
+  environmentProblems,
+  fromGraphql,
+  requiredChecks,
+  settingsProblems,
+} from './repo-settings';
 
 const goodRepo = {
   allow_squash_merge: true,
@@ -45,6 +50,7 @@ describe('settingsProblems', () => {
     const branch = structuredClone(goodBranch);
     branch.protection.required_status_checks.contexts = ['typecheck', 'lint'];
     expect(settingsProblems(goodRepo, branch)).toEqual([
+      'main does not require the check "build"',
       'main does not require the check "unit"',
       'main does not require the check "acceptance"',
       'main does not require the check "pr-title"',
@@ -87,5 +93,27 @@ describe('fromGraphql', () => {
     expect(settingsProblems(fromGraphql({}), goodBranch)[0]).toBe(
       'squash_merge_commit_title is "<not visible>", expected "PR_TITLE"',
     );
+  });
+});
+
+describe('requiredChecks', () => {
+  it('include the build, which no longer runs inside acceptance on every pull request (NFR-D5)', () => {
+    expect(requiredChecks).toContain('build');
+    // Still required: on an ordinary pull request the job is skipped by its own condition, which
+    // GitHub counts as passing; on the release pull request it must pass (task release-pipeline).
+    expect(requiredChecks).toContain('acceptance');
+  });
+});
+
+describe('environmentProblems', () => {
+  it('accepts a Pages environment that deploys from version tags only (NFR-D8)', () => {
+    expect(environmentProblems([{ name: 'v*', type: 'tag' }])).toEqual([]);
+  });
+
+  it('refuses one that still deploys from main, or not from tags (failure 2)', () => {
+    expect(environmentProblems([{ name: 'main', type: 'branch' }])).toEqual([
+      'github-pages deploys from the branch "main"; only a version tag may be published',
+      'github-pages does not deploy from the tags "v*"',
+    ]);
   });
 });

@@ -21,6 +21,7 @@ export const registrations: Registration[] = [
   { feature: 'share-a-run/share-link.feature' },
   { feature: 'every-language/localized-names.feature' },
   { feature: 'every-language/choose-language.feature' },
+  { feature: 'release-gate/deploy-on-release.feature' },
   {
     feature: 'every-language/translate-interface.feature',
   },
