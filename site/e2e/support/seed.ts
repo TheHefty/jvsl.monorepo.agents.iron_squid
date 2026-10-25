@@ -33,7 +33,6 @@ export const winsThenPlaying = (n: number): Play[] =>
 
 // Writes the run into the page's storage before its first load, once: a reload keeps what the
 // player did since.
-// Puts the run in the browser's storage before the page's own scripts run, once per tab.
 export async function seedRunScript(page: Page, state: RunState) {
   await page.addInitScript(
     (record) => {

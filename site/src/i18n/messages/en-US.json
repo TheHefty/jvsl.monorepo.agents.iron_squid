@@ -109,5 +109,10 @@
   "shared.backToRun": "Back to your run",
   "shared.startOwn": "Start a run of your own",
   "shared.broken": "This link is broken: it does not hold a run this site can read.",
-  "shared.unknownCatalogue": "This run needs the weapons and gear of Splatoon 3 {version}, which this site does not have."
+  "shared.unknownCatalogue": "This run needs the weapons and gear of Splatoon 3 {version}, which this site does not have.",
+  "share.copy": "Copy link",
+  "share.share": "Share",
+  "share.copied": "Link copied. Anyone who opens it sees your run as it is now.",
+  "share.copyByHand": "Copy this link to share your run:",
+  "share.title": "My Iron Squid run"
 }

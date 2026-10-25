@@ -93,5 +93,7 @@ When('the player completes the run', async ({ page }) => {
 });
 
 Then('the screen reader announces that the run is complete', async ({ page }) => {
-  await expect(page.locator('[aria-live="polite"]')).toHaveText(message('finish.announce'));
+  await expect(page.locator('.run-announcement[aria-live="polite"]')).toHaveText(
+    message('finish.announce'),
+  );
 });
