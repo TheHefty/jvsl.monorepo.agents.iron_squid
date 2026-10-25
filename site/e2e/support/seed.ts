@@ -12,7 +12,9 @@ const catalogue = JSON.parse(
 ) as Catalogue;
 
 export type Play = 'win' | 'loss' | 'next';
-const at = '2026-10-25T12:00:00.000Z';
+// In the past, as a real run's start always is: a run dated after the clock would make a log that
+// began on the day it was migrated look older than the run itself.
+const at = '2026-10-20T12:00:00.000Z';
 
 // `when` dates the results (the run log shows them); by default every result is dated `at`.
 export function playRun(plays: Play[], name?: string, when: string = at): RunState {

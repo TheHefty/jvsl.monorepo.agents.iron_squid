@@ -247,3 +247,42 @@ test('a run saved in format 1 loads, plays on, and is kept in format 2 with its 
     page.getByText(message('run.conquered', { conquered: 4, total: 160 }), { exact: true }),
   ).toBeVisible();
 });
+
+// A run whose log began part-way (migrated from format 1) never shows a part of its wins and losses
+// as the whole (task finish-screen, failure 2).
+test('a completed run whose log began part-way says from when wins and losses were counted', async ({
+  page,
+}) => {
+  const { playRun, winsThenPlaying } = await import('../support/seed');
+  const played = playRun(winsThenPlaying(159));
+  const {
+    log: _log,
+    logSince: _since,
+    previous,
+    ...rest
+  } = played as unknown as Record<string, unknown>;
+  void _log;
+  void _since;
+  const format1 = {
+    ...rest,
+    schema: 1,
+    ...(previous ? { previous: { ...(previous as object), schema: 1 } } : {}),
+  };
+  await page.addInitScript(
+    (record) => {
+      if (!sessionStorage.getItem('seeded')) {
+        localStorage.setItem('iron-squid:run', record);
+        sessionStorage.setItem('seeded', '1');
+      }
+    },
+    JSON.stringify({ revision: 1, state: format1 }),
+  );
+  await page.goto('./en-US/');
+  await button(page, 'run.won').click();
+  await expect(page.getByRole('heading', { name: message('finish.title') })).toBeVisible();
+  // One win in the log, out of 160 matches: the card says the count is partial.
+  await expect(
+    page.getByText(message('finish.summary', { matches: 160, wins: 1, losses: 0, resets: 0 })),
+  ).toBeVisible();
+  await expect(page.getByText(/Wins and losses are counted from/)).toBeVisible();
+});

@@ -54,5 +54,9 @@
   "log.since": "This log starts on {date}; results before that day were not recorded.",
   "log.empty": "No results yet.",
   "log.entry": "{replay, select, true {Replay. } other {}}{result, select, win {Won with {kit}: {conquered} of {total} kits conquered, {lives} left.} other {Lost with {kit}: {lives} left.{reset, select, true { The run was reset to the first set conquered.} other {}}}}",
-  "log.summary": "Run log ({count})"
+  "log.summary": "Run log ({count})",
+  "finish.title": "Run complete",
+  "finish.summary": "It took {matches, plural, one {# match} other {# matches}}: {wins, plural, one {# win} other {# wins}}, {losses, plural, one {# loss} other {# losses}} and {resets, plural, one {# reset} other {# resets}}.",
+  "finish.since": "Wins and losses are counted from {date}, when this run's log began.",
+  "finish.announce": "Run complete: every kit conquered."
 }

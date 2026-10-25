@@ -364,3 +364,8 @@ dialog::backdrop {
   font-size: 0.875rem;
   color: var(--color-text-muted);
 }
+
+.finish-title {
+  font-size: clamp(2rem, 6vw, 3rem);
+  text-transform: uppercase;
+}
