@@ -31,7 +31,9 @@ describe('the 11.3.0 catalogue', () => {
   });
 
   it('keeps the Hero Mode and Side Order rewards a player can wear online', () => {
-    const names = Object.values(c.gear).flatMap((slot) => slot.map((g) => (english.names as Record<string, string>)[g.id]));
+    const names = Object.values(c.gear).flatMap((slot) =>
+      slot.map((g) => (english.names as Record<string, string>)[g.id]),
+    );
     expect(names).toEqual(expect.arrayContaining(['Hero Headset Replica', 'Order Suit Replica']));
   });
 });
