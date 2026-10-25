@@ -5,6 +5,7 @@ import { Layout } from './Layout';
 import { PrivacyNotice, TermsOfUse } from './notices/Notices';
 import type { Page } from './pages';
 import { RunPage } from './run/RunPage';
+import { SharedRunPage } from './share/SharedRunPage';
 import enUS from './i18n/messages/en-US.json';
 
 const catalogues: Record<Locale, Record<string, string>> = { 'en-US': enUS };
@@ -16,6 +17,7 @@ export function App({ locale, page, basePath, catalogueVersion = currentVersion 
     <IntlProvider locale={locale} messages={catalogues[locale]}>
       <Layout catalogueVersion={catalogueVersion} home={`${basePath}${locale}/`}>
         {page === 'home' && <RunPage newestVersion={catalogueVersion} />}
+        {page === 'shared' && <SharedRunPage home={`${basePath}${locale}/`} />}
         {page === 'privacy' && <PrivacyNotice />}
         {page === 'terms' && <TermsOfUse privacy={`${basePath}${locale}/privacy/`} />}
         {page === 'not-found' && <NotFound home={`${basePath}${locale}/`} />}
