@@ -14,11 +14,12 @@ const catalogue = JSON.parse(
 export type Play = 'win' | 'loss' | 'next';
 const at = '2026-10-25T12:00:00.000Z';
 
-export function playRun(plays: Play[], name?: string): RunState {
+// `when` dates the results (the run log shows them); by default every result is dated `at`.
+export function playRun(plays: Play[], name?: string, when: string = at): RunState {
   let s = startRun(catalogue, { name }, cryptoSource, at);
   for (const play of plays) {
-    if (play === 'win') s = reportWin(s, { step: s.step, at });
-    else if (play === 'loss') s = reportLoss(s, { step: s.step, at });
+    if (play === 'win') s = reportWin(s, { step: s.step, at: when });
+    else if (play === 'loss') s = reportLoss(s, { step: s.step, at: when });
     else s = nextSet(s, { step: s.step });
   }
   return s;

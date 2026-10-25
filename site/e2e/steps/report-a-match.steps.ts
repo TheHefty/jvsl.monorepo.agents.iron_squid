@@ -158,9 +158,11 @@ Then('how many resets the run has had', async ({ page }) => {
   await expect(page.getByText(message('run.resets', { resets: 0 }), { exact: true })).toBeVisible();
 });
 
+// A run with a few results already, so there is a log to read as well as a result to report.
 Given('a player using a screen reader', async ({ page, world }) => {
-  await page.goto('./en-US/');
-  await page.getByRole('button', { name: message('start.roll') }).click();
+  const state = playRun(winsThenPlaying(3));
+  world.state = state;
+  await seedRun(page, state);
   world.set = await readSet(page);
 });
 
