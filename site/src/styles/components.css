@@ -28,6 +28,40 @@
   z-index: 1;
 }
 
+/* More splats, of our own drawing, as the design scatters them (design-alignment). */
+.ink-strip > .splat {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  background: var(--color-ink-glow);
+}
+
+.ink-strip > .splat-1 {
+  width: 7rem;
+  height: 7rem;
+  right: 34%;
+  bottom: 12%;
+  border-radius: 52% 48% 61% 39% / 44% 62% 38% 56%;
+}
+
+.ink-strip > .splat-2 {
+  width: 2.75rem;
+  height: 2.75rem;
+  right: 30%;
+  top: 18%;
+  border-radius: 50%;
+}
+
+.ink-strip > .splat-3 {
+  width: 11rem;
+  height: 11rem;
+  left: -4rem;
+  bottom: -3.5rem;
+  border-radius: 47% 53% 62% 38% / 58% 41% 59% 42%;
+  background: var(--color-ink-ghost);
+  opacity: 0.35;
+}
+
 .hero-title {
   font-size: clamp(2.5rem, 8vw, 5.5rem);
   text-transform: uppercase;
@@ -312,23 +346,92 @@ dialog::backdrop {
   margin-block-end: var(--space-6);
 }
 
-/* — the start: rules and the name field — */
+/* — the start: the rules as five stickers in two columns, and the name field — */
 .rules ol {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-  gap: var(--space-3);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
   margin: 0;
   padding: 0;
   list-style: none;
-  counter-reset: rule;
 }
 
-.rules li::before {
-  counter-increment: rule;
-  content: counter(rule, decimal-leading-zero);
-  font-size: 0.75rem;
+@media (max-width: 30rem) {
+  .rules ol {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.rules li p {
+  margin: 0;
+}
+
+/* The design's tilts for the five rules, on their labels only: the text stays straight. */
+.rules li:nth-child(1) .sticker {
+  transform: rotate(-1.2deg);
+}
+
+.rules li:nth-child(2) .sticker {
+  transform: rotate(1deg);
+}
+
+.rules li:nth-child(3) .sticker {
+  transform: rotate(0.8deg);
+}
+
+.rules li:nth-child(4) .sticker {
+  transform: rotate(-0.9deg);
+}
+
+.rules li:nth-child(5) .sticker {
+  transform: rotate(1.4deg);
+}
+
+/* — the run log's marks: an ink blot for a win, an outline for a loss, each with its word — */
+.log-mark {
+  display: inline-block;
+  min-width: 3.5rem;
+  margin-inline-end: var(--space-2);
+  padding: 0.15rem var(--space-2);
+  font-size: 0.7rem;
   font-weight: 600;
-  color: var(--color-accent-text);
+  letter-spacing: 0.12em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.log-mark-win {
+  color: var(--color-on-sticker);
+  background: var(--color-sticker);
+  border-radius: 52% 48% 44% 56% / 60% 58% 42% 40%;
+  transform: rotate(-2deg);
+}
+
+.log-mark-loss {
+  color: var(--color-text-muted);
+  background: transparent;
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-sm);
+  transform: rotate(1.5deg);
+}
+
+/* — the kit on its splat: tilted, and tilting further as it lands, unless asked not to move — */
+.kit-splat {
+  display: inline-flex;
+  flex: none;
+  padding: var(--space-2);
+  border: 2px solid var(--color-accent);
+  border-radius: 58% 42% 39% 61% / 47% 55% 45% 53%;
+  background: var(--color-accent-fill);
+  transform: rotate(-4deg);
+  /* Still under reduced motion (NFR-A7): the global rule in this file turns every animation off. */
+  animation: kit-lands 0.45s ease-out;
+}
+
+@keyframes kit-lands {
+  from {
+    transform: rotate(-9deg) scale(1.05);
+  }
 }
 
 .start-form {

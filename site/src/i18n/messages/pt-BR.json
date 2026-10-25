@@ -124,5 +124,13 @@
   "theme.label": "Tema",
   "theme.light": "Claro",
   "theme.dark": "Escuro",
-  "privacy.item.theme": "O tema claro ou escuro que você escolher no cabeçalho."
+  "privacy.item.theme": "O tema claro ou escuro que você escolher no cabeçalho.",
+  "rules.rollTitle": "O sorteio",
+  "rules.winTitle": "A vitória",
+  "rules.livesTitle": "Vidas",
+  "rules.resetTitle": "O recomeço",
+  "rules.endTitle": "O fim",
+  "log.markWin": "Vitória",
+  "log.markLoss": "Derrota",
+  "rules.sticker": "{number} · {title}"
 }

@@ -124,5 +124,13 @@
   "theme.label": "Thema",
   "theme.light": "Licht",
   "theme.dark": "Donker",
-  "privacy.item.theme": "Het lichte of donkere thema dat je in de kop kiest."
+  "privacy.item.theme": "Het lichte of donkere thema dat je in de kop kiest.",
+  "rules.rollTitle": "De trekking",
+  "rules.winTitle": "De overwinning",
+  "rules.livesTitle": "Levens",
+  "rules.resetTitle": "De herstart",
+  "rules.endTitle": "Het einde",
+  "log.markWin": "Winst",
+  "log.markLoss": "Verlies",
+  "rules.sticker": "{number} · {title}"
 }

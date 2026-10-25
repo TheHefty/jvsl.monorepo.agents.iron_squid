@@ -124,5 +124,13 @@
   "theme.label": "Тема",
   "theme.light": "Светлая",
   "theme.dark": "Тёмная",
-  "privacy.item.theme": "Светлая или тёмная тема, которую вы выбираете в шапке."
+  "privacy.item.theme": "Светлая или тёмная тема, которую вы выбираете в шапке.",
+  "rules.rollTitle": "Жребий",
+  "rules.winTitle": "Победа",
+  "rules.livesTitle": "Жизни",
+  "rules.resetTitle": "Перезапуск",
+  "rules.endTitle": "Финал",
+  "log.markWin": "Победа",
+  "log.markLoss": "Поражение",
+  "rules.sticker": "{number} · {title}"
 }

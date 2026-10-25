@@ -124,5 +124,13 @@
   "theme.label": "Tema",
   "theme.light": "Chiaro",
   "theme.dark": "Scuro",
-  "privacy.item.theme": "Il tema chiaro o scuro che scegli nell’intestazione."
+  "privacy.item.theme": "Il tema chiaro o scuro che scegli nell’intestazione.",
+  "rules.rollTitle": "Il sorteggio",
+  "rules.winTitle": "La vittoria",
+  "rules.livesTitle": "Le vite",
+  "rules.resetTitle": "La ripartenza",
+  "rules.endTitle": "La fine",
+  "log.markWin": "Vittoria",
+  "log.markLoss": "Sconfitta",
+  "rules.sticker": "{number} · {title}"
 }

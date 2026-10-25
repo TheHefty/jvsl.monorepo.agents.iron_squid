@@ -124,5 +124,13 @@
   "theme.label": "主题",
   "theme.light": "浅色",
   "theme.dark": "深色",
-  "privacy.item.theme": "你在页眉中选择的浅色或深色主题。"
+  "privacy.item.theme": "你在页眉中选择的浅色或深色主题。",
+  "rules.rollTitle": "抽取",
+  "rules.winTitle": "胜利",
+  "rules.livesTitle": "生命",
+  "rules.resetTitle": "重置",
+  "rules.endTitle": "终点",
+  "log.markWin": "胜",
+  "log.markLoss": "负",
+  "rules.sticker": "{number} · {title}"
 }
