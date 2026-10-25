@@ -1,0 +1,81 @@
+/*
+ * Design tokens: every colour, size and shadow on the site comes from here (NFR-A6).
+ *
+ * From the Nocturne design system of the Claude Design project "Iron Squid" (rounds 3 and 4,
+ * "inked"), adopted on 2026-10-24. Dark is the default; the device's own setting picks the light
+ * theme — there is no toggle, so nothing is stored (docs/RULES.md). The ink grounds stay saturated
+ * in both themes. Contrast is checked from these values by src/styles/tokens.test.ts: text pairs
+ * reach 4.5:1, lines and marks 3:1, in both themes.
+ */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('../fonts/InterVariable.woff2') format('woff2');
+}
+
+:root {
+  color-scheme: dark;
+
+  /* grounds and text */
+  --color-bg: #161826;
+  --color-surface: #232532;
+  --color-text: #e9e9ed;
+  --color-text-muted: #b2b6ca;
+  --color-divider: #3f424d;
+
+  /* the accent: lines, outlines, marks and large text only (3:1); small text uses accent-text */
+  --color-accent: #9184d9;
+  --color-accent-text: #d2cefd;
+  --color-accent-fill: #423a6a;
+
+  /* ink: the saturated indigo grounds of the hero strips and splats */
+  --color-ink: #262a60;
+  --color-ink-glow: #353b80;
+  --color-ink-ghost: #4c5397;
+  --color-on-ink: #e9e9ed;
+  --color-on-ink-muted: #cfd3e5;
+
+  /* stickers: the tilted labels */
+  --color-sticker: #9184d9;
+  --color-on-sticker: #161826;
+
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-weight-heading: 500;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+
+  --shadow-sm: 0 0 0 1px #3f424d;
+  --shadow-lg: 0 0 0 1px #9397ab, 0 16px 40px #000000a6;
+  --backdrop: #292b3180;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: light;
+    --color-bg: #f3f5fe;
+    --color-surface: #e4e7f5;
+    --color-text: #292b31;
+    --color-text-muted: #595d6c;
+    --color-divider: #cfd3e5;
+    --color-accent: #796cbf;
+    --color-accent-text: #423a6a;
+    --color-accent-fill: #d2cefd;
+    --color-sticker: #5d5294;
+    --color-on-sticker: #f3f5fe;
+    --shadow-sm: 0 0 0 1px #cfd3e5;
+    --shadow-lg: 0 0 0 1px #b2b6ca, 0 16px 40px #292b3133;
+    --backdrop: #292b3166;
+  }
+}

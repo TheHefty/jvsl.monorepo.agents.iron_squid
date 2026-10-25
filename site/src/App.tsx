@@ -13,7 +13,7 @@ type Props = { locale: Locale; page: Page; basePath: string; catalogueVersion?: 
 export function App({ locale, page, basePath, catalogueVersion = currentVersion }: Props) {
   return (
     <IntlProvider locale={locale} messages={catalogues[locale]}>
-      <Layout catalogueVersion={catalogueVersion}>
+      <Layout catalogueVersion={catalogueVersion} home={`${basePath}${locale}/`}>
         {page === 'home' ? <Home /> : <NotFound home={`${basePath}${locale}/`} />}
       </Layout>
     </IntlProvider>
@@ -22,14 +22,14 @@ export function App({ locale, page, basePath, catalogueVersion = currentVersion 
 
 function Home() {
   return (
-    <>
-      <h1>
+    <section className="ink-strip">
+      <h1 className="hero-title">
         <FormattedMessage id="site.name" />
       </h1>
-      <p>
+      <p className="hero-lede">
         <FormattedMessage id="home.tagline" />
       </p>
-    </>
+    </section>
   );
 }
 

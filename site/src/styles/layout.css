@@ -1,0 +1,32 @@
+/* The frame of every page: header, main, footer. Left-aligned, as the design draws it. */
+.site-header,
+main,
+.site-footer {
+  max-width: 70rem;
+  margin: 0 auto;
+  padding-inline: var(--space-6);
+}
+
+.site-header {
+  display: flex;
+  align-items: center;
+  padding-block: var(--space-4);
+}
+
+.site-mark {
+  color: var(--color-text);
+  text-decoration: none;
+  font-weight: var(--font-weight-heading);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+main {
+  padding-block: var(--space-6);
+}
+
+.site-footer {
+  padding-block: var(--space-8);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
