@@ -25,7 +25,7 @@ async function footers(page: Page, request: APIRequestContext, baseURL: string):
     const url = new URL(p, baseURL).href;
     const html = await (await request.get(url)).text();
     if (!html.includes('<script')) {
-      const footer = /<footer>([\s\S]*?)<\/footer>/.exec(html)?.[1] ?? '';
+      const footer = /<footer[^>]*>([\s\S]*?)<\/footer>/.exec(html)?.[1] ?? '';
       out.push({
         page: p || 'the root',
         text: footer.replace(/<[^>]+>/g, ' '),
