@@ -119,5 +119,6 @@
   "translation.unreviewed": "This translation has not been reviewed by a fluent speaker yet.",
   "language.label": "Language",
   "language.current": "Language: {name}",
-  "language.unreviewed": "unreviewed translation"
+  "language.unreviewed": "unreviewed translation",
+  "header.home": "Iron Squid, home"
 }

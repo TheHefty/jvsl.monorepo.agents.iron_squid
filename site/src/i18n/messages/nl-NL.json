@@ -119,5 +119,6 @@
   "translation.unreviewed": "Deze vertaling is nog niet nagekeken door iemand die de taal vloeiend spreekt.",
   "language.label": "Taal",
   "language.current": "Taal: {name}",
-  "language.unreviewed": "niet-nagekeken vertaling"
+  "language.unreviewed": "niet-nagekeken vertaling",
+  "header.home": "Iron Squid, startpagina"
 }

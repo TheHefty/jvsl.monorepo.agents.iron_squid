@@ -119,5 +119,6 @@
   "translation.unreviewed": "Cette traduction n’a pas encore été relue par une personne qui parle couramment la langue.",
   "language.label": "Langue",
   "language.current": "Langue : {name}",
-  "language.unreviewed": "traduction non relue"
+  "language.unreviewed": "traduction non relue",
+  "header.home": "Iron Squid, accueil"
 }

@@ -12,7 +12,9 @@ export function Layout({ catalogueVersion, home, basePath, children }: Props) {
   return (
     <>
       <header className="site-header">
-        <a className="site-mark" href={home}>
+        <a className="site-mark" href={home} aria-label={intl.formatMessage({ id: 'header.home' })}>
+          {/* Decorative: the link is named "Iron Squid, home" (FR-60). */}
+          <img src={`${basePath}logo.svg`} alt="" width={28} height={28} />
           {intl.formatMessage({ id: 'site.name' })}
         </a>
         <LanguageSwitcher basePath={basePath} />

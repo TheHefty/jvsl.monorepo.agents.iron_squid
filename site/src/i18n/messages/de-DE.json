@@ -119,5 +119,6 @@
   "translation.unreviewed": "Diese Übersetzung wurde noch nicht von einer Person mit fließenden Sprachkenntnissen geprüft.",
   "language.label": "Sprache",
   "language.current": "Sprache: {name}",
-  "language.unreviewed": "ungeprüfte Übersetzung"
+  "language.unreviewed": "ungeprüfte Übersetzung",
+  "header.home": "Iron Squid, Startseite"
 }

@@ -52,6 +52,24 @@ test.describe('on a narrow phone', () => {
         expect(width, `${locale}/${path.split('#')[0]} is ${width}px wide`).toBeLessThanOrEqual(
           320,
         );
+        // Nothing scrolls sideways, and the header's mark and language menu do not overlap.
+        // Each measured by what it draws, not by its box: text that overflows a shrunken flex item
+        // reaches past the item's own edge.
+        const drawn = (selector: string) =>
+          page.locator(selector).evaluate((el) => {
+            const r = el.getBoundingClientRect();
+            return { x: r.x, y: r.y, width: Math.max(r.width, el.scrollWidth), height: r.height };
+          });
+        const mark = await drawn('.site-mark');
+        const menu = await drawn('.language-switcher summary');
+        const apart =
+          mark.x + mark.width <= menu.x ||
+          menu.x + menu.width <= mark.x ||
+          mark.y + mark.height <= menu.y ||
+          menu.y + menu.height <= mark.y;
+        expect(apart, `${locale}/${path.split('#')[0]}: the logo overlaps the language menu`).toBe(
+          true,
+        );
       }
     });
   }

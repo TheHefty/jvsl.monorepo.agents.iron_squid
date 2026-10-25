@@ -119,5 +119,6 @@
   "translation.unreviewed": "Esta traducción todavía no la revisó una persona con dominio del idioma.",
   "language.label": "Idioma",
   "language.current": "Idioma: {name}",
-  "language.unreviewed": "traducción sin revisar"
+  "language.unreviewed": "traducción sin revisar",
+  "header.home": "Iron Squid, inicio"
 }

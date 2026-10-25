@@ -119,5 +119,6 @@
   "translation.unreviewed": "Этот перевод ещё не проверил человек, свободно владеющий языком.",
   "language.label": "Язык",
   "language.current": "Язык: {name}",
-  "language.unreviewed": "непроверенный перевод"
+  "language.unreviewed": "непроверенный перевод",
+  "header.home": "Iron Squid, главная"
 }
