@@ -25,6 +25,7 @@ export const registrations: Registration[] = [
   { feature: 'site-identity/logo-and-favicon.feature' },
   { feature: 'site-identity/theme-switch.feature' },
   { feature: 'site-identity/design-alignment.feature' },
+  { feature: 'found-and-previewed/seo-meta.feature' },
   {
     feature: 'every-language/translate-interface.feature',
   },

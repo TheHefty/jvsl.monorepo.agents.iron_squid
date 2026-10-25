@@ -136,5 +136,9 @@
   "shared.statConquered": "Armi conquistate",
   "shared.statToGo": "Armi rimanenti",
   "shared.statLives": "Vite",
-  "shared.statResets": "Ripartenze"
+  "shared.statResets": "Ripartenze",
+  "meta.home": "Iron Squid propone una sfida di Splatoon 3: vinci con ogni arma, con equipaggiamento a caso, e vinci di nuovo con tutte se perdi l’ultima vita.",
+  "meta.terms": "Cosa comporta Iron Squid: un progetto di fan gratuito, che si gioca sulla parola, senza garanzia.",
+  "meta.privacy": "Cosa conserva Iron Squid, dove, e chi altro vede qualcosa: la tua sfida resta nel tuo browser.",
+  "meta.notFound": "Non c’è nessuna pagina a questo indirizzo."
 }

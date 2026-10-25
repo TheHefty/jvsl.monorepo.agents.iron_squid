@@ -136,5 +136,9 @@
   "shared.statConquered": "Veroverde wapens",
   "shared.statToGo": "Nog te gaan",
   "shared.statLives": "Levens",
-  "shared.statResets": "Herstarts"
+  "shared.statResets": "Herstarts",
+  "meta.home": "Iron Squid biedt een Splatoon 3-uitdaging: win met elk wapen, met willekeurige uitrusting, en win ze allemaal opnieuw als je laatste leven op is.",
+  "meta.terms": "Wat Iron Squid inhoudt: een gratis fanproject, gespeeld op erewoord, zonder garantie.",
+  "meta.privacy": "Wat Iron Squid bewaart, waar, en wie er verder iets ziet: je run blijft in je eigen browser.",
+  "meta.notFound": "Op dit adres staat geen pagina."
 }

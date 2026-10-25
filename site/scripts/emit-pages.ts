@@ -9,6 +9,7 @@ import { IntlMessageFormat } from 'intl-messageformat';
 import { latestVersion } from '../src/catalogue/latest';
 import { links } from '../src/notices/links';
 import { routes } from '../src/pages';
+import { siteOrigin } from '../src/site';
 import { contentSecurityPolicy } from './csp';
 
 type Options = {
@@ -17,7 +18,8 @@ type Options = {
   locales: readonly string[];
   defaultLocale: string;
   catalogueVersion: string;
-  messages: Record<string, string>;
+  // Every locale's catalogue: each page describes itself in its own language (FR-70).
+  catalogues: Record<string, Record<string, string>>;
   // The root's script (src/i18n/root-entry.ts, built as a classic script): it sends a visitor to
   // their language (NFR-I5) before the refresh to the default locale fires.
   rootScript: string;
@@ -35,7 +37,7 @@ export function emitPages({
   locales,
   defaultLocale,
   catalogueVersion,
-  messages,
+  catalogues,
   rootScript,
   themeScript,
 }: Options): void {
@@ -55,25 +57,51 @@ export function emitPages({
   const firstInHead = (html: string) =>
     html.replace(/(<meta charset="UTF-8" \/>)/, `$1${themeTag}`);
   const shell = firstInHead(readFileSync(shellPath, 'utf8'));
-  const alternates = [
-    ...locales.map((l) => `<link rel="alternate" hreflang="${l}" href="${basePath}${l}/" />`),
-    `<link rel="alternate" hreflang="x-default" href="${basePath}" />`,
-  ].join('');
-  const page = (locale: string, extraHead = '') =>
+  const messages = catalogues[defaultLocale] ?? {};
+  // What a search engine is told (FR-70, FR-71): the page's description in its own language, and the
+  // same page in every locale, absolute on the site's domain whatever base path this build has,
+  // with the root as the default. The shared-run page describes itself as the home page: its run
+  // is in the fragment, which no crawler sees.
+  const describedBy: Record<string, string> = {
+    '': 'meta.home',
+    run: 'meta.home',
+    terms: 'meta.terms',
+    privacy: 'meta.privacy',
+  };
+  const description = (locale: string, id: string) =>
+    `<meta name="description" content="${escape(catalogues[locale]?.[id] ?? '')}" />`;
+  const alternatesOf = (route: string) =>
+    [
+      ...locales.map(
+        (l) =>
+          `<link rel="alternate" hreflang="${l}" href="${siteOrigin}/${l}/${route ? `${route}/` : ''}" />`,
+      ),
+      `<link rel="alternate" hreflang="x-default" href="${siteOrigin}/" />`,
+    ].join('');
+  const page = (locale: string, extraHead: string) =>
     shell
       .replace(/<html lang="[^"]*">/, `<html lang="${locale}">`)
-      .replace('</head>', `${alternates}${extraHead}</head>`);
+      .replace('</head>', `${extraHead}</head>`);
 
   for (const locale of locales) {
     for (const route of routes) {
       mkdirSync(join(distDir, locale, route), { recursive: true });
-      writeFileSync(join(distDir, locale, route, 'index.html'), page(locale));
+      writeFileSync(
+        join(distDir, locale, route, 'index.html'),
+        page(locale, description(locale, describedBy[route] ?? 'meta.home') + alternatesOf(route)),
+      );
     }
   }
   writeFileSync(
     join(distDir, '404.html'),
-    page(defaultLocale, '<meta name="iron-squid-page" content="not-found" />'),
+    page(
+      defaultLocale,
+      '<meta name="iron-squid-page" content="not-found" />' +
+        '<meta name="robots" content="noindex" />' +
+        description(defaultLocale, 'meta.notFound'),
+    ),
   );
+  const alternates = description(defaultLocale, 'meta.home') + alternatesOf('');
 
   const target = `${basePath}${defaultLocale}/`;
   const rootFile = named('root', rootScript);
@@ -112,9 +140,14 @@ export function emitPages({
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const { locales, defaultLocale } = await import('../src/i18n/locales');
-  const messages = JSON.parse(
-    readFileSync(new URL(`../src/i18n/messages/${defaultLocale}.json`, import.meta.url), 'utf8'),
-  ) as Record<string, string>;
+  const catalogues = Object.fromEntries(
+    locales.map((l) => [
+      l,
+      JSON.parse(
+        readFileSync(new URL(`../src/i18n/messages/${l}.json`, import.meta.url), 'utf8'),
+      ) as Record<string, string>,
+    ]),
+  );
   // The root's script, bundled alone as a classic script (an IIFE): it runs as soon as it is read,
   // before the refresh below, whenever each browser chooses to apply that. A module script waits
   // for the document; it happens to beat the refresh in Chromium, but nothing promises it does.
@@ -142,7 +175,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
         .filter((e) => e.isDirectory())
         .map((e) => e.name),
     ),
-    messages,
+    catalogues,
   });
   console.log(`emit-pages: ${locales.length} locale page(s), root and 404 written`);
 }
