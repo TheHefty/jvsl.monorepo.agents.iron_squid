@@ -2,12 +2,12 @@ import { FormattedMessage, IntlProvider } from 'react-intl';
 import { currentVersion } from './catalogue';
 import type { Locale } from './i18n/locales';
 import { Layout } from './Layout';
+import { PrivacyNotice, TermsOfUse } from './notices/Notices';
+import type { Page } from './pages';
 import { RunPage } from './run/RunPage';
 import enUS from './i18n/messages/en-US.json';
 
 const catalogues: Record<Locale, Record<string, string>> = { 'en-US': enUS };
-
-export type Page = 'home' | 'not-found';
 
 type Props = { locale: Locale; page: Page; basePath: string; catalogueVersion?: string };
 
@@ -15,11 +15,10 @@ export function App({ locale, page, basePath, catalogueVersion = currentVersion 
   return (
     <IntlProvider locale={locale} messages={catalogues[locale]}>
       <Layout catalogueVersion={catalogueVersion} home={`${basePath}${locale}/`}>
-        {page === 'home' ? (
-          <RunPage newestVersion={catalogueVersion} />
-        ) : (
-          <NotFound home={`${basePath}${locale}/`} />
-        )}
+        {page === 'home' && <RunPage newestVersion={catalogueVersion} />}
+        {page === 'privacy' && <PrivacyNotice />}
+        {page === 'terms' && <TermsOfUse privacy={`${basePath}${locale}/privacy/`} />}
+        {page === 'not-found' && <NotFound home={`${basePath}${locale}/`} />}
       </Layout>
     </IntlProvider>
   );

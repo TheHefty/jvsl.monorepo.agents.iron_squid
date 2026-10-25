@@ -15,6 +15,7 @@ export const registrations: Registration[] = [
   { feature: 'run-in-the-browser/reset-and-replay.feature' },
   { feature: 'run-in-the-browser/run-log.feature' },
   { feature: 'run-in-the-browser/finish-a-run.feature' },
+  { feature: 'run-in-the-browser/notices.feature' },
 ];
 
 export const registeredFeatures = registrations.map((r) => r.feature);

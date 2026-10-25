@@ -42,6 +42,8 @@ Then(
       new IntlMessageFormat(catalogue['catalogue.version'] ?? '', 'en-US').format({ version }),
     );
     expect(footers.size, 'pages in the build').toBeGreaterThan(0);
-    for (const [p, text] of footers) expect(text, `the footer of ${p || 'the root'}`).toBe(line);
+    // The footer also carries the notices (FR-50, FR-51); the version line must be among them.
+    for (const [p, text] of footers)
+      expect(text, `the footer of ${p || 'the root'}`).toContain(line);
   },
 );
