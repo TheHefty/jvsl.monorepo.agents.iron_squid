@@ -21,10 +21,16 @@ export const registrations: Registration[] = [
   { feature: 'share-a-run/share-link.feature' },
   { feature: 'every-language/localized-names.feature' },
   {
-    feature: 'every-language/translate-interface.feature',
+    feature: 'every-language/choose-language.feature',
     pending: {
-      'An unreviewed translation says so': 'language-switcher (is-8el.1.1)',
+      'The first visit follows the browser': 'root-language (is-8el.1.2)',
+      'A language offered under another region': 'root-language (is-8el.1.2)',
+      'A language the site does not offer': 'root-language (is-8el.1.2)',
+      'The choice is remembered': 'root-language (is-8el.1.2)',
     },
+  },
+  {
+    feature: 'every-language/translate-interface.feature',
   },
 ];
 

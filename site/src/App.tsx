@@ -24,7 +24,11 @@ export function App({
 }: Props) {
   return (
     <IntlProvider locale={locale} messages={messages}>
-      <Layout catalogueVersion={catalogueVersion} home={`${basePath}${locale}/`}>
+      <Layout
+        catalogueVersion={catalogueVersion}
+        home={`${basePath}${locale}/`}
+        basePath={basePath}
+      >
         {page === 'home' && <RunPage newestVersion={catalogueVersion} />}
         {page === 'shared' && <SharedRunPage home={`${basePath}${locale}/`} />}
         {page === 'privacy' && <PrivacyNotice />}

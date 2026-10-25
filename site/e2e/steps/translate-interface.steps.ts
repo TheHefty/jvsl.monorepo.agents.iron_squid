@@ -157,3 +157,38 @@ Then('numbers and dates are written as German writes them', async ({ page }) => 
     messageIn('de-DE', 'run.conquered', { conquered: 1, total: 160 }),
   );
 });
+
+Given('a locale whose translation no fluent speaker has reviewed', async ({ world }) => {
+  const locale = locales.find((l) => catalogueOf(l)['translation.status'] === 'unreviewed');
+  if (!locale) throw new Error('steps: every translation has been reviewed');
+  world.locale = locale;
+});
+
+When("a visitor is on that locale's address", async ({ page, world }) => {
+  await page.goto(`./${world.locale as string}/`);
+});
+
+Then('the page says the translation has not been reviewed', async ({ page, world }) => {
+  await expect(
+    page.getByText(messageIn(world.locale as string, 'translation.unreviewed')),
+  ).toBeVisible();
+});
+
+Then('the language switcher marks that language as unreviewed', async ({ page, world }) => {
+  const locale = world.locale as string;
+  const nav = page.getByRole('navigation', { name: messageIn(locale, 'language.label') });
+  await nav.locator('summary').click();
+  const autonyms = JSON.parse(readFileSync('src/i18n/autonyms.json', 'utf8')) as Record<
+    string,
+    string
+  >;
+  const entry = nav
+    .getByRole('listitem')
+    .filter({ has: page.getByRole('link', { name: autonyms[locale], exact: true }) });
+  await expect(entry).toContainText(messageIn(locale, 'language.unreviewed'));
+  // And a reviewed one is not marked.
+  const reviewed = nav
+    .getByRole('listitem')
+    .filter({ has: page.getByRole('link', { name: autonyms['en-US'], exact: true }) });
+  await expect(reviewed).not.toContainText(messageIn(locale, 'language.unreviewed'));
+});

@@ -1,12 +1,13 @@
 import type { ReactNode } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { LanguageSwitcher } from './i18n/LanguageSwitcher';
 import { links } from './notices/links';
 
-type Props = { catalogueVersion: string; home: string; children: ReactNode };
+type Props = { catalogueVersion: string; home: string; basePath: string; children: ReactNode };
 
 // The frame every page is drawn in: the site's mark, the page, and the footer with the notices
 // (FR-50), the fan-project line (FR-51) and the game version the draws come from (FR-4).
-export function Layout({ catalogueVersion, home, children }: Props) {
+export function Layout({ catalogueVersion, home, basePath, children }: Props) {
   const intl = useIntl();
   return (
     <>
@@ -14,6 +15,7 @@ export function Layout({ catalogueVersion, home, children }: Props) {
         <a className="site-mark" href={home}>
           {intl.formatMessage({ id: 'site.name' })}
         </a>
+        <LanguageSwitcher basePath={basePath} />
       </header>
       <main>
         {intl.messages['translation.status'] === 'unreviewed' && (

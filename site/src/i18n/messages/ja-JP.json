@@ -71,7 +71,7 @@
   "privacy.keptTitle": "保存されるもの",
   "privacy.item.run": "あなたのチャレンジ:セットの順番、あなたが報告した結果、ライフとリセット、そしてすべてのバトルの記録。",
   "privacy.item.name": "チャレンジにつけた名前(つけた場合)。",
-  "privacy.item.language": "サイトが複数の言語を提供している場合に、あなたが選んだ言語。",
+  "privacy.item.language": "言語メニューで選んだ言語。",
   "privacy.where": "これらはすべて、この端末のこのブラウザにだけ保存されます。サイトはどこにも送信しません。私たちのサーバーも、アカウントも、Cookie も、アクセス解析もありません。",
   "privacy.nameTitle": "チャレンジの名前",
   "privacy.name": "チャレンジの名前は、そのリンクを受け取った人なら誰でも見られます。名前を出したくない場合は空欄のままにしてください。",
@@ -116,5 +116,8 @@
   "share.copied": "リンクをコピーしました。開いた人には、今の状態のチャレンジが表示されます。",
   "share.copyByHand": "このリンクをコピーしてチャレンジを共有してください:",
   "share.title": "私の Iron Squid チャレンジ",
-  "translation.unreviewed": "この翻訳は、まだその言語を流暢に話す人の確認を受けていません。"
+  "translation.unreviewed": "この翻訳は、まだその言語を流暢に話す人の確認を受けていません。",
+  "language.label": "言語",
+  "language.current": "言語:{name}",
+  "language.unreviewed": "未確認の翻訳"
 }

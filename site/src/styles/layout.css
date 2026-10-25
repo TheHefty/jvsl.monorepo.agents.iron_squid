@@ -10,10 +10,13 @@ main,
 .site-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
   padding-block: var(--space-4);
 }
 
 .site-mark {
+  white-space: nowrap;
   color: var(--color-text);
   text-decoration: none;
   font-weight: var(--font-weight-heading);
@@ -29,4 +32,39 @@ main {
   padding-block: var(--space-8);
   font-size: 0.875rem;
   color: var(--color-text-muted);
+}
+
+.language-switcher {
+  position: relative;
+}
+
+.language-switcher summary {
+  cursor: pointer;
+  min-height: 24px;
+}
+
+.language-switcher ul {
+  position: absolute;
+  inset-inline-end: 0;
+  z-index: 10;
+  margin: var(--space-2) 0 0;
+  padding: var(--space-3);
+  list-style: none;
+  display: grid;
+  gap: var(--space-2);
+  min-width: 14rem;
+  max-width: calc(100vw - 2 * var(--space-4));
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-md);
+}
+
+.language-switcher a {
+  display: inline-block;
+  min-height: 24px;
+}
+
+.language-note {
+  font-size: 0.85em;
+  opacity: 0.8;
 }
