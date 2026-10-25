@@ -130,6 +130,19 @@ Then(
   },
 );
 
+When('a player enters a display name of {int} family emoji', async ({ page }, n: number) => {
+  // 30 characters as the player sees them, each of 25 bytes: within the count, over the byte cap.
+  await page.goto('./en-US/');
+  await page.getByLabel(message('start.nameLabel')).fill('👨‍👩‍👧‍👦'.repeat(n));
+  await page.getByRole('button', { name: message('start.roll') }).click();
+});
+
+Then('the player is told the name is too long to fit in a link', async ({ page }) => {
+  await expect(page.getByLabel(message('start.nameLabel'))).toHaveAttribute('aria-invalid', 'true');
+  await expect(page.getByText(message('start.nameTooLongForLink'))).toBeVisible();
+  await expect(page.getByRole('region', { name: message('set.label') })).toHaveCount(0);
+});
+
 Then('the run is not started until the name is shortened or removed', async ({ page }) => {
   await expect(page.getByRole('region', { name: message('set.label') })).toHaveCount(0);
   await page.getByLabel(message('start.nameLabel')).fill('a'.repeat(30));

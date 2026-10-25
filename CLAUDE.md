@@ -86,8 +86,10 @@ TypeScript strict, react-intl. From `site/`:
   `npm run catalogue:generate` writes `site/src/catalogue/<version>/` (names and image digests,
   never an image). Moving the pin is its own PR (`docs/RULES.md`): change commit, folder and game
   version, run the generator with `--record-digests`, and review the diff it prints. The previous version's folder stays: runs
-  on it may still be in players' browsers. Add the new version to `site/catalogue.versions.json`, which
-  only grows; `npm test` fails if a version listed there has no folder, or a folder is not listed. Version
+  on it may still be in players' browsers. Add the new version to `site/catalogue.versions.json` with
+  the digest of its items' order (the versions test prints the one it computed). That file only grows,
+  and no listed version's order may change, since share links name items by their place; `npm test`
+  fails if a listed version has no folder, a folder is not listed, or an order moved. Version
   folders sort as text, so read the datamine's `versions.json` for the newest, not the last folder.
 - **Game images are fetched by the build, never committed.** `npm run build` downloads each image
   in `images.lock.json`, verifies its SHA-256, caches it by digest in `site/.cache/game-images/`

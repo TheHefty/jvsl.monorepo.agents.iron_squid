@@ -46,8 +46,9 @@ could look at the running site and say whether it holds.
 
 - **FR-10** A player can start a run. Starting one while another is in progress asks for
   confirmation and says that the current run will be discarded.
-- **FR-11** A player may give the run a display name of up to 30 characters. It is optional, and
-  the site works the same without one.
+- **FR-11** A player may give the run a display name of up to 30 characters, and of at most 300
+  bytes in UTF-8, so the longest name still fits in a share link (NFR-P2). It is optional, and the
+  site works the same without one.
 - **FR-12** Each new set is drawn at random: a kit not yet conquered in this run, and one headgear,
   one clothing and one shoes piece not yet used in this run.
 - **FR-13** A gear piece, once drawn, is never drawn again in the same run. That includes after a
@@ -305,3 +306,11 @@ the run) but no requirement covered. FR-24 and the `run-log` story add it. The d
 additions — a leaderboard, community progress, following runs, handles, a history of past runs and
 a re-roll button — were left out: the first five need a server the charter rules out, and a re-roll
 breaks FR-14.
+
+Amended on 2026-10-25 when the share-a-run epic started (task share-codec): FR-11 also caps the
+display name at 300 bytes. A character as the player sees it can be any number of code points (an
+emoji family is 25 bytes, and accents can be stacked without end), so 30 characters alone could not
+keep NFR-P2's 2,000 characters for a link. Ordinary names, emoji included, never reach the cap. A
+run stored with a longer name before the cap stays readable; its share link leaves the name out.
+The draw-a-set story gains a scenario for the cap.
+

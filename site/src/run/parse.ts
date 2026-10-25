@@ -70,9 +70,12 @@ function state(v: unknown, catalogues: Record<string, Catalogue>, schema: 1 | 2)
   let name: string | undefined;
   if (v.name !== undefined) {
     const checked = typeof v.name === 'string' ? displayName(v.name) : undefined;
-    if (!checked?.ok || checked.name !== v.name)
-      throw new Refused('not-a-run', 'the name is not a valid display name');
-    name = checked.name;
+    // A name over the byte cap was allowed before the cap existed; such a run stays readable.
+    const valid = checked?.ok
+      ? checked.name === v.name
+      : checked?.reason === 'bytes' && v.name === (v.name as string).trim();
+    if (!valid) throw new Refused('not-a-run', 'the name is not a valid display name');
+    name = v.name as string;
   }
   return {
     schema: 2,
