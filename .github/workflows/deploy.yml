@@ -1,11 +1,13 @@
-# Publishes main to GitHub Pages. Every check runs again on the merged commit first, because two
-# pull requests that were green on their own can be red together. After publishing, the @deployed
-# scenarios run against the live site and wait for it to carry this commit.
+# Publishes a release to GitHub Pages: what players see is a version cut by release-please, never
+# an ordinary merge (NFR-D8). Every check, acceptance included, runs again on the release's commit
+# first. After publishing, the @deployed scenarios run against the live site and wait for it to
+# carry this commit. release-please creates the release with the GitHub App's token, which, unlike
+# GITHUB_TOKEN, triggers this workflow.
 name: deploy
 
 on:
-  push:
-    branches: [main]
+  release:
+    types: [published]
   # From any branch, to try the workflow: everything but the publication itself runs.
   workflow_dispatch:
 
@@ -47,7 +49,7 @@ jobs:
 
   deploy:
     needs: build
-    if: github.ref == 'refs/heads/main'
+    if: github.event_name == 'release'
     runs-on: ubuntu-latest
     permissions:
       pages: write
@@ -73,6 +75,7 @@ jobs:
     env:
       SITE_URL: ${{ needs.deploy.outputs.page_url }}
       EXPECTED_BUILD: ${{ github.sha }}
+      RELEASE_TAG: ${{ github.event.release.tag_name }}
       DEPLOY_WAIT_SECONDS: '600'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

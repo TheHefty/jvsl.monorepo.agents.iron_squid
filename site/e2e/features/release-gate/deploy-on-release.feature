@@ -29,7 +29,7 @@ Feature: Deploy on release
   @manual
   Scenario: An ordinary pull request is not held by acceptance
     Given a pull request that is not release-please's
-    Then its required checks are the build, the type check, the lint, the unit tests and the repository settings
+    Then its required checks are the build, the type check, the lint, the unit tests, the pull request title and the repository settings
     And the acceptance tests do not run on it
 
   @manual

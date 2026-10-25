@@ -4,7 +4,10 @@
 // release-please reads; any other merge method puts an unchecked message on main.
 import { fileURLToPath } from 'node:url';
 
+// acceptance stays required although it runs on release-please's pull request only: on any other
+// its job is skipped by its own condition, which GitHub counts as passing (task release-pipeline).
 export const requiredChecks = [
+  'build',
   'typecheck',
   'lint',
   'unit',
@@ -75,6 +78,22 @@ export function settingsProblems(repo: Repo, branch: Branch): string[] {
   return problems;
 }
 
+type DeploymentPolicy = { name?: string; type?: string };
+
+// The Pages environment publishes version tags and nothing else (NFR-D8): a branch policy would let
+// a push to main reach players without a release.
+export function environmentProblems(policies: DeploymentPolicy[]): string[] {
+  const problems = policies
+    .filter((p) => p.type === 'branch')
+    .map(
+      (p) =>
+        `github-pages deploys from the branch "${p.name}"; only a version tag may be published`,
+    );
+  if (!policies.some((p) => p.type === 'tag' && p.name === 'v*'))
+    problems.push('github-pages does not deploy from the tags "v*"');
+  return problems;
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const repository = process.env.GITHUB_REPOSITORY;
   const token = process.env.GITHUB_TOKEN;
@@ -102,10 +121,21 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       `repo-settings: GraphQL answered ${gqlRes.status} ${JSON.stringify(gql.errors ?? '')}`,
     );
   }
-  const problems = settingsProblems(
-    fromGraphql(gql.data?.repository ?? {}),
-    await branchRes.json(),
+  const policiesRes = await fetch(
+    `https://api.github.com/repos/${repository}/environments/github-pages/deployment-branch-policies`,
+    { headers },
   );
+  if (!policiesRes.ok)
+    throw new Error(
+      `repo-settings: GET the github-pages deployment policies answered ${policiesRes.status}`,
+    );
+  const { branch_policies: policies = [] } = (await policiesRes.json()) as {
+    branch_policies?: DeploymentPolicy[];
+  };
+  const problems = [
+    ...settingsProblems(fromGraphql(gql.data?.repository ?? {}), await branchRes.json()),
+    ...environmentProblems(policies),
+  ];
   for (const p of problems) console.error(`repo-settings: ${p}`);
   if (problems.length > 0) process.exit(1);
   console.log(`repo-settings: ${repository} has the settings the release discipline relies on`);

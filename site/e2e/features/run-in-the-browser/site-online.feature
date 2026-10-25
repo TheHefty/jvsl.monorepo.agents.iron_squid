@@ -3,11 +3,11 @@ Feature: The site is online
   breaks it cannot reach main.
 
   @deployed
-  Scenario: A merged change reaches the domain
-    Given a change has been merged into main
+  Scenario: A released version reaches the domain
+    Given a version has been cut
     When a visitor opens the project's domain once the publication has finished
     Then the site loads over HTTPS
-    And it includes the merged change
+    And it is that version's build
 
   @deployed
   Scenario: Plain HTTP is upgraded
