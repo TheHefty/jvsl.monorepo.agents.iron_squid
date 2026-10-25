@@ -41,6 +41,8 @@ could look at the running site and say whether it holds.
 - **FR-3** Every kit and gear piece is shown with its official name in the active locale (see
   NFR-I2) and its image from the game.
 - **FR-4** The site states which catalogue version it was built from, on every page.
+- **FR-5** Every gear piece is shown with the icon of its brand, from the game, so the player can
+  find it in the game's shops. The brand's name is the icon's text alternative.
 
 ### A run
 
@@ -53,11 +55,13 @@ could look at the running site and say whether it holds.
   one clothing and one shoes piece not yet used in this run.
 - **FR-13** A gear piece, once drawn, is never drawn again in the same run. That includes after a
   reset: a conquered set keeps its gear.
-- **FR-14** A drawn set cannot be re-drawn, skipped or swapped. Reloading the page, closing the
-  browser or opening the site in a new tab shows the same set. The order of every draw in a run is
-  fixed when the run starts, so undoing and re-reporting a result (FR-20) never changes which set
-  comes next.
-- **FR-15** The player reports the result of each match as a win or a loss.
+- **FR-14** A drawn set cannot be re-drawn, skipped or swapped, except for the gear re-roll of
+  FR-25. Reloading the page, closing the browser or opening the site in a new tab shows the same
+  set. The order of every draw in a run, re-rolls included, is fixed when the run starts, so undoing
+  and re-reporting a result (FR-20) never changes which set comes next.
+- **FR-15** The player reports the result of each match as a win or a loss, and the mode it was
+  played in: Turf War, Splat Zones, Tower Control, Rainmaker, Clam Blitz or Tricolor Turf War. A
+  result is recorded only once its mode is chosen; dismissing the choice records nothing.
 - **FR-16** A run starts with **1 life**. The player earns **1 life for every 10 wins** since the
   run started or since its last reset, whichever is later. Wins during a replay count.
 - **FR-17** A loss costs one life. If lives remain, the player plays the same set again.
@@ -72,12 +76,18 @@ could look at the running site and say whether it holds.
   and shows the number of matches, wins, losses and resets it took.
 - **FR-22** At any moment the site shows: kits conquered out of the total, lives, wins towards the
   next life, the current set, and the number of resets so far.
-- **FR-23** After a win, the site shows the set just conquered, and the next set appears when the
-  player asks for it.
+- **FR-23** After a win, the site says which set was conquered and shows the next set at once.
 - **FR-24** The run keeps a log of every reported match, in the order played: the set, the result,
-  the lives left after it, whether it was a replay, and when it was reported; a reset is marked
-  where it happened. The player can read the whole log, newest first. Undoing a result (FR-20)
-  removes its entry.
+  the mode, the lives left after it, whether it was a replay, and when it was reported; a reset is
+  marked where it happened, and so is every gear piece re-rolled away (FR-25). The player can read
+  the whole log, newest first. Undoing a result (FR-20) removes its entry. A match reported before
+  modes were recorded says its mode was not recorded.
+- **FR-25** On a newly drawn set, before any result is reported for it, the player may re-roll its
+  headgear, clothing or shoes, one slot at a time and as many times as they like. The kit is never
+  re-rolled. The piece re-rolled away is spent: it counts as used in the run (FR-13). A re-roll is
+  refused, saying why, when the slot has no more unused pieces than there are kits still to draw
+  after the current one, so that the run can always be finished. A replayed set (FR-18) keeps its
+  gear and cannot be re-rolled, and a re-roll cannot be undone.
 
 ### Keeping progress
 
@@ -97,8 +107,8 @@ could look at the running site and say whether it holds.
 
 - **FR-40** The player can copy a link that shows the run as it is at that moment.
 - **FR-41** Anyone who opens the link sees the run, read-only: its display name if any, kits
-  conquered out of the total, the conquered sets in order, current lives, resets, and whether it is
-  complete. Nothing on that view can change the run, or the visitor's own run.
+  conquered out of the total, the conquered sets in order with the mode each was won in, current
+  lives, resets, how many gear pieces were re-rolled away (FR-25), and whether it is complete. Nothing on that view can change the run, or the visitor's own run.
 - **FR-42** A link opened by a visitor who has a run of their own does not replace it, and offers a
   way back to it.
 - **FR-43** The run is carried in the link itself. Opening one requires nothing but the site.
@@ -111,12 +121,31 @@ could look at the running site and say whether it holds.
 - **FR-51** Every page carries a notice that the site is a fan project, not affiliated with or
   endorsed by Nintendo, and that Splatoon names and images are Nintendo's.
 
+### Look
+
+- **FR-60** The site has a logo of its own, a simple icon in a metallic iron grey, drawn for the
+  project. It is the favicon and the logo in every page's header. It uses no Nintendo artwork.
+- **FR-61** Every page's header has a control to switch between the light and the dark theme. Until
+  the player chooses, the site follows the system's setting; the choice is remembered.
+- **FR-62** The interface follows the inked screens of the owner's design (Claude Design project
+  "Iron Squid", rounds 3 and 4): stickers, tags and marks sit tilted, buttons are skewed, panels are
+  cut at an angle, and the ink strips carry splats over a slanted edge. Body text is never rotated.
+
+### Being found
+
+- **FR-70** Every page has a description, in its own locale, for search engines.
+- **FR-71** Every page names the address of the same page in every other locale, and which one is
+  the default, so that a search engine sends a visitor to their own language.
+- **FR-72** A link to any page, posted where links show a preview, shows the site's name, the page's
+  description and an image, in the page's locale. The image is served by the site itself. A shared
+  run's preview is the site's own: the run, in the link's fragment, never reaches the preview.
+
 ## Non-functional requirements
 
 ### Delivery and operation
 
 - **NFR-D1** The site is static: HTML, CSS, JavaScript and images, published to GitHub Pages from
-  `main`. There is no server-side code.
+  the release tags cut on `main` (NFR-D8). There is no server-side code.
 - **NFR-D2** At runtime the site makes **no requests to any host but its own**: no fonts, scripts,
   images or analytics from third parties. A Content Security Policy enforces it.
 - **NFR-D3** The game's images are **not committed to the repository**. The build downloads them
@@ -127,9 +156,13 @@ could look at the running site and say whether it holds.
   same pinned datamine commit by a script in the repository, and the generated data is committed, so
   that a game update reaches the site as a reviewable diff. Moving the pin is a deliberate change,
   never automatic.
-- **NFR-D5** A pull request that breaks the build, the tests, the accessibility check or the
+- **NFR-D5** A pull request that breaks the build, the unit tests, the type check, the lint or the
   catalogue checks (NFR-D3, NFR-D6, NFR-I7) cannot be merged: they are required status checks on
-  `main`.
+  `main`. The acceptance tests and the accessibility check run on the release pull request instead
+  (NFR-D8), so a change that breaks them can reach `main`, and is found when a version is cut.
+- **NFR-D8** The site is published when a version is cut, never on an ordinary merge: merging
+  release-please's pull request tags the version, and the tag is what is published. That pull
+  request cannot be merged while the acceptance tests or the accessibility check fail on it.
 - **NFR-D6** The build checks that each gear slot has at least as many pieces as there are kits, so
   that FR-13 can always be satisfied, and fails if it does not.
 - **NFR-D7** The site is served from the project's own domain, over HTTPS only, through GitHub Pages.
@@ -152,7 +185,8 @@ could look at the running site and say whether it holds.
 - **NFR-A6** Colour contrast and text sizes are defined once, in design tokens. Nothing is conveyed by
   colour alone.
 - **NFR-A7** Any animation, such as of a draw, respects the system's reduced-motion setting.
-- **NFR-A8** An automated accessibility check runs in CI on every page and every state of a run.
+- **NFR-A8** An automated accessibility check runs in CI on every page and every state of a run,
+  on every release pull request (NFR-D8).
 
 ### Internationalization
 
@@ -225,7 +259,7 @@ policy texts that follow from it will not have been either.
 
 ## Epics and stories
 
-Three epics, in the order they are built.
+Eight epics, in the order they are built.
 
 ### `run-in-the-browser` — A player can play a whole Iron Squid run on the published site.
 
@@ -260,6 +294,38 @@ The site in English only (`en-US`), with the i18n seam already in place.
 - **`localized-names`** — Kits and gear carry their official names in every locale. (NFR-I3)
 - **`translate-interface`** — The interface is translated into every offered locale, with unreviewed
   translations marked. (NFR-I2, NFR-I4, NFR-I6, NFR-I7)
+
+### `release-gate` — What reaches players is a version cut by release-please, accepted before it is published.
+
+First of the five added on 2026-10-25, because it changes how every pull request after it is checked.
+
+- **`deploy-on-release`** — The site is published when a version is cut, and the release pull
+  request is where acceptance gates it. (NFR-D1, NFR-D5, NFR-D8, NFR-A8)
+
+### `site-identity` — The site has a look of its own: a logo, a light and a dark theme, and the style of its design.
+
+Before the epics that add screens, so that they are built in the design rather than restyled after.
+
+- **`logo-and-favicon`** — A logo of our own, as the favicon and in the header. (FR-60)
+- **`theme-switch`** — The player chooses light or dark, and the choice is remembered. (FR-61)
+- **`design-alignment`** — The site is as crooked as its design: tilted stickers, skewed buttons,
+  angled panels. (FR-62)
+
+### `found-and-previewed` — The site is found by search engines and previews well where its links are posted.
+
+- **`seo-meta`** — Every page is described, and names its siblings in every locale. (FR-70, FR-71)
+- **`link-previews`** — A posted link shows the site's name, description and logo. (FR-72)
+
+### `match-modes` — A run records the mode every match was played in.
+
+- **`report-mode`** — Reporting a result asks for its mode, and a win draws the next set at once.
+  (FR-15, FR-23, FR-24, FR-41)
+
+### `find-the-gear` — A player can find and wear every piece of gear a run draws.
+
+- **`gear-brand`** — Every gear piece shows its brand's icon. (FR-5)
+- **`reroll-gear`** — The player re-rolls a gear piece they do not have, and the piece is spent.
+  (FR-14, FR-24, FR-25, FR-41)
 
 ## Alternatives considered
 
@@ -314,3 +380,26 @@ keep NFR-P2's 2,000 characters for a link. Ordinary names, emoji included, never
 run stored with a longer name before the cap stays readable; its share link leaves the name out.
 The draw-a-set story gains a scenario for the cap.
 
+Amended on 2026-10-25 from the owner's list of adjustments, with five epics agreed the same day:
+`release-gate`, `site-identity`, `found-and-previewed`, `match-modes` and `find-the-gear`. They add
+FR-5, FR-25, FR-60–FR-62, FR-70–FR-72 and NFR-D8, and amend FR-14, FR-15, FR-23, FR-24, FR-41,
+NFR-D1, NFR-D5 and NFR-A8. Three of them change what was agreed rather than add to it:
+
+- **The gear re-roll (FR-25) is a change to the challenge's rules**, and the charter is amended with
+  it. The owner chose an unlimited re-roll whose discarded piece is spent. Refusing a re-roll that
+  would leave a slot short of the kits still to draw was added with it, so that NFR-D6 still
+  guarantees a run can be finished. The design's re-roll button, which re-drew the kit too, stays
+  out.
+- **A result carries its mode (FR-15), on a win and on a loss, and a win shows the next set at once
+  (FR-23)**, reversing the "next set on request" of PR #6. A share link carries the modes, so its
+  format changes; links and files made before must still open. The `report-a-match` and `run-log`
+  scenarios that report a result without a mode change in the task that starts `report-mode`, when
+  the new ones are seen failing, not here: rewritten now, they would fail against the code on
+  `main`.
+- **Acceptance moves from every pull request to the release pull request (NFR-D5, NFR-D8).** The
+  owner accepted the cost: a change that breaks acceptance can reach `main`, and is found when a
+  version is cut rather than when it is opened.
+
+Remembering the theme (FR-61) is a new row in the data map. It is added by the `theme-switch` story,
+in the same pull request as the privacy notice, not here. The design's armory grid, gear ledger,
+streak and stage were offered and not chosen.
