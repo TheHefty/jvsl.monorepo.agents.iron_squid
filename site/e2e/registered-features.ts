@@ -22,9 +22,6 @@ export const registrations: Registration[] = [
   {
     feature: 'every-language/translate-interface.feature',
     pending: {
-      'Every page is fully translated': 'translations (is-8el.3.2)',
-      'Plurals follow the language': 'translations (is-8el.3.2)',
-      'Numbers and dates follow the locale': 'translations (is-8el.3.2)',
       'An unreviewed translation says so': 'language-switcher (is-8el.1.1)',
     },
   },

@@ -3,11 +3,12 @@ import { expect } from '@playwright/test';
 import { latestVersion } from '../../src/catalogue/latest';
 import { Then, When } from '../fixtures';
 import { localeOfPage, messageIn } from '../support/messages';
-import { pagesOfBuild } from '../support/pages';
+import { pagesOfBuild, timeForEveryPage } from '../support/pages';
 
 const footers = new Map<string, string>();
 
-When('a visitor opens any page', async ({ page, request, guard, baseURL }) => {
+When('a visitor opens any page', async ({ page, request, guard, baseURL, $test }) => {
+  $test.setTimeout(timeForEveryPage());
   for (const p of pagesOfBuild()) {
     const url = new URL(p, baseURL);
     if (p === '404.html') guard.expectedMissing.add(url.pathname);

@@ -39,6 +39,18 @@ The interface is written in `en-US`. A translation is marked `unreviewed` in its
 reviewed it, and the site says so on every page in that language. These have not been reviewed yet:
 
 - `en-GB` — unreviewed
+- `es-ES` — unreviewed
+- `es-MX` — unreviewed
+- `fr-FR` — unreviewed
+- `fr-CA` — unreviewed
+- `de-DE` — unreviewed
+- `it-IT` — unreviewed
+- `nl-NL` — unreviewed
+- `ru-RU` — unreviewed
+- `ja-JP` — unreviewed
+- `ko-KR` — unreviewed
+- `zh-CN` — unreviewed
+- `zh-TW` — unreviewed
 
 To review one, read it against `en-US`, correct it, and set its status to `reviewed` in the same
 pull request that removes it from this list. A test keeps this list and the catalogues in step.

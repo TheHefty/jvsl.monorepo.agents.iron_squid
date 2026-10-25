@@ -4,7 +4,7 @@ import { IntlMessageFormat } from 'intl-messageformat';
 import { links } from '../../src/notices/links';
 import { Given, Then, When } from '../fixtures';
 import { localeOfPage, messageIn } from '../support/messages';
-import { pagesOfBuild } from '../support/pages';
+import { pagesOfBuild, timeForEveryPage } from '../support/pages';
 
 const catalogue = JSON.parse(readFileSync('src/i18n/messages/en-US.json', 'utf8')) as Record<
   string,
@@ -61,12 +61,16 @@ async function footers(page: Page, request: APIRequestContext, baseURL: string):
   return out;
 }
 
-Given('a visitor is on any page of the site', async ({ page, request, baseURL, guard, world }) => {
-  for (const p of pagesOfBuild())
-    if (p === '404.html') guard.expectedMissing.add(new URL(p, baseURL).pathname);
-  world.footers = await footers(page, request, baseURL ?? '');
-  expect((world.footers as Footer[]).length).toBeGreaterThan(2);
-});
+Given(
+  'a visitor is on any page of the site',
+  async ({ page, request, baseURL, guard, world, $test }) => {
+    $test.setTimeout(timeForEveryPage());
+    for (const p of pagesOfBuild())
+      if (p === '404.html') guard.expectedMissing.add(new URL(p, baseURL).pathname);
+    world.footers = await footers(page, request, baseURL ?? '');
+    expect((world.footers as Footer[]).length).toBeGreaterThan(2);
+  },
+);
 
 const noticeIds: Record<string, string> = {
   'terms of use': 'footer.terms',
