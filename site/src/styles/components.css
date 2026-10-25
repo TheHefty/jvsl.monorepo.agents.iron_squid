@@ -396,3 +396,16 @@ dialog::backdrop {
   gap: var(--space-3);
   margin-block-end: var(--space-4);
 }
+
+.storage-notice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-block-end: var(--space-4);
+}
+
+.storage-notice p {
+  margin: 0;
+  flex: 1 1 20ch;
+}

@@ -19,7 +19,6 @@ export const registrations: Registration[] = [
   {
     feature: 'run-in-the-browser/keep-progress.feature',
     pending: {
-      'The player is told when progress cannot be kept': 'not-kept-notice (is-82z.8.2)',
       'A run continues on its catalogue after the site is updated': 'older-catalogue (is-82z.8.3)',
     },
   },

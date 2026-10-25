@@ -145,3 +145,44 @@ Then('the player is told which catalogue version the file needs', async ({ page 
     message('import.unknownCatalogue', { version: '9.9.9' }),
   );
 });
+
+Given('a browser that does not let the site store anything', async ({ page, guard }) => {
+  guard.storageBlocked = true;
+  // The strictest refusal: reaching localStorage at all throws, as with blocked site data.
+  await page.addInitScript(() => {
+    Object.defineProperty(window, 'localStorage', {
+      get() {
+        throw new DOMException('The operation is insecure.', 'SecurityError');
+      },
+    });
+  });
+});
+
+When('the player opens the site', async ({ page }) => {
+  await page.goto('./en-US/');
+});
+
+const notKept = (p: Page) => p.getByRole('alert').filter({ hasText: message('storage.notKept') });
+
+Then('the player is told the run will not be kept when the page closes', async ({ page }) => {
+  await expect(notKept(page)).toBeVisible();
+});
+
+Then('the player is offered to export it instead', async ({ page, browser, baseURL }) => {
+  // There is a run to export once one is started; the notice stays, and carries the export.
+  await button(page, 'start.roll').click();
+  await expect(notKept(page)).toBeVisible();
+  const before = await snapshot(page);
+  const [download] = await Promise.all([
+    page.waitForEvent('download'),
+    notKept(page)
+      .getByRole('button', { name: message('run.export') })
+      .click(),
+  ]);
+  const file = readFileSync(await download.path(), 'utf8');
+  // The file it gives works in a browser that does keep runs (failure 3).
+  const other = await (await browser.newContext({ baseURL })).newPage();
+  await other.goto('./en-US/');
+  await importInto(other, file);
+  expect(await snapshot(other)).toEqual(before);
+});
