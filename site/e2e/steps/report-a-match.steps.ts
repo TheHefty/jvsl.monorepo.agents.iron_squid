@@ -175,7 +175,8 @@ Then(
   async ({ page, world }) => {
     const [kit] = world.set as string[];
     const expected = message('announce.win', { kit, lives: message('run.lives', { lives: 1 }) });
-    const live = page.locator('[aria-live="polite"]');
+    // The run's own announcement; the page has other live regions (the share status).
+    const live = page.locator('.run-announcement[aria-live="polite"]');
     await expect(live).toHaveText(expected);
     await expect(live).toHaveCount(1);
   },

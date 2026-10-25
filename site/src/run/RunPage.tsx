@@ -17,6 +17,7 @@ import {
   type RunState,
 } from './engine';
 import { exportRun, MAX_FILE_BYTES, readRunFile } from './file';
+import { ShareControls } from '../share/ShareControls';
 import { displayName } from './name';
 import { cryptoSource } from './random';
 import { browserStorage, createRunStore, type LoadResult, type RunStore } from './storage';
@@ -375,6 +376,7 @@ export function RunPage({ newestVersion }: { newestVersion: string }) {
         </section>
       )}
       <RunLog state={state} catalogue={catalogue} />
+      <ShareControls state={state} catalogue={catalogue} />
       <FileControls
         run={state}
         catalogues={catalogues}
@@ -389,7 +391,7 @@ export function RunPage({ newestVersion }: { newestVersion: string }) {
           setView({ kind: 'start' });
         }}
       />
-      <p className="visually-hidden" role="status" aria-live="polite">
+      <p className="visually-hidden run-announcement" role="status" aria-live="polite">
         {announcement}
       </p>
     </>
