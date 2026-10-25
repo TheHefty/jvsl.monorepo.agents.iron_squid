@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { expect } from '@playwright/test';
 import type { Catalogue, Item } from '../../src/catalogue/types';
+import { locales } from '../../src/i18n/locales';
 import { Given, Then } from '../fixtures';
 import { buildState } from '../support/build-state';
 import { run } from '../support/run';
@@ -23,7 +24,6 @@ const lock = JSON.parse(
 // The published build holds the image of every item, with the bytes its lock recorded.
 function publishedWithImage(items: Item[]) {
   const wrong = items.flatMap((item) => {
-    if (!item.name['en-US']) return [`${item.id}: no en-US name`];
     const file = join(siteDir, 'game', version, item.image);
     if (!existsSync(file)) return [`${item.id}: ${file} is missing`];
     return sha256(readFileSync(file)) === lock[item.image]
@@ -61,7 +61,7 @@ async function badImage(serve: 'altered' | 'missing') {
   await new Promise<void>((r) => server.listen(0, r));
   const base = `http://localhost:${(server.address() as AddressInfo).port}/`;
   const dir = mkdtempSync(join(tmpdir(), 'catalogue-'));
-  const item = (id: string, image: string) => ({ id, name: { 'en-US': id }, image });
+  const item = (id: string, image: string) => ({ id, image });
   const c: Catalogue = {
     version: '0.0.1',
     datamine: { repo: 'fixture', commit: 'x', dataFolder: '1' },
@@ -80,6 +80,16 @@ async function badImage(serve: 'altered' | 'missing') {
   mkdirSync(join(dir, c.version));
   writeFileSync(join(dir, c.version, 'catalogue.json'), JSON.stringify(c));
   writeFileSync(join(dir, c.version, 'images.lock.json'), JSON.stringify(lock));
+  // Named in every locale, so the build gets as far as the images it is meant to fail on.
+  mkdirSync(join(dir, c.version, 'names'));
+  const names = Object.fromEntries(
+    [...c.kits, ...c.gear.head, ...c.gear.clothes, ...c.gear.shoes].map((i) => [i.id, i.id]),
+  );
+  for (const locale of locales)
+    writeFileSync(
+      join(dir, c.version, 'names', `${locale}.json`),
+      JSON.stringify({ source: 'fixture', names }),
+    );
   buildState.env = {
     CATALOGUE_DIR: dir,
     DATAMINE_BASE_URL: base,

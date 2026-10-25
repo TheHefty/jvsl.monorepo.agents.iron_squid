@@ -3,7 +3,7 @@
 // state the site could not have reached (task report-screen, failure 1).
 import { readFileSync } from 'node:fs';
 import type { Page } from '@playwright/test';
-import type { Catalogue } from '../../src/catalogue/types';
+import type { Catalogue, NamesFile } from '../../src/catalogue/types';
 import { nextSet, reportLoss, reportWin, startRun, type RunState } from '../../src/run/engine';
 import { cryptoSource } from '../../src/run/random';
 
@@ -51,13 +51,15 @@ export async function seedRun(page: Page, state: RunState, locale = 'en-US') {
 }
 
 // The names of draw n of a run, kit first, as the set card shows them in en-US.
+const english = (
+  JSON.parse(readFileSync('src/catalogue/11.3.0/names/en-US.json', 'utf8')) as NamesFile
+).names;
 export function setNames(state: RunState, n: number): string[] {
-  const name = (items: { id: string; name: Record<string, string> }[], id: string | undefined) =>
-    items.find((i) => i.id === id)?.name['en-US'] ?? `<no item ${String(id)}>`;
+  const name = (id: string | undefined) => english[id ?? ''] ?? `<no item ${String(id)}>`;
   return [
-    name(catalogue.kits, state.order.kits[n]),
-    name(catalogue.gear.head, state.order.head[n]),
-    name(catalogue.gear.clothes, state.order.clothes[n]),
-    name(catalogue.gear.shoes, state.order.shoes[n]),
+    name(state.order.kits[n]),
+    name(state.order.head[n]),
+    name(state.order.clothes[n]),
+    name(state.order.shoes[n]),
   ];
 }

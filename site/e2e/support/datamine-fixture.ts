@@ -3,6 +3,7 @@
 // not even a test fixture may be a game image (docs/RULES.md).
 import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
+import { languageFiles } from '../../scripts/catalogue/languages';
 
 type Version = { kits: string[]; gear: string[] };
 
@@ -29,8 +30,17 @@ function files(v: Version): Record<string, Buffer> {
     'data/mush/1/GearInfoHead.json': json(slot('Hed')),
     'data/mush/1/GearInfoClothes.json': json(slot('Clt')),
     'data/mush/1/GearInfoShoes.json': json(slot('Shs')),
-    'data/language/USen.json': json(names),
   };
+  // Every language the generator reads, each naming items its own way.
+  for (const code of new Set(Object.values(languageFiles)))
+    out[`data/language/${code}.json`] = json(
+      Object.fromEntries(
+        Object.entries(names).map(([table, rows]) => [
+          table,
+          Object.fromEntries(Object.entries(rows).map(([k, v]) => [k, `${v} (${code})`])),
+        ]),
+      ),
+    );
   for (const k of v.kits) out[`images/weapon/Wst_${k}.png`] = Buffer.from(`not an image: ${k}`);
   for (const p of ['Hed', 'Clt', 'Shs'])
     for (const g of v.gear)

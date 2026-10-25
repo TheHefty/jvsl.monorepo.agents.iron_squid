@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildCatalogue, type Source } from './rules';
+import { buildCatalogue, buildNames, type Source } from './rules';
 
 const weapon = (id: string, sub: string, special: string, type = 'Versus') => ({
   __RowId: id,
@@ -41,19 +41,11 @@ function source(overrides: Partial<Source> = {}): Source {
 }
 
 describe('buildCatalogue', () => {
-  it('keeps every versus kit with a numeric suffix, with its name and image', () => {
+  it('keeps every versus kit with a numeric suffix, with its image', () => {
     const { kits } = buildCatalogue(source());
     expect(kits).toEqual([
-      {
-        id: 'Shooter_Normal_00',
-        name: { 'en-US': 'Splattershot' },
-        image: 'weapon/Wst_Shooter_Normal_00.png',
-      },
-      {
-        id: 'Shooter_Normal_01',
-        name: { 'en-US': 'Tentatek Splattershot' },
-        image: 'weapon/Wst_Shooter_Normal_01.png',
-      },
+      { id: 'Shooter_Normal_00', image: 'weapon/Wst_Shooter_Normal_00.png' },
+      { id: 'Shooter_Normal_01', image: 'weapon/Wst_Shooter_Normal_01.png' },
     ]);
   });
 
@@ -75,17 +67,26 @@ describe('buildCatalogue', () => {
   it('keeps the gear a player can wear online, and records what it left out', () => {
     const c = buildCatalogue(source());
     expect(c.gear.head.map((g) => g.id)).toEqual(['Hed_AMB000']);
-    expect(c.gear.shoes).toEqual([
-      { id: 'Shs_AMB000', name: { 'en-US': 'School Shoes' }, image: 'gear/Shs_AMB000.png' },
-    ]);
+    expect(c.gear.shoes).toEqual([{ id: 'Shs_AMB000', image: 'gear/Shs_AMB000.png' }]);
     expect(c.excluded.unobtainable).toEqual(['Hed_MSN000', 'Shs_SDODR000']);
   });
 
-  it('refuses an item with no name, naming it', () => {
+  it('names every kit and piece from one language file of the game (NFR-I3)', () => {
+    const s = source();
+    expect(buildNames(buildCatalogue(s), s.names, 'data/language/USen.json')).toEqual({
+      Shooter_Normal_00: 'Splattershot',
+      Shooter_Normal_01: 'Tentatek Splattershot',
+      Hed_AMB000: 'Squid Hairclip',
+      Clt_AMB000: 'School Uniform A',
+      Shs_AMB000: 'School Shoes',
+    });
+  });
+
+  it('refuses an item with no name in a language file, naming both', () => {
     const s = source();
     s.names['CommonMsg/Gear/GearName_Clothes'] = {};
-    expect(() => buildCatalogue(s)).toThrow(
-      'catalogue: Clt_AMB000 has no en-US name in the game data',
+    expect(() => buildNames(buildCatalogue(s), s.names, 'data/language/JPja.json')).toThrow(
+      'catalogue: Clt_AMB000 has no name in data/language/JPja.json',
     );
   });
 

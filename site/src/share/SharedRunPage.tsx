@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { imageUrl, loadCatalogues } from '../catalogue/load';
+import { NamesContext, useItemNames, useLoadedNames } from '../catalogue/names';
 import type { Catalogue, Item } from '../catalogue/types';
 import { browserStorage, hasStoredRun } from '../run/storage';
 import { decodeShare, type SharedRun } from './link';
@@ -15,6 +16,8 @@ export function SharedRunPage({ home }: { home: string }) {
   const [catalogues, setCatalogues] = useState<Record<string, Catalogue>>();
   const [link, setLink] = useState(() => window.location.hash.slice(1));
   const [ownRun] = useState(() => hasStoredRun(browserStorage()));
+  // Kit and gear names in the visitor's locale, whatever locale the link was made in.
+  const names = useLoadedNames();
 
   useEffect(() => {
     let live = true;
@@ -35,7 +38,7 @@ export function SharedRunPage({ home }: { home: string }) {
     </p>
   );
 
-  if (!catalogues) {
+  if (!catalogues || !names) {
     return (
       <p>
         <FormattedMessage id="run.loading" />
@@ -84,14 +87,17 @@ export function SharedRunPage({ home }: { home: string }) {
         <FormattedMessage id="shared.readOnly" />
       </p>
       {offer}
-      <SharedSets run={run} catalogue={catalogue} />
+      <NamesContext.Provider value={names}>
+        <SharedSets run={run} catalogue={catalogue} />
+      </NamesContext.Provider>
     </>
   );
 }
 
 function SharedSets({ run, catalogue }: { run: SharedRun; catalogue: Catalogue }) {
   const intl = useIntl();
-  const name = (items: Item[], id: string) => nameIn(items, id)?.name['en-US'] ?? '';
+  const names = useItemNames();
+  const name = (_items: Item[], id: string) => names(catalogue.version, id);
   return (
     <section className="card" aria-labelledby="shared-sets">
       <h2 id="shared-sets">

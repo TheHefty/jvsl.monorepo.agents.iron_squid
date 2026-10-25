@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { imageUrl, loadCatalogues } from '../catalogue/load';
+import { NamesContext, useItemNames, useLoadedNames } from '../catalogue/names';
 import type { Catalogue, Item } from '../catalogue/types';
 import {
   currentSet,
@@ -25,7 +26,6 @@ import { browserStorage, createRunStore, type LoadResult, type RunStore } from '
 const MAX_NAME = 30;
 
 const findItem = (items: Item[], id: string) => items.find((i) => i.id === id);
-const nameOf = (item: Item | undefined) => item?.name['en-US'] ?? '';
 
 function setPieces(catalogue: Catalogue, state: RunState) {
   const set = currentSet(state);
@@ -47,7 +47,19 @@ type View =
 // for the next set, undo the last result, start over only after confirming. The rules are the
 // engine's; this page shows them and keeps every change in the store.
 export function RunPage({ newestVersion }: { newestVersion: string }) {
+  // Kit and gear names in the page's locale, loaded beside the catalogues (story localized-names).
+  const names = useLoadedNames();
+  return (
+    <NamesContext.Provider value={names ?? (() => '')}>
+      <RunView newestVersion={newestVersion} namesLoaded={names !== undefined} />
+    </NamesContext.Provider>
+  );
+}
+
+function RunView({ newestVersion, namesLoaded }: { newestVersion: string; namesLoaded: boolean }) {
   const intl = useIntl();
+  const names = useItemNames();
+  const nameOf = (item: Item | undefined, version: string) => (item ? names(version, item.id) : '');
   const [catalogues, setCatalogues] = useState<Record<string, Catalogue>>();
   const [store, setStore] = useState<RunStore>();
   const [view, setView] = useState<View>({ kind: 'loading' });
@@ -98,10 +110,10 @@ export function RunPage({ newestVersion }: { newestVersion: string }) {
       intl.formatMessage(
         { id: isReplay(s) ? 'set.announceReplay' : 'set.announce' },
         {
-          kit: nameOf(p.kit),
-          head: nameOf(p.head),
-          clothes: nameOf(p.clothes),
-          shoes: nameOf(p.shoes),
+          kit: nameOf(p.kit, c.version),
+          head: nameOf(p.head, c.version),
+          clothes: nameOf(p.clothes, c.version),
+          shoes: nameOf(p.shoes, c.version),
         },
       ),
     );
@@ -124,7 +136,7 @@ export function RunPage({ newestVersion }: { newestVersion: string }) {
     return false;
   };
 
-  if (view.kind === 'loading' || !catalogues) {
+  if (view.kind === 'loading' || !catalogues || !namesLoaded) {
     return (
       <Hero>
         <h1 className="hero-title">
@@ -195,7 +207,7 @@ export function RunPage({ newestVersion }: { newestVersion: string }) {
       intl.formatMessage(
         { id },
         {
-          kit: nameOf(pieces.kit),
+          kit: nameOf(pieces.kit, catalogue.version),
           lives: intl.formatMessage({ id: 'run.lives' }, { lives: after.lives }),
         },
       ),
@@ -413,8 +425,9 @@ function Piece({
   kit?: boolean;
   children: React.ReactNode;
 }) {
+  const names = useItemNames();
   if (!item) return null;
-  const name = item.name['en-US'] ?? '';
+  const name = names(version, item.id);
   return (
     <figure className={kit ? 'piece piece-kit' : 'piece'}>
       <img
@@ -550,7 +563,8 @@ function NewRunButton({ label, onConfirm }: { label: string; onConfirm: () => vo
 // the date written for the page's locale. Collapsed by default, so the set stays first on screen.
 function RunLog({ state, catalogue }: { state: RunState; catalogue: Catalogue }) {
   const intl = useIntl();
-  const kitName = (draw: number) => nameOf(findItem(catalogue.kits, state.order.kits[draw] ?? ''));
+  const names = useItemNames();
+  const kitName = (draw: number) => names(catalogue.version, state.order.kits[draw] ?? '');
   const title = intl.formatMessage({ id: 'log.title' });
   return (
     <details className="run-log">

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import type { Catalogue } from '../../src/catalogue/types';
-import { catalogueProblems } from './check';
+import { catalogueProblems, nameProblems } from './check';
 
-const item = (id: string) => ({ id, name: { 'en-US': id }, image: `${id}.png` });
+const item = (id: string) => ({ id, image: `${id}.png` });
 const ids = (prefix: string, n: number) =>
   Array.from({ length: n }, (_, i) => item(`${prefix}${i}`));
 const cat = (kits: number, head: number, clothes: number, shoes: number): Catalogue => ({
@@ -24,13 +24,10 @@ describe('catalogueProblems', () => {
     ]);
   });
 
-  it('refuses an item with no name or no image', () => {
+  it('refuses an item with no image', () => {
     const c = cat(1, 1, 1, 1);
-    c.kits[0] = { id: 'K0', name: { 'en-US': '' }, image: '' };
-    expect(catalogueProblems(c)).toEqual([
-      'catalogue 11.3.0: K0 has no en-US name',
-      'catalogue 11.3.0: K0 has no image',
-    ]);
+    c.kits[0] = { id: 'K0', image: '' };
+    expect(catalogueProblems(c)).toEqual(['catalogue 11.3.0: K0 has no image']);
   });
 
   it('refuses an id used twice', () => {
@@ -41,5 +38,28 @@ describe('catalogueProblems', () => {
 
   it('refuses a catalogue with no kits', () => {
     expect(catalogueProblems(cat(0, 0, 0, 0))).toEqual(['catalogue 11.3.0: no kits']);
+  });
+});
+
+describe('nameProblems', () => {
+  const c = cat(1, 1, 1, 1);
+  const all = { K0: 'Kit', H0: 'Hat', C0: 'Coat', S0: 'Shoes' };
+
+  it('accepts names for every item in every locale', () => {
+    expect(nameProblems(c, { 'en-US': all, 'ko-KR': all }, ['en-US', 'ko-KR'])).toEqual([]);
+  });
+
+  it('names the item and the locale a name is missing in (localized-names, failure 1)', () => {
+    const { K0: _, ...ko } = all;
+    void _;
+    expect(
+      nameProblems(c, { 'en-US': all, 'ko-KR': { ...ko, H0: '' } }, ['en-US', 'ko-KR']),
+    ).toEqual(['catalogue 11.3.0: K0 has no ko-KR name', 'catalogue 11.3.0: H0 has no ko-KR name']);
+  });
+
+  it('names a locale with no names at all', () => {
+    expect(nameProblems(c, { 'en-US': all }, ['en-US', 'ja-JP'])).toEqual([
+      'catalogue 11.3.0 has no names for ja-JP',
+    ]);
   });
 });

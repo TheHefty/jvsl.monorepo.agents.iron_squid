@@ -10,7 +10,9 @@ import { gearSlots, type Catalogue } from '../../src/catalogue/types';
 import { catalogueProblems } from './check';
 import { describeDiff, diffCatalogues, removedIds } from './diff';
 import { fetchBytes, mapLimit, sha256 } from './fetch';
-import { buildCatalogue, type Source } from './rules';
+import { locales } from '../../src/i18n/locales';
+import { languageFiles } from './languages';
+import { buildCatalogue, buildNames, type Source } from './rules';
 
 type Pin = {
   repo: string;
@@ -64,6 +66,19 @@ const catalogue = buildCatalogue({
 const problems = catalogueProblems(catalogue);
 if (problems.length) throw new Error(problems.join('\n'));
 
+// Each language file once, however many locales share it, checked against its pinned digest.
+const languageTables = new Map<string, Source['names']>();
+for (const code of new Set(Object.values(languageFiles))) {
+  languageTables.set(code, (await source(`data/language/${code}.json`)) as Source['names']);
+}
+const namesByLocale = Object.fromEntries(
+  locales.map((locale) => {
+    const file = `data/language/${languageFiles[locale]}.json`;
+    const tables = languageTables.get(languageFiles[locale]) ?? {};
+    return [locale, { source: file, names: buildNames(catalogue, tables, file) }];
+  }),
+);
+
 // The newest other version already generated, if any, is what this one is compared with.
 const semver = (v: string) => v.split('.').map(Number);
 const earlier = existsSync(outRoot)
@@ -102,6 +117,10 @@ const digests = await mapLimit(items, 8, async (item) => {
 const out = join(outRoot, catalogue.version);
 mkdirSync(out, { recursive: true });
 writeFileSync(join(out, 'catalogue.json'), JSON.stringify(catalogue, null, 2) + '\n');
+mkdirSync(join(out, 'names'), { recursive: true });
+for (const [locale, file] of Object.entries(namesByLocale)) {
+  writeFileSync(join(out, 'names', `${locale}.json`), JSON.stringify(file, null, 2) + '\n');
+}
 writeFileSync(
   join(out, 'images.lock.json'),
   JSON.stringify(Object.fromEntries([...digests].sort(([a], [b]) => a.localeCompare(b))), null, 2) +

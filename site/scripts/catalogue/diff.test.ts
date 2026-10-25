@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { Catalogue } from '../../src/catalogue/types';
 import { describeDiff, diffCatalogues } from './diff';
 
-const item = (id: string) => ({ id, name: { 'en-US': id }, image: `${id}.png` });
+const item = (id: string) => ({ id, image: `${id}.png` });
 const cat = (kits: string[], head: string[]): Catalogue => ({
   version: 'v',
   datamine: { repo: 'r', commit: 'c', dataFolder: 'f' },

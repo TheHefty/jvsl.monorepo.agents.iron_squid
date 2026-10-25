@@ -1,6 +1,10 @@
 // The shape of a generated catalogue (site/src/catalogue/<version>/catalogue.json). Items are
-// identified by the datamine's row id, which is what a saved run refers to.
-export type Item = { id: string; name: Record<string, string>; image: string };
+// identified by the datamine's row id, which is what a saved run refers to. Their names are kept
+// apart, one file per locale (names/<locale>.json), so a page loads only its own language's.
+export type Item = { id: string; image: string };
+
+// site/src/catalogue/<version>/names/<locale>.json: every item's name, and the game file it is from.
+export type NamesFile = { source: string; names: Record<string, string> };
 
 export type Catalogue = {
   version: string;

@@ -2,13 +2,15 @@ import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { expect } from '@playwright/test';
-import type { Catalogue } from '../../src/catalogue/types';
+import type { Catalogue, NamesFile } from '../../src/catalogue/types';
 import { Given, Then, When } from '../fixtures';
 import { startDatamine } from '../support/datamine-fixture';
 import { buildState } from '../support/build-state';
 import { run } from '../support/run';
 
 let catalogue: Catalogue;
+// The names a player of the en-US site sees, as the catalogue was generated.
+let english: Record<string, string> = {};
 const gearOf = (c: Catalogue) => Object.values(c.gear).flat();
 
 Given('the site is built from the game data for version {word}', async ({}, version: string) => {
@@ -16,6 +18,9 @@ Given('the site is built from the game data for version {word}', async ({}, vers
     readFileSync(`src/catalogue/${version}/catalogue.json`, 'utf8'),
   ) as Catalogue;
   expect(catalogue.version).toBe(version);
+  english = (
+    JSON.parse(readFileSync(`src/catalogue/${version}/names/en-US.json`, 'utf8')) as NamesFile
+  ).names;
 });
 
 Then('the catalogue has {int} kits', async ({}, n: number) => {
@@ -23,7 +28,7 @@ Then('the catalogue has {int} kits', async ({}, n: number) => {
 });
 
 Then(/^the catalogue does not contain the (.+)$/, async ({}, name: string) => {
-  expect(catalogue.kits.map((k) => k.name['en-US'])).not.toContain(name);
+  expect(catalogue.kits.map((k) => english[k.id])).not.toContain(name);
 });
 
 Then(
@@ -46,7 +51,7 @@ Then(
   'the catalogue contains the Hero Mode and Side Order rewards a player can wear online',
   async () => {
     const rewards = gearOf(catalogue).filter((g) => /_(MSN|SDODR)/.test(g.id));
-    expect(rewards.map((g) => g.name['en-US'])).toEqual(
+    expect(rewards.map((g) => english[g.id])).toEqual(
       expect.arrayContaining(['Hero Headset Replica', 'Order Suit Replica']),
     );
   },
