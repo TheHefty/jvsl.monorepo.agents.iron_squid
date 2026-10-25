@@ -2,6 +2,7 @@
 // locale (NFR-I8), a root that sends visitors to the default locale, and a 404 page. Each address
 // is then answered by GitHub Pages with status 200, instead of every page being 404.html in disguise.
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { IntlMessageFormat } from 'intl-messageformat';
@@ -17,6 +18,9 @@ type Options = {
   defaultLocale: string;
   catalogueVersion: string;
   messages: Record<string, string>;
+  // The root's script (src/i18n/root-entry.ts, built as a classic script): it sends a visitor to
+  // their language (NFR-I5) before the refresh to the default locale fires.
+  rootScript: string;
 };
 
 const escape = (s: string) =>
@@ -29,6 +33,7 @@ export function emitPages({
   defaultLocale,
   catalogueVersion,
   messages,
+  rootScript,
 }: Options): void {
   const shellPath = join(distDir, 'index.html');
   if (!existsSync(shellPath)) {
@@ -56,6 +61,9 @@ export function emitPages({
   );
 
   const target = `${basePath}${defaultLocale}/`;
+  // Named by its content, like every other asset, so a cached copy is never a stale one.
+  const rootFile = `root-${createHash('sha256').update(rootScript).digest('hex').slice(0, 12)}.js`;
+  writeFileSync(join(distDir, rootFile), rootScript);
   // The site's own stylesheet: the root has no app, but its footer is laid out like every page's
   // (links far enough apart to meet WCAG 2.2 target size; defect is-8qd).
   const stylesheets = (shell.match(/<link rel="stylesheet"[^>]*>/g) ?? []).join('');
@@ -79,6 +87,9 @@ export function emitPages({
     shellPath,
     `<!doctype html><html lang="${defaultLocale}"><head><meta charset="UTF-8" />` +
       `${contentSecurityPolicy}<meta name="viewport" content="width=device-width, initial-scale=1" />` +
+      // A classic script runs where it stands, before the refresh below; without scripts the
+      // refresh still takes the visitor to the default locale.
+      `<script src="${basePath}${rootFile}"></script>` +
       `<meta http-equiv="refresh" content="0; url=${target}" />${alternates}${stylesheets}<title>${name}</title></head>` +
       `<body><main><p><a href="${target}">${cont}</a></p></main>` +
       `<footer class="site-footer">${notices}<p>${version}</p></footer></body></html>`,
@@ -90,7 +101,23 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const messages = JSON.parse(
     readFileSync(new URL(`../src/i18n/messages/${defaultLocale}.json`, import.meta.url), 'utf8'),
   ) as Record<string, string>;
+  // The root's script, bundled alone as a classic script (an IIFE): it runs as soon as it is read,
+  // before the refresh below, whenever each browser chooses to apply that. A module script waits
+  // for the document; it happens to beat the refresh in Chromium, but nothing promises it does.
+  const { build } = await import('vite');
+  const built = (await build({
+    configFile: false,
+    logLevel: 'warn',
+    build: {
+      write: false,
+      minify: true,
+      lib: { entry: 'src/i18n/root-entry.ts', formats: ['iife'], name: 'ironSquidRoot' },
+    },
+  })) as { output: { code?: string }[] } | { output: { code?: string }[] }[];
+  const rootScript = (Array.isArray(built) ? built[0] : built)?.output[0]?.code;
+  if (!rootScript) throw new Error('emit-pages: the root script was not built');
   emitPages({
+    rootScript,
     // Scenarios that build the site build it elsewhere, never over the dist/ under test.
     distDir: process.env.BUILD_OUT_DIR ?? 'dist',
     basePath: process.env.BASE_PATH ?? '/',

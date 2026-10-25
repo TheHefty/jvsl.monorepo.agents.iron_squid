@@ -30,7 +30,8 @@ async function footers(page: Page, request: APIRequestContext, baseURL: string):
   for (const p of pagesOfBuild()) {
     const url = new URL(p, baseURL).href;
     const html = await (await request.get(url)).text();
-    if (!html.includes('<script')) {
+    // Static: without the app's module script (the root's own small script is not the app).
+    if (!html.includes('<script type="module"')) {
       const footer = /<footer[^>]*>([\s\S]*?)<\/footer>/.exec(html)?.[1] ?? '';
       out.push({
         page: p || 'the root',

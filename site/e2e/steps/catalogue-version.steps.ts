@@ -15,7 +15,8 @@ When('a visitor opens any page', async ({ page, request, guard, baseURL, $test }
     // A page without the app script is static, and may send the browser on at once (the root's
     // meta refresh): read its footer from the HTML as served, or the next page's would be read.
     const html = await (await request.get(url.href)).text();
-    if (!html.includes('<script')) {
+    // Static: without the app's module script (the root's own small script is not the app).
+    if (!html.includes('<script type="module"')) {
       const footer = /<footer[^>]*>([\s\S]*?)<\/footer>/.exec(html)?.[1] ?? '';
       footers.set(p, footer.replace(/<[^>]+>/g, ''));
       continue;
