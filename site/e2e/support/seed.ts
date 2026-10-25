@@ -45,9 +45,9 @@ export async function seedRunScript(page: Page, state: RunState) {
   );
 }
 
-export async function seedRun(page: Page, state: RunState) {
+export async function seedRun(page: Page, state: RunState, locale = 'en-US') {
   await seedRunScript(page, state);
-  await page.goto('./en-US/');
+  await page.goto(`./${locale}/`);
 }
 
 // The names of draw n of a run, kit first, as the set card shows them in en-US.

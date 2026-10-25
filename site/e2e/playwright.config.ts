@@ -9,6 +9,9 @@ const testDir = defineBddConfig({
   // Scenarios that only GitHub can perform, or that need the published site, run elsewhere.
   tags: 'not @manual and not @deployed',
   missingSteps: 'fail-on-gen',
+  // A Given or When and a Then may share their words and mean different things ("the player has 3
+  // lives" sets a run up in one story and checks the page in another): match the keyword too.
+  matchKeywords: true,
   outputDir: '.features-gen',
 });
 

@@ -17,3 +17,7 @@ function htmlFiles(dir: string): string[] {
 
 export const pagesOfBuild = () =>
   htmlFiles(siteDir).map((f) => relative(siteDir, f).replace(/(^|\/)index\.html$/, '$1'));
+
+// The time a step that visits every page may take: a scenario's usual 30 seconds is sized for one
+// page, and the build has a page per locale per route (15 locales × 4 routes and the static ones).
+export const timeForEveryPage = () => 30_000 + 2_000 * pagesOfBuild().length;

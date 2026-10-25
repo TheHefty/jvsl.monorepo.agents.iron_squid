@@ -21,6 +21,10 @@ h3 {
   line-height: 1.12;
   letter-spacing: -0.015em;
   margin: 0 0 var(--space-3);
+  /* Long words in large type (Nutzungsbedingungen, Конфиденциальность) would overflow a phone:
+     hyphenate where the language allows, and break a word only when it cannot fit. */
+  hyphens: auto;
+  overflow-wrap: break-word;
 }
 
 p {

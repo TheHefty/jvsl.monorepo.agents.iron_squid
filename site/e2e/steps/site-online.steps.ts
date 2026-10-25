@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { expect } from '@playwright/test';
 import { accessibilityViolations, Given, Then, When } from '../fixtures';
-import { pagesOfBuild } from '../support/pages';
+import { pagesOfBuild, timeForEveryPage } from '../support/pages';
 
 const catalogue = JSON.parse(
   readFileSync(new URL('../../src/i18n/messages/en-US.json', import.meta.url), 'utf8'),
@@ -58,7 +58,8 @@ Given('the published site', async () => {
   // The build under test: every HTML page it contains is a page a visitor can reach.
 });
 
-When('a visitor loads every page', async ({ page, guard, baseURL }) => {
+When('a visitor loads every page', async ({ page, guard, baseURL, $test }) => {
+  $test.setTimeout(timeForEveryPage());
   const pages = pagesOfBuild();
   expect(pages.length, 'pages in the build').toBeGreaterThan(0);
   for (const p of pages) {
