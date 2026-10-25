@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.3.0](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/compare/v0.2.0...v0.3.0) (2026-10-25)
+
+
+### Features
+
+* draw the run page as the inked design does ([#74](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/issues/74)) ([562edd7](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/562edd7423b3e3d592c58465de4f5790ac2a3672))
+* give the site a logo of its own, as the favicon and in the header ([#70](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/issues/70)) ([2af3d95](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/2af3d95e0c5f7edebd890bb2d77dfb100797ff34))
+* give the site the inked design's skewed buttons, cut panels and tilted labels ([#73](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/issues/73)) ([45c4873](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/45c487343d0e6141ecdc752828761755b179d51a))
+* lead a shared run with a headline and its numbers in one row ([#75](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/issues/75)) ([9feb4f2](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/9feb4f2aadd35f2c442e916ae0ced4dc359c720c))
+* let a player choose the light or the dark theme ([#72](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/issues/72)) ([f1323e5](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/f1323e523f79cd21a3723be4d476f58c65893f07))
+
 ## [0.2.0](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/compare/v0.1.0...v0.2.0) (2026-10-25)
 
 
