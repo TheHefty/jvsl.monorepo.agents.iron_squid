@@ -24,6 +24,7 @@ export default defineConfig({
     { name: 'acceptance-dark', use: { ...devices['Desktop Chrome'], colorScheme: 'dark' } },
     { name: 'acceptance-light', use: { ...devices['Desktop Chrome'], colorScheme: 'light' } },
     { name: 'guard', testDir: 'guard', use: { ...devices['Desktop Chrome'] } },
+    { name: 'screen', testDir: 'screen', use: { ...devices['Desktop Chrome'] } },
   ],
   webServer: {
     command: `tsx scripts/pages-server.ts`,

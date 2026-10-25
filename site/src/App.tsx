@@ -2,6 +2,7 @@ import { FormattedMessage, IntlProvider } from 'react-intl';
 import { currentVersion } from './catalogue';
 import type { Locale } from './i18n/locales';
 import { Layout } from './Layout';
+import { RunPage } from './run/RunPage';
 import enUS from './i18n/messages/en-US.json';
 
 const catalogues: Record<Locale, Record<string, string>> = { 'en-US': enUS };
@@ -14,22 +15,13 @@ export function App({ locale, page, basePath, catalogueVersion = currentVersion 
   return (
     <IntlProvider locale={locale} messages={catalogues[locale]}>
       <Layout catalogueVersion={catalogueVersion} home={`${basePath}${locale}/`}>
-        {page === 'home' ? <Home /> : <NotFound home={`${basePath}${locale}/`} />}
+        {page === 'home' ? (
+          <RunPage newestVersion={catalogueVersion} />
+        ) : (
+          <NotFound home={`${basePath}${locale}/`} />
+        )}
       </Layout>
     </IntlProvider>
-  );
-}
-
-function Home() {
-  return (
-    <section className="ink-strip">
-      <h1 className="hero-title">
-        <FormattedMessage id="site.name" />
-      </h1>
-      <p className="hero-lede">
-        <FormattedMessage id="home.tagline" />
-      </p>
-    </section>
   );
 }
 
