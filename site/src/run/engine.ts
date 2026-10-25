@@ -162,3 +162,10 @@ export function reportLoss(s: RunState, action: { step: number; at: string }): R
 
 // How many more wins earn the next life (FR-22).
 export const winsToNextLife = (s: RunState) => 10 - (s.winsSinceReset % 10);
+
+// A replay: a set already conquered, being played again after a reset (FR-19). Only while playing:
+// once a set is won, cursor < conquered holds for a new conquest too, and the card says "conquered".
+export const isReplay = (s: RunState) => s.phase === 'playing' && s.cursor < s.conquered;
+
+// Replays left before new draws, counting the one on screen: the fifth of 12 leaves 8.
+export const replaysRemaining = (s: RunState) => (isReplay(s) ? s.conquered - s.cursor : 0);
