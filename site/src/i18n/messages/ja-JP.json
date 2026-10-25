@@ -119,5 +119,6 @@
   "translation.unreviewed": "この翻訳は、まだその言語を流暢に話す人の確認を受けていません。",
   "language.label": "言語",
   "language.current": "言語:{name}",
-  "language.unreviewed": "未確認の翻訳"
+  "language.unreviewed": "未確認の翻訳",
+  "header.home": "Iron Squid、ホーム"
 }

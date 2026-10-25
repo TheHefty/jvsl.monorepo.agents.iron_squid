@@ -90,6 +90,7 @@ export function emitPages({
       // A classic script runs where it stands, before the refresh below; without scripts the
       // refresh still takes the visitor to the default locale.
       `<script src="${basePath}${rootFile}"></script>` +
+      `<link rel="icon" type="image/svg+xml" href="${basePath}logo.svg" />` +
       `<meta http-equiv="refresh" content="0; url=${target}" />${alternates}${stylesheets}<title>${name}</title></head>` +
       `<body><main><p><a href="${target}">${cont}</a></p></main>` +
       `<footer class="site-footer">${notices}<p>${version}</p></footer></body></html>`,

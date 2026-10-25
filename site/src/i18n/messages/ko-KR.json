@@ -119,5 +119,6 @@
   "translation.unreviewed": "이 번역은 아직 그 언어를 유창하게 하는 사람의 검토를 받지 않았습니다.",
   "language.label": "언어",
   "language.current": "언어: {name}",
-  "language.unreviewed": "검토되지 않은 번역"
+  "language.unreviewed": "검토되지 않은 번역",
+  "header.home": "Iron Squid, 홈"
 }

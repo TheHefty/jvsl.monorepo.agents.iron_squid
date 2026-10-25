@@ -32,7 +32,7 @@ describe('App', () => {
       );
       const banners = screen.getAllByRole('banner');
       expect(banners).toHaveLength(1);
-      const mark = screen.getByRole('link', { name: messages['site.name'] });
+      const mark = screen.getByRole('link', { name: messages['header.home'] });
       expect(mark.getAttribute('href')).toBe('/repo/en-US/');
       cleanup();
     }

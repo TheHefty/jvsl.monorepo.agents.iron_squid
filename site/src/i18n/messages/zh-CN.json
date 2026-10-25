@@ -119,5 +119,6 @@
   "translation.unreviewed": "这份翻译尚未经过流利使用该语言的人审阅。",
   "language.label": "语言",
   "language.current": "语言:{name}",
-  "language.unreviewed": "未经审阅的翻译"
+  "language.unreviewed": "未经审阅的翻译",
+  "header.home": "Iron Squid,首页"
 }
