@@ -11,14 +11,12 @@ export const pending = (task: string) => () => {
 };
 
 // A pending step that takes one parameter must declare it, or the step cannot be generated.
-const pendingWith =
+export const pendingWith =
   (task: string) =>
   async ({}, value: unknown) => {
     void value;
     pending(task)();
   };
-const root = pending('root-language (is-8el.1.2)');
-Given('a browser whose preferred language is {string}', pendingWith('root-language (is-8el.1.2)'));
-When('the visitor opens the root of the site for the first time', root);
-When('the visitor later opens the root of the site', root);
-Then('the visitor arrives at the {string} address', pendingWith('root-language (is-8el.1.2)'));
+
+// No scenario is pending at the moment; these are what a task's pending steps are written with.
+void [Given, Then, When];

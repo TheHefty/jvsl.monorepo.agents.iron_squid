@@ -1,7 +1,7 @@
 // The static pages the build writes, the root above all, checked for accessibility like every other
-// page (defect is-8qd). The root sends the browser on at once with a meta refresh, so the guard, which
-// checks the page a test ends on, never saw it. Here each static page is served as built, minus the
-// refresh (not an accessibility property), and held still for axe, in both colour schemes.
+// page (defect is-8qd). The root sends the browser on at once, with its script and a meta refresh, so
+// the guard, which checks the page a test ends on, never saw it. Here each static page is served as
+// built, minus both (not accessibility properties), and held still for axe, in both colour schemes.
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { expect } from '@playwright/test';
@@ -11,7 +11,7 @@ import { pagesOfBuild, siteDir } from '../support/pages';
 const staticPages = pagesOfBuild().filter(
   (p) =>
     !readFileSync(join(siteDir, p.endsWith('.html') ? p : `${p}index.html`), 'utf8').includes(
-      '<script',
+      '<script type="module"',
     ),
 );
 
@@ -33,7 +33,9 @@ for (const colorScheme of ['dark', 'light'] as const) {
         await page.route(url, (route) =>
           route.fulfill({
             contentType: 'text/html',
-            body: html.replace(/<meta http-equiv="refresh"[^>]*>/, ''),
+            body: html
+              .replace(/<meta http-equiv="refresh"[^>]*>/, '')
+              .replace(/<script src="[^"]*root-[^"]*"><\/script>/, ''),
           }),
         );
         await page.goto(url);

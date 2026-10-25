@@ -14,6 +14,7 @@ function build(basePath = '/repo/') {
   const dist = mkdtempSync(join(tmpdir(), 'dist-'));
   writeFileSync(join(dist, 'index.html'), shell);
   emitPages({
+    rootScript: 'location.replace("/repo/ja-JP/");',
     distDir: dist,
     basePath,
     locales: ['en-US', 'ja-JP'],
@@ -75,13 +76,18 @@ describe('emitPages', () => {
     expect(page).toContain('<link rel="alternate" hreflang="x-default" href="/repo/" />');
   });
 
-  it('makes the root a page that sends the visitor to the default locale, without a script', () => {
-    const { read } = build();
+  it('makes the root a page that picks the language with a script of the site, before the refresh to the default locale that stays for browsers without scripts', () => {
+    const { read, dist } = build();
     const root = read('index.html');
+    const script = /<script src="\/repo\/(root-[0-9a-f]{12}\.js)"><\/script>/.exec(root);
+    expect(script, 'a classic script, from the site, not inline').not.toBeNull();
+    expect(read(script?.[1] ?? '')).toBe('location.replace("/repo/ja-JP/");');
+    expect(root.indexOf('<script')).toBeLessThan(root.indexOf('http-equiv="refresh"'));
     expect(root).toContain('<meta http-equiv="refresh" content="0; url=/repo/en-US/" />');
     expect(root).toContain('<a href="/repo/en-US/">Continue to Iron Squid</a>');
     expect(root).toContain(contentSecurityPolicy);
-    expect(root).not.toContain('<script');
+    expect(root).not.toMatch(/<script>|<script [^>]*>[^<]/);
+    expect(dist).toBeTruthy();
   });
 
   it('says on the root page which game version the catalogue matches', () => {
@@ -107,6 +113,7 @@ describe('emitPages', () => {
         defaultLocale: 'en-US',
         catalogueVersion: '1.2.3',
         messages: {},
+        rootScript: '',
       }),
     ).toThrow(/no built index\.html/);
     expect(existsSync(join(dist, 'en-US'))).toBe(false);

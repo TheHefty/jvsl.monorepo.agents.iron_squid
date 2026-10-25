@@ -111,3 +111,24 @@ Then('the visitor can reach the language switcher and choose any language', asyn
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/\/ja-JP\/$/);
 });
+
+Given('a browser whose preferred language is {string}', async ({ page }, language: string) => {
+  // The browser's preferences as the root's script reads them, on the page the guard watches.
+  await page.addInitScript((lang) => {
+    Object.defineProperty(navigator, 'languages', { get: () => [lang] });
+    Object.defineProperty(navigator, 'language', { get: () => lang });
+  }, language);
+});
+
+When('the visitor opens the root of the site for the first time', async ({ page }) => {
+  await page.goto('./');
+});
+
+When('the visitor later opens the root of the site', async ({ page }) => {
+  await page.goto('./');
+});
+
+Then('the visitor arrives at the {string} address', async ({ page, baseURL }, address: string) => {
+  await expect(page).toHaveURL(new URL(`.${address}`, baseURL).href);
+  await expect(page.getByRole('contentinfo')).toBeVisible();
+});
