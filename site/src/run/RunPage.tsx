@@ -51,6 +51,8 @@ export function RunPage({ newestVersion }: { newestVersion: string }) {
   const [store, setStore] = useState<RunStore>();
   const [view, setView] = useState<View>({ kind: 'loading' });
   const [notice, setNotice] = useState<string>();
+  // Whether the browser is keeping the run; false when storage is refused or full (FR-30).
+  const [kept, setKept] = useState(true);
   const [announcement, setAnnouncement] = useState('');
   const replacing = useRef<{ basedOn: number; unreadable: boolean } | undefined>(undefined);
   const lastAction = useRef(0);
@@ -77,7 +79,9 @@ export function RunPage({ newestVersion }: { newestVersion: string }) {
       detach = () => window.removeEventListener('storage', onStorage);
       setCatalogues(loaded);
       setStore(s);
-      show(s.load());
+      const first = s.load();
+      setKept(!('persistent' in first) || first.persistent !== false);
+      show(first);
     });
     return () => {
       live = false;
@@ -108,6 +112,7 @@ export function RunPage({ newestVersion }: { newestVersion: string }) {
     if (!store) return false;
     const saved = store.save(state, basedOn, options);
     if (saved.ok) {
+      setKept(saved.persistent);
       setView({ kind: 'run', state, revision: saved.revision });
       return true;
     }
@@ -152,6 +157,7 @@ export function RunPage({ newestVersion }: { newestVersion: string }) {
     const catalogue = catalogues[newestVersion];
     return (
       <>
+        {!kept && <NotKeptNotice />}
         <StartForm
           onStart={(name) => {
             if (!catalogue) return;
@@ -221,6 +227,7 @@ export function RunPage({ newestVersion }: { newestVersion: string }) {
 
   return (
     <>
+      {!kept && <NotKeptNotice run={state} />}
       <Hero>
         <h1 className="run-title">{state.name ?? intl.formatMessage({ id: 'run.untitled' })}</h1>
         <div className="run-stats">
@@ -653,15 +660,7 @@ function FileControls({
 
   return (
     <div className="file-controls">
-      {run && (
-        <button
-          type="button"
-          className="btn btn-secondary"
-          onClick={() => download(exportRun(run, new Date().toISOString()))}
-        >
-          <FormattedMessage id="run.export" />
-        </button>
-      )}
+      {run && <ExportButton run={run} />}
       <label className="btn btn-secondary">
         <FormattedMessage id="run.import" />
         <input
@@ -709,6 +708,31 @@ function FileControls({
           </button>
         </div>
       </dialog>
+    </div>
+  );
+}
+
+function ExportButton({ run }: { run: RunState }) {
+  return (
+    <button
+      type="button"
+      className="btn btn-secondary"
+      onClick={() => download(exportRun(run, new Date().toISOString()))}
+    >
+      <FormattedMessage id="run.export" />
+    </button>
+  );
+}
+
+// Storage refused or full: the run lives only in this page, so the player is told, and offered the
+// export as the way to keep it (FR-30).
+function NotKeptNotice({ run }: { run?: RunState }) {
+  return (
+    <div className="notice storage-notice" role="alert">
+      <p>
+        <FormattedMessage id="storage.notKept" />
+      </p>
+      {run && <ExportButton run={run} />}
     </div>
   );
 }

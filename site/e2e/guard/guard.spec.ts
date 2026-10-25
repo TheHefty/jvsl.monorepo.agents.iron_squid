@@ -33,3 +33,14 @@ test('fails a scenario that ends with an accessibility violation', async ({ page
     document.querySelector('main')?.append(document.createElement('button')),
   );
 });
+
+test('fails a scenario whose page says the run is not kept when storage works', async ({
+  page,
+}) => {
+  test.fail();
+  await page.evaluate(() => {
+    const notice = document.createElement('div');
+    notice.className = 'storage-notice';
+    document.querySelector('main')?.append(notice);
+  });
+});

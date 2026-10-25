@@ -1,9 +1,9 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { Catalogue } from '../catalogue/types';
 import { reportWin, startRun, type RunState } from './engine';
 import catalogue from './fixtures/catalogue-0.0.1.json';
 import { cryptoSource } from './random';
-import { createRunStore, RUN_KEY, type StorageLike } from './storage';
+import { browserStorage, createRunStore, RUN_KEY, type StorageLike } from './storage';
 
 const catalogues = { '0.0.1': catalogue as Catalogue };
 const at = '2026-10-24T12:00:00.000Z';
@@ -137,5 +137,24 @@ describe('a run store', () => {
     tabB.storageEvent({ key: RUN_KEY });
     tabB.storageEvent({ key: 'something-else' });
     expect(seen).toEqual([{ status: 'ok', state: run, revision: 1, persistent: true }]);
+  });
+});
+
+describe('the browser storage', () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  it('is none when the browser throws on reaching it, not only on using it (not-kept-notice, failure 1)', () => {
+    const blocked = {};
+    Object.defineProperty(blocked, 'localStorage', {
+      get() {
+        throw new DOMException('The operation is insecure.', 'SecurityError');
+      },
+    });
+    vi.stubGlobal('window', blocked);
+    expect(browserStorage()).toBeUndefined();
+    expect(createRunStore(browserStorage(), catalogues).load()).toEqual({
+      status: 'empty',
+      persistent: false,
+    });
   });
 });
