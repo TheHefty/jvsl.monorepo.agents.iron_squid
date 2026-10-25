@@ -120,3 +120,13 @@ export function browserStorage(): StorageLike | undefined {
     return undefined;
   }
 }
+
+// Whether this browser holds a run of its own, readable or not, without loading or writing it: what
+// a shared run's page needs to offer the way back (FR-42).
+export function hasStoredRun(storage: StorageLike | undefined): boolean {
+  try {
+    return storage?.getItem(RUN_KEY) != null;
+  } catch {
+    return false;
+  }
+}

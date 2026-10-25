@@ -6,6 +6,8 @@ describe('pageFromPath', () => {
     ['/en-US/', '/', 'home'],
     ['/en-US/privacy/', '/', 'privacy'],
     ['/en-US/terms/', '/', 'terms'],
+    ['/en-US/run/', '/', 'shared'],
+    ['/repo/en-US/run/', '/repo/', 'shared'],
     ['/repo/en-US/terms/', '/repo/', 'terms'],
     ['/en-US/nowhere/', '/', 'not-found'],
     ['/', '/', 'not-found'],
