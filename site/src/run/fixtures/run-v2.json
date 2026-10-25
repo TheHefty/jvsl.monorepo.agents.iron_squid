@@ -1,0 +1,51 @@
+{
+  "schema": 2,
+  "catalogueVersion": "0.0.1",
+  "name": "Inkling Ivo",
+  "startedAt": "2026-10-25T10:00:00.000Z",
+  "order": {
+    "kits": ["K2", "K0", "K1"],
+    "head": ["H1", "H2", "H0"],
+    "clothes": ["C0", "C2", "C1"],
+    "shoes": ["S3", "S1", "S0", "S2"]
+  },
+  "conquered": 1,
+  "cursor": 0,
+  "phase": "conquered",
+  "lives": 1,
+  "winsSinceReset": 1,
+  "resets": 0,
+  "matches": 1,
+  "step": 1,
+  "log": [
+    {
+      "at": "2026-10-25T10:05:00.000Z",
+      "draw": 0,
+      "result": "win",
+      "livesAfter": 1,
+      "replay": false,
+      "reset": false
+    }
+  ],
+  "logSince": "2026-10-25T10:00:00.000Z",
+  "previous": {
+    "schema": 2,
+    "catalogueVersion": "0.0.1",
+    "name": "Inkling Ivo",
+    "startedAt": "2026-10-25T10:00:00.000Z",
+    "order": {
+      "kits": ["K2", "K0", "K1"],
+      "head": ["H1", "H2", "H0"],
+      "clothes": ["C0", "C2", "C1"],
+      "shoes": ["S3", "S1", "S0", "S2"]
+    },
+    "conquered": 0,
+    "cursor": 0,
+    "phase": "playing",
+    "lives": 1,
+    "winsSinceReset": 0,
+    "resets": 0,
+    "matches": 0,
+    "step": 0
+  }
+}

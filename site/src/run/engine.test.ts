@@ -26,7 +26,7 @@ describe('startRun', () => {
   it('starts with 1 life, nothing conquered, and the first set to play', () => {
     const s = start();
     expect(s).toMatchObject({
-      schema: 1,
+      schema: 2,
       catalogueVersion: '11.3.0',
       lives: 1,
       conquered: 0,

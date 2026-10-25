@@ -6,8 +6,23 @@ import { shuffle, type RandomSource } from './random';
 
 type Order = { kits: string[]; head: string[]; clothes: string[]; shoes: string[] };
 
+// One reported result (FR-24): which draw of the order it was (so its kit and gear are the run's own
+// order[draw]), win or loss, the lives left after it, and whether it was a replay or reset the run.
+export type LogEntry = {
+  at: string;
+  draw: number;
+  result: 'win' | 'loss';
+  livesAfter: number;
+  replay: boolean;
+  reset: boolean;
+};
+
+// The state before the last result, without the log: undo removes the log's last entry instead, so
+// a long run never stores its log twice (task run-log-format, failure 3).
+export type Snapshot = Omit<RunState, 'previous' | 'log' | 'logSince'>;
+
 export type RunState = {
-  schema: 1;
+  schema: 2;
   catalogueVersion: string;
   name?: string;
   startedAt: string;
@@ -26,8 +41,12 @@ export type RunState = {
   matches: number;
   // Goes up with every change; an action names the step it was made on, and a stale one is refused.
   step: number;
+  // Every result, in the order played (FR-24), complete from logSince: the start of a run begun in
+  // format 2, or the day a format-1 run was migrated, before which nothing was recorded.
+  log: LogEntry[];
+  logSince: string;
   // The state before the last result: what undo returns to (FR-20). One level only.
-  previous?: Omit<RunState, 'previous'>;
+  previous?: Snapshot;
 };
 
 export type CurrentSet = { kit: string; head: string; clothes: string; shoes: string };
@@ -50,7 +69,7 @@ export function startRun(
       source,
     );
   return {
-    schema: 1,
+    schema: 2,
     catalogueVersion: catalogue.version,
     ...(name === undefined ? {} : { name }),
     startedAt: at,
@@ -68,6 +87,8 @@ export function startRun(
     resets: 0,
     matches: 0,
     step: 0,
+    log: [],
+    logSince: at,
   };
 }
 
@@ -90,17 +111,33 @@ function fresh(s: RunState, { step }: { step: number }): void {
     throw new Error(`run: stale action for step ${step}; the run is at step ${s.step}`);
 }
 
-function withoutPrevious(s: RunState): Omit<RunState, 'previous'> {
-  const { previous: _previous, ...rest } = s;
+function snapshot(s: RunState): Snapshot {
+  const { previous: _previous, log: _log, logSince: _logSince, ...rest } = s;
   void _previous;
+  void _log;
+  void _logSince;
   return rest;
+}
+
+const entry = (s: RunState, at: string, result: 'win' | 'loss', after: RunState): LogEntry => ({
+  at,
+  draw: s.cursor,
+  result,
+  livesAfter: after.lives,
+  replay: s.cursor < s.conquered,
+  reset: after.resets > s.resets,
+});
+
+// A result's new state, with its log entry and the snapshot undo returns to.
+function recorded(s: RunState, at: string, result: 'win' | 'loss', after: RunState): RunState {
+  return { ...after, log: [...s.log, entry(s, at, result, after)], previous: snapshot(s) };
 }
 
 export function reportWin(s: RunState, action: { step: number; at: string }): RunState {
   fresh(s, action);
   if (s.phase !== 'playing')
     throw new Error('run: a win is reported while playing, not after a win');
-  return {
+  return recorded(s, action.at, 'win', {
     ...s,
     conquered: s.cursor === s.conquered ? s.conquered + 1 : s.conquered,
     phase: 'conquered',
@@ -109,8 +146,7 @@ export function reportWin(s: RunState, action: { step: number; at: string }): Ru
     winsSinceReset: s.winsSinceReset + 1,
     matches: s.matches + 1,
     step: s.step + 1,
-    previous: withoutPrevious(s),
-  };
+  });
 }
 
 export function nextSet(s: RunState, action: { step: number }): RunState {
@@ -132,9 +168,10 @@ export function nextSet(s: RunState, action: { step: number }): RunState {
   };
 }
 
+// Undo exists only after a result, whose entry is the log's last: it goes with the result.
 export function undo(s: RunState): RunState {
   if (!s.previous) throw new Error('run: nothing to undo');
-  return { ...s.previous, step: s.step + 1 } as RunState;
+  return { ...s.previous, log: s.log.slice(0, -1), logSince: s.logSince, step: s.step + 1 };
 }
 
 // A loss costs a life and the same set is played again (FR-17). On the last life the run resets
@@ -145,10 +182,15 @@ export function reportLoss(s: RunState, action: { step: number; at: string }): R
   fresh(s, action);
   if (s.phase !== 'playing')
     throw new Error('run: a loss is reported while playing, not after a win');
-  const previous = withoutPrevious(s);
-  if (s.lives > 1)
-    return { ...s, lives: s.lives - 1, matches: s.matches + 1, step: s.step + 1, previous };
-  return {
+  if (s.lives > 1) {
+    return recorded(s, action.at, 'loss', {
+      ...s,
+      lives: s.lives - 1,
+      matches: s.matches + 1,
+      step: s.step + 1,
+    });
+  }
+  return recorded(s, action.at, 'loss', {
     ...s,
     cursor: 0,
     lives: 1,
@@ -156,8 +198,7 @@ export function reportLoss(s: RunState, action: { step: number; at: string }): R
     resets: s.resets + 1,
     matches: s.matches + 1,
     step: s.step + 1,
-    previous,
-  };
+  });
 }
 
 // How many more wins earn the next life (FR-22).
