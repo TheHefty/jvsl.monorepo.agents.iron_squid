@@ -438,7 +438,12 @@ function StartForm({ onStart }: { onStart: (name: string | undefined) => void })
     const checked = displayName(typeof field === 'string' ? field : '');
     if (!checked.ok) {
       setError(
-        intl.formatMessage({ id: 'start.nameTooLong' }, { max: MAX_NAME, length: checked.length }),
+        checked.reason === 'length'
+          ? intl.formatMessage(
+              { id: 'start.nameTooLong' },
+              { max: MAX_NAME, length: checked.length },
+            )
+          : intl.formatMessage({ id: 'start.nameTooLongForLink' }),
       );
       return;
     }

@@ -10,6 +10,11 @@ const catalogues = { '0.0.1': catalogue as Catalogue };
 const with_ = (patch: Record<string, unknown>) => ({ ...structuredClone(v1), ...patch });
 
 describe('parseRun', () => {
+  it('still reads a run named before names were capped at 300 bytes (share-codec)', () => {
+    const name = '👨‍👩‍👧‍👦'.repeat(30);
+    expect(parseRun(with_({ name }), catalogues)).toMatchObject({ ok: true, state: { name } });
+  });
+
   // This fixture is a run saved in the first format the site ever wrote. It stays as it is: a change
   // that can no longer read it would lose every run saved before that change (task run-engine,
   // failure 3).

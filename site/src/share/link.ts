@@ -1,0 +1,211 @@
+// The share link (FR-40, FR-43, NFR-P2): what a shared run shows, packed into the link's fragment,
+// and read back with every check a link from anyone needs (FR-44).
+//
+// Format 1, as bytes in base64url without padding:
+//   1 · version (length, ASCII) · name (length, UTF-8) · conquered · lives · resets
+// as unsigned varints, then for each conquered set its kit, head, clothes and shoes as their places
+// in that catalogue version's lists, packed in as many bits as each list needs. Only what a shared
+// run shows is carried: never the sets not yet played, the log or the undo state.
+import { gearSlots, type Catalogue } from '../catalogue/types';
+import type { CurrentSet, RunState } from '../run/engine';
+import { displayName } from '../run/name';
+
+const FORMAT = 1;
+const slots = ['kits', ...gearSlots] as const;
+
+export type SharedRun = {
+  catalogueVersion: string;
+  name?: string;
+  conquered: number;
+  total: number;
+  lives: number;
+  resets: number;
+  complete: boolean;
+  sets: CurrentSet[];
+};
+
+export type ShareResult =
+  | { ok: true; run: SharedRun }
+  | { ok: false; reason: 'broken' }
+  | { ok: false; reason: 'unknown-catalogue'; version: string };
+
+// The link's fields as numbers and bytes, before any check: what packShare writes.
+export type Packed = {
+  version: string;
+  name: Uint8Array;
+  conquered: number;
+  lives: number;
+  resets: number;
+  sets: number[][];
+};
+
+const lists = (c: Catalogue) => [c.kits, c.gear.head, c.gear.clothes, c.gear.shoes];
+const widthOf = (n: number) => Math.max(1, Math.ceil(Math.log2(n)));
+
+// How many bits each list's places take in a link on that catalogue.
+export const widthsOf = (c: Catalogue) => lists(c).map((l) => widthOf(l.length));
+
+export function encodeShare(state: RunState, catalogue: Catalogue): string {
+  const places = lists(catalogue).map((items) => new Map(items.map((item, i) => [item.id, i])));
+  const name = new TextEncoder().encode(state.name ?? '');
+  const sets = Array.from({ length: state.conquered }, (_, n) =>
+    slots.map((slot, i) => {
+      const id = (slot === 'kits' ? state.order.kits : state.order[slot])[n] ?? '';
+      const place = places[i]?.get(id);
+      if (place === undefined)
+        throw new Error(`share: ${id} is not in catalogue ${catalogue.version}`);
+      return place;
+    }),
+  );
+  return packShare(
+    {
+      version: catalogue.version,
+      // A name over the byte cap, stored before the cap existed, is left out of the link.
+      name: displayName(state.name ?? '').ok ? name : new Uint8Array(),
+      conquered: state.conquered,
+      lives: state.lives,
+      resets: state.resets,
+      sets,
+    },
+    widthsOf(catalogue),
+  );
+}
+
+// Writes the fields as they are, checking nothing.
+export function packShare(p: Packed, widths: number[]): string {
+  const bytes: number[] = [FORMAT];
+  const varint = (n: number) => {
+    do {
+      bytes.push((n & 0x7f) | (n > 0x7f ? 0x80 : 0));
+      n >>>= 7;
+    } while (n > 0);
+  };
+  const ascii = new TextEncoder().encode(p.version);
+  varint(ascii.length);
+  bytes.push(...ascii);
+  varint(p.name.length);
+  bytes.push(...p.name);
+  varint(p.conquered);
+  varint(p.lives);
+  varint(p.resets);
+  let acc = 0;
+  let filled = 0;
+  for (const set of p.sets) {
+    set.forEach((value, i) => {
+      const width = widths[i] ?? 8;
+      for (let bit = width - 1; bit >= 0; bit--) {
+        acc = (acc << 1) | ((value >> bit) & 1);
+        if (++filled === 8) {
+          bytes.push(acc);
+          acc = 0;
+          filled = 0;
+        }
+      }
+    });
+  }
+  if (filled > 0) bytes.push(acc << (8 - filled));
+  return btoa(String.fromCharCode(...bytes))
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
+}
+
+class Broken extends Error {}
+
+export function decodeShare(text: string, catalogues: Record<string, Catalogue>): ShareResult {
+  try {
+    return read(text, catalogues);
+  } catch (e) {
+    if (e instanceof Broken) return { ok: false, reason: 'broken' };
+    throw e;
+  }
+}
+
+function read(text: string, catalogues: Record<string, Catalogue>): ShareResult {
+  if (!/^[A-Za-z0-9_-]+$/.test(text) || text.length % 4 === 1) throw new Broken();
+  const bytes = Uint8Array.from(atob(text.replace(/-/g, '+').replace(/_/g, '/')), (c) =>
+    c.charCodeAt(0),
+  );
+  let at = 0;
+  const byte = () => {
+    const b = bytes[at++];
+    if (b === undefined) throw new Broken();
+    return b;
+  };
+  const varint = () => {
+    let n = 0;
+    for (let shift = 0; shift < 28; shift += 7) {
+      const b = byte();
+      n |= (b & 0x7f) << shift;
+      if (!(b & 0x80)) return n;
+    }
+    throw new Broken();
+  };
+  const take = (n: number) => {
+    if (at + n > bytes.length) throw new Broken();
+    at += n;
+    return bytes.slice(at - n, at);
+  };
+
+  if (byte() !== FORMAT) throw new Broken();
+  const version = String.fromCharCode(...take(varint()));
+  if (!/^\d{1,4}\.\d{1,4}\.\d{1,4}$/.test(version)) throw new Broken();
+  let name: string;
+  try {
+    name = new TextDecoder('utf-8', { fatal: true }).decode(take(varint()));
+  } catch {
+    throw new Broken();
+  }
+  const checked = displayName(name);
+  if (!checked.ok || (checked.name ?? '') !== name) throw new Broken();
+  const conquered = varint();
+  const lives = varint();
+  const resets = varint();
+  const catalogue = catalogues[version];
+  if (!catalogue) return { ok: false, reason: 'unknown-catalogue', version };
+  const items = lists(catalogue);
+  const widths = widthsOf(catalogue);
+  if (lives < 1 || conquered > catalogue.kits.length) throw new Broken();
+
+  // The sets: exactly the bits they need, then nothing but the zero bits that pad the last byte.
+  const bitsNeeded = conquered * widths.reduce((a, b) => a + b, 0);
+  if (bytes.length - at !== Math.ceil(bitsNeeded / 8)) throw new Broken();
+  let bit = 0;
+  const readBits = (width: number) => {
+    let n = 0;
+    for (let i = 0; i < width; i++, bit++) {
+      n = (n << 1) | (((bytes[at + (bit >> 3)] ?? 0) >> (7 - (bit & 7))) & 1);
+    }
+    return n;
+  };
+  const seen = items.map(() => new Set<number>());
+  const sets: CurrentSet[] = [];
+  for (let n = 0; n < conquered; n++) {
+    const ids = items.map((list, i) => {
+      const place = readBits(widths[i] ?? 0);
+      const item = list[place];
+      const used = seen[i];
+      if (!item || !used || used.has(place)) throw new Broken();
+      used.add(place);
+      return item.id;
+    });
+    const [kit = '', head = '', clothes = '', shoes = ''] = ids;
+    sets.push({ kit, head, clothes, shoes });
+  }
+  if (bit < (bytes.length - at) * 8 && readBits((bytes.length - at) * 8 - bit) !== 0)
+    throw new Broken();
+
+  return {
+    ok: true,
+    run: {
+      catalogueVersion: version,
+      ...(name ? { name } : {}),
+      conquered,
+      total: catalogue.kits.length,
+      lives,
+      resets,
+      complete: conquered === catalogue.kits.length,
+      sets,
+    },
+  };
+}

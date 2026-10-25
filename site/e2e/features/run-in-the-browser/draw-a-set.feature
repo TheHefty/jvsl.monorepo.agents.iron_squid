@@ -24,6 +24,10 @@ Feature: Draw a set
     Then the player is told the name can have at most 30 characters
     And the run is not started until the name is shortened or removed
 
+  Scenario: A display name too long for a link is refused
+    When a player enters a display name of 30 family emoji
+    Then the player is told the name is too long to fit in a link
+
   Scenario: Starting over asks first
     Given a player with a run in progress
     When the player starts a new run
