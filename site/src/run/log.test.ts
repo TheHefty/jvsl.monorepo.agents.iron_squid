@@ -34,7 +34,15 @@ describe('the run log (FR-24)', () => {
 
   it('logs a win: the draw, the result, the lives after it, and when', () => {
     expect(win(start()).log).toEqual([
-      { at: t1, draw: 0, result: 'win', livesAfter: 1, replay: false, reset: false },
+      {
+        at: t1,
+        draw: 0,
+        result: 'win',
+        livesAfter: 1,
+        conqueredAfter: 1,
+        replay: false,
+        reset: false,
+      },
     ]);
   });
 
@@ -54,6 +62,7 @@ describe('the run log (FR-24)', () => {
       draw: 12,
       result: 'loss',
       livesAfter: 1,
+      conqueredAfter: 12,
       replay: false,
       reset: false,
     });
@@ -105,7 +114,8 @@ describe('the run log (FR-24)', () => {
           continue;
         }
         expect(s.log).toHaveLength(s.matches);
-        if (s.log.length) expect(s.log.at(-1)?.livesAfter).toBe(s.lives);
+        if (s.log.length)
+          expect(s.log.at(-1)).toMatchObject({ livesAfter: s.lives, conqueredAfter: s.conquered });
         expect(s.log.every((e) => e.draw >= 0 && e.draw < s.order.kits.length)).toBe(true);
       }
     }

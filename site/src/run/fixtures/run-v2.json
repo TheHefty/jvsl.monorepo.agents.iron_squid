@@ -23,6 +23,7 @@
       "draw": 0,
       "result": "win",
       "livesAfter": 1,
+      "conqueredAfter": 1,
       "replay": false,
       "reset": false
     }

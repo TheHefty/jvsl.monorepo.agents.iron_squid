@@ -7,12 +7,14 @@ import { shuffle, type RandomSource } from './random';
 type Order = { kits: string[]; head: string[]; clothes: string[]; shoes: string[] };
 
 // One reported result (FR-24): which draw of the order it was (so its kit and gear are the run's own
-// order[draw]), win or loss, the lives left after it, and whether it was a replay or reset the run.
+// order[draw]), win or loss, the lives left and the kits conquered after it, and whether it was a
+// replay or reset the run.
 export type LogEntry = {
   at: string;
   draw: number;
   result: 'win' | 'loss';
   livesAfter: number;
+  conqueredAfter: number;
   replay: boolean;
   reset: boolean;
 };
@@ -124,6 +126,7 @@ const entry = (s: RunState, at: string, result: 'win' | 'loss', after: RunState)
   draw: s.cursor,
   result,
   livesAfter: after.lives,
+  conqueredAfter: after.conquered,
   replay: s.cursor < s.conquered,
   reset: after.resets > s.resets,
 });

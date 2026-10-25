@@ -109,10 +109,19 @@ function logEntries(v: unknown, draws: number, matches: number): LogEntry[] {
     if (!isObject(e)) throw bad();
     const draw = count(e.draw, `log entry ${i} draw`, draws - 1);
     const livesAfter = count(e.livesAfter, `log entry ${i} lives`);
+    const conqueredAfter = count(e.conqueredAfter, `log entry ${i} conquered`, draws);
     if (typeof e.at !== 'string' || (e.result !== 'win' && e.result !== 'loss')) throw bad();
     if (typeof e.replay !== 'boolean' || typeof e.reset !== 'boolean' || livesAfter < 1)
       throw bad();
-    return { at: e.at, draw, result: e.result, livesAfter, replay: e.replay, reset: e.reset };
+    return {
+      at: e.at,
+      draw,
+      result: e.result,
+      livesAfter,
+      conqueredAfter,
+      replay: e.replay,
+      reset: e.reset,
+    };
   });
 }
 
