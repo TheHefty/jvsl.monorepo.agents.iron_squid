@@ -136,5 +136,9 @@
   "shared.statConquered": "已征服的武器",
   "shared.statToGo": "剩餘武器",
   "shared.statLives": "生命",
-  "shared.statResets": "重置"
+  "shared.statResets": "重置",
+  "meta.home": "Iron Squid 是一項《斯普拉遁3》挑戰:用隨機裝備贏遍每一把武器,失去最後一條命就全部再贏一遍。",
+  "meta.terms": "Iron Squid 是什麼:仰賴誠信運作的免費粉絲專案,不作任何保證。",
+  "meta.privacy": "Iron Squid 儲存什麼、儲存在哪裡、還有誰能看到:你的挑戰只儲存在你自己的瀏覽器裡。",
+  "meta.notFound": "這個網址沒有頁面。"
 }

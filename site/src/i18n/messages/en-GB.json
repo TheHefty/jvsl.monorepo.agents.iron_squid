@@ -136,5 +136,9 @@
   "shared.statConquered": "Kits conquered",
   "shared.statToGo": "Kits to go",
   "shared.statLives": "Lives",
-  "shared.statResets": "Resets"
+  "shared.statResets": "Resets",
+  "meta.home": "Iron Squid runs a Splatoon 3 challenge: win with every weapon, with gear drawn at random, and win them all again when your last life is lost.",
+  "meta.terms": "What playing Iron Squid involves: a free fan project, played on the honour system, with no warranty.",
+  "meta.privacy": "What Iron Squid keeps, where, and who else sees anything: your run stays in your own browser.",
+  "meta.notFound": "There is no page at this address."
 }

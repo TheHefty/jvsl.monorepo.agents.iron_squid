@@ -21,14 +21,21 @@ function build(basePath = '/repo/') {
     locales: ['en-US', 'ja-JP'],
     defaultLocale: 'en-US',
     catalogueVersion: '1.2.3',
-    messages: {
-      'root.continue': 'Continue to Iron Squid',
-      'site.name': 'Iron Squid',
-      'catalogue.version': 'Weapons and gear from Splatoon 3 {version}',
-      'footer.terms': 'Terms of use',
-      'footer.privacy': 'Privacy',
-      'footer.security': 'Security policy',
-      'footer.fan': 'A fan project.',
+    catalogues: {
+      'en-US': {
+        'root.continue': 'Continue to Iron Squid',
+        'site.name': 'Iron Squid',
+        'catalogue.version': 'Weapons and gear from Splatoon 3 {version}',
+        'footer.terms': 'Terms of use',
+        'footer.privacy': 'Privacy',
+        'footer.security': 'Security policy',
+        'footer.fan': 'A fan project.',
+        'meta.home': 'The home page.',
+        'meta.terms': 'The terms.',
+        'meta.privacy': 'The privacy notice.',
+        'meta.notFound': 'No such page.',
+      },
+      'ja-JP': { 'meta.home': 'ホーム', 'meta.terms': '規約', 'meta.privacy': 'プライバシー' },
     },
   });
   const read = (p: string) => readFileSync(join(dist, p), 'utf8');
@@ -69,12 +76,31 @@ describe('emitPages', () => {
     expect(root).toContain('A fan project.');
   });
 
-  it('names every locale as an alternate of each page', () => {
+  it('names the same page in every locale, on the domain of the site whatever the base path', () => {
     const { read } = build();
-    const page = read('en-US/index.html');
-    expect(page).toContain('<link rel="alternate" hreflang="en-US" href="/repo/en-US/" />');
-    expect(page).toContain('<link rel="alternate" hreflang="ja-JP" href="/repo/ja-JP/" />');
-    expect(page).toContain('<link rel="alternate" hreflang="x-default" href="/repo/" />');
+    const terms = read('ja-JP/terms/index.html');
+    expect(terms).toContain(
+      '<link rel="alternate" hreflang="en-US" href="https://iron-squid.top/en-US/terms/" />',
+    );
+    expect(terms).toContain(
+      '<link rel="alternate" hreflang="ja-JP" href="https://iron-squid.top/ja-JP/terms/" />',
+    );
+    expect(terms).toContain(
+      '<link rel="alternate" hreflang="x-default" href="https://iron-squid.top/" />',
+    );
+  });
+
+  it('describes each page in its own language, and keeps the 404 page out of indexes', () => {
+    const { read } = build();
+    expect(read('ja-JP/privacy/index.html')).toContain(
+      '<meta name="description" content="プライバシー" />',
+    );
+    expect(read('en-US/run/index.html')).toContain(
+      '<meta name="description" content="The home page." />',
+    );
+    const missing = read('404.html');
+    expect(missing).toContain('<meta name="robots" content="noindex" />');
+    expect(missing).toContain('<meta name="description" content="No such page." />');
   });
 
   it('makes the root a page that picks the language with a script of the site, before the refresh to the default locale that stays for browsers without scripts', () => {
@@ -113,7 +139,7 @@ describe('emitPages', () => {
         locales: ['en-US'],
         defaultLocale: 'en-US',
         catalogueVersion: '1.2.3',
-        messages: {},
+        catalogues: {},
         rootScript: '',
         themeScript: '',
       }),
