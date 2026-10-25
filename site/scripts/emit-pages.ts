@@ -56,11 +56,15 @@ export function emitPages({
   );
 
   const target = `${basePath}${defaultLocale}/`;
+  // The site's own stylesheet: the root has no app, but its footer is laid out like every page's
+  // (links far enough apart to meet WCAG 2.2 target size; defect is-8qd).
+  const stylesheets = (shell.match(/<link rel="stylesheet"[^>]*>/g) ?? []).join('');
   const name = escape(messages['site.name'] ?? '');
   const cont = escape(messages['root.continue'] ?? '');
   const link = (href: string, id: string) => `<a href="${href}">${escape(messages[id] ?? '')}</a>`;
   const notices =
-    `<nav><ul><li>${link(`${target}terms/`, 'footer.terms')}</li>` +
+    `<nav aria-label="${escape(messages['footer.label'] ?? '')}"><ul class="footer-links">` +
+    `<li>${link(`${target}terms/`, 'footer.terms')}</li>` +
     `<li>${link(`${target}privacy/`, 'footer.privacy')}</li>` +
     `<li>${link(links.securityPolicy, 'footer.security')}</li></ul></nav>` +
     `<p>${escape(messages['footer.fan'] ?? '')}</p>`;
@@ -75,9 +79,9 @@ export function emitPages({
     shellPath,
     `<!doctype html><html lang="${defaultLocale}"><head><meta charset="UTF-8" />` +
       `${contentSecurityPolicy}<meta name="viewport" content="width=device-width, initial-scale=1" />` +
-      `<meta http-equiv="refresh" content="0; url=${target}" />${alternates}<title>${name}</title></head>` +
+      `<meta http-equiv="refresh" content="0; url=${target}" />${alternates}${stylesheets}<title>${name}</title></head>` +
       `<body><main><p><a href="${target}">${cont}</a></p></main>` +
-      `<footer>${notices}<p>${version}</p></footer></body></html>`,
+      `<footer class="site-footer">${notices}<p>${version}</p></footer></body></html>`,
   );
 }
 

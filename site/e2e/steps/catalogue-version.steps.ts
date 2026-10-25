@@ -19,7 +19,7 @@ When('a visitor opens any page', async ({ page, request, guard, baseURL }) => {
     // meta refresh): read its footer from the HTML as served, or the next page's would be read.
     const html = await (await request.get(url.href)).text();
     if (!html.includes('<script')) {
-      const footer = /<footer>([\s\S]*?)<\/footer>/.exec(html)?.[1] ?? '';
+      const footer = /<footer[^>]*>([\s\S]*?)<\/footer>/.exec(html)?.[1] ?? '';
       footers.set(p, footer.replace(/<[^>]+>/g, ''));
       continue;
     }

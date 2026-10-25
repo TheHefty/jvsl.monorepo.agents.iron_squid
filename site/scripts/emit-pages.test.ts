@@ -6,7 +6,8 @@ import { emitPages } from './emit-pages';
 import { contentSecurityPolicy, cspPlugin } from './csp';
 
 const shell = `<!doctype html><html lang="x"><head><meta charset="UTF-8" /><title>t</title>
-<script type="module" crossorigin src="/repo/assets/index.js"></script></head>
+<script type="module" crossorigin src="/repo/assets/index.js"></script>
+<link rel="stylesheet" crossorigin href="/repo/assets/index.css"></head>
 <body><div id="root"></div></body></html>`;
 
 function build(basePath = '/repo/') {
@@ -47,6 +48,14 @@ describe('emitPages', () => {
         expect(read(`${locale}/${page}/index.html`)).toContain(`<html lang="${locale}">`);
       }
     }
+  });
+
+  it('styles the root page with the stylesheet of the site, so its footer is laid out like every page', () => {
+    const { read } = build();
+    const root = read('index.html');
+    expect(root).toContain('<link rel="stylesheet" crossorigin href="/repo/assets/index.css">');
+    expect(root).toContain('<footer class="site-footer"><nav');
+    expect(root).toContain('<ul class="footer-links">');
   });
 
   it('gives the root page the notices and the fan-project line', () => {
