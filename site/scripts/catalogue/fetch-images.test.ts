@@ -1,7 +1,7 @@
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { tempDir } from '../../e2e/support/temp';
 import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
-import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { sha256 } from './fetch';
@@ -39,9 +39,9 @@ let out = '';
 beforeEach(() => {
   requests = [];
   serveWrong = false;
-  root = mkdtempSync(join(tmpdir(), 'catalogue-'));
-  cache = mkdtempSync(join(tmpdir(), 'cache-'));
-  out = mkdtempSync(join(tmpdir(), 'public-'));
+  root = tempDir('catalogue-');
+  cache = tempDir('cache-');
+  out = tempDir('public-');
   mkdirSync(join(root, '1.0.0'));
   writeFileSync(
     join(root, '1.0.0', 'images.lock.json'),

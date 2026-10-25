@@ -1,5 +1,5 @@
-import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { tempDir } from '../support/temp';
 import { join } from 'node:path';
 import { expect } from '@playwright/test';
 import type { Catalogue, NamesFile } from '../../src/catalogue/types';
@@ -60,7 +60,7 @@ Then(
 // A build of the site from a catalogue the scenario sets up, into a directory of its own.
 
 Given('game data in which one gear slot has fewer pieces than there are kits', async () => {
-  const dir = mkdtempSync(join(tmpdir(), 'catalogue-'));
+  const dir = tempDir('catalogue-');
   const short = structuredClone(catalogue);
   short.version = '0.0.1';
   short.gear.shoes = short.gear.shoes.slice(0, short.kits.length - 1);
@@ -68,8 +68,8 @@ Given('game data in which one gear slot has fewer pieces than there are kits', a
   writeFileSync(join(dir, short.version, 'catalogue.json'), JSON.stringify(short));
   buildState.env = {
     CATALOGUE_DIR: dir,
-    BUILD_OUT_DIR: mkdtempSync(join(tmpdir(), 'build-')),
-    PUBLIC_DIR: mkdtempSync(join(tmpdir(), 'public-')),
+    BUILD_OUT_DIR: tempDir('build-'),
+    PUBLIC_DIR: tempDir('public-'),
   };
 });
 
@@ -99,7 +99,7 @@ Given('the pin on the game data is moved to a newer commit', async () => {
     old: { kits: ['A_Kit_00', 'B_Kit_00'], gear: ['G1', 'G2', 'G3'] },
     new: { kits: ['A_Kit_00', 'C_Kit_00'], gear: ['G1', 'G2', 'G4'] },
   });
-  const dir = mkdtempSync(join(tmpdir(), 'pin-'));
+  const dir = tempDir('pin-');
   const pin = (commit: string, gameVersion: string) => {
     const file = join(dir, `${commit}.pin.json`);
     writeFileSync(

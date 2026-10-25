@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect } from '@playwright/test';
 import { createBdd, test as base } from 'playwright-bdd';
+import { removeTempDirs } from './support/temp';
 
 // What a scenario declares it expects, so the guard below does not fail it for doing so on purpose.
 export type Guard = {
@@ -59,7 +60,12 @@ export const test = base.extend<{ guard: Guard; guarded: undefined; world: World
         if (/Content Security Policy/i.test(m.text())) csp.push(m.text());
       });
 
-      await use(undefined);
+      try {
+        await use(undefined);
+      } finally {
+        // The test's temporary folders go now, whatever happened in it (debt is-m2n).
+        removeTempDirs();
+      }
 
       expect(offsite, 'requests to a host other than the site').toEqual([]);
       expect(csp, 'Content Security Policy violations').toEqual([]);

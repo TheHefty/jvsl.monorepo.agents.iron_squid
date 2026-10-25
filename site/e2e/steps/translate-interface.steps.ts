@@ -1,5 +1,5 @@
-import { cpSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { cpSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { tempDir } from '../support/temp';
 import { join } from 'node:path';
 import { expect, type Page } from '@playwright/test';
 import { locales } from '../../src/i18n/locales';
@@ -12,7 +12,7 @@ import { buildState } from '../support/build-state';
 
 Given('a locale missing a text that en-US has', async () => {
   // The site's own catalogues, with one text removed from pt-BR, built elsewhere.
-  const dir = mkdtempSync(join(tmpdir(), 'messages-'));
+  const dir = tempDir('messages-');
   cpSync('src/i18n/messages', dir, { recursive: true });
   const file = join(dir, 'pt-BR.json');
   const pt = JSON.parse(readFileSync(file, 'utf8')) as Record<string, string>;
@@ -20,8 +20,8 @@ Given('a locale missing a text that en-US has', async () => {
   writeFileSync(file, JSON.stringify(pt));
   buildState.env = {
     MESSAGES_DIR: dir,
-    BUILD_OUT_DIR: mkdtempSync(join(tmpdir(), 'build-')),
-    PUBLIC_DIR: mkdtempSync(join(tmpdir(), 'public-')),
+    BUILD_OUT_DIR: tempDir('build-'),
+    PUBLIC_DIR: tempDir('public-'),
   };
 });
 

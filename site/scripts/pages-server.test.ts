@@ -1,5 +1,5 @@
-import { mkdtempSync, mkdirSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { suiteTempDir } from '../e2e/support/temp';
 import { join } from 'node:path';
 import type { AddressInfo } from 'node:net';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -8,7 +8,8 @@ import { createPagesServer } from './pages-server';
 // The server stands in for GitHub Pages in the acceptance tests, so it has to answer the way
 // Pages does: a directory serves its index.html, a missing path serves 404.html with status 404.
 describe('pages server', () => {
-  const root = mkdtempSync(join(tmpdir(), 'pages-'));
+  // One folder for the whole file: every test below serves it.
+  const root = suiteTempDir('pages-');
   mkdirSync(join(root, 'en-US'));
   writeFileSync(join(root, 'index.html'), 'root');
   writeFileSync(join(root, 'en-US', 'index.html'), 'english');
