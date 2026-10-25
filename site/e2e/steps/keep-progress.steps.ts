@@ -235,9 +235,15 @@ Given(
     writeFileSync(join(dir, newer.version, 'catalogue.json'), JSON.stringify(newer));
     cpSync('src/catalogue/11.3.0/images.lock.json', join(dir, newer.version, 'images.lock.json'));
     const out = tempDir('build-');
+    // The site's own public files (its logo), without the game images the build places there.
+    const publicDir = tempDir('public-');
+    cpSync('public', publicDir, {
+      recursive: true,
+      filter: (src) => !/\/public\/game(\/|$)/.test(src),
+    });
     const built = await run('npm', ['run', 'build'], {
       CATALOGUE_DIR: dir,
-      PUBLIC_DIR: tempDir('public-'),
+      PUBLIC_DIR: publicDir,
       BUILD_OUT_DIR: out,
     });
     expect(built.status, built.output).toBe(0);

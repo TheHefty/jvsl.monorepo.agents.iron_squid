@@ -40,8 +40,14 @@
   color: var(--color-on-ink-muted);
 }
 
-/* — buttons: outlined, never filled — */
+/* — buttons: outlined, never filled, skewed like the design's (skewX -8deg). The skew is on a layer
+   behind the label, which carries the button's ground and outline, so the label stands upright and
+   the focus ring stays the button's own rectangle (design-alignment, FR-62). — */
 .btn {
+  --btn-line: var(--color-divider);
+  --btn-ground: transparent;
+  position: relative;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -52,13 +58,24 @@
   font-weight: var(--font-weight-heading);
   color: var(--color-text);
   background: transparent;
-  border: 1px solid var(--color-divider);
+  border: 0;
   border-radius: var(--radius-md);
   cursor: pointer;
 }
 
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border: 1px solid var(--btn-line);
+  border-radius: var(--radius-sm);
+  background: var(--btn-ground);
+  transform: skewX(-8deg);
+}
+
 .btn:hover {
-  background: var(--color-surface);
+  --btn-ground: var(--color-surface);
 }
 
 .btn:disabled {
@@ -67,28 +84,54 @@
 }
 
 .btn-primary {
+  --btn-line: var(--color-accent);
   color: var(--color-accent-text);
-  border-color: var(--color-accent);
 }
 
 .btn-primary:hover {
-  background: var(--color-accent-fill);
+  --btn-ground: var(--color-accent-fill);
 }
 
 .btn-ghost {
+  --btn-line: transparent;
   color: var(--color-accent-text);
-  border-color: transparent;
 }
 
-/* — cards — */
+/* — cards: panels with the design's cut corner (12px, bottom right). The cut is on a layer behind
+   the content, never on the panel, so nothing inside it, a focus ring least of all, is clipped. — */
 .card {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
   padding: var(--space-6);
-  border-radius: var(--radius-md);
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: var(--radius-md) var(--radius-md) 0 var(--radius-md);
   background: var(--color-surface);
   box-shadow: var(--shadow-sm);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+}
+
+/* — tags: small tilted labels; within a set they lean one way, then the other — */
+.tag {
+  display: inline-block;
+  align-self: flex-start;
+  transform: rotate(var(--tilt, -2deg));
+}
+
+.gear .piece:nth-child(odd) .tag {
+  --tilt: 1.5deg;
+}
+
+.gear .piece:nth-child(even) .tag {
+  --tilt: -1.5deg;
 }
 
 /* — stickers: tilted labels — */

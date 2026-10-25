@@ -18,5 +18,23 @@ export const pendingWith =
     pending(task)();
   };
 
-// No scenario is pending at the moment; these are what a task's pending steps are written with.
-void [Given, Then, When];
+const runPage = pending('inked-run-page (is-o8k.3.2)');
+const sharedRun = pending('inked-shared-run (is-o8k.3.3)');
+Then('the ink strip at the top carries several splats', runPage);
+Then('its lower edge is slanted', runPage);
+Then("the kit's name is in uppercase display type", runPage);
+Then("the challenge's rules are shown as tilted stickers, in two columns", runPage);
+Given('a run with a win and a loss', runPage);
+Then('the win is marked with an ink blot and the loss with an outlined mark', runPage);
+Then('each mark says in words whether it was a win or a loss', runPage);
+When(
+  'a visitor opens a link to a run with {int} kits conquered',
+  pendingWith('inked-shared-run (is-o8k.3.3)'),
+);
+Then('the page leads with a headline about the run', sharedRun);
+Then('its kits conquered, kits to go, lives and resets stand in one row', sharedRun);
+Given('a device that asks for reduced motion', runPage);
+When('a player is given a new set', runPage);
+Then("the kit's splat does not move", runPage);
+When('a visitor opens the home page', runPage);
+When('the visitor opens the home page', runPage);

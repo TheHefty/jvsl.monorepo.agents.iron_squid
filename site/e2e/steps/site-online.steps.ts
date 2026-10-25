@@ -58,7 +58,7 @@ Given('the published site', async () => {
   // The build under test: every HTML page it contains is a page a visitor can reach.
 });
 
-When('a visitor loads every page', async ({ page, guard, baseURL, $test }) => {
+When('a visitor loads every page', async ({ page, guard, baseURL, world, $test }) => {
   $test.setTimeout(timeForEveryPage());
   const pages = pagesOfBuild();
   expect(pages.length, 'pages in the build').toBeGreaterThan(0);
@@ -67,6 +67,23 @@ When('a visitor loads every page', async ({ page, guard, baseURL, $test }) => {
     if (p === '404.html') guard.expectedMissing.add(url.pathname);
     await page.goto(url.href);
     await page.waitForLoadState('networkidle');
+    // Paragraphs drawn turned, by their own transform or an ancestor's (design-alignment).
+    const turned = await page.evaluate(() =>
+      [...document.querySelectorAll('p')]
+        .filter((p) => {
+          for (let el: Element | null = p; el; el = el.parentElement) {
+            const t = getComputedStyle(el).transform;
+            const m = t === 'none' ? null : new DOMMatrixReadOnly(t);
+            if (m && (Math.abs(m.b) > 1e-6 || Math.abs(m.c) > 1e-6)) return true;
+          }
+          return false;
+        })
+        .map((p) => (p.textContent ?? '').slice(0, 40)),
+    );
+    world.turned = [
+      ...((world.turned as string[] | undefined) ?? []),
+      ...turned.map((t) => `${p}: ${t}`),
+    ];
   }
 });
 
