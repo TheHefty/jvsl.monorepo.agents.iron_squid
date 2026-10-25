@@ -3,6 +3,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { imageUrl, loadCatalogues } from '../catalogue/load';
 import { NamesContext, useItemNames, useLoadedNames } from '../catalogue/names';
 import type { Catalogue, Item } from '../catalogue/types';
+import { Hero } from '../run/RunPage';
 import { browserStorage, hasStoredRun } from '../run/storage';
 import { decodeShare, type SharedRun } from './link';
 
@@ -65,24 +66,37 @@ export function SharedRunPage({ home }: { home: string }) {
   if (!catalogue) return null;
   return (
     <>
-      <section className="ink-strip">
+      <Hero>
         <span className="sticker">
           <FormattedMessage id={run.complete ? 'shared.complete' : 'shared.inProgress'} />
         </span>
         <h1 className="run-title">{run.name ?? intl.formatMessage({ id: 'shared.untitled' })}</h1>
-        <div className="run-stats">
-          <p className="run-conquered">
-            {intl.formatMessage(
-              { id: 'run.conquered' },
-              { conquered: run.conquered, total: run.total },
-            )}
-          </p>
-          <p>{intl.formatMessage({ id: 'run.lives' }, { lives: run.lives })}</p>
-          <p className="run-resets">
-            {intl.formatMessage({ id: 'run.resets' }, { resets: run.resets })}
-          </p>
-        </div>
-      </section>
+        {/* The headline the design leads with, right under the name (design-alignment). */}
+        <p className="shared-headline run-conquered">
+          {intl.formatMessage(
+            { id: 'run.conquered' },
+            { conquered: run.conquered, total: run.total },
+          )}
+        </p>
+        {/* Four numbers in one row, each named, so a screen reader hears "Lives: 2", not "2". */}
+        <dl className="shared-numbers">
+          {(
+            [
+              ['shared.statConquered', run.conquered],
+              ['shared.statToGo', run.total - run.conquered],
+              ['shared.statLives', run.lives],
+              ['shared.statResets', run.resets],
+            ] as const
+          ).map(([id, value]) => (
+            <div key={id}>
+              <dt>
+                <FormattedMessage id={id} />
+              </dt>
+              <dd>{intl.formatNumber(value)}</dd>
+            </div>
+          ))}
+        </dl>
+      </Hero>
       <p>
         <FormattedMessage id="shared.readOnly" />
       </p>

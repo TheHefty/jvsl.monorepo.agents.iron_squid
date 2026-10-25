@@ -132,5 +132,9 @@
   "rules.endTitle": "O fim",
   "log.markWin": "Vitória",
   "log.markLoss": "Derrota",
-  "rules.sticker": "{number} · {title}"
+  "rules.sticker": "{number} · {title}",
+  "shared.statConquered": "Kits conquistados",
+  "shared.statToGo": "Kits restantes",
+  "shared.statLives": "Vidas",
+  "shared.statResets": "Recomeços"
 }

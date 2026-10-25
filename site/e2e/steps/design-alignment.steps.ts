@@ -1,4 +1,8 @@
+import { readFileSync } from 'node:fs';
 import { expect, type Page } from '@playwright/test';
+import type { Catalogue } from '../../src/catalogue/types';
+import type { RunState } from '../../src/run/engine';
+import { encodeShare } from '../../src/share/link';
 import { Given, Then, When } from '../fixtures';
 import { messageIn } from '../support/messages';
 import { playRun, seedRun, winsThenPlaying } from '../support/seed';
@@ -231,3 +235,57 @@ Then("the kit's splat does not move", async ({ page }) => {
   expect(await splat.evaluate((el) => getComputedStyle(el).animationName)).toBe('none');
   expect(await splat.evaluate((el) => el.getAnimations().length)).toBe(0);
 });
+
+When(
+  'a visitor opens a link to a run with {int} kits conquered',
+  async ({ page, world }, conquered: number) => {
+    const catalogue = JSON.parse(
+      readFileSync('src/catalogue/11.3.0/catalogue.json', 'utf8'),
+    ) as Catalogue;
+    const state = playRun(winsThenPlaying(conquered), 'Inkling Ivo');
+    world.state = state;
+    await page.goto(`./en-US/run/#${encodeShare(state, catalogue)}`);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Inkling Ivo');
+  },
+);
+
+Then('the page leads with a headline about the run', async ({ page, world }) => {
+  const state = world.state as RunState;
+  const headline = page.locator('.ink-strip .shared-headline');
+  await expect(headline).toHaveText(
+    messageIn('en-US', 'run.conquered', { conquered: state.conquered, total: 160 }),
+  );
+  // In display type, right under the run's name, before anything else of the run.
+  const size = await headline.evaluate(
+    (el) =>
+      parseFloat(getComputedStyle(el).fontSize) /
+      parseFloat(getComputedStyle(document.body).fontSize),
+  );
+  expect(size).toBeGreaterThanOrEqual(1.5);
+  expect(
+    await page
+      .locator('.ink-strip h1')
+      .evaluate((h) => h.nextElementSibling?.classList.contains('shared-headline')),
+  ).toBe(true);
+});
+
+Then(
+  'its kits conquered, kits to go, lives and resets stand in one row',
+  async ({ page, world }) => {
+    const state = world.state as RunState;
+    const terms = page.locator('.shared-numbers dt');
+    await expect(terms).toHaveText(
+      ['shared.statConquered', 'shared.statToGo', 'shared.statLives', 'shared.statResets'].map(
+        (id) => messageIn('en-US', id),
+      ),
+    );
+    await expect(page.locator('.shared-numbers dd')).toHaveText(
+      [state.conquered, 160 - state.conquered, state.lives, state.resets].map(String),
+    );
+    // One row: every number at the same height.
+    const tops = await page
+      .locator('.shared-numbers > div')
+      .evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().top)));
+    expect(new Set(tops).size, `tops ${tops.join(', ')}`).toBe(1);
+  },
+);

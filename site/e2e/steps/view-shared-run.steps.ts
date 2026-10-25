@@ -87,12 +87,13 @@ Then('the conquered sets, in the order they were conquered', async ({ page, worl
 
 Then("the run's lives and resets", async ({ page, world }) => {
   const state = world.state as RunState;
-  await expect(page.locator('.ink-strip')).toContainText(
-    message('run.lives', { lives: state.lives }),
-  );
-  await expect(page.locator('.ink-strip')).toContainText(
-    message('run.resets', { resets: state.resets }),
-  );
+  // Each number with its name, in the row under the headline (design-alignment).
+  const stat = (id: string) =>
+    page
+      .locator('.shared-numbers > div')
+      .filter({ has: page.getByText(message(id), { exact: true }) });
+  await expect(stat('shared.statLives').locator('dd')).toHaveText(String(state.lives));
+  await expect(stat('shared.statResets').locator('dd')).toHaveText(String(state.resets));
 });
 
 Then('whether the run is complete', async ({ page }) => {
