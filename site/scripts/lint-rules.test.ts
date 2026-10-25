@@ -34,6 +34,13 @@ describe('lint', () => {
     );
   });
 
+  it('forbids Math.random in the rules of a run, which must draw from crypto (FR-12)', async () => {
+    const [result] = await eslint.lintText('export const roll = () => Math.random();\n', {
+      filePath: 'src/run/Probe.ts',
+    });
+    expect((result?.messages ?? []).map((m) => m.ruleId)).toContain('no-restricted-properties');
+  });
+
   it('passes text that comes from the catalogue', async () => {
     const code =
       "import { FormattedMessage } from 'react-intl';\n" +

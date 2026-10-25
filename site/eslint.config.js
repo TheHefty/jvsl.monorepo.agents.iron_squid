@@ -33,6 +33,22 @@ export default tseslint.config(
     },
   },
   {
+    // The draw is the challenge: it comes from crypto.getRandomValues through src/run/random.ts,
+    // never from Math.random, which is neither unpredictable nor meant to be (FR-12).
+    files: ['src/run/**/*.ts'],
+    ignores: ['src/run/**/*.test.ts'],
+    rules: {
+      'no-restricted-properties': [
+        'error',
+        {
+          object: 'Math',
+          property: 'random',
+          message: 'Draw from src/run/random.ts (crypto), never Math.random.',
+        },
+      ],
+    },
+  },
+  {
     files: ['scripts/**/*.ts', 'e2e/**/*.ts', '*.config.{js,ts}'],
     languageOptions: { globals: globals.node },
   },
