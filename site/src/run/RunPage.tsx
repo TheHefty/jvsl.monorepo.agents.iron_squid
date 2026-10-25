@@ -253,6 +253,15 @@ export function RunPage({ newestVersion }: { newestVersion: string }) {
           </p>
         </div>
       </Hero>
+      {state.catalogueVersion !== newestVersion && (
+        // A run is held to the game it started on (FR-33): it keeps its own kits after an update.
+        <p className="notice older-catalogue">
+          {intl.formatMessage(
+            { id: 'run.olderCatalogue' },
+            { version: state.catalogueVersion, newest: newestVersion },
+          )}
+        </p>
+      )}
       {notice && (
         <p className="notice" role="status">
           {notice}

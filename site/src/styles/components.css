@@ -409,3 +409,7 @@ dialog::backdrop {
   margin: 0;
   flex: 1 1 20ch;
 }
+
+.older-catalogue {
+  margin-block-end: var(--space-4);
+}

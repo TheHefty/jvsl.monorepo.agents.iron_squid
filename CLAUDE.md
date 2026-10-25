@@ -85,7 +85,9 @@ TypeScript strict, react-intl. From `site/`:
   (`Leanny/splat3`) to a commit and a data folder, with a digest per source file;
   `npm run catalogue:generate` writes `site/src/catalogue/<version>/` (names and image digests,
   never an image). Moving the pin is its own PR (`docs/RULES.md`): change commit, folder and game
-  version, run the generator with `--record-digests`, and review the diff it prints. Version
+  version, run the generator with `--record-digests`, and review the diff it prints. The previous version's folder stays: runs
+  on it may still be in players' browsers. Add the new version to `site/catalogue.versions.json`, which
+  only grows; `npm test` fails if a version listed there has no folder, or a folder is not listed. Version
   folders sort as text, so read the datamine's `versions.json` for the newest, not the last folder.
 - **Game images are fetched by the build, never committed.** `npm run build` downloads each image
   in `images.lock.json`, verifies its SHA-256, caches it by digest in `site/.cache/game-images/`

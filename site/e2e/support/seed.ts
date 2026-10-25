@@ -33,7 +33,8 @@ export const winsThenPlaying = (n: number): Play[] =>
 
 // Writes the run into the page's storage before its first load, once: a reload keeps what the
 // player did since.
-export async function seedRun(page: Page, state: RunState) {
+// Puts the run in the browser's storage before the page's own scripts run, once per tab.
+export async function seedRunScript(page: Page, state: RunState) {
   await page.addInitScript(
     (record) => {
       if (!sessionStorage.getItem('iron-squid:seeded')) {
@@ -43,6 +44,10 @@ export async function seedRun(page: Page, state: RunState) {
     },
     JSON.stringify({ revision: 1, state }),
   );
+}
+
+export async function seedRun(page: Page, state: RunState) {
+  await seedRunScript(page, state);
   await page.goto('./en-US/');
 }
 

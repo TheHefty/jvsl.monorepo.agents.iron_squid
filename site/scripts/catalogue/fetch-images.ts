@@ -82,7 +82,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const result = await fetchImages({
     catalogueRoot: process.env.CATALOGUE_DIR ?? 'src/catalogue',
     cacheDir: process.env.GAME_IMAGES_CACHE ?? '.cache/game-images',
-    outDir: 'public/game',
+    outDir: join(process.env.PUBLIC_DIR ?? 'public', 'game'),
     baseFor: ({ version, datamine }) => {
       if (override) return override;
       if (!datamine) throw new Error(`game-images: catalogue ${version} names no datamine`);
