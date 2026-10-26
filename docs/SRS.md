@@ -118,12 +118,22 @@ could look at the running site and say whether it holds.
 - **FR-40** The player can copy a link that shows the run as it is at that moment.
 - **FR-41** Anyone who opens the link sees the run, read-only: its display name if any, kits
   conquered out of the total, the conquered sets in order with the mode each was won in, current
-  lives, resets, how many gear pieces were re-rolled away (FR-25), and whether it is complete. Nothing on that view can change the run, or the visitor's own run.
+  lives, resets, how many gear pieces were re-rolled away (FR-25), whether it is complete, its run
+  log (FR-45) and its longest winning streak (FR-46). Nothing on that view can change the run, or the
+  visitor's own run.
 - **FR-42** A link opened by a visitor who has a run of their own does not replace it, and offers a
   way back to it.
 - **FR-43** The run is carried in the link itself. Opening one requires nothing but the site.
 - **FR-44** A link that is malformed, or that names a catalogue version the site no longer has,
   shows a message saying which of the two, never a blank page or a partial run.
+- **FR-45** A share link carries the run's log: for each match, in the order played, its result, its
+  kit and its mode, and whether it was a replay or reset the run; never the date it was reported.
+  When the whole log does not fit within NFR-P2, the link carries the most recent matches that fit,
+  and the shared view says how many earlier matches it leaves out. A link made before the log was
+  shared opens with no log, and says so.
+- **FR-46** A run's longest winning streak is the most consecutive wins with no loss between them,
+  replays included, over the matches the log covers. The shared view shows it beside the run's
+  other numbers.
 
 ### Notices
 
@@ -134,7 +144,8 @@ could look at the running site and say whether it holds.
 ### Look
 
 - **FR-60** The site has a logo of its own, a simple icon in a metallic iron grey, drawn for the
-  project. It is the favicon and the logo in every page's header. It uses no Nintendo artwork.
+  project: a squid in the game's style, with round eyes in a dark mask and rounded contours. It is
+  the favicon and the logo in every page's header. It uses no Nintendo artwork.
 - **FR-61** Every page's header has a control to switch between the light and the dark theme. Until
   the player chooses, the site follows the system's setting; the choice is remembered.
 - **FR-62** The interface follows the inked screens of the owner's design (Claude Design project
@@ -344,6 +355,17 @@ Before the epics that add screens, so that they are built in the design rather t
   out again among them; a replayed set can be re-rolled; runs started before keep the earlier reset.
   (FR-13, FR-14, FR-18, FR-25)
 
+### `squid-logo` — The logo is a squid in the game's style, with round eyes and rounded contours.
+
+- **`redraw-logo`** — The logo is redrawn: Splatoon-like eyes in a dark mask, rounded contours, the
+  same iron grey; the favicon and the link preview follow. (FR-60)
+
+### `shared-log` — A shared run shows its whole story: its log and its longest winning streak.
+
+- **`share-the-log`** — The share link carries the run's log without dates, the most recent matches
+  when it does not all fit, and the shared view shows it with the longest winning streak.
+  (FR-41, FR-45, FR-46, NFR-P2)
+
 ## Alternatives considered
 
 - **Do nothing, and run the challenge on a spreadsheet** — rejected: the random draw, the
@@ -432,3 +454,11 @@ the earlier reset, so a run is never finished under rules other than those it be
 (`docs/RULES.md`, "The challenge rules are the product"). The `reset-and-replay` scenarios that
 assert the same order and the same gear change in the task that starts `reshuffle-replays`, when
 the new ones are seen failing, not here.
+
+Amended on 2026-10-26 by João Lima, with two adjustments and no change to the charter: the logo is
+redrawn as a squid in the game's style (FR-60, epic `squid-logo`), from a sketch the owner chose; and
+a shared run shows its run log and its longest winning streak (FR-41, FR-45, FR-46, epic
+`shared-log`). The owner chose the log's matches with result, kit and mode but no date, so a link
+says nothing about when the player played and the data map is unchanged; the 2,000-character limit
+of NFR-P2 stays, a link carrying the most recent matches that fit when a long run's log does not;
+and a streak that counts replay wins.
