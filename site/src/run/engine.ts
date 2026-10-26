@@ -1,7 +1,7 @@
 // The rules of a run (charter, "The rules the site enforces"), as pure functions over an immutable
 // state: no screen, no storage, no clock (time is passed in). Every draw of the run is fixed when it
 // starts, so nothing a player does afterwards (undo included) can change what comes next (FR-14).
-import { gearSlots, type Catalogue } from '../catalogue/types';
+import { gearSlots, type Catalogue, type GearSlot } from '../catalogue/types';
 import { shuffle, type RandomSource } from './random';
 
 type Order = { kits: string[]; head: string[]; clothes: string[]; shoes: string[] };
@@ -21,18 +21,35 @@ export type LogEntry = {
   reset: boolean;
 };
 
-// The state before the last result, without the log: undo removes the log's last entry instead, so
-// a long run never stores its log twice (task run-log-format, failure 3).
-export type Snapshot = Omit<RunState, 'previous' | 'log' | 'logSince'>;
+// A piece of gear given up for the next spare of its slot (FR-25), where it happened: on which draw,
+// and after how many matches, so the run log can place it among the results (FR-24).
+export type RerollEntry = {
+  at: string;
+  draw: number;
+  slot: GearSlot;
+  from: string;
+  to: string;
+  afterMatches: number;
+};
+
+// The state before the last result, without the logs: undo removes the log's last entry instead, so
+// a long run never stores its log twice (task run-log-format, failure 3); re-rolls are never undone.
+export type Snapshot = Omit<RunState, 'previous' | 'log' | 'logSince' | 'rerolls'>;
 
 export type RunState = {
-  schema: 2;
+  schema: 3;
   catalogueVersion: string;
   name?: string;
   startedAt: string;
   // The whole run, drawn at the start: draw n is kit n with head, clothes and shoes n. The order is
-  // stored rather than a seed, so a change in this code can never reorder a run in progress.
+  // stored rather than a seed, so a change in this code can never reorder a run in progress. Each
+  // gear slot holds more pieces than kits: those past the kits are its spares, in the order a
+  // re-roll takes them (FR-25), so what a re-roll gives is fixed from the start too (FR-14).
   order: Order;
+  // Per slot, the order index a re-rolled draw wears instead of its own, and how many spares the
+  // slot has given; a spare given and re-rolled away again stays spent.
+  worn: Record<GearSlot, Record<number, number>>;
+  spent: Record<GearSlot, number>;
   // Kits conquered so far (a prefix of order.kits), and the set being played (a replay when it is
   // below conquered, which reset-and-replay brings).
   conquered: number;
@@ -49,6 +66,8 @@ export type RunState = {
   // format 2, or the day a format-1 run was migrated, before which nothing was recorded.
   log: LogEntry[];
   logSince: string;
+  // Every re-roll, in the order made; never undone, so kept apart from the results.
+  rerolls: RerollEntry[];
   // The state before the last result: what undo returns to (FR-20). One level only.
   previous?: Snapshot;
 };
@@ -73,7 +92,7 @@ export function startRun(
       source,
     );
   return {
-    schema: 2,
+    schema: 3,
     catalogueVersion: catalogue.version,
     ...(name === undefined ? {} : { name }),
     startedAt: at,
@@ -93,22 +112,31 @@ export function startRun(
     step: 0,
     log: [],
     logSince: at,
+    worn: { head: {}, clothes: {}, shoes: {} },
+    spent: { head: 0, clothes: 0, shoes: 0 },
+    rerolls: [],
   };
 }
 
-export function currentSet(s: RunState): CurrentSet {
-  const at = (list: string[]) => {
-    const id = list[s.cursor];
-    if (id === undefined) throw new Error(`run: no draw ${s.cursor} in this run`);
+// The order index of the piece draw n wears in a slot: its own, unless it was re-rolled.
+const wornIndex = (s: Snapshot, n: number, slot: GearSlot) => s.worn[slot][n] ?? n;
+
+// The kit and the gear draw n is played with: the gear it was re-rolled to, if it was.
+export function gearOf(s: Snapshot, n: number): CurrentSet {
+  const at = (list: string[], index: number) => {
+    const id = list[index];
+    if (id === undefined) throw new Error(`run: no draw ${n} in this run`);
     return id;
   };
   return {
-    kit: at(s.order.kits),
-    head: at(s.order.head),
-    clothes: at(s.order.clothes),
-    shoes: at(s.order.shoes),
+    kit: at(s.order.kits, n),
+    head: at(s.order.head, wornIndex(s, n, 'head')),
+    clothes: at(s.order.clothes, wornIndex(s, n, 'clothes')),
+    shoes: at(s.order.shoes, wornIndex(s, n, 'shoes')),
   };
 }
+
+export const currentSet = (s: RunState): CurrentSet => gearOf(s, s.cursor);
 
 function fresh(s: RunState, { step }: { step: number }): void {
   if (step !== s.step)
@@ -116,10 +144,11 @@ function fresh(s: RunState, { step }: { step: number }): void {
 }
 
 function snapshot(s: RunState): Snapshot {
-  const { previous: _previous, log: _log, logSince: _logSince, ...rest } = s;
+  const { previous: _previous, log: _log, logSince: _logSince, rerolls: _rerolls, ...rest } = s;
   void _previous;
   void _log;
   void _logSince;
+  void _rerolls;
   return rest;
 }
 
@@ -177,7 +206,67 @@ export function reportWin(s: RunState, action: Result): RunState {
 // Undo exists only after a result, whose entry is the log's last: it goes with the result.
 export function undo(s: RunState): RunState {
   if (!s.previous) throw new Error('run: nothing to undo');
-  return { ...s.previous, log: s.log.slice(0, -1), logSince: s.logSince, step: s.step + 1 };
+  return {
+    ...s.previous,
+    log: s.log.slice(0, -1),
+    logSince: s.logSince,
+    rerolls: s.rerolls,
+    step: s.step + 1,
+  };
+}
+
+// Why a re-roll of a slot is refused, or undefined when it is allowed (FR-25): only on a newly drawn
+// set before any result for it, never on a replay (FR-18), and only while the slot has a spare, so
+// the run can always be finished (FR-13, NFR-D6). The kit is never re-rolled: it has no slot here.
+export function rerollRefusal(
+  s: RunState,
+  slot: GearSlot,
+): 'complete' | 'replay' | 'played' | 'no-spare' | undefined {
+  if (s.phase !== 'playing') return 'complete';
+  if (s.cursor < s.conquered) return 'replay';
+  if (s.log.some((e) => e.draw === s.cursor)) return 'played';
+  if (s.order.kits.length + s.spent[slot] >= s.order[slot].length) return 'no-spare';
+  return undefined;
+}
+
+const refusals = {
+  complete: 'run: no re-roll once the run is complete',
+  replay: 'run: no re-roll on a replay, which keeps the gear the set was won with',
+  played: 'run: no re-roll once a result is reported for the set',
+  'no-spare': 'run: no spare left in this slot; the run could not be finished',
+};
+
+// Gives up the piece the set wears in a slot for the slot's next spare. The piece given up is spent:
+// it is never drawn again. A re-roll cannot be undone, and it takes away the undo of the result
+// before it, or undoing that result would bring the piece given up back.
+export function reroll(
+  s: RunState,
+  action: { step: number; at: string; slot: GearSlot },
+): RunState {
+  fresh(s, action);
+  const { slot } = action;
+  const refused = rerollRefusal(s, slot);
+  if (refused) throw new Error(refusals[refused]);
+  const spare = s.order.kits.length + s.spent[slot];
+  const { previous: _previous, ...rest } = s;
+  void _previous;
+  return {
+    ...rest,
+    worn: { ...s.worn, [slot]: { ...s.worn[slot], [s.cursor]: spare } },
+    spent: { ...s.spent, [slot]: s.spent[slot] + 1 },
+    rerolls: [
+      ...s.rerolls,
+      {
+        at: action.at,
+        draw: s.cursor,
+        slot,
+        from: s.order[slot][wornIndex(s, s.cursor, slot)] ?? '',
+        to: s.order[slot][spare] ?? '',
+        afterMatches: s.matches,
+      },
+    ],
+    step: s.step + 1,
+  };
 }
 
 // A loss costs a life and the same set is played again (FR-17). On the last life the run resets
