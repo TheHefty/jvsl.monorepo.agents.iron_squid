@@ -34,8 +34,15 @@ function build(basePath = '/repo/') {
         'meta.terms': 'The terms.',
         'meta.privacy': 'The privacy notice.',
         'meta.notFound': 'No such page.',
+        'meta.imageAlt': 'The logo.',
       },
-      'ja-JP': { 'meta.home': 'ホーム', 'meta.terms': '規約', 'meta.privacy': 'プライバシー' },
+      'ja-JP': {
+        'site.name': 'Iron Squid',
+        'meta.home': 'ホーム',
+        'meta.terms': '規約',
+        'meta.privacy': 'プライバシー',
+        'meta.imageAlt': 'ロゴ',
+      },
     },
   });
   const read = (p: string) => readFileSync(join(dist, p), 'utf8');

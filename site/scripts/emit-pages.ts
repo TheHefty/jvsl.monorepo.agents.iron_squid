@@ -78,6 +78,28 @@ export function emitPages({
       ),
       `<link rel="alternate" hreflang="x-default" href="${siteOrigin}/" />`,
     ].join('');
+  // What a preview generator shows for a posted link (FR-72): the site's name, the page's
+  // description, its locale and the site's own image. The shared-run page previews as the home
+  // page, address included: its run is in the fragment, which no preview generator receives.
+  const preview = (locale: string, route: string) => {
+    const shown = route === 'run' ? '' : route;
+    const id = describedBy[route] ?? 'meta.home';
+    const meta = (property: string, content: string) =>
+      `<meta property="${property}" content="${escape(content)}" />`;
+    return (
+      meta('og:type', 'website') +
+      meta('og:site_name', catalogues[locale]?.['site.name'] ?? '') +
+      meta('og:title', catalogues[locale]?.['site.name'] ?? '') +
+      meta('og:description', catalogues[locale]?.[id] ?? '') +
+      meta('og:url', `${siteOrigin}/${locale}/${shown ? `${shown}/` : ''}`) +
+      meta('og:locale', locale.replace('-', '_')) +
+      meta('og:image', `${siteOrigin}/preview.png`) +
+      meta('og:image:width', '1200') +
+      meta('og:image:height', '630') +
+      meta('og:image:alt', catalogues[locale]?.['meta.imageAlt'] ?? '') +
+      `<meta name="twitter:card" content="summary_large_image" />`
+    );
+  };
   const page = (locale: string, extraHead: string) =>
     shell
       .replace(/<html lang="[^"]*">/, `<html lang="${locale}">`)
@@ -88,7 +110,12 @@ export function emitPages({
       mkdirSync(join(distDir, locale, route), { recursive: true });
       writeFileSync(
         join(distDir, locale, route, 'index.html'),
-        page(locale, description(locale, describedBy[route] ?? 'meta.home') + alternatesOf(route)),
+        page(
+          locale,
+          description(locale, describedBy[route] ?? 'meta.home') +
+            alternatesOf(route) +
+            preview(locale, route),
+        ),
       );
     }
   }
@@ -101,7 +128,8 @@ export function emitPages({
         description(defaultLocale, 'meta.notFound'),
     ),
   );
-  const alternates = description(defaultLocale, 'meta.home') + alternatesOf('');
+  const alternates =
+    description(defaultLocale, 'meta.home') + alternatesOf('') + preview(defaultLocale, '');
 
   const target = `${basePath}${defaultLocale}/`;
   const rootFile = named('root', rootScript);
