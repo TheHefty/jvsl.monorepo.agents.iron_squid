@@ -72,6 +72,7 @@ async function badImage(serve: 'altered' | 'missing') {
       shoes: [item('Shs_G', gearImages.shoes)],
     },
     excluded: { replicas: [], unobtainable: [] },
+    modes: [{ id: 'Pnt' }],
   };
   const lock = {
     [kitImage]: sha256(lockedKit),
@@ -83,7 +84,10 @@ async function badImage(serve: 'altered' | 'missing') {
   // Named in every locale, so the build gets as far as the images it is meant to fail on.
   mkdirSync(join(dir, c.version, 'names'));
   const names = Object.fromEntries(
-    [...c.kits, ...c.gear.head, ...c.gear.clothes, ...c.gear.shoes].map((i) => [i.id, i.id]),
+    [...c.kits, ...c.gear.head, ...c.gear.clothes, ...c.gear.shoes, ...c.modes].map((i) => [
+      i.id,
+      i.id,
+    ]),
   );
   for (const locale of locales)
     writeFileSync(

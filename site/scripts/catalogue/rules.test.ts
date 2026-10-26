@@ -35,6 +35,15 @@ function source(overrides: Partial<Source> = {}): Source {
       'CommonMsg/Gear/GearName_Head': { AMB000: 'Squid Hairclip', MSN000: 'Hero Headset' },
       'CommonMsg/Gear/GearName_Clothes': { AMB000: 'School Uniform A' },
       'CommonMsg/Gear/GearName_Shoes': { AMB000: 'School Shoes', SDODR000: 'Side Order shoes' },
+      'CommonMsg/VS/VSRuleName': {
+        Pnt: 'Turf War',
+        Pnt_2L: 'Turf\nWar',
+        Var: 'Splat Zones',
+        Vlf: 'Tower Control',
+        Vgl: 'Rainmaker',
+        Vcl: 'Clam Blitz',
+        Tcl: 'Tricolor Turf War',
+      },
     },
     ...overrides,
   };
@@ -79,6 +88,12 @@ describe('buildCatalogue', () => {
       Hed_AMB000: 'Squid Hairclip',
       Clt_AMB000: 'School Uniform A',
       Shs_AMB000: 'School Shoes',
+      Pnt: 'Turf War',
+      Var: 'Splat Zones',
+      Vlf: 'Tower Control',
+      Vgl: 'Rainmaker',
+      Vcl: 'Clam Blitz',
+      Tcl: 'Tricolor Turf War',
     });
   });
 
@@ -94,5 +109,31 @@ describe('buildCatalogue', () => {
     const c = buildCatalogue(source());
     expect(c.version).toBe('11.3.0');
     expect(c.datamine).toEqual({ repo: 'Leanny/splat3', commit: 'abc', dataFolder: '1130' });
+  });
+
+  it('lists the six modes a result can be played in, in a fixed order (match-modes)', () => {
+    expect(buildCatalogue(source()).modes.map((m) => m.id)).toEqual([
+      'Pnt',
+      'Var',
+      'Vlf',
+      'Vgl',
+      'Vcl',
+      'Tcl',
+    ]);
+  });
+
+  it("names the modes from the game's own words, never its two-line variants", () => {
+    const s = source();
+    const names = buildNames(buildCatalogue(s), s.names, 'data/language/USen.json');
+    expect([names.Pnt, names.Tcl]).toEqual(['Turf War', 'Tricolor Turf War']);
+    expect(Object.values(names).some((n) => n.includes('\n'))).toBe(false);
+  });
+
+  it('refuses a mode with no name in a language file, naming both', () => {
+    const s = source();
+    delete s.names['CommonMsg/VS/VSRuleName']?.Vgl;
+    expect(() => buildNames(buildCatalogue(s), s.names, 'data/language/KRko.json')).toThrow(
+      'catalogue: Vgl has no name in data/language/KRko.json',
+    );
   });
 });

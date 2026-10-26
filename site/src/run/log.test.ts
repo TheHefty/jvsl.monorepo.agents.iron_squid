@@ -15,6 +15,7 @@ const catalogue: Catalogue = {
     shoes: ids('S', 160).map(item),
   },
   excluded: { replicas: [], unobtainable: [] },
+  modes: ['Pnt', 'Var', 'Vlf', 'Vgl', 'Vcl', 'Tcl'].map((id) => ({ id })),
 };
 const t0 = '2026-10-24T12:00:00.000Z';
 const t1 = '2026-10-25T09:30:00.000Z';

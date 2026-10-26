@@ -3,7 +3,7 @@
 import { gearSlots, type Catalogue } from '../../src/catalogue/types';
 
 type Change = { added: string[]; removed: string[] };
-export type CatalogueDiff = Record<'kits' | (typeof gearSlots)[number], Change>;
+export type CatalogueDiff = Record<'kits' | (typeof gearSlots)[number] | 'modes', Change>;
 
 const change = (before: { id: string }[], after: { id: string }[]): Change => {
   const was = new Set(before.map((i) => i.id));
@@ -20,6 +20,7 @@ export function diffCatalogues(before: Catalogue, after: Catalogue): CatalogueDi
     head: change(before.gear.head, after.gear.head),
     clothes: change(before.gear.clothes, after.gear.clothes),
     shoes: change(before.gear.shoes, after.gear.shoes),
+    modes: change(before.modes ?? [], after.modes ?? []),
   };
 }
 

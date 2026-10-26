@@ -15,7 +15,9 @@ const control = (p: Page, theme: 'Light' | 'Dark') =>
   });
 const themeOf = (p: Page) => p.evaluate(() => getComputedStyle(document.body).backgroundColor);
 const expectTheme = async (p: Page, theme: Theme) =>
-  expect.poll(() => themeOf(p), { timeout: 2000 }).toBe(ground[theme]);
+  // Waits for the page to be read, not for the theme: under load a page can take longer than 2 s to
+  // load. Whether the theme was right before the first paint is checked apart (themeAtLoad).
+  expect.poll(() => themeOf(p), { timeout: 10_000 }).toBe(ground[theme]);
 
 Given('a device set to a light appearance', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'light' });

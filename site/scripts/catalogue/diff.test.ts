@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Catalogue } from '../../src/catalogue/types';
-import { describeDiff, diffCatalogues } from './diff';
+import { describeDiff, diffCatalogues, removedIds } from './diff';
 
 const item = (id: string) => ({ id, image: `${id}.png` });
 const cat = (kits: string[], head: string[]): Catalogue => ({
@@ -9,6 +9,7 @@ const cat = (kits: string[], head: string[]): Catalogue => ({
   kits: kits.map(item),
   gear: { head: head.map(item), clothes: [], shoes: [] },
   excluded: { replicas: [], unobtainable: [] },
+  modes: ['Pnt', 'Var', 'Vlf', 'Vgl', 'Vcl', 'Tcl'].map((id) => ({ id })),
 });
 
 describe('diffCatalogues', () => {
@@ -19,6 +20,7 @@ describe('diffCatalogues', () => {
       head: { added: ['H2'], removed: [] },
       clothes: { added: [], removed: [] },
       shoes: { added: [], removed: [] },
+      modes: { added: [], removed: [] },
     });
     expect(describeDiff(d)).toBe('kits: +1 (C), -1 (B)\nhead: +1 (H2)');
   });
@@ -27,5 +29,12 @@ describe('diffCatalogues', () => {
     expect(describeDiff(diffCatalogues(cat(['A'], []), cat(['A'], [])))).toBe(
       'no kits or gear added or removed',
     );
+  });
+
+  it('lists a mode the game adds or retires, which a removal refuses like a kit (failure 3)', () => {
+    const before = cat(['A'], []);
+    const after = { ...cat(['A'], []), modes: before.modes.filter((m) => m.id !== 'Tcl') };
+    expect(diffCatalogues(before, after).modes).toEqual({ added: [], removed: ['Tcl'] });
+    expect(removedIds(diffCatalogues(before, after))).toEqual(['Tcl']);
   });
 });
