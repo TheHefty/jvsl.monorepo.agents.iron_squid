@@ -88,6 +88,9 @@ export async function seedRun(page: Page, state: RunState, locale = 'en-US') {
 const english = (
   JSON.parse(readFileSync('src/catalogue/11.3.0/names/en-US.json', 'utf8')) as NamesFile
 ).names;
+// The en-US name of an item, by id.
+export const nameOf = (id: string | undefined) => english[id ?? ''] ?? `<no item ${String(id)}>`;
+
 export function setNames(state: RunState, n: number): string[] {
   const name = (id: string | undefined) => english[id ?? ''] ?? `<no item ${String(id)}>`;
   return [
