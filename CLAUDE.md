@@ -111,6 +111,9 @@ TypeScript strict, react-intl. From `site/`:
   `site/e2e/steps/pending.steps.ts` and fail on purpose, naming the task, if they ever run. Every scenario runs under the guard in
   `site/e2e/fixtures.ts`, which fails it on any off-site request, CSP violation, missing file of the
   site's own or WCAG 2.2 A/AA violation.
+- **The preview image (`site/public/preview.png`) is made from the logo** by
+  `npx tsx scripts/preview-image.ts`, and committed with the record of the logo it used: change
+  `site/public/logo.svg` and run it again in the same pull request, or a scenario fails.
 - **A test's temporary folder comes from `tempDir` (or `suiteTempDir`) in `site/e2e/support/temp.ts`**,
   never `mkdtempSync`: it is removed when the test ends, passed or failed. In the agent container
   `/tmp` is memory, and folders left behind once filled it until the kernel killed the browser

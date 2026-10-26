@@ -140,5 +140,6 @@
   "meta.home": "Iron Squid runs a Splatoon 3 challenge: win with every weapon, with gear drawn at random, and win them all again when your last life is lost.",
   "meta.terms": "What playing Iron Squid involves: a free fan project, played on the honor system, with no warranty.",
   "meta.privacy": "What Iron Squid keeps, where, and who else sees anything: your run stays in your own browser.",
-  "meta.notFound": "There is no page at this address."
+  "meta.notFound": "There is no page at this address.",
+  "meta.imageAlt": "The Iron Squid logo, an iron-plated squid, beside the name Iron Squid"
 }
