@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import published from '../catalogue/11.3.0/catalogue.json';
 import type { Catalogue } from '../catalogue/types';
-import { reportLoss, reportWin, startRun, type RunState } from '../run/engine';
+import { reportLoss, reportWin, reroll, startRun, type RunState } from '../run/engine';
 import { cryptoSource } from '../run/random';
 import { decodeShare, encodeShare, packShare, widthsOf, type Packed } from './link';
 
@@ -54,6 +54,7 @@ describe('a share link', () => {
         total: 160,
         lives: s.lives,
         resets: s.resets,
+        rerolls: 0,
         complete: false,
         sets: Array.from({ length: 12 }, (_, i) => ({
           kit: s.order.kits[i],
@@ -116,7 +117,7 @@ describe('reading a share link', () => {
   it.each([
     ['nothing', ''],
     ['characters outside base64url', 'abc$def'],
-    ['a format it does not know', textOf(Uint8Array.of(3, 0))],
+    ['a format it does not know', textOf(Uint8Array.of(4, 0))],
   ])('refuses %s as broken', (_label, text) => {
     expect(decodeShare(text, catalogues)).toEqual(broken);
   });
@@ -234,6 +235,57 @@ describe('the mode of each conquest (share-mode)', () => {
     expect(decodeShare(encodeShare(s, catalogue), catalogues)).toMatchObject({
       ok: true,
       run: { name, conquered: 160, complete: true },
+    });
+  });
+});
+
+describe('the re-rolls of a run (share-rerolls)', () => {
+  const spares = (['head', 'clothes', 'shoes'] as const).reduce(
+    (n, slot) => n + catalogue.gear[slot].length - catalogue.kits.length,
+    0,
+  );
+  const rerolled = (times: number, wins: number) => {
+    let s = startRun(catalogue, { name: 'Ivo' }, cryptoSource, at);
+    for (let n = 0; n < times; n++) s = reroll(s, { step: s.step, at, slot: 'head' });
+    for (let n = 0; n < wins; n++) s = reportWin(s, { step: s.step, at, mode: 'Pnt' });
+    return s;
+  };
+
+  it('carries how many pieces were re-rolled away', () => {
+    const shared = decodeShare(encodeShare(rerolled(4, 2), catalogue), catalogues);
+    expect(shared).toMatchObject({ ok: true, run: { rerolls: 4, conquered: 2 } });
+  });
+
+  it('reads a link made before re-rolls as none (failure 1)', () => {
+    const p = valid();
+    expect(decodeShare(packShare(p, widthsOf(catalogue, 2), 2), catalogues)).toMatchObject({
+      ok: true,
+      run: { rerolls: 0, conquered: 2 },
+    });
+  });
+
+  it('refuses more re-rolls than the catalogue has spares (failure 2)', () => {
+    expect(
+      decodeShare(packShare({ ...valid(), rerolls: spares + 1 }, widthsOf(catalogue)), catalogues),
+    ).toEqual({ ok: false, reason: 'broken' });
+    expect(
+      decodeShare(packShare({ ...valid(), rerolls: spares }, widthsOf(catalogue)), catalogues),
+    ).toMatchObject({ ok: true, run: { rerolls: spares } });
+  });
+
+  it('fits a complete run that spent every spare, with the largest name, in 2,000 characters (failure 3)', () => {
+    const name = '👩‍👩‍👧'.repeat(16) + '🦑'.repeat(3);
+    let s = startRun(catalogue, { name }, cryptoSource, at);
+    for (const slot of ['head', 'clothes', 'shoes'] as const)
+      for (let n = 0; n < catalogue.gear[slot].length - catalogue.kits.length; n++)
+        s = reroll(s, { step: s.step, at, slot });
+    for (let n = 0; n < 160; n++) s = reportWin(s, { step: s.step, at, mode: 'Tcl' });
+    expect(s.rerolls).toHaveLength(spares);
+    const link = site + encodeShare(s, catalogue);
+    expect(link.length).toBeLessThanOrEqual(2000);
+    expect(decodeShare(encodeShare(s, catalogue), catalogues)).toMatchObject({
+      ok: true,
+      run: { rerolls: spares, conquered: 160, complete: true },
     });
   });
 });

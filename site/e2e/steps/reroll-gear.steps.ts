@@ -292,3 +292,21 @@ Then('the screen reader announces the new clothing', async ({ page }) => {
   const live = page.locator('.run-announcement[aria-live="polite"]');
   await expect(live).toHaveText(message('reroll.announce', { slot: 'clothes', piece }));
 });
+
+// share-rerolls: the link counts the pieces re-rolled away, and the shared page says how many.
+Given('a run in which {int} pieces were re-rolled away', async ({ page }, pieces: number) => {
+  const state = rerolledRun('head', pieces, winsThenPlaying(3));
+  expect(state.rerolls).toHaveLength(pieces);
+  await seedRun(page, state);
+});
+
+Then(
+  'the visitor is shown that {int} pieces were re-rolled away',
+  async ({ world }, pieces: number) => {
+    const other = world.other as Page;
+    const stat = other
+      .locator('.shared-numbers > div')
+      .filter({ has: other.getByText(message('shared.statRerolls'), { exact: true }) });
+    await expect(stat.locator('dd')).toHaveText(String(pieces));
+  },
+);

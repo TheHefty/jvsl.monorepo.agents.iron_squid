@@ -659,13 +659,16 @@ dialog::backdrop {
 
 .shared-numbers {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  /* One row of equal columns, four numbers or five with the re-rolls. */
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
   gap: var(--space-4);
   margin: var(--space-6) 0 0;
 }
 
 @media (max-width: 30rem) {
   .shared-numbers {
+    grid-auto-flow: row;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

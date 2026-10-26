@@ -18,9 +18,5 @@ export const pendingWith =
     pending(task)();
   };
 
-Given('a run in which {int} pieces were re-rolled away', pendingWith('share-rerolls (is-k2f.2.3)'));
-Then(
-  'the visitor is shown that {int} pieces were re-rolled away',
-  pendingWith('share-rerolls (is-k2f.2.3)'),
-);
-void When;
+// No scenario is pending at the moment; these are what a task's pending steps are written with.
+void [Given, Then, When];
