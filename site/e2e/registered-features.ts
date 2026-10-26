@@ -29,10 +29,7 @@ export const registrations: Registration[] = [
   { feature: 'found-and-previewed/link-previews.feature' },
   { feature: 'match-modes/report-mode.feature' },
   { feature: 'find-the-gear/gear-brand.feature' },
-  {
-    feature: 'find-the-gear/reroll-gear.feature',
-    pending: { 'A shared run counts its re-rolls': 'share-rerolls (is-k2f.2.3)' },
-  },
+  { feature: 'find-the-gear/reroll-gear.feature' },
   {
     feature: 'every-language/translate-interface.feature',
   },

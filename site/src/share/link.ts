@@ -8,14 +8,15 @@
 // run shows is carried: never the sets not yet played, the log or the undo state.
 //
 // Format 2 (share-mode) is format 1 with one more field per set: the mode it was conquered in, 0
-// when none was recorded and then the catalogue's modes from 1. Format 1 is still read, forever:
+// when none was recorded and then the catalogue's modes from 1. Format 3 (share-rerolls) adds, after
+// resets, how many gear pieces the run re-rolled away. Formats 1 and 2 are still read, forever:
 // links made before are in posts and messages that cannot be edited.
 import { gearSlots, type Catalogue } from '../catalogue/types';
 import { gearOf, type CurrentSet, type RunState } from '../run/engine';
 import { displayName } from '../run/name';
 
-const FORMAT = 2;
-type Format = 1 | 2;
+const FORMAT = 3;
+type Format = 1 | 2 | 3;
 const slots = ['kits', ...gearSlots] as const;
 
 export type SharedRun = {
@@ -25,6 +26,8 @@ export type SharedRun = {
   total: number;
   lives: number;
   resets: number;
+  // Gear pieces re-rolled away (FR-25); none in a link made before re-rolls.
+  rerolls: number;
   complete: boolean;
   sets: SharedSet[];
 };
@@ -44,6 +47,7 @@ export type Packed = {
   conquered: number;
   lives: number;
   resets: number;
+  rerolls?: number;
   sets: number[][];
 };
 
@@ -54,7 +58,7 @@ const widthOf = (n: number) => Math.max(1, Math.ceil(Math.log2(n)));
 // format 2 the mode, which also has "none".
 export const widthsOf = (c: Catalogue, format: Format = FORMAT) => [
   ...lists(c).map((l) => widthOf(l.length)),
-  ...(format === 2 ? [widthOf(c.modes.length + 1)] : []),
+  ...(format >= 2 ? [widthOf(c.modes.length + 1)] : []),
 ];
 
 // The mode a set was conquered in: that of the win on its draw that was not a replay. A replay won
@@ -86,6 +90,7 @@ export function encodeShare(state: RunState, catalogue: Catalogue): string {
       conquered: state.conquered,
       lives: state.lives,
       resets: state.resets,
+      rerolls: state.rerolls.length,
       sets,
     },
     widthsOf(catalogue),
@@ -109,6 +114,7 @@ export function packShare(p: Packed, widths: number[], format: Format = FORMAT):
   varint(p.conquered);
   varint(p.lives);
   varint(p.resets);
+  if (format === 3) varint(p.rerolls ?? 0);
   let acc = 0;
   let filled = 0;
   for (const set of p.sets) {
@@ -169,7 +175,7 @@ function read(text: string, catalogues: Record<string, Catalogue>): ShareResult 
   };
 
   const format = byte();
-  if (format !== 1 && format !== 2) throw new Broken();
+  if (format !== 1 && format !== 2 && format !== 3) throw new Broken();
   const version = String.fromCharCode(...take(varint()));
   if (!/^\d{1,4}\.\d{1,4}\.\d{1,4}$/.test(version)) throw new Broken();
   let name: string;
@@ -183,12 +189,19 @@ function read(text: string, catalogues: Record<string, Catalogue>): ShareResult 
   const conquered = varint();
   const lives = varint();
   const resets = varint();
+  const rerolls = format === 3 ? varint() : 0;
   const catalogue = catalogues[version];
   if (!catalogue) return { ok: false, reason: 'unknown-catalogue', version };
   const items = lists(catalogue);
   const widths = widthsOf(catalogue, format);
   const modes = catalogue.modes;
   if (lives < 1 || conquered > catalogue.kits.length) throw new Broken();
+  // A re-roll spends a spare, the pieces past the kits in a slot: no run has more re-rolls.
+  const spares = [catalogue.gear.head, catalogue.gear.clothes, catalogue.gear.shoes].reduce(
+    (n, list) => n + Math.max(0, list.length - catalogue.kits.length),
+    0,
+  );
+  if (rerolls > spares) throw new Broken();
 
   // The sets: exactly the bits they need, then nothing but the zero bits that pad the last byte.
   const bitsNeeded = conquered * widths.reduce((a, b) => a + b, 0);
@@ -214,7 +227,7 @@ function read(text: string, catalogues: Record<string, Catalogue>): ShareResult 
     });
     const [kit = '', head = '', clothes = '', shoes = ''] = ids;
     let mode: string | undefined;
-    if (format === 2) {
+    if (format >= 2) {
       const index = readBits(widths[4] ?? 0);
       if (index > modes.length) throw new Broken();
       mode = modes[index - 1]?.id;
@@ -233,6 +246,7 @@ function read(text: string, catalogues: Record<string, Catalogue>): ShareResult 
       total: catalogue.kits.length,
       lives,
       resets,
+      rerolls,
       complete: conquered === catalogue.kits.length,
       sets,
     },

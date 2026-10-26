@@ -86,6 +86,8 @@ export function SharedRunPage({ home }: { home: string }) {
               ['shared.statToGo', run.total - run.conquered],
               ['shared.statLives', run.lives],
               ['shared.statResets', run.resets],
+              // Only for a run that re-rolled: the row stays the design's four numbers otherwise.
+              ...(run.rerolls > 0 ? [['shared.statRerolls', run.rerolls] as const] : []),
             ] as const
           ).map(([id, value]) => (
             <div key={id}>
