@@ -109,7 +109,7 @@
   "shared.complete": "Completa",
   "shared.inProgress": "Em andamento",
   "shared.sets": "Conjuntos conquistados",
-  "shared.set": "{number}. {kit}, com {head}, {clothes} e {shoes}",
+  "shared.set": "{number}. {kit}, com {head}, {clothes} e {shoes}{recorded, select, true {, vencido em {mode}} other {}}",
   "shared.noSets": "Nenhum kit conquistado ainda.",
   "shared.backToRun": "Voltar para a sua run",
   "shared.startOwn": "Começar a sua própria run",

@@ -109,7 +109,7 @@
   "shared.complete": "已完成",
   "shared.inProgress": "進行中",
   "shared.sets": "已征服的組合",
-  "shared.set": "{number}. {kit},搭配 {head}、{clothes} 和 {shoes}",
+  "shared.set": "{number}. {kit},搭配 {head}、{clothes} 和 {shoes}{recorded, select, true {,在{mode}中獲勝} other {}}",
   "shared.noSets": "還沒有征服任何武器。",
   "shared.backToRun": "回到你的挑戰",
   "shared.startOwn": "開始你自己的挑戰",

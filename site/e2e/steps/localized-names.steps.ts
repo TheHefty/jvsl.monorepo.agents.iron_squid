@@ -8,7 +8,7 @@ import { encodeShare } from '../../src/share/link';
 import { Given, Then, When } from '../fixtures';
 import { buildState } from '../support/build-state';
 import { messageIn } from '../support/messages';
-import { playRun, seedRun, winsThenPlaying } from '../support/seed';
+import { conquestMode, playRun, seedRun, winsThenPlaying } from '../support/seed';
 
 const version = '11.3.0';
 const catalogue = JSON.parse(
@@ -43,6 +43,8 @@ const sentence = (locale: string, state: RunState, n: number) => {
     head: name(state.order.head[n]),
     clothes: name(state.order.clothes[n]),
     shoes: name(state.order.shoes[n]),
+    recorded: String(conquestMode(state, n) !== undefined),
+    mode: name(conquestMode(state, n)),
   });
 };
 

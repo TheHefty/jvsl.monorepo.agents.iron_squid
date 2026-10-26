@@ -109,7 +109,7 @@
   "shared.complete": "Voltooid",
   "shared.inProgress": "Bezig",
   "shared.sets": "Veroverde sets",
-  "shared.set": "{number}. {kit}, met {head}, {clothes} en {shoes}",
+  "shared.set": "{number}. {kit}, met {head}, {clothes} en {shoes}{recorded, select, true {, gewonnen in {mode}} other {}}",
   "shared.noSets": "Nog geen wapen veroverd.",
   "shared.backToRun": "Terug naar je run",
   "shared.startOwn": "Zelf een run beginnen",

@@ -109,7 +109,7 @@
   "shared.complete": "Пройден",
   "shared.inProgress": "В процессе",
   "shared.sets": "Покорённые комплекты",
-  "shared.set": "{number}. {kit}, с {head}, {clothes} и {shoes}",
+  "shared.set": "{number}. {kit}, с {head}, {clothes} и {shoes}{recorded, select, true {, победа в режиме «{mode}»} other {}}",
   "shared.noSets": "Пока ничего не покорено.",
   "shared.backToRun": "Вернуться к своему забегу",
   "shared.startOwn": "Начать свой забег",

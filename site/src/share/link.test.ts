@@ -33,9 +33,10 @@ const valid = (): Packed => ({
   conquered: 2,
   lives: 1,
   resets: 0,
+  // Kit, head, clothes, shoes, and the mode of the conquest (format 2): 0 none, then the modes.
   sets: [
-    [0, 0, 0, 0],
-    [1, 1, 1, 1],
+    [0, 0, 0, 0, 0],
+    [1, 1, 1, 1, 1],
   ],
 });
 
@@ -59,6 +60,7 @@ describe('a share link', () => {
           head: s.order.head[i],
           clothes: s.order.clothes[i],
           shoes: s.order.shoes[i],
+          mode: 'Pnt',
         })),
       },
     });
@@ -114,7 +116,7 @@ describe('reading a share link', () => {
   it.each([
     ['nothing', ''],
     ['characters outside base64url', 'abc$def'],
-    ['a format it does not know', textOf(Uint8Array.of(2, 0))],
+    ['a format it does not know', textOf(Uint8Array.of(3, 0))],
   ])('refuses %s as broken', (_label, text) => {
     expect(decodeShare(text, catalogues)).toEqual(broken);
   });
@@ -129,7 +131,7 @@ describe('reading a share link', () => {
 
   it('refuses an index past the end of its catalogue list', () => {
     const p = valid();
-    p.sets[1] = [1, 300, 1, 1]; // 266 head pieces, written in 9 bits
+    p.sets[1] = [1, 300, 1, 1, 1]; // 266 head pieces, written in 9 bits
     expect(read(p)).toEqual(broken);
   });
 
@@ -178,5 +180,60 @@ describe('reading a share link', () => {
       }
       expect(run.lives).toBeGreaterThan(0);
     }
+  });
+});
+
+describe('the mode of each conquest (share-mode)', () => {
+  const modes = catalogue.modes.map((m) => m.id);
+  const win = (s: RunState, mode: string) => reportWin(s, { step: s.step, at, mode });
+  const lose = (s: RunState) => reportLoss(s, { step: s.step, at, mode: 'Pnt' });
+
+  it('carries the mode each set was conquered in', () => {
+    let s = startRun(catalogue, { name: undefined }, cryptoSource, at);
+    for (const mode of modes) s = win(s, mode);
+    const shared = decodeShare(encodeShare(s, catalogue), catalogues);
+    expect(shared.ok && shared.run.sets.map((set) => set.mode)).toEqual(modes);
+  });
+
+  it('keeps the mode of the conquest, not of a replay won since', () => {
+    let s = win(win(startRun(catalogue, { name: undefined }, cryptoSource, at), 'Vgl'), 'Vgl');
+    s = win(lose(s), 'Tcl'); // reset, then the first set replayed in another mode
+    const shared = decodeShare(encodeShare(s, catalogue), catalogues);
+    expect(shared.ok && shared.run.sets.map((set) => set.mode)).toEqual(['Vgl', 'Vgl']);
+  });
+
+  it('carries no mode for a set conquered before modes were recorded', () => {
+    const s = played(2);
+    const old = { ...s, log: s.log.map(({ mode: _mode, ...e }) => (void _mode, e)) };
+    const shared = decodeShare(encodeShare(old, catalogue), catalogues);
+    expect(shared.ok && shared.run.sets.map((set) => 'mode' in set)).toEqual([false, false]);
+  });
+
+  it('still reads a link made in format 1, its sets without a mode (failure 1)', () => {
+    const p = { ...valid(), sets: valid().sets.map((set) => set.slice(0, 4)) };
+    const shared = decodeShare(packShare(p, widthsOf(catalogue, 1), 1), catalogues);
+    expect(shared).toMatchObject({ ok: true, run: { name: 'Ivo', conquered: 2 } });
+    expect(shared.ok && shared.run.sets.map((set) => 'mode' in set)).toEqual([false, false]);
+  });
+
+  it('refuses a mode past the end of the catalogue modes (failure 2)', () => {
+    const p = valid();
+    p.sets[1] = [1, 1, 1, 1, modes.length + 1];
+    expect(decodeShare(packShare(p, widthsOf(catalogue)), catalogues)).toEqual({
+      ok: false,
+      reason: 'broken',
+    });
+  });
+
+  it('fits a complete run, every set in a mode, with the largest name in 2,000 characters (failure 3)', () => {
+    const name = '👩‍👩‍👧'.repeat(16) + '🦑'.repeat(3);
+    let s = startRun(catalogue, { name }, cryptoSource, at);
+    for (let n = 0; n < 160; n++) s = win(s, modes[n % modes.length] ?? 'Pnt');
+    const link = site + encodeShare(s, catalogue);
+    expect(link.length).toBeLessThanOrEqual(2000);
+    expect(decodeShare(encodeShare(s, catalogue), catalogues)).toMatchObject({
+      ok: true,
+      run: { name, conquered: 160, complete: true },
+    });
   });
 });

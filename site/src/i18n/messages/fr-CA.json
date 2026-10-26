@@ -109,7 +109,7 @@
   "shared.complete": "Terminé",
   "shared.inProgress": "En cours",
   "shared.sets": "Ensembles conquis",
-  "shared.set": "{number}. {kit}, avec {head}, {clothes} et {shoes}",
+  "shared.set": "{number}. {kit}, avec {head}, {clothes} et {shoes}{recorded, select, true {, gagné en {mode}} other {}}",
   "shared.noSets": "Aucune arme conquise pour l’instant.",
   "shared.backToRun": "Retour à votre défi",
   "shared.startOwn": "Commencer votre propre défi",

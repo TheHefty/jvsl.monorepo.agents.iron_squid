@@ -109,7 +109,7 @@
   "shared.complete": "Completado",
   "shared.inProgress": "En curso",
   "shared.sets": "Conjuntos conquistados",
-  "shared.set": "{number}. {kit}, con {head}, {clothes} y {shoes}",
+  "shared.set": "{number}. {kit}, con {head}, {clothes} y {shoes}{recorded, select, true {, ganado en {mode}} other {}}",
   "shared.noSets": "Todavía no hay ninguna arma conquistada.",
   "shared.backToRun": "Volver a tu reto",
   "shared.startOwn": "Empezar tu propio reto",

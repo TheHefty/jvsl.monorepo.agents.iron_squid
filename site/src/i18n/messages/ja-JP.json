@@ -109,7 +109,7 @@
   "shared.complete": "達成",
   "shared.inProgress": "挑戦中",
   "shared.sets": "制覇したセット",
-  "shared.set": "{number}. {kit}、{head}、{clothes}、{shoes}",
+  "shared.set": "{number}. {kit}、{head}、{clothes}、{shoes}{recorded, select, true {、{mode}で勝利} other {}}",
   "shared.noSets": "まだ制覇したブキはありません。",
   "shared.backToRun": "自分のチャレンジに戻る",
   "shared.startOwn": "自分のチャレンジを始める",

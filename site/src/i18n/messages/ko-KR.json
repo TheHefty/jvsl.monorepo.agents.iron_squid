@@ -109,7 +109,7 @@
   "shared.complete": "완료",
   "shared.inProgress": "진행 중",
   "shared.sets": "정복한 세트",
-  "shared.set": "{number}. {kit}, {head}, {clothes}, {shoes}",
+  "shared.set": "{number}. {kit}, {head}, {clothes}, {shoes}{recorded, select, true {, {mode}에서 승리} other {}}",
   "shared.noSets": "아직 정복한 무기가 없습니다.",
   "shared.backToRun": "내 도전으로 돌아가기",
   "shared.startOwn": "나만의 도전 시작",

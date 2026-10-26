@@ -35,6 +35,11 @@ export function playRun(
   return s;
 }
 
+// The mode set n was conquered in, as the share link carries it: that of its win that was not a
+// replay (share-mode).
+export const conquestMode = (state: RunState, n: number) =>
+  state.log.find((e) => e.draw === n && e.result === 'win' && !e.replay)?.mode;
+
 // n wins: a win draws the next set at once, so the player is then playing a new set.
 export const winsThenPlaying = (n: number): Play[] => Array.from({ length: n }, () => 'win');
 
