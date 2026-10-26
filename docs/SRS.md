@@ -51,53 +51,53 @@ could look at the running site and say whether it holds.
 - **FR-11** A player may give the run a display name of up to 30 characters, and of at most 300
   bytes in UTF-8, so the longest name still fits in a share link (NFR-P2). It is optional, and the
   site works the same without one.
-- **FR-12** Each new set is drawn at random: a kit not yet conquered in this run, and one headgear,
-  one clothing and one shoes piece not yet used in this run.
-- **FR-13** A gear piece, once drawn for a new set, is never drawn for another new set in the same
-  run. After a reset, the replays wear the gear the conquered sets were won with, dealt out again
-  among them (FR-18): no unused piece is spent on a replay.
+- **FR-12** Each new set is drawn at random: a kit not yet conquered since the run started or last
+  reset, and one headgear, one clothing and one shoes piece not yet used since then.
+- **FR-13** A gear piece, once drawn, is never drawn again before the next reset. A reset (FR-18)
+  draws every piece of the catalogue again.
 - **FR-14** A drawn set cannot be re-drawn, skipped or swapped, except for the gear re-roll of
   FR-25. Reloading the page, closing the browser or opening the site in a new tab shows the same
-  set. The order of every draw in a run, re-rolls included, is fixed when the run starts, so undoing
-  and re-reporting a result (FR-20) never changes which set comes next. The replays of a reset
-  (FR-18) are fixed the moment the reset happens: undoing the loss that caused it and reporting it
-  again brings the same replays, in the same order, with the same gear.
+  set. The order of every draw, re-rolls included, is fixed when the run starts and again at each
+  reset, so undoing and re-reporting a result (FR-20) never changes which set comes next. A reset's
+  new draw (FR-18) is fixed the moment the reset happens: undoing the loss that caused it and
+  reporting it again brings the same draw.
 - **FR-15** The player reports the result of each match as a win or a loss, and the mode it was
   played in: Turf War, Splat Zones, Tower Control, Rainmaker, Clam Blitz or Tricolor Turf War. A
   result is recorded only once its mode is chosen; dismissing the choice records nothing.
 - **FR-16** A run starts with **1 life**. The player earns **1 life for every 10 wins** since the
-  run started or since its last reset, whichever is later. Wins during a replay count.
+  run started or since its last reset, whichever is later.
 - **FR-17** A loss costs one life. If lives remain, the player plays the same set again.
-- **FR-18** When a loss leaves **0 lives**, the run resets and the player has 1 life. The player
-  then replays the conquered kits in a new random order, drawn at each reset. The gear those kits
-  were last won with is dealt out again among them at random, one headgear, clothing and shoes to
-  each, so a replay pairs a kit with gear it may never have worn. Once every conquered kit has been
-  won again, the draws resume. A shared run (FR-41) shows each kit with the gear it was first
-  conquered with. A run started before this rule (amended 2026-10-26) keeps the earlier one: it
-  replays the conquered sets in the order they were first conquered, with the same gear; the run
-  records which of the two it follows.
-- **FR-19** During a replay, the site makes clear that the set is a replay, and how many conquered
-  sets remain before new draws.
+- **FR-18** When a loss leaves **0 lives**, the run resets: every kit conquered is lost, the run
+  draws a new order of every kit and of every gear piece from the whole catalogue, as when it
+  started, and the player has 1 life. The run keeps its resets, its matches and its log. A run
+  started before this rule keeps the reset it began with, and the run records which it follows:
+  begun before 2026-10-26's first amendment, it replays the conquered sets in the order they were
+  conquered, with the same gear; begun between the two amendments of 2026-10-26, it replays the
+  conquered kits in a new order, with the gear they were last won with dealt out again among them,
+  and a shared run shows each kit with the gear it was first conquered with.
+- **FR-19** In a run that replays (FR-18, earlier rules), during a replay the site makes clear that
+  the set is a replay, and how many conquered sets remain before new draws.
 - **FR-20** The player can undo the last reported result. The undo is available until the next
   result is reported, and it returns lives, the set and the progress exactly as they were before.
-- **FR-21** The run is complete when every kit in the catalogue is conquered. The site then says so,
-  and shows the number of matches, wins, losses and resets it took.
-- **FR-22** At any moment the site shows: kits conquered out of the total, lives, wins towards the
-  next life, the current set, and the number of resets so far.
+- **FR-21** The run is complete when every kit in the catalogue is conquered since the run started or
+  last reset. The site then says so, and shows the number of matches, wins, losses and resets it
+  took.
+- **FR-22** At any moment the site shows: kits conquered since the run started or last reset, out
+  of the total, lives, wins towards the next life, the current set, and the number of resets so
+  far.
 - **FR-23** After a win, the site says which set was conquered and shows the next set at once.
 - **FR-24** The run keeps a log of every reported match, in the order played: the set, the result,
   the mode, the lives left after it, whether it was a replay, and when it was reported; a reset is
   marked where it happened, and so is every gear piece re-rolled away (FR-25). The player can read
   the whole log, newest first. Undoing a result (FR-20) removes its entry. A match reported before
   modes were recorded says its mode was not recorded.
-- **FR-25** On a newly drawn set, or on a replay (FR-18), before any result is reported for it, the
-  player may re-roll its headgear, clothing or shoes, one slot at a time and as many times as they
-  like. The kit is never re-rolled. The piece re-rolled away is spent: it counts as used in the run
-  (FR-13) and is not dealt out again at a later reset; the piece re-rolled to takes its place. A
-  re-roll is refused, saying why, when the slot has no more unused pieces than there are kits still
-  to draw after the current one, so that the run can always be finished. A re-roll cannot be
-  undone. In a run that follows the earlier reset (FR-18), a replayed set keeps its gear and cannot
-  be re-rolled.
+- **FR-25** On a newly drawn set, before any result is reported for it, the player may re-roll its
+  headgear, clothing or shoes, one slot at a time and as many times as they like. The kit is never
+  re-rolled. The piece re-rolled away is spent until the next reset (FR-13). A re-roll is refused,
+  saying why, when the slot has no more unused pieces than there are kits still to draw after the
+  current one, so that the run can always be finished. A re-roll cannot be undone. In a run that
+  follows an earlier reset (FR-18), the re-roll applies as that rule had it: on a replay of the
+  reshuffled reset, before its first result; never on a replay of the earliest one.
 
 ### Keeping progress
 
@@ -117,7 +117,8 @@ could look at the running site and say whether it holds.
 
 - **FR-40** The player can copy a link that shows the run as it is at that moment.
 - **FR-41** Anyone who opens the link sees the run, read-only: its display name if any, kits
-  conquered out of the total, the conquered sets in order with the mode each was won in, current
+  conquered since the run started or last reset out of the total, those sets in the order conquered
+  with the mode each was won in, current
   lives, resets, how many gear pieces were re-rolled away (FR-25), whether it is complete, its run
   log (FR-45) and its longest winning streak (FR-46). Nothing on that view can change the run, or the
   visitor's own run.
@@ -366,6 +367,12 @@ Before the epics that add screens, so that they are built in the design rather t
   when it does not all fit, and the shared view shows it with the longest winning streak.
   (FR-41, FR-45, FR-46, NFR-P2)
 
+### `reset-restart` — A reset starts the run over from nothing, with a new draw of every kit and gear.
+
+- **`restart-on-reset`** — Losing the last life loses every kit conquered and draws the whole run
+  again; runs begun under an earlier reset keep it. (FR-12, FR-13, FR-14, FR-16, FR-18, FR-21,
+  FR-22, FR-25, FR-41)
+
 ## Alternatives considered
 
 - **Do nothing, and run the challenge on a spreadsheet** — rejected: the random draw, the
@@ -462,3 +469,16 @@ a shared run shows its run log and its longest winning streak (FR-41, FR-45, FR-
 says nothing about when the player played and the data map is unchanged; the 2,000-character limit
 of NFR-P2 stays, a link carrying the most recent matches that fit when a long run's log does not;
 and a streak that counts replay wins.
+
+Amended again on 2026-10-26 by João Lima, with the charter: a reset starts the run over from nothing
+(FR-18). The owner played the reshuffled reset of `reset-reshuffle` and found its replays brought
+back the weapons already won, where a new draw was wanted. Every kit conquered is lost at a reset,
+and every kit and gear piece is drawn again from the whole catalogue; the run keeps its resets, its
+matches and its log. The owner chose the same run with a new draw over a new run, the whole
+catalogue's gear again over pieces spent for good (which would leave a long run unable to finish),
+and the earlier resets kept for the runs that began under them. It amends FR-12, FR-13, FR-14,
+FR-16, FR-18, FR-19, FR-21, FR-22, FR-25 and FR-41 and adds the epic `reset-restart`. Replays now
+exist only in runs begun under the earlier rules, which the site still plays. The scenarios that
+assert replays for a new run change in the task that starts `restart-on-reset`, when the new ones
+are seen failing.
+
