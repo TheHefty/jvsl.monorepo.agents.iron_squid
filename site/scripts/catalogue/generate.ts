@@ -106,7 +106,12 @@ if (earlier) {
   }
 }
 
-const items = [...catalogue.kits, ...gearSlots.flatMap((s) => catalogue.gear[s])];
+// Brand icons are game images too: fetched by the build and checked against these digests.
+const items = [
+  ...catalogue.kits,
+  ...gearSlots.flatMap((s) => catalogue.gear[s]),
+  ...catalogue.brands,
+];
 let done = 0;
 const digests = await mapLimit(items, 8, async (item) => {
   const digest = sha256(await fetchBytes(base, `images/${item.image}`));
@@ -130,6 +135,7 @@ if (record) writeFileSync(pinFile, JSON.stringify(pin, null, 2) + '\n');
 console.log(
   `generate: ${catalogue.version}: ${catalogue.kits.length} kits, ` +
     gearSlots.map((s) => `${catalogue.gear[s].length} ${s}`).join(', ') +
+    `, ${catalogue.brands.length} brands` +
     `, ${catalogue.excluded.replicas.length} replicas and ${catalogue.excluded.unobtainable.length} unobtainable left out; ` +
     `${digests.length} image digests`,
 );

@@ -41,17 +41,18 @@ Then('every gear piece in the catalogue has its official en-US name and its imag
   publishedWithImage(Object.values(catalogue.gear).flat());
 });
 
-// A one-kit catalogue served by a stand-in datamine whose single kit image is wrong or missing.
-// The bytes are generated: not even a fixture may be a game image.
+// A one-kit catalogue served by a stand-in datamine whose kit image, or brand icon, is wrong or
+// missing. The bytes are generated: not even a fixture may be a game image.
 const kitImage = 'weapon/Wst_K_00.png';
+const brandImage = 'brand/B00.png';
 const gearImages = { head: 'gear/Hed_G.png', clothes: 'gear/Clt_G.png', shoes: 'gear/Shs_G.png' };
-const lockedKit = Buffer.from('a kit image');
+const lockedBad = Buffer.from('the locked image');
 const servedBody = (p: string) => Buffer.from(`image ${p}`);
 
-async function badImage(serve: 'altered' | 'missing') {
+async function badImage(serve: 'altered' | 'missing', bad = kitImage) {
   const server = createServer((req, res) => {
     const p = (req.url ?? '').replace(/^\/images\//, '');
-    if (p !== kitImage) return res.end(servedBody(p));
+    if (p !== bad) return res.end(servedBody(p));
     if (serve === 'missing') {
       res.writeHead(404);
       return res.end();
@@ -62,21 +63,25 @@ async function badImage(serve: 'altered' | 'missing') {
   const base = `http://localhost:${(server.address() as AddressInfo).port}/`;
   const dir = tempDir('catalogue-');
   const item = (id: string, image: string) => ({ id, image });
+  const piece = (id: string, image: string) => ({ id, image, brand: 'B00' });
   const c: Catalogue = {
     version: '0.0.1',
     datamine: { repo: 'fixture', commit: 'x', dataFolder: '1' },
     kits: [item('K_00', kitImage)],
     gear: {
-      head: [item('Hed_G', gearImages.head)],
-      clothes: [item('Clt_G', gearImages.clothes)],
-      shoes: [item('Shs_G', gearImages.shoes)],
+      head: [piece('Hed_G', gearImages.head)],
+      clothes: [piece('Clt_G', gearImages.clothes)],
+      shoes: [piece('Shs_G', gearImages.shoes)],
     },
+    brands: [item('B00', brandImage)],
     excluded: { replicas: [], unobtainable: [] },
     modes: [{ id: 'Pnt' }],
   };
   const lock = {
-    [kitImage]: sha256(lockedKit),
-    ...Object.fromEntries(Object.values(gearImages).map((p) => [p, sha256(servedBody(p))])),
+    ...Object.fromEntries(
+      [kitImage, brandImage, ...Object.values(gearImages)].map((p) => [p, sha256(servedBody(p))]),
+    ),
+    [bad]: sha256(lockedBad),
   };
   mkdirSync(join(dir, c.version));
   writeFileSync(join(dir, c.version, 'catalogue.json'), JSON.stringify(c));
@@ -84,10 +89,9 @@ async function badImage(serve: 'altered' | 'missing') {
   // Named in every locale, so the build gets as far as the images it is meant to fail on.
   mkdirSync(join(dir, c.version, 'names'));
   const names = Object.fromEntries(
-    [...c.kits, ...c.gear.head, ...c.gear.clothes, ...c.gear.shoes, ...c.modes].map((i) => [
-      i.id,
-      i.id,
-    ]),
+    [...c.kits, ...c.gear.head, ...c.gear.clothes, ...c.gear.shoes, ...c.brands, ...c.modes].map(
+      (i) => [i.id, i.id],
+    ),
   );
   for (const locale of locales)
     writeFileSync(
@@ -103,9 +107,9 @@ async function badImage(serve: 'altered' | 'missing') {
   };
   buildState.after = () => new Promise<void>((r) => server.close(() => r()));
   buildState.expected = {
-    file: kitImage,
-    digest: sha256(lockedKit),
-    address: `${base}images/${kitImage}`,
+    file: bad,
+    digest: sha256(lockedBad),
+    address: `${base}images/${bad}`,
   };
 }
 
@@ -141,4 +145,33 @@ Then('no image from the game is tracked in the repository', async () => {
   const r = await run('npx', ['tsx', 'scripts/catalogue/no-game-images.ts']);
   expect(r.status, r.output).toBe(0);
   expect(r.output).toContain('no tracked file is a game image');
+});
+
+// gear-brand: brand icons are game images like any other, fetched and checked by the build.
+Given('a brand icon whose downloaded bytes do not match the committed digest', async () => {
+  await badImage('altered', brandImage);
+});
+
+Then('the build fails, naming the icon, the expected digest and the one received', async () => {
+  const { file, digest } = expectedFailure();
+  expect(file).toBe(brandImage);
+  expect(buildState.result?.status, buildState.result?.output).not.toBe(0);
+  expect(buildState.result?.output).toContain(
+    `game-images: ${file} does not match its digest: expected ${digest}, ` +
+      `received ${sha256(Buffer.from('not the locked bytes'))}`,
+  );
+});
+
+Then('no file tracked in the repository has the bytes of a brand icon', async () => {
+  // The check covers brand icons because each one has a digest in the lock it reads.
+  const missing = catalogue.brands.filter((b) => !lock[b.image]).map((b) => b.id);
+  expect(missing).toEqual([]);
+  expect(catalogue.brands.length).toBeGreaterThan(0);
+  const r = await run('npx', ['tsx', 'scripts/catalogue/no-game-images.ts']);
+  expect(r.status, r.output).toBe(0);
+  expect(r.output).toContain('no tracked file is a game image');
+});
+
+Then('every brand icon is served by the site', async () => {
+  publishedWithImage(catalogue.brands);
 });

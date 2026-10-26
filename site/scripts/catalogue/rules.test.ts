@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { catalogueOrderDigest } from '../../src/catalogue/order';
 import { buildCatalogue, buildNames, type Source } from './rules';
 
 const weapon = (id: string, sub: string, special: string, type = 'Versus') => ({
@@ -7,7 +8,11 @@ const weapon = (id: string, sub: string, special: string, type = 'Versus') => ({
   SubWeapon: `Work/Gyml/${sub}.spl__WeaponInfoSub.gyml`,
   SpecialWeapon: `Work/Gyml/${special}.spl__WeaponInfoSpecial.gyml`,
 });
-const gear = (id: string, howToGet = 'Shop') => ({ __RowId: id, HowToGet: howToGet });
+const gear = (id: string, howToGet = 'Shop', brand = 'B01') => ({
+  __RowId: id,
+  HowToGet: howToGet,
+  Brand: brand,
+});
 
 function source(overrides: Partial<Source> = {}): Source {
   return {
@@ -21,9 +26,9 @@ function source(overrides: Partial<Source> = {}): Source {
       weapon('Shooter_Normal_Coop', 'Bomb_Suction', 'SpUltraShot', 'Coop'),
     ],
     gear: {
-      head: [gear('Hed_AMB000'), gear('Hed_MSN000', 'Impossible')],
-      clothes: [gear('Clt_AMB000', 'Catalog')],
-      shoes: [gear('Shs_AMB000', 'Other'), gear('Shs_SDODR000', 'Impossible')],
+      head: [gear('Hed_AMB000', 'Shop', 'B10'), gear('Hed_MSN000', 'Impossible', 'None')],
+      clothes: [gear('Clt_AMB000', 'Catalog', 'B00')],
+      shoes: [gear('Shs_AMB000', 'Other', 'B10'), gear('Shs_SDODR000', 'Impossible', 'None')],
     },
     names: {
       'CommonMsg/Weapon/WeaponName_Main': {
@@ -35,6 +40,7 @@ function source(overrides: Partial<Source> = {}): Source {
       'CommonMsg/Gear/GearName_Head': { AMB000: 'Squid Hairclip', MSN000: 'Hero Headset' },
       'CommonMsg/Gear/GearName_Clothes': { AMB000: 'School Uniform A' },
       'CommonMsg/Gear/GearName_Shoes': { AMB000: 'School Shoes', SDODR000: 'Side Order shoes' },
+      'CommonMsg/Gear/GearBrandName': { B00: 'SquidForce', B01: 'Zink', B10: 'Zekko' },
       'CommonMsg/VS/VSRuleName': {
         Pnt: 'Turf War',
         Pnt_2L: 'Turf\nWar',
@@ -76,7 +82,9 @@ describe('buildCatalogue', () => {
   it('keeps the gear a player can wear online, and records what it left out', () => {
     const c = buildCatalogue(source());
     expect(c.gear.head.map((g) => g.id)).toEqual(['Hed_AMB000']);
-    expect(c.gear.shoes).toEqual([{ id: 'Shs_AMB000', image: 'gear/Shs_AMB000.png' }]);
+    expect(c.gear.shoes).toEqual([
+      { id: 'Shs_AMB000', image: 'gear/Shs_AMB000.png', brand: 'B10' },
+    ]);
     expect(c.excluded.unobtainable).toEqual(['Hed_MSN000', 'Shs_SDODR000']);
   });
 
@@ -88,6 +96,8 @@ describe('buildCatalogue', () => {
       Hed_AMB000: 'Squid Hairclip',
       Clt_AMB000: 'School Uniform A',
       Shs_AMB000: 'School Shoes',
+      B00: 'SquidForce',
+      B10: 'Zekko',
       Pnt: 'Turf War',
       Var: 'Splat Zones',
       Vlf: 'Tower Control',
@@ -135,5 +145,45 @@ describe('buildCatalogue', () => {
     expect(() => buildNames(buildCatalogue(s), s.names, 'data/language/KRko.json')).toThrow(
       'catalogue: Vgl has no name in data/language/KRko.json',
     );
+  });
+
+  it('gives every piece its brand, and lists each brand worn once, with its icon (gear-brand)', () => {
+    const c = buildCatalogue(source());
+    expect(c.gear.head[0]?.brand).toBe('B10');
+    expect(c.gear.clothes[0]?.brand).toBe('B00');
+    expect(c.brands).toEqual([
+      { id: 'B00', image: 'brand/B00.png' },
+      { id: 'B10', image: 'brand/B10.png' },
+    ]);
+  });
+
+  it('refuses a piece a player can wear that has no brand, naming it (brand-catalogue, failure 3)', () => {
+    for (const brand of ['None', '', undefined]) {
+      const s = source();
+      s.gear.clothes = [{ __RowId: 'Clt_AMB000', HowToGet: 'Catalog', Brand: brand }];
+      expect(() => buildCatalogue(s), String(brand)).toThrow('catalogue: Clt_AMB000 has no brand');
+    }
+  });
+
+  it('refuses a brand with no name in a language file, naming both', () => {
+    const s = source();
+    delete s.names['CommonMsg/Gear/GearBrandName']?.B10;
+    expect(() => buildNames(buildCatalogue(s), s.names, 'data/language/EUde.json')).toThrow(
+      'catalogue: B10 has no name in data/language/EUde.json',
+    );
+  });
+
+  it('leaves the order of the items as it was: brands are not in a share link (failure 1)', () => {
+    const c = buildCatalogue(source());
+    const without = {
+      ...c,
+      gear: {
+        head: c.gear.head.map(({ id, image }) => ({ id, image })),
+        clothes: c.gear.clothes.map(({ id, image }) => ({ id, image })),
+        shoes: c.gear.shoes.map(({ id, image }) => ({ id, image })),
+      },
+      brands: [],
+    } as unknown as typeof c;
+    expect(catalogueOrderDigest(c)).toBe(catalogueOrderDigest(without));
   });
 });

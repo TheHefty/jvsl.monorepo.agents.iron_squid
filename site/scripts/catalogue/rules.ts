@@ -4,7 +4,7 @@
 import type { Catalogue, GearSlot } from '../../src/catalogue/types';
 
 type WeaponRow = { __RowId: string; Type?: string; SubWeapon?: string; SpecialWeapon?: string };
-type GearRow = { __RowId: string; HowToGet?: string };
+type GearRow = { __RowId: string; HowToGet?: string; Brand?: string };
 
 export type Source = {
   gameVersion: string;
@@ -66,15 +66,21 @@ export function buildCatalogue(source: Source): Catalogue {
         unobtainable.push(g.__RowId);
         return [];
       }
-      return [{ id: g.__RowId, image: `gear/${g.__RowId}.png` }];
+      // The datamine marks a piece without a brand "None"; one a player can wear must have one.
+      if (!g.Brand || g.Brand === 'None') throw new Error(`catalogue: ${g.__RowId} has no brand`);
+      return [{ id: g.__RowId, image: `gear/${g.__RowId}.png`, brand: g.Brand }];
     });
   const gear = { head: gearOf('head'), clothes: gearOf('clothes'), shoes: gearOf('shoes') };
+  const brands = [...new Set(Object.values(gear).flatMap((list) => list.map((g) => g.brand)))]
+    .sort()
+    .map((id) => ({ id, image: `brand/${id}.png` }));
 
   return {
     version: source.gameVersion,
     datamine: source.datamine,
     kits: kitRows.map((k) => ({ id: k.__RowId, image: `weapon/Wst_${k.__RowId}.png` })),
     gear,
+    brands,
     excluded: { replicas, unobtainable },
     modes: modeIds.map((id) => ({ id })),
   };
@@ -98,6 +104,8 @@ export function buildNames(
     const table = names[nameTables[slot]] ?? {};
     for (const g of catalogue.gear[slot]) add(g.id, table[gearKey(g.id)]);
   }
+  const brandNames = names['CommonMsg/Gear/GearBrandName'] ?? {};
+  for (const b of catalogue.brands) add(b.id, brandNames[b.id]);
   const modeNames = names['CommonMsg/VS/VSRuleName'] ?? {};
   for (const m of catalogue.modes) add(m.id, modeNames[m.id]);
   return out;

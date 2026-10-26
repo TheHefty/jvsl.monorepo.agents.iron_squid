@@ -5,11 +5,13 @@ import { catalogueProblems, nameProblems } from './check';
 const item = (id: string) => ({ id, image: `${id}.png` });
 const ids = (prefix: string, n: number) =>
   Array.from({ length: n }, (_, i) => item(`${prefix}${i}`));
+const pieces = (prefix: string, n: number) => ids(prefix, n).map((i) => ({ ...i, brand: 'B00' }));
 const cat = (kits: number, head: number, clothes: number, shoes: number): Catalogue => ({
   version: '11.3.0',
   datamine: { repo: 'r', commit: 'c', dataFolder: '1130' },
   kits: ids('K', kits),
-  gear: { head: ids('H', head), clothes: ids('C', clothes), shoes: ids('S', shoes) },
+  gear: { head: pieces('H', head), clothes: pieces('C', clothes), shoes: pieces('S', shoes) },
+  brands: [{ id: 'B00', image: 'brand/B00.png' }],
   excluded: { replicas: [], unobtainable: [] },
   modes: [{ id: 'M0' }],
 });
@@ -33,7 +35,7 @@ describe('catalogueProblems', () => {
 
   it('refuses an id used twice', () => {
     const c = cat(2, 2, 2, 2);
-    c.gear.head[1] = item('K0');
+    c.gear.head[1] = { ...item('K0'), brand: 'B00' };
     expect(catalogueProblems(c)).toEqual(['catalogue 11.3.0: the id K0 is used more than once']);
   });
 
@@ -44,7 +46,7 @@ describe('catalogueProblems', () => {
 
 describe('nameProblems', () => {
   const c = cat(1, 1, 1, 1);
-  const all = { K0: 'Kit', H0: 'Hat', C0: 'Coat', S0: 'Shoes', M0: 'Mode' };
+  const all = { K0: 'Kit', H0: 'Hat', C0: 'Coat', S0: 'Shoes', M0: 'Mode', B00: 'Brand' };
 
   it('accepts names for every item in every locale', () => {
     expect(nameProblems(c, { 'en-US': all, 'ko-KR': all }, ['en-US', 'ko-KR'])).toEqual([]);
@@ -78,5 +80,29 @@ describe('catalogueProblems, for modes', () => {
     const c = cat(1, 1, 1, 1);
     c.modes = [];
     expect(catalogueProblems(c)).toEqual(['catalogue 11.3.0: no modes']);
+  });
+});
+
+describe('catalogueProblems, for brands (gear-brand)', () => {
+  it('refuses a piece whose brand the catalogue does not list, naming both', () => {
+    const c = cat(1, 1, 1, 1);
+    c.gear.shoes[0] = { ...item('S0'), brand: 'B42' };
+    expect(catalogueProblems(c)).toEqual([
+      'catalogue 11.3.0: S0 wears the brand B42, which is not listed',
+    ]);
+  });
+
+  it('refuses a brand with no icon', () => {
+    const c = cat(1, 1, 1, 1);
+    c.brands = [{ id: 'B00', image: '' }];
+    expect(catalogueProblems(c)).toEqual(['catalogue 11.3.0: B00 has no image']);
+  });
+
+  it('names a brand without a name in a locale', () => {
+    const c = cat(1, 1, 1, 1);
+    const named = { K0: 'Kit', H0: 'Hat', C0: 'Coat', S0: 'Shoes', M0: 'Mode' };
+    expect(nameProblems(c, { 'ja-JP': named }, ['ja-JP'])).toEqual([
+      'catalogue 11.3.0: B00 has no ja-JP name',
+    ]);
   });
 });
