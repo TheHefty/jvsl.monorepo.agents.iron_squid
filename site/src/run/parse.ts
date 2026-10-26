@@ -77,6 +77,9 @@ function state(v: unknown, catalogues: Record<string, Catalogue>, schema: 1 | 2)
     if (!valid) throw new Refused('not-a-run', 'the name is not a valid display name');
     name = v.name as string;
   }
+  // Before match-modes a win stayed on show until the player asked for the next set. Such a run
+  // loads on that next set, which its order already holds: nothing is drawn (failure 2).
+  const left = v.phase === 'conquered' && conquered < kits.length;
   return {
     schema: 2,
     catalogueVersion: catalogue.version,
@@ -84,8 +87,8 @@ function state(v: unknown, catalogues: Record<string, Catalogue>, schema: 1 | 2)
     startedAt: v.startedAt,
     order: { kits, ...gear },
     conquered,
-    cursor,
-    phase: v.phase,
+    cursor: left ? cursor + 1 : cursor,
+    phase: left ? 'playing' : v.phase,
     lives: count(v.lives, 'lives'),
     winsSinceReset: count(v.winsSinceReset, 'winsSinceReset'),
     resets: count(v.resets, 'resets'),
@@ -104,7 +107,7 @@ function previousState(v: unknown, catalogues: Record<string, Catalogue>, schema
   }
 }
 
-function logEntries(v: unknown, draws: number, matches: number): LogEntry[] {
+function logEntries(v: unknown, draws: number, matches: number, modes: string[]): LogEntry[] {
   if (!Array.isArray(v) || v.length > matches)
     throw new Refused('not-a-run', 'the log is not a log');
   return v.map((e: unknown, i) => {
@@ -116,10 +119,14 @@ function logEntries(v: unknown, draws: number, matches: number): LogEntry[] {
     if (typeof e.at !== 'string' || (e.result !== 'win' && e.result !== 'loss')) throw bad();
     if (typeof e.replay !== 'boolean' || typeof e.reset !== 'boolean' || livesAfter < 1)
       throw bad();
+    // No mode is a result from before modes were recorded; a mode is one of the catalogue's.
+    if (e.mode !== undefined && !(typeof e.mode === 'string' && modes.includes(e.mode)))
+      throw new Refused('not-a-run', `log entry ${i} names a mode the catalogue does not have`);
     return {
       at: e.at,
       draw,
       result: e.result,
+      ...(e.mode === undefined ? {} : { mode: e.mode }),
       livesAfter,
       conqueredAfter,
       replay: e.replay,
@@ -148,7 +155,12 @@ export function parseRun(
     let log: LogEntry[] = [];
     let logSince = now;
     if (schema === 2) {
-      log = logEntries(input.log, core.order.kits.length, core.matches);
+      log = logEntries(
+        input.log,
+        core.order.kits.length,
+        core.matches,
+        catalogues[core.catalogueVersion]?.modes.map((m) => m.id) ?? [],
+      );
       if (typeof input.logSince !== 'string')
         throw new Refused('not-a-run', 'the run has no log date');
       logSince = input.logSince;

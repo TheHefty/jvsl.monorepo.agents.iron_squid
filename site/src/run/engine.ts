@@ -7,12 +7,14 @@ import { shuffle, type RandomSource } from './random';
 type Order = { kits: string[]; head: string[]; clothes: string[]; shoes: string[] };
 
 // One reported result (FR-24): which draw of the order it was (so its kit and gear are the run's own
-// order[draw]), win or loss, the lives left and the kits conquered after it, and whether it was a
-// replay or reset the run.
+// order[draw]), win or loss, the mode it was played in, the lives left and the kits conquered after
+// it, and whether it was a replay or reset the run. A result reported before the site recorded modes
+// has none, and none is invented for it.
 export type LogEntry = {
   at: string;
   draw: number;
   result: 'win' | 'loss';
+  mode?: string;
   livesAfter: number;
   conqueredAfter: number;
   replay: boolean;
@@ -35,7 +37,7 @@ export type RunState = {
   // below conquered, which reset-and-replay brings).
   conquered: number;
   cursor: number;
-  // After a win the conquered set stays on show until the player asks for the next (FR-23).
+  // A win moves straight on to the next set (FR-23); only the final win stays on show, as 'conquered'.
   phase: 'playing' | 'conquered';
   lives: number;
   winsSinceReset: number;
@@ -121,10 +123,18 @@ function snapshot(s: RunState): Snapshot {
   return rest;
 }
 
-const entry = (s: RunState, at: string, result: 'win' | 'loss', after: RunState): LogEntry => ({
+type Result = { step: number; at: string; mode: string };
+
+const entry = (
+  s: RunState,
+  { at, mode }: Result,
+  result: 'win' | 'loss',
+  after: RunState,
+): LogEntry => ({
   at,
   draw: s.cursor,
   result,
+  mode,
   livesAfter: after.lives,
   conqueredAfter: after.conquered,
   replay: s.cursor < s.conquered,
@@ -132,43 +142,36 @@ const entry = (s: RunState, at: string, result: 'win' | 'loss', after: RunState)
 });
 
 // A result's new state, with its log entry and the snapshot undo returns to.
-function recorded(s: RunState, at: string, result: 'win' | 'loss', after: RunState): RunState {
-  return { ...after, log: [...s.log, entry(s, at, result, after)], previous: snapshot(s) };
+function recorded(s: RunState, action: Result, result: 'win' | 'loss', after: RunState): RunState {
+  return { ...after, log: [...s.log, entry(s, action, result, after)], previous: snapshot(s) };
 }
 
-export function reportWin(s: RunState, action: { step: number; at: string }): RunState {
+// Every result names the mode it was played in (match-modes); which modes exist is the catalogue's,
+// and the screen offers only those.
+function checked(s: RunState, action: Result, result: 'win' | 'loss'): void {
   fresh(s, action);
+  if (!action.mode) throw new Error(`run: a ${result} is reported with the mode it was played in`);
   if (s.phase !== 'playing')
-    throw new Error('run: a win is reported while playing, not after a win');
-  return recorded(s, action.at, 'win', {
+    throw new Error(`run: a ${result} is reported while playing, not after the run is complete`);
+}
+
+// A win moves straight on to the next set, drawn when the run started (FR-14, FR-23), unless it
+// conquers the last kit: then the run is complete and its final set stays on show.
+export function reportWin(s: RunState, action: Result): RunState {
+  checked(s, action, 'win');
+  const conquered = s.cursor === s.conquered ? s.conquered + 1 : s.conquered;
+  const complete = conquered === s.order.kits.length;
+  return recorded(s, action, 'win', {
     ...s,
-    conquered: s.cursor === s.conquered ? s.conquered + 1 : s.conquered,
-    phase: 'conquered',
+    conquered,
+    cursor: complete ? s.cursor : s.cursor + 1,
+    phase: complete ? 'conquered' : 'playing',
     // Every 10th win since the run started or was reset earns a life (FR-16); replays count.
     lives: (s.winsSinceReset + 1) % 10 === 0 ? s.lives + 1 : s.lives,
     winsSinceReset: s.winsSinceReset + 1,
     matches: s.matches + 1,
     step: s.step + 1,
   });
-}
-
-export function nextSet(s: RunState, action: { step: number }): RunState {
-  fresh(s, action);
-  if (s.phase !== 'conquered')
-    throw new Error('run: the next set comes after a win, not after a win is undone');
-  if (s.cursor + 1 >= s.order.kits.length) {
-    throw new Error('run: every kit is conquered; there is no next set');
-  }
-  const { previous: _previous, ...rest } = s;
-  void _previous;
-  // Asking for the next set keeps the last result undoable: undo is lost only at the next result.
-  return {
-    ...rest,
-    phase: 'playing',
-    cursor: s.cursor + 1,
-    step: s.step + 1,
-    ...(s.previous ? { previous: s.previous } : {}),
-  };
 }
 
 // Undo exists only after a result, whose entry is the log's last: it goes with the result.
@@ -181,19 +184,17 @@ export function undo(s: RunState): RunState {
 // (FR-18): back to the first conquered set with 1 life, and what was conquered stays conquered. The
 // order is fixed and the conquered kits are its prefix, so the replay is the cursor walking from 0
 // again, each set with the gear it was won with.
-export function reportLoss(s: RunState, action: { step: number; at: string }): RunState {
-  fresh(s, action);
-  if (s.phase !== 'playing')
-    throw new Error('run: a loss is reported while playing, not after a win');
+export function reportLoss(s: RunState, action: Result): RunState {
+  checked(s, action, 'loss');
   if (s.lives > 1) {
-    return recorded(s, action.at, 'loss', {
+    return recorded(s, action, 'loss', {
       ...s,
       lives: s.lives - 1,
       matches: s.matches + 1,
       step: s.step + 1,
     });
   }
-  return recorded(s, action.at, 'loss', {
+  return recorded(s, action, 'loss', {
     ...s,
     cursor: 0,
     lives: 1,
@@ -207,8 +208,7 @@ export function reportLoss(s: RunState, action: { step: number; at: string }): R
 // How many more wins earn the next life (FR-22).
 export const winsToNextLife = (s: RunState) => 10 - (s.winsSinceReset % 10);
 
-// A replay: a set already conquered, being played again after a reset (FR-19). Only while playing:
-// once a set is won, cursor < conquered holds for a new conquest too, and the card says "conquered".
+// A replay: a set already conquered, being played again after a reset (FR-19).
 export const isReplay = (s: RunState) => s.phase === 'playing' && s.cursor < s.conquered;
 
 // Replays left before new draws, counting the one on screen: the fifth of 12 leaves 8.
@@ -216,7 +216,7 @@ export const replaysRemaining = (s: RunState) => (isReplay(s) ? s.conquered - s.
 
 // The end of a run (FR-21): every kit conquered. Only a win on a new draw raises the conquered count,
 // so a replay never ends a run, and a complete run is always on show after its final win, where no
-// result and no next set is accepted.
+// result is accepted.
 export const isComplete = (s: RunState) => s.conquered === s.order.kits.length;
 
 // What the run took. Wins and losses are counted from the log; when the log does not cover the whole

@@ -4,32 +4,39 @@
 import { readFileSync } from 'node:fs';
 import type { Page } from '@playwright/test';
 import type { Catalogue, NamesFile } from '../../src/catalogue/types';
-import { nextSet, reportLoss, reportWin, startRun, type RunState } from '../../src/run/engine';
+import { reportLoss, reportWin, startRun, type RunState } from '../../src/run/engine';
 import { cryptoSource } from '../../src/run/random';
 
 const catalogue = JSON.parse(
   readFileSync('src/catalogue/11.3.0/catalogue.json', 'utf8'),
 ) as Catalogue;
 
-export type Play = 'win' | 'loss' | 'next';
+export type Play = 'win' | 'loss';
 // In the past, as a real run's start always is: a run dated after the clock would make a log that
 // began on the day it was migrated look older than the run itself.
 const at = '2026-10-20T12:00:00.000Z';
 
-// `when` dates the results (the run log shows them); by default every result is dated `at`.
-export function playRun(plays: Play[], name?: string, when: string = at): RunState {
+// `when` dates the results (the run log shows them); by default every result is dated `at`. Every
+// result is played in `mode` (Turf War by default); null makes a run from before modes were
+// recorded, whose log entries carry none (match-modes).
+export function playRun(
+  plays: Play[],
+  name?: string,
+  when: string = at,
+  mode: string | null = 'Pnt',
+): RunState {
   let s = startRun(catalogue, { name }, cryptoSource, at);
   for (const play of plays) {
-    if (play === 'win') s = reportWin(s, { step: s.step, at: when });
-    else if (play === 'loss') s = reportLoss(s, { step: s.step, at: when });
-    else s = nextSet(s, { step: s.step });
+    const action = { step: s.step, at: when, mode: mode ?? 'Pnt' };
+    s = play === 'win' ? reportWin(s, action) : reportLoss(s, action);
   }
+  if (mode === null)
+    s = { ...s, log: s.log.map(({ mode: _mode, ...entry }) => (void _mode, entry)) };
   return s;
 }
 
-// n wins, each followed by the next set: the player is then playing a new set.
-export const winsThenPlaying = (n: number): Play[] =>
-  Array.from({ length: n }, () => ['win', 'next'] as Play[]).flat();
+// n wins: a win draws the next set at once, so the player is then playing a new set.
+export const winsThenPlaying = (n: number): Play[] => Array.from({ length: n }, () => 'win');
 
 // Writes the run into the page's storage before its first load, once: a reload keeps what the
 // player did since.

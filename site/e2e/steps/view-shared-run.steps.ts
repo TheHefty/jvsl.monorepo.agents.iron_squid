@@ -109,7 +109,7 @@ Then(
   'the visitor is not offered to report a result, undo or draw a set for it',
   async ({ page }) => {
     await expect(sets(page)).toHaveCount(3);
-    for (const id of ['run.won', 'run.lost', 'run.undo', 'run.next', 'start.roll', 'run.newRun']) {
+    for (const id of ['run.won', 'run.lost', 'run.undo', 'start.roll', 'run.newRun']) {
       await expect(page.getByRole('button', { name: message(id) }), id).toHaveCount(0);
     }
   },

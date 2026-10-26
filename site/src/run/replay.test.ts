@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import type { Catalogue } from '../catalogue/types';
 import {
   isReplay,
-  nextSet,
   replaysRemaining,
   reportLoss,
   reportWin,
@@ -26,16 +25,15 @@ const catalogue: Catalogue = {
   modes: ['Pnt', 'Var', 'Vlf', 'Vgl', 'Vcl', 'Tcl'].map((id) => ({ id })),
 };
 const at = '2026-10-25T12:00:00.000Z';
-const win = (s: RunState) => reportWin(s, { step: s.step, at });
-const lose = (s: RunState) => reportLoss(s, { step: s.step, at });
-const next = (s: RunState) => nextSet(s, { step: s.step });
-const winAndNext = (s: RunState, n: number) => {
-  for (let i = 0; i < n; i++) s = next(win(s));
+const win = (s: RunState) => reportWin(s, { step: s.step, at, mode: 'Pnt' });
+const lose = (s: RunState) => reportLoss(s, { step: s.step, at, mode: 'Pnt' });
+const winTimes = (s: RunState, n: number) => {
+  for (let i = 0; i < n; i++) s = win(s);
   return s;
 };
 // 12 conquered, then two losses: the 12 wins earned a second life, so the second loss resets.
 const afterReset = () =>
-  lose(lose(winAndNext(startRun(catalogue, { name: undefined }, cryptoSource, at), 12)));
+  lose(lose(winTimes(startRun(catalogue, { name: undefined }, cryptoSource, at), 12)));
 
 describe('a replay (FR-19)', () => {
   it('is a set already conquered, played again after a reset', () => {
@@ -45,24 +43,26 @@ describe('a replay (FR-19)', () => {
   });
 
   it('counts the set on screen: playing the fifth of 12, 8 remain', () => {
-    expect(replaysRemaining(winAndNext(afterReset(), 4))).toBe(8);
+    expect(replaysRemaining(winTimes(afterReset(), 4))).toBe(8);
   });
 
   it('on the last of 12, 1 remains; after it is won, the next set is a new draw', () => {
-    const last = winAndNext(afterReset(), 11);
+    const last = winTimes(afterReset(), 11);
     expect(replaysRemaining(last)).toBe(1);
-    const fresh = next(win(last));
+    const fresh = win(last);
     expect(isReplay(fresh)).toBe(false);
     expect(replaysRemaining(fresh)).toBe(0);
   });
 
   it('is never a new draw, nor the set just conquered by a new win', () => {
-    const s = winAndNext(startRun(catalogue, { name: undefined }, cryptoSource, at), 3);
+    const s = winTimes(startRun(catalogue, { name: undefined }, cryptoSource, at), 3);
     expect(isReplay(s)).toBe(false);
     expect(isReplay(win(s))).toBe(false);
   });
 
-  it('is not claimed for a replay just won, which is shown as conquered', () => {
-    expect(isReplay(win(afterReset()))).toBe(false);
+  it('moves on from a replay just won to the next replay (match-modes)', () => {
+    const s = win(afterReset());
+    expect(isReplay(s)).toBe(true);
+    expect(replaysRemaining(s)).toBe(11);
   });
 });

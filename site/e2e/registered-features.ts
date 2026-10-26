@@ -28,6 +28,14 @@ export const registrations: Registration[] = [
   { feature: 'found-and-previewed/seo-meta.feature' },
   { feature: 'found-and-previewed/link-previews.feature' },
   {
+    feature: 'match-modes/report-mode.feature',
+    pending: {
+      'A shared run shows the mode of each conquest': 'share-mode (is-84v.1.3)',
+      'Links made before modes still open': 'share-mode (is-84v.1.3)',
+      "A complete run's link is still short enough to paste anywhere": 'share-mode (is-84v.1.3)',
+    },
+  },
+  {
     feature: 'every-language/translate-interface.feature',
   },
 ];

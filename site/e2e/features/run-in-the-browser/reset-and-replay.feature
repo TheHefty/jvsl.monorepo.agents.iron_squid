@@ -41,7 +41,6 @@ Feature: Reset and replay
   Scenario: New draws resume after the replay
     Given a player replaying the last of 12 conquered sets
     When the player reports a win
-    And the player asks for the next set
     Then the player is given a set that is not one of the 12
     And none of its gear pieces has been drawn before in this run
 

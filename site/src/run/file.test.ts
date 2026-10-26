@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Catalogue } from '../catalogue/types';
-import { nextSet, reportLoss, reportWin, startRun, type RunState } from './engine';
+import { reportLoss, reportWin, startRun, type RunState } from './engine';
 import catalogue from './fixtures/catalogue-0.0.1.json';
 import { exportRun, MAX_FILE_BYTES, readRunFile } from './file';
 import { cryptoSource } from './random';
@@ -9,8 +9,8 @@ const catalogues = { '0.0.1': catalogue as Catalogue };
 const at = '2026-10-20T12:00:00.000Z';
 const played = (): RunState => {
   let s = startRun(catalogue as Catalogue, { name: 'Inkling Ivo' }, cryptoSource, at);
-  s = nextSet(reportWin(s, { step: s.step, at }), { step: s.step + 1 });
-  s = reportLoss(s, { step: s.step, at });
+  s = reportWin(s, { step: s.step, at, mode: 'Pnt' });
+  s = reportLoss(s, { step: s.step, at, mode: 'Pnt' });
   return s;
 };
 

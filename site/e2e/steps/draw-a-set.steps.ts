@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { expect, type Page } from '@playwright/test';
 import { IntlMessageFormat } from 'intl-messageformat';
 import { Given, Then, When, type World } from '../fixtures';
+import { report } from '../support/report';
 
 const catalogue = JSON.parse(readFileSync('src/i18n/messages/en-US.json', 'utf8')) as Record<
   string,
@@ -32,8 +33,10 @@ async function startRun(p: Page, name = '') {
   await p.getByRole('button', { name: message('start.roll') }).click();
 }
 
-const win = (p: Page) => p.getByRole('button', { name: message('run.won') }).click();
-const next = (p: Page) => p.getByRole('button', { name: message('run.next') }).click();
+// A win, in Turf War; the next set is drawn at once (match-modes).
+const win = (p: Page) => report(p, 'win');
+// The notice that names the set just conquered, now that the next set follows at once.
+const justConquered = (p: Page) => p.locator('.just-conquered');
 
 Given('a player with no run', async ({ page }) => {
   await page.goto('./en-US/');
@@ -109,8 +112,7 @@ When('a player starts a run without a display name', async ({ page }) => {
 Then('the run starts and is played the same way', async ({ page }) => {
   const set = await readSet(page);
   await win(page);
-  await expect(page.getByText(message('set.conquered'), { exact: true })).toBeVisible();
-  expect(await readSet(page)).toEqual(set);
+  await expect(justConquered(page)).toContainText(set[0] ?? '');
 });
 
 When('a player enters a display name of {int} characters', async ({ page }, n: number) => {
@@ -212,7 +214,6 @@ Given('a run with conquered sets', async ({ page, world }) => {
   for (let n = 0; n < 3; n++) {
     seen.push(await readSet(page));
     await win(page);
-    await next(page);
   }
   world.seen = seen;
 });
@@ -239,12 +240,7 @@ Given('the player has just reported a win', async ({ page, world }) => {
 });
 
 Then('the player is shown the set they just conquered', async ({ page, world }) => {
-  await expect(page.getByText(message('set.conquered'), { exact: true })).toBeVisible();
-  expect(await readSet(page)).toEqual(world.set);
-});
-
-When('the player asks for the next set', async ({ page }) => {
-  await next(page);
+  await expect(justConquered(page)).toContainText((world.set as string[])[0] ?? '');
 });
 
 Then('the player is shown the next set', async ({ page, world }) => {
@@ -256,14 +252,12 @@ Then('the player is shown the next set', async ({ page, world }) => {
 Given('the player has reported a win and been shown the next set', async ({ page, world }) => {
   await startRun(page);
   await win(page);
-  await next(page);
   world.set = await readSet(page);
 });
 
 When('the player undoes the win and reports the win again', async ({ page }) => {
   await page.getByRole('button', { name: message('run.undo') }).click();
   await win(page);
-  await next(page);
 });
 
 Then('the player is shown the same next set as before', async ({ page, world }) => {

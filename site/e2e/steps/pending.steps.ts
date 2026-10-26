@@ -18,5 +18,17 @@ export const pendingWith =
     pending(task)();
   };
 
-// No scenario is pending at the moment; these are what a task's pending steps are written with.
-void [Given, Then, When];
+const shareMode = pending('share-mode (is-84v.1.3)');
+Given('a player conquered a set in Tower Control', shareMode);
+When('a visitor opens a link to the run', shareMode);
+When('a visitor opens it', shareMode);
+Then('the conquered set is shown with Tower Control', shareMode);
+Given('a link to a run made before the site recorded modes', shareMode);
+Then('the run is shown as it was, with no mode on its sets', shareMode);
+Given(
+  'a complete run of {int} kits, each won in a mode, with a display name of {int} characters',
+  async ({}, kits: number, length: number) => {
+    void [kits, length];
+    shareMode();
+  },
+);

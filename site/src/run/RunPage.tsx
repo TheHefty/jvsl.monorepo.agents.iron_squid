@@ -5,7 +5,6 @@ import { NamesContext, useItemNames, useLoadedNames } from '../catalogue/names';
 import type { Catalogue, Item } from '../catalogue/types';
 import {
   currentSet,
-  nextSet,
   reportLoss,
   replaysRemaining,
   reportWin,
@@ -43,8 +42,8 @@ type View =
   | { kind: 'run'; state: RunState; revision: number }
   | { kind: 'unreadable'; detail: string };
 
-// The run, as the player plays it (story draw-a-set): start a run, see the set, report the win, ask
-// for the next set, undo the last result, start over only after confirming. The rules are the
+// The run, as the player plays it (story draw-a-set): start a run, see the set, report a result with
+// the mode it was played in, undo the last result, start over only after confirming. The rules are the
 // engine's; this page shows them and keeps every change in the store.
 export function RunPage({ newestVersion }: { newestVersion: string }) {
   // Kit and gear names in the page's locale, loaded beside the catalogues (story localized-names).
@@ -69,6 +68,8 @@ function RunView({ newestVersion, namesLoaded }: { newestVersion: string; namesL
   const [announcement, setAnnouncement] = useState('');
   const replacing = useRef<{ basedOn: number; unreadable: boolean } | undefined>(undefined);
   const lastAction = useRef(0);
+  // The result whose mode is being asked for (match-modes); nothing is recorded until one is chosen.
+  const [asking, setAsking] = useState<'win' | 'loss'>();
 
   const show = useCallback((result: LoadResult) => {
     if (result.status === 'ok')
@@ -102,21 +103,23 @@ function RunView({ newestVersion, namesLoaded }: { newestVersion: string; namesL
     };
   }, [intl, show]);
 
-  function announceSet(s: RunState) {
+  function setAnnouncementFor(s: RunState) {
     const c = catalogues?.[s.catalogueVersion];
-    if (!c) return;
+    if (!c) return '';
     const p = setPieces(c, s);
-    setAnnouncement(
-      intl.formatMessage(
-        { id: isReplay(s) ? 'set.announceReplay' : 'set.announce' },
-        {
-          kit: nameOf(p.kit, c.version),
-          head: nameOf(p.head, c.version),
-          clothes: nameOf(p.clothes, c.version),
-          shoes: nameOf(p.shoes, c.version),
-        },
-      ),
+    return intl.formatMessage(
+      { id: isReplay(s) ? 'set.announceReplay' : 'set.announce' },
+      {
+        kit: nameOf(p.kit, c.version),
+        head: nameOf(p.head, c.version),
+        clothes: nameOf(p.clothes, c.version),
+        shoes: nameOf(p.shoes, c.version),
+      },
     );
+  }
+
+  function announceSet(s: RunState) {
+    setAnnouncement(setAnnouncementFor(s));
   }
 
   // Every change goes through the store; one refused because another tab or a second click got
@@ -201,41 +204,46 @@ function RunView({ newestVersion, namesLoaded }: { newestVersion: string; namesL
   if (!catalogue) return null;
   const pieces = setPieces(catalogue, state);
 
-  // What a result did, for screen readers (NFR-A4): the result, the kit and the lives now.
-  const announceResult = (id: string, after: RunState) =>
-    setAnnouncement(
-      intl.formatMessage(
-        { id },
-        {
-          kit: nameOf(pieces.kit, catalogue.version),
-          lives: intl.formatMessage({ id: 'run.lives' }, { lives: after.lives }),
-        },
-      ),
+  // What a result did, for screen readers (NFR-A4): the result, the kit, the mode and the lives now.
+  const announceResult = (id: string, after: RunState, mode: string) =>
+    intl.formatMessage(
+      { id },
+      {
+        kit: nameOf(pieces.kit, catalogue.version),
+        mode: names(catalogue.version, mode),
+        lives: intl.formatMessage({ id: 'run.lives' }, { lives: after.lives }),
+      },
     );
 
+  // After a click, the next control can appear under the pointer, so the second click of a double
+  // click (or a quick double tap) lands on it: on a mode, or on "I won" behind the closed dialog, it
+  // would report a result for a set never played. A click that is part of a multiple click is
+  // ignored; so is a tap within 300 ms of the last action, since not every phone counts taps.
+  // Keyboard activation (detail 0) always counts.
+  const deliberate = (event: React.MouseEvent) => {
+    const now = Date.now();
+    const touch = (event.nativeEvent as PointerEvent).pointerType === 'touch';
+    if (event.detail > 1 || (touch && now - lastAction.current < 300)) return false;
+    lastAction.current = now;
+    return true;
+  };
+
   // Each action names the step on screen; the engine refuses one made on a state already moved on.
-  //
-  // After a result, the next button appears where the last one was, so the second click of a double
-  // click (or a quick double tap) lands on it: on "Next set" it would report a win for a set never
-  // played. A click that is part of a multiple click is ignored; so is a tap within 300 ms of the
-  // last action, since not every phone counts taps. Keyboard activation (detail 0) always counts.
   const act = (
     event: React.MouseEvent,
     change: () => RunState,
     announce: (s: RunState) => void,
   ) => {
-    const now = Date.now();
-    const touch = (event.nativeEvent as PointerEvent).pointerType === 'touch';
-    if (event.detail > 1 || (touch && now - lastAction.current < 300)) return;
-    lastAction.current = now;
+    if (!deliberate(event)) return false;
     let changed: RunState;
     try {
       changed = change();
     } catch {
-      return;
+      return true;
     }
     setNotice(undefined);
     if (commit(changed, revision)) announce(changed);
+    return true;
   };
 
   return (
@@ -280,20 +288,13 @@ function RunView({ newestVersion, namesLoaded }: { newestVersion: string; namesL
           {notice}
         </p>
       )}
+      {!isComplete(state) && <JustConquered state={state} catalogue={catalogue} />}
       {isComplete(state) ? (
         <FinishCard state={state} onUndo={(event) => act(event, () => undo(state), announceSet)} />
       ) : (
         <section className="card set-card" aria-labelledby="set-heading">
           <span className="sticker">
-            <FormattedMessage
-              id={
-                state.phase === 'conquered'
-                  ? 'set.conquered'
-                  : isReplay(state)
-                    ? 'set.replay'
-                    : 'set.playing'
-              }
-            />
+            <FormattedMessage id={isReplay(state) ? 'set.replay' : 'set.playing'} />
           </span>
           <h2 id="set-heading" className="visually-hidden">
             <FormattedMessage id="set.label" />
@@ -324,57 +325,20 @@ function RunView({ newestVersion, namesLoaded }: { newestVersion: string; namesL
             </Piece>
           </div>
           <div className="actions">
-            {state.phase === 'playing' ? (
-              <>
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={(event) =>
-                    act(
-                      event,
-                      () => reportWin(state, { step: state.step, at: new Date().toISOString() }),
-                      (after) =>
-                        isComplete(after)
-                          ? setAnnouncement(intl.formatMessage({ id: 'finish.announce' }))
-                          : announceResult('announce.win', after),
-                    )
-                  }
-                >
-                  <FormattedMessage id="run.won" />
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={(event) =>
-                    act(
-                      event,
-                      () => reportLoss(state, { step: state.step, at: new Date().toISOString() }),
-                      (after) => {
-                        // A loss on the last life resets the run (FR-18); say so on the page too.
-                        if (after.resets > state.resets) {
-                          announceResult('announce.reset', after);
-                          setNotice(intl.formatMessage({ id: 'run.resetNotice' }));
-                        } else {
-                          announceResult('announce.loss', after);
-                        }
-                      },
-                    )
-                  }
-                >
-                  <FormattedMessage id="run.lost" />
-                </button>
-              </>
-            ) : (
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={(event) =>
-                  act(event, () => nextSet(state, { step: state.step }), announceSet)
-                }
-              >
-                <FormattedMessage id="run.next" />
-              </button>
-            )}
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={(event) => deliberate(event) && setAsking('win')}
+            >
+              <FormattedMessage id="run.won" />
+            </button>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={(event) => deliberate(event) && setAsking('loss')}
+            >
+              <FormattedMessage id="run.lost" />
+            </button>
             {state.previous && (
               <button
                 type="button"
@@ -386,6 +350,42 @@ function RunView({ newestVersion, namesLoaded }: { newestVersion: string; namesL
             )}
           </div>
         </section>
+      )}
+      {asking && (
+        <ModeDialog
+          result={asking}
+          catalogue={catalogue}
+          onCancel={() => setAsking(undefined)}
+          onChoose={(event, mode) => {
+            const at = new Date().toISOString();
+            const result = asking;
+            // Closed once the choice counts, whether or not the store took it: a refused one shows
+            // what is stored instead.
+            const counted = act(
+              event,
+              () =>
+                result === 'win'
+                  ? reportWin(state, { step: state.step, at, mode })
+                  : reportLoss(state, { step: state.step, at, mode }),
+              (after) => {
+                if (result === 'win') {
+                  setAnnouncement(
+                    isComplete(after)
+                      ? intl.formatMessage({ id: 'finish.announce' })
+                      : `${announceResult('announce.win', after, mode)} ${setAnnouncementFor(after)}`,
+                  );
+                } else if (after.resets > state.resets) {
+                  // A loss on the last life resets the run (FR-18); say so on the page too.
+                  setAnnouncement(announceResult('announce.reset', after, mode));
+                  setNotice(intl.formatMessage({ id: 'run.resetNotice' }));
+                } else {
+                  setAnnouncement(announceResult('announce.loss', after, mode));
+                }
+              },
+            );
+            if (counted) setAsking(undefined);
+          }}
+        />
       )}
       <RunLog state={state} catalogue={catalogue} />
       <ShareControls state={state} catalogue={catalogue} />
@@ -583,6 +583,81 @@ function NewRunButton({ label, onConfirm }: { label: string; onConfirm: () => vo
   );
 }
 
+// The result whose mode is asked for (match-modes): the six modes, by the game's own names, in a native
+// dialog, so focus moves into it and Escape dismisses it with nothing recorded.
+function ModeDialog({
+  result,
+  catalogue,
+  onCancel,
+  onChoose,
+}: {
+  result: 'win' | 'loss';
+  catalogue: Catalogue;
+  onCancel: () => void;
+  onChoose: (event: React.MouseEvent, mode: string) => void;
+}) {
+  const names = useItemNames();
+  const dialog = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    const d = dialog.current;
+    if (d && !d.open) d.showModal();
+    return () => d?.close();
+  }, []);
+  return (
+    <dialog
+      ref={dialog}
+      className="mode-dialog"
+      aria-labelledby="mode-title"
+      onCancel={(e) => {
+        e.preventDefault();
+        onCancel();
+      }}
+    >
+      <h2 id="mode-title">
+        <FormattedMessage id={result === 'win' ? 'mode.titleWin' : 'mode.titleLoss'} />
+      </h2>
+      <div className="mode-choices">
+        {catalogue.modes.map((m) => (
+          <button
+            key={m.id}
+            type="button"
+            className="btn btn-secondary"
+            onClick={(event) => onChoose(event, m.id)}
+          >
+            {names(catalogue.version, m.id)}
+          </button>
+        ))}
+      </div>
+      <div className="dialog-actions">
+        <button type="button" className="btn btn-ghost" onClick={onCancel}>
+          <FormattedMessage id="mode.cancel" />
+        </button>
+      </div>
+    </dialog>
+  );
+}
+
+// The set a win just conquered, on show while that win can still be undone: a win moves straight on
+// to the next set (FR-23), and this says which one was left behind.
+function JustConquered({ state, catalogue }: { state: RunState; catalogue: Catalogue }) {
+  const intl = useIntl();
+  const names = useItemNames();
+  const last = state.log.at(-1);
+  if (!state.previous || last?.result !== 'win') return null;
+  return (
+    <p className="notice just-conquered" role="status">
+      {intl.formatMessage(
+        { id: 'run.justConquered' },
+        {
+          kit: names(catalogue.version, state.order.kits[last.draw] ?? ''),
+          recorded: String(last.mode !== undefined),
+          mode: last.mode ? names(catalogue.version, last.mode) : '',
+        },
+      )}
+    </p>
+  );
+}
+
 // The run log (FR-24): every result, newest first, each one sentence a screen reader reads whole, with
 // the date written for the page's locale. Collapsed by default, so the set stays first on screen.
 function RunLog({ state, catalogue }: { state: RunState; catalogue: Catalogue }) {
@@ -627,6 +702,9 @@ function RunLog({ state, catalogue }: { state: RunState; catalogue: Catalogue })
                     total: state.order.kits.length,
                     lives: intl.formatMessage({ id: 'run.lives' }, { lives: entry.livesAfter }),
                     reset: String(entry.reset),
+                    recorded: String(entry.mode !== undefined),
+                    mode: entry.mode ? names(catalogue.version, entry.mode) : '',
+                    notRecorded: intl.formatMessage({ id: 'log.modeNotRecorded' }),
                   },
                 )}{' '}
                 <time dateTime={entry.at}>{intl.formatDate(entry.at, { dateStyle: 'long' })}</time>
