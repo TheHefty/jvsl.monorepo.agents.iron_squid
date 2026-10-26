@@ -9,14 +9,21 @@
 //
 // Format 2 (share-mode) is format 1 with one more field per set: the mode it was conquered in, 0
 // when none was recorded and then the catalogue's modes from 1. Format 3 (share-rerolls) adds, after
-// resets, how many gear pieces the run re-rolled away. Formats 1 and 2 are still read, forever:
-// links made before are in posts and messages that cannot be edited.
+// resets, how many gear pieces the run re-rolled away. Format 4 (share-log-codec) adds the run log
+// (FR-45): after the re-rolls, how many earlier matches it leaves out and how many it carries; after
+// the sets, for each match carried, oldest first, a bit for a win, its mode (0 when none was
+// recorded), its kit's place in the catalogue, and a bit each for a replay and for a reset. Never a
+// date. Formats 1 to 3 are still read, forever, with no log: links made before are in posts and
+// messages that cannot be edited.
 import { gearSlots, type Catalogue } from '../catalogue/types';
 import { gearOf, type CurrentSet, type RunState } from '../run/engine';
 import { displayName } from '../run/name';
 
-const FORMAT = 3;
-type Format = 1 | 2 | 3;
+const FORMAT = 4;
+type Format = 1 | 2 | 3 | 4;
+// The characters a link's fragment may take: NFR-P2's 2,000 less the address before the '#', which
+// is at most 100 (origin, base path, locale and '/run/#').
+export const FRAGMENT_BUDGET = 1900;
 const slots = ['kits', ...gearSlots] as const;
 
 export type SharedRun = {
@@ -30,10 +37,24 @@ export type SharedRun = {
   rerolls: number;
   complete: boolean;
   sets: SharedSet[];
+  // The run log, oldest first, and how many earlier matches the link leaves out (FR-45); no log in a
+  // link made before it was shared. The longest winning streak is over the matches carried (FR-46).
+  log?: SharedMatch[];
+  logOmitted: number;
+  longestStreak?: number;
 };
 
 // A conquered set, with the mode it was conquered in when there is one.
 export type SharedSet = CurrentSet & { mode?: string };
+
+// A match of a shared log: no date, ever.
+export type SharedMatch = {
+  result: 'win' | 'loss';
+  kit: string;
+  mode?: string;
+  replay: boolean;
+  reset: boolean;
+};
 
 export type ShareResult =
   | { ok: true; run: SharedRun }
@@ -49,6 +70,8 @@ export type Packed = {
   resets: number;
   rerolls?: number;
   sets: number[][];
+  // Each match as [win 1 or loss 0, mode index or 0, kit place, replay 1/0, reset 1/0].
+  log?: { omitted: number; matches: number[][] };
 };
 
 const lists = (c: Catalogue) => [c.kits, c.gear.head, c.gear.clothes, c.gear.shoes];
@@ -61,12 +84,36 @@ export const widthsOf = (c: Catalogue, format: Format = FORMAT) => [
   ...(format >= 2 ? [widthOf(c.modes.length + 1)] : []),
 ];
 
+// How many bits each field of a match of the log takes (format 4).
+const matchWidths = (c: Catalogue) => [
+  1,
+  widthOf(c.modes.length + 1),
+  widthOf(c.kits.length),
+  1,
+  1,
+];
+
+// The longest run of wins with no loss between them, replays included (FR-46).
+export function longestStreak(matches: { result: 'win' | 'loss' }[]): number {
+  let best = 0;
+  let current = 0;
+  for (const m of matches) {
+    current = m.result === 'win' ? current + 1 : 0;
+    best = Math.max(best, current);
+  }
+  return best;
+}
+
 // The mode a set was conquered in: that of the win on its draw that was not a replay. A replay won
 // since does not change it, and a conquest from before modes has none.
 const conquestMode = (state: RunState, draw: number) =>
   state.log.find((e) => e.draw === draw && e.result === 'win' && !e.replay)?.mode;
 
-export function encodeShare(state: RunState, catalogue: Catalogue): string {
+export function encodeShare(
+  state: RunState,
+  catalogue: Catalogue,
+  budget: number = FRAGMENT_BUDGET,
+): string {
   const places = lists(catalogue).map((items) => new Map(items.map((item, i) => [item.id, i])));
   const modes = catalogue.modes.map((m) => m.id);
   const name = new TextEncoder().encode(state.name ?? '');
@@ -82,19 +129,42 @@ export function encodeShare(state: RunState, catalogue: Catalogue): string {
     }),
     modes.indexOf(conquestMode(state, n) ?? '') + 1,
   ]);
-  return packShare(
-    {
-      version: catalogue.version,
-      // A name over the byte cap, stored before the cap existed, is left out of the link.
-      name: displayName(state.name ?? '').ok ? name : new Uint8Array(),
-      conquered: state.conquered,
-      lives: state.lives,
-      resets: state.resets,
-      rerolls: state.rerolls.length,
-      sets,
-    },
-    widthsOf(catalogue),
-  );
+  const kitPlaces = places[0];
+  const matches = state.log.map((e) => [
+    e.result === 'win' ? 1 : 0,
+    modes.indexOf(e.mode ?? '') + 1,
+    kitPlaces?.get(state.order.kits[e.draw] ?? '') ?? 0,
+    e.replay ? 1 : 0,
+    e.reset ? 1 : 0,
+  ]);
+  const pack = (carried: number) =>
+    packShare(
+      {
+        version: catalogue.version,
+        // A name over the byte cap, stored before the cap existed, is left out of the link.
+        name: displayName(state.name ?? '').ok ? name : new Uint8Array(),
+        conquered: state.conquered,
+        lives: state.lives,
+        resets: state.resets,
+        rerolls: state.rerolls.length,
+        sets,
+        log: {
+          omitted: state.matches - carried,
+          matches: matches.slice(matches.length - carried),
+        },
+      },
+      widthsOf(catalogue),
+    );
+  // As many of the most recent matches as fit (FR-45): the longest link that is within budget.
+  let fits = 0;
+  let over = matches.length + 1;
+  if (pack(matches.length).length <= budget) return pack(matches.length);
+  while (over - fits > 1) {
+    const mid = Math.floor((fits + over) / 2);
+    if (pack(mid).length <= budget) fits = mid;
+    else over = mid;
+  }
+  return pack(fits);
 }
 
 // Writes the fields as they are, checking nothing.
@@ -114,22 +184,29 @@ export function packShare(p: Packed, widths: number[], format: Format = FORMAT):
   varint(p.conquered);
   varint(p.lives);
   varint(p.resets);
-  if (format === 3) varint(p.rerolls ?? 0);
+  if (format >= 3) varint(p.rerolls ?? 0);
+  if (format >= 4) {
+    varint(p.log?.omitted ?? 0);
+    varint(p.log?.matches.length ?? 0);
+  }
   let acc = 0;
   let filled = 0;
-  for (const set of p.sets) {
-    set.forEach((value, i) => {
-      const width = widths[i] ?? 8;
-      for (let bit = width - 1; bit >= 0; bit--) {
-        acc = (acc << 1) | ((value >> bit) & 1);
-        if (++filled === 8) {
-          bytes.push(acc);
-          acc = 0;
-          filled = 0;
-        }
+  const write = (value: number, width: number) => {
+    for (let bit = width - 1; bit >= 0; bit--) {
+      acc = (acc << 1) | ((value >> bit) & 1);
+      if (++filled === 8) {
+        bytes.push(acc);
+        acc = 0;
+        filled = 0;
       }
-    });
-  }
+    }
+  };
+  for (const set of p.sets) set.forEach((value, i) => write(value, widths[i] ?? 8));
+  // The log's widths follow from the sets': the mode's is the sets' last, the kit's their first.
+  const logWidths = [1, widths[4] ?? 3, widths[0] ?? 8, 1, 1];
+  if (format >= 4)
+    for (const match of p.log?.matches ?? [])
+      match.forEach((value, i) => write(value, logWidths[i] ?? 1));
   if (filled > 0) bytes.push(acc << (8 - filled));
   return btoa(String.fromCharCode(...bytes))
     .replace(/\+/g, '-')
@@ -175,7 +252,7 @@ function read(text: string, catalogues: Record<string, Catalogue>): ShareResult 
   };
 
   const format = byte();
-  if (format !== 1 && format !== 2 && format !== 3) throw new Broken();
+  if (format !== 1 && format !== 2 && format !== 3 && format !== 4) throw new Broken();
   const version = String.fromCharCode(...take(varint()));
   if (!/^\d{1,4}\.\d{1,4}\.\d{1,4}$/.test(version)) throw new Broken();
   let name: string;
@@ -189,7 +266,9 @@ function read(text: string, catalogues: Record<string, Catalogue>): ShareResult 
   const conquered = varint();
   const lives = varint();
   const resets = varint();
-  const rerolls = format === 3 ? varint() : 0;
+  const rerolls = format >= 3 ? varint() : 0;
+  const omitted = format >= 4 ? varint() : 0;
+  const carried = format >= 4 ? varint() : 0;
   const catalogue = catalogues[version];
   if (!catalogue) return { ok: false, reason: 'unknown-catalogue', version };
   const items = lists(catalogue);
@@ -204,7 +283,9 @@ function read(text: string, catalogues: Record<string, Catalogue>): ShareResult 
   if (rerolls > spares) throw new Broken();
 
   // The sets: exactly the bits they need, then nothing but the zero bits that pad the last byte.
-  const bitsNeeded = conquered * widths.reduce((a, b) => a + b, 0);
+  const logWidths = matchWidths(catalogue);
+  const bitsNeeded =
+    conquered * widths.reduce((a, b) => a + b, 0) + carried * logWidths.reduce((a, b) => a + b, 0);
   if (bytes.length - at !== Math.ceil(bitsNeeded / 8)) throw new Broken();
   let bit = 0;
   const readBits = (width: number) => {
@@ -234,6 +315,21 @@ function read(text: string, catalogues: Record<string, Catalogue>): ShareResult 
     }
     sets.push({ kit, head, clothes, shoes, ...(mode ? { mode } : {}) });
   }
+  // The log: a mode the catalogue has or none, and a kit of the catalogue.
+  const log: SharedMatch[] = [];
+  for (let n = 0; n < carried; n++) {
+    const [win, modeIndex, place, replay, reset] = logWidths.map((w) => readBits(w));
+    const kit = catalogue.kits[place ?? -1]?.id;
+    if (!kit || (modeIndex ?? 0) > modes.length) throw new Broken();
+    const mode = modes[(modeIndex ?? 0) - 1]?.id;
+    log.push({
+      result: win ? 'win' : 'loss',
+      kit,
+      ...(mode ? { mode } : {}),
+      replay: replay === 1,
+      reset: reset === 1,
+    });
+  }
   if (bit < (bytes.length - at) * 8 && readBits((bytes.length - at) * 8 - bit) !== 0)
     throw new Broken();
 
@@ -249,6 +345,8 @@ function read(text: string, catalogues: Record<string, Catalogue>): ShareResult 
       rerolls,
       complete: conquered === catalogue.kits.length,
       sets,
+      logOmitted: omitted,
+      ...(format >= 4 ? { log, longestStreak: longestStreak(log) } : {}),
     },
   };
 }

@@ -56,6 +56,9 @@ describe('a share link', () => {
         resets: s.resets,
         rerolls: 0,
         complete: false,
+        logOmitted: 0,
+        log: expect.any(Array),
+        longestStreak: 12,
         sets: Array.from({ length: 12 }, (_, i) => ({
           kit: s.order.kits[i],
           head: s.order.head[i],
@@ -287,6 +290,113 @@ describe('the re-rolls of a run (share-rerolls)', () => {
     expect(decodeShare(encodeShare(s, catalogue), catalogues)).toMatchObject({
       ok: true,
       run: { rerolls: spares, conquered: 160, complete: true },
+    });
+  });
+});
+
+describe('the run log of a shared run (share-log-codec)', () => {
+  const modes = catalogue.modes.map((m) => m.id);
+  const act = (s: RunState, mode = 'Pnt') => ({ step: s.step, at, mode, source: cryptoSource });
+  const play = (
+    results: ('W' | 'L')[],
+    s = startRun(catalogue, { name: 'Ivo' }, cryptoSource, at),
+  ) => {
+    for (const r of results) s = r === 'W' ? reportWin(s, act(s)) : reportLoss(s, act(s));
+    return s;
+  };
+  const seq = (text: string) => [...text] as ('W' | 'L')[];
+  const read = (s: RunState) => {
+    const shared = decodeShare(encodeShare(s, catalogue), catalogues);
+    if (!shared.ok) throw new Error('the link did not read');
+    return shared.run;
+  };
+
+  it('carries every match: its result, kit, mode, replay and reset, newest last, and no date', () => {
+    let s = startRun(catalogue, { name: 'Ivo' }, cryptoSource, at);
+    s = reportWin(s, act(s, 'Var'));
+    s = reportLoss(s, act(s, 'Vgl')); // the last life: a reset
+    s = reportWin(s, act(s, 'Tcl')); // a replay
+    const run = read(s);
+    expect(run.log).toEqual(
+      s.log.map((e) => ({
+        result: e.result,
+        kit: s.order.kits[e.draw],
+        mode: e.mode,
+        replay: e.replay,
+        reset: e.reset,
+      })),
+    );
+    expect(run.log?.map((m) => m.mode)).toEqual(['Var', 'Vgl', 'Tcl']);
+    expect(run.logOmitted).toBe(0);
+    expect(JSON.stringify(run.log)).not.toMatch(/2026/);
+  });
+
+  it('finds the longest winning streak: consecutive wins with no loss between', () => {
+    // 2 lives after 10 wins: the first loss costs a life, the second resets.
+    const s = play(seq('WWWWW' + 'WWWWW' + 'L' + 'WWWWWWWW' + 'L' + 'WWW'));
+    expect(read(s).longestStreak).toBe(10);
+    expect(read(play(seq('WWWWWLWW'))).longestStreak).toBe(5);
+  });
+
+  it('counts wins in a replay towards the streak', () => {
+    // 12 wins, a loss and a reset, then 12 replays and 3 new sets won: 15 in a row.
+    const s = play([...seq('W'.repeat(12)), 'L', 'L', ...seq('W'.repeat(15))]);
+    expect(read(s).longestStreak).toBe(15);
+  });
+
+  it('opens a link made before the log was shared, with no log (failure 2)', () => {
+    const p = valid();
+    const shared = decodeShare(packShare(p, widthsOf(catalogue, 3), 3), catalogues);
+    expect(shared).toMatchObject({ ok: true, run: { conquered: 2 } });
+    expect(shared.ok && shared.run.log).toBeUndefined();
+  });
+
+  it('fits a long run in 2,000 characters with its most recent matches, and says how many it leaves out (failure 1)', () => {
+    const name = 'Iñigo, Ñandú 🦑 ' + 'é'.repeat(14);
+    let s = startRun(catalogue, { name }, cryptoSource, at);
+    // Losses on the last life, after 5 new sets, reset the run again and again: 3,000 matches.
+    // Losses on the last life, once 5 sets are conquered, reset the run again and again until
+    // 3,000 matches are played; then the run is won to the end.
+    while (s.matches < 3000 && s.phase === 'playing') {
+      const lose = s.conquered >= 5 && s.cursor === s.conquered;
+      s = lose ? reportLoss(s, act(s)) : reportWin(s, act(s));
+    }
+    while (s.phase === 'playing') s = reportWin(s, act(s));
+    expect(s.matches).toBeGreaterThanOrEqual(3000);
+    const link = site + encodeShare(s, catalogue);
+    expect(link.length).toBeLessThanOrEqual(2000);
+    const run = read(s);
+    const carried = run.log?.length ?? 0;
+    expect(carried).toBeGreaterThan(100);
+    expect(run.logOmitted).toBe(s.matches - carried);
+    expect(run.log?.at(-1)).toMatchObject({
+      result: 'win',
+      kit: s.order.kits[s.log.at(-1)?.draw ?? -1],
+    });
+    expect(run).toMatchObject({ conquered: 160, complete: true });
+  });
+
+  it('still fits a complete run with the largest name and a full log (failure 1)', () => {
+    const name = '👩‍👩‍👧'.repeat(16) + '🦑'.repeat(3);
+    let s = startRun(catalogue, { name }, cryptoSource, at);
+    for (let n = 0; n < 160; n++) s = reportWin(s, act(s, modes[n % 6]));
+    expect((site + encodeShare(s, catalogue)).length).toBeLessThanOrEqual(2000);
+  });
+
+  it('refuses a log that cannot be true: a kit past the catalogue, a mode past its modes (failure 3)', () => {
+    const bad = (patch: (p: Packed) => void) => {
+      const p: Packed = { ...valid(), log: { omitted: 0, matches: [[1, 1, 0, 0, 0]] } };
+      patch(p);
+      return decodeShare(packShare(p, widthsOf(catalogue)), catalogues);
+    };
+    expect(bad(() => undefined)).toMatchObject({ ok: true });
+    expect(bad((p) => (p.log = { omitted: 0, matches: [[1, 1, 200, 0, 0]] }))).toEqual({
+      ok: false,
+      reason: 'broken',
+    });
+    expect(bad((p) => (p.log = { omitted: 0, matches: [[1, 7, 0, 0, 0]] }))).toEqual({
+      ok: false,
+      reason: 'broken',
     });
   });
 });
