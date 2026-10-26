@@ -109,7 +109,7 @@
   "shared.complete": "Geschafft",
   "shared.inProgress": "Läuft",
   "shared.sets": "Eroberte Sets",
-  "shared.set": "{number}. {kit}, mit {head}, {clothes} und {shoes}",
+  "shared.set": "{number}. {kit}, mit {head}, {clothes} und {shoes}{recorded, select, true {, gewonnen in {mode}} other {}}",
   "shared.noSets": "Noch keine Waffe erobert.",
   "shared.backToRun": "Zurück zu deinem Run",
   "shared.startOwn": "Einen eigenen Run starten",

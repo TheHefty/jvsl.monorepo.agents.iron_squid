@@ -109,7 +109,7 @@
   "shared.complete": "Complete",
   "shared.inProgress": "In progress",
   "shared.sets": "Conquered sets",
-  "shared.set": "{number}. {kit}, with {head}, {clothes} and {shoes}",
+  "shared.set": "{number}. {kit}, with {head}, {clothes} and {shoes}{recorded, select, true {, won in {mode}} other {}}",
   "shared.noSets": "No kit conquered yet.",
   "shared.backToRun": "Back to your run",
   "shared.startOwn": "Start a run of your own",

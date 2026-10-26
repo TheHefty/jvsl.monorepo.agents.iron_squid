@@ -142,6 +142,9 @@ function SharedSets({ run, catalogue }: { run: SharedRun; catalogue: Catalogue }
                     head: name(catalogue.gear.head, set.head),
                     clothes: name(catalogue.gear.clothes, set.clothes),
                     shoes: name(catalogue.gear.shoes, set.shoes),
+                    // The mode it was conquered in, when the link carries one (share-mode).
+                    recorded: String(set.mode !== undefined),
+                    mode: set.mode ? names(catalogue.version, set.mode) : '',
                   },
                 )}
               </span>

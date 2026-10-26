@@ -1,9 +1,16 @@
+import { readFileSync } from 'node:fs';
 import { expect, type Page } from '@playwright/test';
+import type { Catalogue } from '../../src/catalogue/types';
+import type { RunState } from '../../src/run/engine';
+import { packShare, widthsOf } from '../../src/share/link';
 import { Given, Then, When } from '../fixtures';
 import { messageIn } from '../support/messages';
 import { askForMode, modeDialog, modes, modeName, report, tabTo } from '../support/report';
 import { playRun, seedRun, setNames, winsThenPlaying } from '../support/seed';
 
+const catalogue = JSON.parse(
+  readFileSync('src/catalogue/11.3.0/catalogue.json', 'utf8'),
+) as Catalogue;
 const message = (id: string, values: Record<string, unknown> = {}) =>
   messageIn('en-US', id, values);
 const set = async (p: Page) => {
@@ -181,7 +188,7 @@ When('the player imports it', async ({ page, world }) => {
 });
 
 Then('the run continues where it was', async ({ page, world }) => {
-  const state = world.state as import('../../src/run/engine').RunState;
+  const state = world.state as RunState;
   await expect(page.locator('.run-title')).toHaveText('Inkling Ivo');
   expect(await set(page)).toEqual(setNames(state, state.cursor));
   await expect(page.locator('.run-conquered')).toHaveText(
@@ -222,3 +229,111 @@ Then('the screen reader announces the conquered set and the next set', async ({ 
   await expect(live).toContainText('Splat Zones');
   await expect(live).toContainText(next[0] ?? '');
 });
+
+// The shared run (share-mode): the link carries the mode of each conquest.
+const sharedSets = (p: Page) =>
+  p.getByRole('list', { name: message('shared.sets') }).getByRole('listitem');
+
+async function copyLink(p: Page): Promise<string> {
+  await p.context().grantPermissions(['clipboard-read', 'clipboard-write']);
+  await p.getByRole('button', { name: message('share.copy') }).click();
+  await expect(p.getByRole('status').filter({ hasText: message('share.copied') })).toBeVisible();
+  return p.evaluate(() => navigator.clipboard.readText());
+}
+
+// Opened where a stranger would open it: a browser with no run of its own.
+async function openElsewhere(p: Page, link: string) {
+  const browser = p.context().browser();
+  if (!browser) throw new Error('steps: no browser to open the link in');
+  const other = await (await browser.newContext()).newPage();
+  await other.goto(link);
+  await expect(other.getByRole('heading', { level: 1 })).toBeVisible();
+  return other;
+}
+
+Given('a player conquered a set in Tower Control', async ({ page, world }) => {
+  await seedRun(page, playRun(winsThenPlaying(1)));
+  world.set = await set(page);
+  await report(page, 'win', 'Tower Control');
+});
+
+When('a visitor opens a link to the run', async ({ page, world }) => {
+  world.other = await openElsewhere(page, await copyLink(page));
+});
+
+Then('the conquered set is shown with Tower Control', async ({ world }) => {
+  const items = sharedSets(world.other as Page);
+  await expect(items).toHaveCount(2);
+  await expect(items.nth(1)).toContainText((world.set as string[])[0] ?? '');
+  await expect(items.nth(1)).toContainText('Tower Control');
+  await expect(items.nth(0)).not.toContainText('Tower Control');
+});
+
+Given('a link to a run made before the site recorded modes', async ({ baseURL, world }) => {
+  // Written in format 1, as the site wrote links before share-mode.
+  const state = playRun(winsThenPlaying(3), 'Inkling Ivo', undefined, null);
+  const places = (list: { id: string }[], ids: string[]) =>
+    ids.slice(0, 3).map((id) => list.findIndex((i) => i.id === id));
+  const columns = [
+    places(catalogue.kits, state.order.kits),
+    places(catalogue.gear.head, state.order.head),
+    places(catalogue.gear.clothes, state.order.clothes),
+    places(catalogue.gear.shoes, state.order.shoes),
+  ];
+  const sets = [0, 1, 2].map((n) => columns.map((c) => c[n] ?? 0));
+  world.state = state;
+  world.link = `${baseURL}en-US/run/#${packShare(
+    {
+      version: catalogue.version,
+      name: new TextEncoder().encode('Inkling Ivo'),
+      conquered: 3,
+      lives: state.lives,
+      resets: state.resets,
+      sets,
+    },
+    widthsOf(catalogue, 1),
+    1,
+  )}`;
+});
+
+When('a visitor opens it', async ({ page, world }) => {
+  world.other = await openElsewhere(page, world.link as string);
+});
+
+Then('the run is shown as it was, with no mode on its sets', async ({ world }) => {
+  const other = world.other as Page;
+  const state = world.state as RunState;
+  await expect(other.getByRole('heading', { level: 1 })).toHaveText('Inkling Ivo');
+  const items = sharedSets(other);
+  await expect(items).toHaveCount(3);
+  for (let n = 0; n < 3; n++) {
+    const [kit, head, clothes, shoes] = setNames(state, n);
+    await expect(items.nth(n)).toHaveText(
+      message('shared.set', {
+        number: n + 1,
+        kit,
+        head,
+        clothes,
+        shoes,
+        recorded: 'false',
+        mode: '',
+      }),
+    );
+  }
+});
+
+Given(
+  'a complete run of {int} kits, each won in a mode, with a display name of {int} characters',
+  async ({ page }, kits: number, length: number) => {
+    // Characters as the player sees them, an emoji among them, as the name field counts them.
+    const count = (s: string) => [...new Intl.Segmenter().segment(s)].length;
+    let name = 'Iñigo, Ñandú 🦑 ';
+    while (count(name) < length) name += 'é';
+    expect(count(name)).toBe(length);
+    // Tricolor Turf War: the last mode, so its index takes every bit the mode field has.
+    const state = playRun(winsThenPlaying(kits), name, undefined, 'Tcl');
+    expect(state.conquered).toBe(kits);
+    expect(state.log.every((e) => e.mode === 'Tcl')).toBe(true);
+    await seedRun(page, state);
+  },
+);

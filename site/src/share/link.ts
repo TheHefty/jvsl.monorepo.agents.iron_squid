@@ -6,11 +6,16 @@
 // as unsigned varints, then for each conquered set its kit, head, clothes and shoes as their places
 // in that catalogue version's lists, packed in as many bits as each list needs. Only what a shared
 // run shows is carried: never the sets not yet played, the log or the undo state.
+//
+// Format 2 (share-mode) is format 1 with one more field per set: the mode it was conquered in, 0
+// when none was recorded and then the catalogue's modes from 1. Format 1 is still read, forever:
+// links made before are in posts and messages that cannot be edited.
 import { gearSlots, type Catalogue } from '../catalogue/types';
 import type { CurrentSet, RunState } from '../run/engine';
 import { displayName } from '../run/name';
 
-const FORMAT = 1;
+const FORMAT = 2;
+type Format = 1 | 2;
 const slots = ['kits', ...gearSlots] as const;
 
 export type SharedRun = {
@@ -21,8 +26,11 @@ export type SharedRun = {
   lives: number;
   resets: number;
   complete: boolean;
-  sets: CurrentSet[];
+  sets: SharedSet[];
 };
+
+// A conquered set, with the mode it was conquered in when there is one.
+export type SharedSet = CurrentSet & { mode?: string };
 
 export type ShareResult =
   | { ok: true; run: SharedRun }
@@ -42,21 +50,32 @@ export type Packed = {
 const lists = (c: Catalogue) => [c.kits, c.gear.head, c.gear.clothes, c.gear.shoes];
 const widthOf = (n: number) => Math.max(1, Math.ceil(Math.log2(n)));
 
-// How many bits each list's places take in a link on that catalogue.
-export const widthsOf = (c: Catalogue) => lists(c).map((l) => widthOf(l.length));
+// How many bits each field of a set takes in a link on that catalogue: the four places, and in
+// format 2 the mode, which also has "none".
+export const widthsOf = (c: Catalogue, format: Format = FORMAT) => [
+  ...lists(c).map((l) => widthOf(l.length)),
+  ...(format === 2 ? [widthOf(c.modes.length + 1)] : []),
+];
+
+// The mode a set was conquered in: that of the win on its draw that was not a replay. A replay won
+// since does not change it, and a conquest from before modes has none.
+const conquestMode = (state: RunState, draw: number) =>
+  state.log.find((e) => e.draw === draw && e.result === 'win' && !e.replay)?.mode;
 
 export function encodeShare(state: RunState, catalogue: Catalogue): string {
   const places = lists(catalogue).map((items) => new Map(items.map((item, i) => [item.id, i])));
+  const modes = catalogue.modes.map((m) => m.id);
   const name = new TextEncoder().encode(state.name ?? '');
-  const sets = Array.from({ length: state.conquered }, (_, n) =>
-    slots.map((slot, i) => {
+  const sets = Array.from({ length: state.conquered }, (_, n) => [
+    ...slots.map((slot, i) => {
       const id = (slot === 'kits' ? state.order.kits : state.order[slot])[n] ?? '';
       const place = places[i]?.get(id);
       if (place === undefined)
         throw new Error(`share: ${id} is not in catalogue ${catalogue.version}`);
       return place;
     }),
-  );
+    modes.indexOf(conquestMode(state, n) ?? '') + 1,
+  ]);
   return packShare(
     {
       version: catalogue.version,
@@ -72,8 +91,8 @@ export function encodeShare(state: RunState, catalogue: Catalogue): string {
 }
 
 // Writes the fields as they are, checking nothing.
-export function packShare(p: Packed, widths: number[]): string {
-  const bytes: number[] = [FORMAT];
+export function packShare(p: Packed, widths: number[], format: Format = FORMAT): string {
+  const bytes: number[] = [format];
   const varint = (n: number) => {
     do {
       bytes.push((n & 0x7f) | (n > 0x7f ? 0x80 : 0));
@@ -147,7 +166,8 @@ function read(text: string, catalogues: Record<string, Catalogue>): ShareResult 
     return bytes.slice(at - n, at);
   };
 
-  if (byte() !== FORMAT) throw new Broken();
+  const format = byte();
+  if (format !== 1 && format !== 2) throw new Broken();
   const version = String.fromCharCode(...take(varint()));
   if (!/^\d{1,4}\.\d{1,4}\.\d{1,4}$/.test(version)) throw new Broken();
   let name: string;
@@ -164,7 +184,8 @@ function read(text: string, catalogues: Record<string, Catalogue>): ShareResult 
   const catalogue = catalogues[version];
   if (!catalogue) return { ok: false, reason: 'unknown-catalogue', version };
   const items = lists(catalogue);
-  const widths = widthsOf(catalogue);
+  const widths = widthsOf(catalogue, format);
+  const modes = catalogue.modes;
   if (lives < 1 || conquered > catalogue.kits.length) throw new Broken();
 
   // The sets: exactly the bits they need, then nothing but the zero bits that pad the last byte.
@@ -179,7 +200,7 @@ function read(text: string, catalogues: Record<string, Catalogue>): ShareResult 
     return n;
   };
   const seen = items.map(() => new Set<number>());
-  const sets: CurrentSet[] = [];
+  const sets: SharedSet[] = [];
   for (let n = 0; n < conquered; n++) {
     const ids = items.map((list, i) => {
       const place = readBits(widths[i] ?? 0);
@@ -190,7 +211,13 @@ function read(text: string, catalogues: Record<string, Catalogue>): ShareResult 
       return item.id;
     });
     const [kit = '', head = '', clothes = '', shoes = ''] = ids;
-    sets.push({ kit, head, clothes, shoes });
+    let mode: string | undefined;
+    if (format === 2) {
+      const index = readBits(widths[4] ?? 0);
+      if (index > modes.length) throw new Broken();
+      mode = modes[index - 1]?.id;
+    }
+    sets.push({ kit, head, clothes, shoes, ...(mode ? { mode } : {}) });
   }
   if (bit < (bytes.length - at) * 8 && readBits((bytes.length - at) * 8 - bit) !== 0)
     throw new Broken();

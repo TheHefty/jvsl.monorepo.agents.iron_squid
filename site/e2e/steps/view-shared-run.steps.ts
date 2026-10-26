@@ -5,7 +5,8 @@ import type { Catalogue } from '../../src/catalogue/types';
 import type { RunState } from '../../src/run/engine';
 import { encodeShare, packShare, widthsOf, type Packed } from '../../src/share/link';
 import { Given, Then, When } from '../fixtures';
-import { playRun, seedRun, setNames, winsThenPlaying } from '../support/seed';
+import { modeName } from '../support/report';
+import { conquestMode, playRun, seedRun, setNames, winsThenPlaying } from '../support/seed';
 
 const messages = JSON.parse(readFileSync('src/i18n/messages/en-US.json', 'utf8')) as Record<
   string,
@@ -31,8 +32,8 @@ const packed = (patch: Partial<Packed>) =>
       lives: 1,
       resets: 0,
       sets: [
-        [0, 0, 0, 0],
-        [1, 1, 1, 1],
+        [0, 0, 0, 0, 0],
+        [1, 1, 1, 1, 0],
       ],
       ...patch,
     },
@@ -73,8 +74,17 @@ Then('the conquered sets, in the order they were conquered', async ({ page, worl
   await expect(items).toHaveCount(state.conquered);
   for (let n = 0; n < state.conquered; n++) {
     const [kit, head, clothes, shoes] = setNames(state, n);
+    const mode = conquestMode(state, n);
     await expect(items.nth(n)).toContainText(
-      message('shared.set', { number: n + 1, kit, head, clothes, shoes }),
+      message('shared.set', {
+        number: n + 1,
+        kit,
+        head,
+        clothes,
+        shoes,
+        recorded: String(mode !== undefined),
+        mode: mode ? modeName(mode) : '',
+      }),
     );
   }
   // 160 sets are 160 images: each loads only as it nears the screen (NFR-P1, failure 3).
@@ -166,8 +176,8 @@ When('a visitor opens a link to a run in which a gear piece was used twice', asy
   await page.goto(
     packed({
       sets: [
-        [0, 0, 0, 0],
-        [1, 0, 1, 1],
+        [0, 0, 0, 0, 0],
+        [1, 0, 1, 1, 0],
       ],
     }),
   );
