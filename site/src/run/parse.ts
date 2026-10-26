@@ -2,7 +2,7 @@
 // not a run this site can play: an unknown format is never guessed into the current one, so a run
 // saved by an older or newer site is reported, not corrupted.
 import { gearSlots, type Catalogue, type GearSlot } from '../catalogue/types';
-import type { LogEntry, RerollEntry, RunState, Snapshot } from './engine';
+import type { LogEntry, RerollEntry, Replays, RunState, Snapshot } from './engine';
 import { displayName } from './name';
 
 export type ParseResult =
@@ -36,7 +36,7 @@ const permutation = (v: unknown, of: string[], name: string) => {
   return v as string[];
 };
 
-type Schema = 1 | 2 | 3;
+type Schema = 1 | 2 | 3 | 4;
 
 function state(v: unknown, catalogues: Record<string, Catalogue>, schema: Schema): Snapshot {
   if (!isObject(v)) throw new Refused('not-a-run', 'the run is not an object');
@@ -85,9 +85,15 @@ function state(v: unknown, catalogues: Record<string, Catalogue>, schema: Schema
   // Re-rolls (format 3): each slot's spares are the pieces past the kits in its order. A run from
   // before them has none.
   const { worn, spent } =
-    schema === 3 ? rerolled(v, kits.length, gear) : { worn: noneWorn(), spent: noneSpent() };
+    schema >= 3 ? rerolled(v, kits.length, gear) : { worn: noneWorn(), spent: noneSpent() };
+  // The reset a run follows (format 4). A run saved before keeps the earlier one: it was begun
+  // under it, and finishes under it (FR-18).
+  if (schema === 4 && v.resetRule !== 'reshuffle' && v.resetRule !== 'in-order')
+    throw new Refused('not-a-run', 'the reset rule is unknown');
+  const resetRule = schema === 4 ? (v.resetRule as Snapshot['resetRule']) : 'in-order';
   return {
-    schema: 3,
+    schema: 4,
+    resetRule,
     catalogueVersion: catalogue.version,
     ...(name === undefined ? {} : { name }),
     startedAt: v.startedAt,
@@ -134,6 +140,40 @@ function rerolled(v: Record<string, unknown>, kits: number, gear: Record<GearSlo
     }
   }
   return { worn, spent };
+}
+
+// The replays of each reset (format 4): for reset r, a kit drawn at most once and only among the
+// conquered ones, and per slot one piece for each, never the same twice, and only a piece the run
+// has used: one of the kits' own or a spare already given. Anything else is a run that cannot be.
+function replayEntries(v: unknown, core: Snapshot): Record<number, Replays> {
+  if (!isObject(v)) throw new Refused('not-a-run', 'the run has no replays');
+  const kits = core.order.kits.length;
+  const out: Record<number, Replays> = {};
+  for (const [key, value] of Object.entries(v) as [string, unknown][]) {
+    const reset = Number(key);
+    const bad = () => new Refused('not-a-run', `the replays of reset ${key} cannot be`);
+    if (!Number.isInteger(reset) || String(reset) !== key || reset < 1 || reset > core.resets + 1)
+      throw bad();
+    if (!isObject(value) || !Array.isArray(value.draws) || !isObject(value.gear)) throw bad();
+    const draws = value.draws.map((d) => count(d, `replays ${key} draw`, kits - 1));
+    if (draws.length > core.conquered + 1 || new Set(draws).size !== draws.length) throw bad();
+    const gear = {} as Replays['gear'];
+    for (const slot of gearSlots) {
+      const list: unknown = (value.gear as Record<string, unknown>)[slot];
+      if (!Array.isArray(list) || list.length !== draws.length) throw bad();
+      const used = kits + core.spent[slot];
+      gear[slot] = list.map((i) => count(i, `replays ${key} ${slot}`, used - 1));
+      if (new Set(gear[slot]).size !== gear[slot].length) throw bad();
+    }
+    out[reset] = {
+      matches: count(value.matches, `replays ${key} match`, core.matches + 1),
+      draws,
+      gear,
+    };
+  }
+  if (core.resetRule === 'reshuffle' && core.resets > 0 && !out[core.resets])
+    throw new Refused('not-a-run', 'the run has no replays for its last reset');
+  return out;
 }
 
 // The re-rolls a run records: one per spare given, each naming pieces of its slot.
@@ -218,10 +258,10 @@ export function parseRun(
   try {
     if (!isObject(input)) throw new Refused('not-a-run', 'the run is not an object');
     const schema = input.schema;
-    if (schema !== 1 && schema !== 2 && schema !== 3) {
+    if (schema !== 1 && schema !== 2 && schema !== 3 && schema !== 4) {
       throw new Refused(
         'unknown-schema',
-        `the run is in format ${String(schema)}; this site reads formats 1, 2 and 3`,
+        `the run is in format ${String(schema)}; this site reads formats 1 to 4`,
       );
     }
     const core = state(input, catalogues, schema);
@@ -241,8 +281,9 @@ export function parseRun(
     const previous =
       input.previous !== undefined ? previousState(input.previous, catalogues, schema) : undefined;
     const rerolls =
-      schema === 3 ? rerollEntries(input.rerolls, core, catalogues[core.catalogueVersion]) : [];
-    const run: RunState = { ...core, log, logSince, rerolls };
+      schema >= 3 ? rerollEntries(input.rerolls, core, catalogues[core.catalogueVersion]) : [];
+    const replays = schema === 4 ? replayEntries(input.replays, core) : {};
+    const run: RunState = { ...core, log, logSince, rerolls, replays };
     return { ok: true, state: previous ? { ...run, previous } : run };
   } catch (e) {
     if (e instanceof Refused) return { ok: false, reason: e.reason, detail: e.message };

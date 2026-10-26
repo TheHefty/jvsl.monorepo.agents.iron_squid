@@ -411,7 +411,7 @@ function RunView({ newestVersion, namesLoaded }: { newestVersion: string; namesL
               () =>
                 result === 'win'
                   ? reportWin(state, { step: state.step, at, mode })
-                  : reportLoss(state, { step: state.step, at, mode }),
+                  : reportLoss(state, { step: state.step, at, mode, source: cryptoSource }),
               (after) => {
                 if (result === 'win') {
                   setAnnouncement(

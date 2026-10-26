@@ -226,8 +226,18 @@ test('a run saved in format 1 loads, plays on, and is kept in format 2 with its 
   const played = playRun(winsThenPlaying(3));
   // The same run as the site wrote it in format 1: no log, no log date, no re-rolls.
   const asFormat1 = (s: Record<string, unknown>) => {
-    const { log: _log, logSince: _since, worn: _w, spent: _s, rerolls: _r, previous, ...rest } = s;
-    void [_log, _since, _w, _s, _r];
+    const {
+      log: _log,
+      logSince: _since,
+      worn: _w,
+      spent: _s,
+      rerolls: _r,
+      resetRule: _rule,
+      replays: _replays,
+      previous,
+      ...rest
+    } = s;
+    void [_log, _since, _w, _s, _r, _rule, _replays];
     return {
       ...rest,
       schema: 1,
@@ -254,7 +264,7 @@ test('a run saved in format 1 loads, plays on, and is kept in format 2 with its 
   const stored = JSON.parse(
     (await page.evaluate(() => localStorage.getItem('iron-squid:run'))) ?? '{}',
   );
-  expect(stored.state.schema).toBe(3);
+  expect(stored.state.schema).toBe(4);
   expect(stored.state.log).toHaveLength(1);
   expect(stored.state.log[0]).toMatchObject({ draw: 3, result: 'win' });
   // The log starts when the run was read, not when it was started.
@@ -279,10 +289,12 @@ test('a completed run whose log began part-way says from when wins and losses we
     worn: _worn,
     spent: _spent,
     rerolls: _rerolls,
+    resetRule: _rule,
+    replays: _replays,
     previous,
     ...rest
   } = played as unknown as Record<string, unknown>;
-  void [_log, _since, _worn, _spent, _rerolls];
+  void [_log, _since, _worn, _spent, _rerolls, _rule, _replays];
   const format1 = {
     ...rest,
     schema: 1,

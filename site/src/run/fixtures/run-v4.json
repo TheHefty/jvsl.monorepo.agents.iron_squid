@@ -1,0 +1,107 @@
+{
+  "schema": 4,
+  "resetRule": "reshuffle",
+  "catalogueVersion": "0.0.1",
+  "name": "Inkling Ivo",
+  "startedAt": "2026-10-26T10:00:00.000Z",
+  "order": {
+    "kits": ["K2", "K1", "K0"],
+    "head": ["H1", "H2", "H0"],
+    "clothes": ["C0", "C1", "C2"],
+    "shoes": ["S2", "S0", "S1", "S3"]
+  },
+  "conquered": 2,
+  "cursor": 0,
+  "phase": "playing",
+  "lives": 1,
+  "winsSinceReset": 0,
+  "resets": 1,
+  "matches": 3,
+  "step": 3,
+  "log": [
+    {
+      "at": "2026-10-26T10:00:00.000Z",
+      "draw": 0,
+      "result": "win",
+      "mode": "Pnt",
+      "livesAfter": 1,
+      "conqueredAfter": 1,
+      "replay": false,
+      "reset": false
+    },
+    {
+      "at": "2026-10-26T10:00:00.000Z",
+      "draw": 1,
+      "result": "win",
+      "mode": "Var",
+      "livesAfter": 1,
+      "conqueredAfter": 2,
+      "replay": false,
+      "reset": false
+    },
+    {
+      "at": "2026-10-26T10:00:00.000Z",
+      "draw": 2,
+      "result": "loss",
+      "mode": "Vlf",
+      "livesAfter": 1,
+      "conqueredAfter": 2,
+      "replay": false,
+      "reset": true
+    }
+  ],
+  "logSince": "2026-10-26T10:00:00.000Z",
+  "worn": {
+    "head": {},
+    "clothes": {},
+    "shoes": {}
+  },
+  "spent": {
+    "head": 0,
+    "clothes": 0,
+    "shoes": 0
+  },
+  "rerolls": [],
+  "replays": {
+    "1": {
+      "matches": 3,
+      "draws": [1, 0],
+      "gear": {
+        "head": [0, 1],
+        "clothes": [0, 1],
+        "shoes": [1, 0]
+      }
+    }
+  },
+  "previous": {
+    "schema": 4,
+    "resetRule": "reshuffle",
+    "catalogueVersion": "0.0.1",
+    "name": "Inkling Ivo",
+    "startedAt": "2026-10-26T10:00:00.000Z",
+    "order": {
+      "kits": ["K2", "K1", "K0"],
+      "head": ["H1", "H2", "H0"],
+      "clothes": ["C0", "C1", "C2"],
+      "shoes": ["S2", "S0", "S1", "S3"]
+    },
+    "conquered": 2,
+    "cursor": 2,
+    "phase": "playing",
+    "lives": 1,
+    "winsSinceReset": 2,
+    "resets": 0,
+    "matches": 2,
+    "step": 2,
+    "worn": {
+      "head": {},
+      "clothes": {},
+      "shoes": {}
+    },
+    "spent": {
+      "head": 0,
+      "clothes": 0,
+      "shoes": 0
+    }
+  }
+}

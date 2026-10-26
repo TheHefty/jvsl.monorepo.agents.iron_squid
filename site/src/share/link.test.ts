@@ -43,7 +43,7 @@ const valid = (): Packed => ({
 describe('a share link', () => {
   it('carries what a shared run shows, and reads back to it', () => {
     let s = played(12, 'Inkling Ivo');
-    s = reportLoss(s, { step: s.step, at, mode: 'Pnt' });
+    s = reportLoss(s, { step: s.step, at, mode: 'Pnt', source: cryptoSource });
     const shared = decodeShare(encodeShare(s, catalogue), catalogues);
     expect(shared).toEqual({
       ok: true,
@@ -187,7 +187,8 @@ describe('reading a share link', () => {
 describe('the mode of each conquest (share-mode)', () => {
   const modes = catalogue.modes.map((m) => m.id);
   const win = (s: RunState, mode: string) => reportWin(s, { step: s.step, at, mode });
-  const lose = (s: RunState) => reportLoss(s, { step: s.step, at, mode: 'Pnt' });
+  const lose = (s: RunState) =>
+    reportLoss(s, { step: s.step, at, mode: 'Pnt', source: cryptoSource });
 
   it('carries the mode each set was conquered in', () => {
     let s = startRun(catalogue, { name: undefined }, cryptoSource, at);

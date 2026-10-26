@@ -30,8 +30,12 @@ const catalogue: Catalogue = {
 };
 const at = '2026-10-25T12:00:00.000Z';
 const start = () => startRun(catalogue, { name: undefined }, cryptoSource, at);
+// A run begun before 2026-10-26, which replays in the order of conquest (FR-18, earlier rule); the
+// reshuffled reset is tested in reshuffle.test.ts.
+const startInOrder = (): RunState => ({ ...start(), resetRule: 'in-order' });
 const win = (s: RunState) => reportWin(s, { step: s.step, at, mode: 'Pnt' });
-const lose = (s: RunState) => reportLoss(s, { step: s.step, at, mode: 'Pnt' });
+const lose = (s: RunState) =>
+  reportLoss(s, { step: s.step, at, mode: 'Pnt', source: cryptoSource });
 const winTimes = (s: RunState, times: number) => {
   for (let i = 0; i < times; i++) s = win(s);
   return s;
@@ -73,9 +77,9 @@ describe('a loss with lives to spare (FR-17)', () => {
 });
 
 describe('a loss on the last life resets the run (FR-18)', () => {
-  it('goes back to the first conquered set, with 1 life, and keeps what was conquered', () => {
+  it('goes back to the first conquered set, with 1 life, and keeps what was conquered (earlier rule)', () => {
     // 12 wins earn a second life; one loss spends it, so the player has 12 conquered and 1 life.
-    const s = lose(winTimes(start(), 12));
+    const s = lose(winTimes(startInOrder(), 12));
     expect(s.lives).toBe(1);
     const reset = lose(s);
     expect(reset).toMatchObject({
@@ -93,8 +97,8 @@ describe('a loss on the last life resets the run (FR-18)', () => {
     });
   });
 
-  it('replays the conquered sets in order without conquering them again, then draws anew', () => {
-    let s = lose(winTimes(start(), 3));
+  it('replays the conquered sets in order without conquering them again, then draws anew (earlier rule)', () => {
+    let s = lose(winTimes(startInOrder(), 3));
     for (let i = 0; i < 3; i++) {
       expect(currentSet(s).kit).toBe(s.order.kits[i]);
       s = win(s);
@@ -126,9 +130,14 @@ describe('undo across losses (FR-20)', () => {
     expect(run(undo(lose(s)))).toEqual(run(s));
   });
 
-  it('undoes the loss that caused a reset exactly, resets included', () => {
-    const s = winTimes(start(), 5);
-    expect(run(undo(lose(s)))).toEqual(run(s));
+  it('undoes the loss that caused a reset exactly, resets included; its replays stay drawn (FR-14)', () => {
+    const s = winTimes(
+      startRun(catalogue, { name: undefined, resetRule: 'reshuffle' }, cryptoSource, at),
+      5,
+    );
+    const back = undo(lose(s));
+    expect({ ...run(back), replays: {} }).toEqual(run(s));
+    expect(Object.keys(back.replays)).toEqual(['1']);
   });
 
   it('takes back the life a tenth win earned', () => {

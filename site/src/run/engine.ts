@@ -32,12 +32,23 @@ export type RerollEntry = {
   afterMatches: number;
 };
 
+// The replays of one reset (FR-18, reshuffle rule): the conquered kits in the order drawn for it, by
+// their draw, and per slot the order index of the gear dealt to each, in the same order. `matches`
+// is the match that caused the reset, so a reset reported again after undo reuses it (FR-14).
+export type Replays = { matches: number; draws: number[]; gear: Record<GearSlot, number[]> };
+
+// Which reset a run follows: 'reshuffle' for runs started after 2026-10-26, 'in-order' (the conquered
+// sets again, in order, with their own gear) for runs begun before, which finish under it.
+export type ResetRule = 'reshuffle' | 'in-order';
+
 // The state before the last result, without the logs: undo removes the log's last entry instead, so
-// a long run never stores its log twice (task run-log-format, failure 3); re-rolls are never undone.
-export type Snapshot = Omit<RunState, 'previous' | 'log' | 'logSince' | 'rerolls'>;
+// a long run never stores its log twice (task run-log-format, failure 3); re-rolls are never undone,
+// and a reset's replays outlive an undo so that it cannot draw them again.
+export type Snapshot = Omit<RunState, 'previous' | 'log' | 'logSince' | 'rerolls' | 'replays'>;
 
 export type RunState = {
-  schema: 3;
+  schema: 4;
+  resetRule: ResetRule;
   catalogueVersion: string;
   name?: string;
   startedAt: string;
@@ -68,15 +79,19 @@ export type RunState = {
   logSince: string;
   // Every re-roll, in the order made; never undone, so kept apart from the results.
   rerolls: RerollEntry[];
+  // The replays drawn for each reset, by reset number; kept apart from the results, like re-rolls.
+  replays: Record<number, Replays>;
   // The state before the last result: what undo returns to (FR-20). One level only.
   previous?: Snapshot;
 };
 
 export type CurrentSet = { kit: string; head: string; clothes: string; shoes: string };
 
+// The reset a new run follows. Until the screen shows the reshuffled reset (task reshuffle-screen),
+// a run started on the site keeps the earlier one, so the rules and the screen change together.
 export function startRun(
   catalogue: Catalogue,
-  { name }: { name: string | undefined },
+  { name, resetRule = 'in-order' }: { name: string | undefined; resetRule?: ResetRule },
   source: RandomSource,
   at: string,
 ): RunState {
@@ -92,7 +107,8 @@ export function startRun(
       source,
     );
   return {
-    schema: 3,
+    schema: 4,
+    resetRule,
     catalogueVersion: catalogue.version,
     ...(name === undefined ? {} : { name }),
     startedAt: at,
@@ -115,6 +131,7 @@ export function startRun(
     worn: { head: {}, clothes: {}, shoes: {} },
     spent: { head: 0, clothes: 0, shoes: 0 },
     rerolls: [],
+    replays: {},
   };
 }
 
@@ -136,7 +153,35 @@ export function gearOf(s: Snapshot, n: number): CurrentSet {
   };
 }
 
-export const currentSet = (s: RunState): CurrentSet => gearOf(s, s.cursor);
+// The replays being played, under the reshuffle rule: those of the latest reset, while the cursor is
+// still among the conquered kits.
+const replaying = (s: RunState) =>
+  s.resetRule === 'reshuffle' && s.phase === 'playing' && s.cursor < s.conquered
+    ? s.replays[s.resets]
+    : undefined;
+
+// The draw of the kit being played: on a reshuffled replay, the one drawn for that place.
+const currentDraw = (s: RunState) => replaying(s)?.draws[s.cursor] ?? s.cursor;
+
+export function currentSet(s: RunState): CurrentSet {
+  const r = replaying(s);
+  if (!r) return gearOf(s, s.cursor);
+  const at = (list: string[], index: number | undefined) => {
+    const id = index === undefined ? undefined : list[index];
+    if (id === undefined) throw new Error(`run: no replay ${s.cursor} in reset ${s.resets}`);
+    return id;
+  };
+  return {
+    kit: at(s.order.kits, r.draws[s.cursor]),
+    head: at(s.order.head, r.gear.head[s.cursor]),
+    clothes: at(s.order.clothes, r.gear.clothes[s.cursor]),
+    shoes: at(s.order.shoes, r.gear.shoes[s.cursor]),
+  };
+}
+
+// The order index of the piece the set being played wears in a slot.
+const currentIndex = (s: RunState, slot: GearSlot) =>
+  replaying(s)?.gear[slot][s.cursor] ?? wornIndex(s, s.cursor, slot);
 
 function fresh(s: RunState, { step }: { step: number }): void {
   if (step !== s.step)
@@ -144,15 +189,21 @@ function fresh(s: RunState, { step }: { step: number }): void {
 }
 
 function snapshot(s: RunState): Snapshot {
-  const { previous: _previous, log: _log, logSince: _logSince, rerolls: _rerolls, ...rest } = s;
-  void _previous;
-  void _log;
-  void _logSince;
-  void _rerolls;
+  const {
+    previous: _previous,
+    log: _log,
+    logSince: _logSince,
+    rerolls: _rerolls,
+    replays: _replays,
+    ...rest
+  } = s;
+  void [_previous, _log, _logSince, _rerolls, _replays];
   return rest;
 }
 
-type Result = { step: number; at: string; mode: string };
+// A loss that resets a run under the reshuffle rule draws its replays, so it needs the randomness
+// a run is drawn from; nothing else does.
+type Result = { step: number; at: string; mode: string; source?: RandomSource };
 
 const entry = (
   s: RunState,
@@ -161,7 +212,7 @@ const entry = (
   after: RunState,
 ): LogEntry => ({
   at,
-  draw: s.cursor,
+  draw: currentDraw(s),
   result,
   mode,
   livesAfter: after.lives,
@@ -211,20 +262,27 @@ export function undo(s: RunState): RunState {
     log: s.log.slice(0, -1),
     logSince: s.logSince,
     rerolls: s.rerolls,
+    replays: s.replays,
     step: s.step + 1,
   };
 }
 
-// Why a re-roll of a slot is refused, or undefined when it is allowed (FR-25): only on a newly drawn
-// set before any result for it, never on a replay (FR-18), and only while the slot has a spare, so
-// the run can always be finished (FR-13, NFR-D6). The kit is never re-rolled: it has no slot here.
+// Why a re-roll of a slot is refused, or undefined when it is allowed (FR-25): on a newly drawn set,
+// or a reshuffled replay, before any result for it, and only while the slot has a spare, so the run
+// can always be finished (FR-13, NFR-D6). A replay of a run that follows the earlier reset keeps its
+// gear. The kit is never re-rolled: it has no slot here.
 export function rerollRefusal(
   s: RunState,
   slot: GearSlot,
 ): 'complete' | 'replay' | 'played' | 'no-spare' | undefined {
   if (s.phase !== 'playing') return 'complete';
-  if (s.cursor < s.conquered) return 'replay';
-  if (s.log.some((e) => e.draw === s.cursor)) return 'played';
+  if (s.cursor < s.conquered) {
+    if (s.resetRule === 'in-order') return 'replay';
+    // A result for this replay: one since the reset, for its kit.
+    const since = s.log.findLastIndex((e) => e.reset);
+    const draw = currentDraw(s);
+    if (s.log.slice(since + 1).some((e) => e.draw === draw)) return 'played';
+  } else if (s.log.some((e) => e.draw === s.cursor)) return 'played';
   if (s.order.kits.length + s.spent[slot] >= s.order[slot].length) return 'no-spare';
   return undefined;
 }
@@ -250,17 +308,26 @@ export function reroll(
   const spare = s.order.kits.length + s.spent[slot];
   const { previous: _previous, ...rest } = s;
   void _previous;
+  // On a replay the piece is the one dealt to it, which the next reset deals out in its stead; on a
+  // new draw, the one the set wears from then on, conquest included.
+  const r = replaying(s);
+  const swapped = r && {
+    ...s.replays,
+    [s.resets]: { ...r, gear: { ...r.gear, [slot]: r.gear[slot].with(s.cursor, spare) } },
+  };
   return {
     ...rest,
-    worn: { ...s.worn, [slot]: { ...s.worn[slot], [s.cursor]: spare } },
+    ...(swapped
+      ? { replays: swapped }
+      : { worn: { ...s.worn, [slot]: { ...s.worn[slot], [s.cursor]: spare } } }),
     spent: { ...s.spent, [slot]: s.spent[slot] + 1 },
     rerolls: [
       ...s.rerolls,
       {
         at: action.at,
-        draw: s.cursor,
+        draw: currentDraw(s),
         slot,
-        from: s.order[slot][wornIndex(s, s.cursor, slot)] ?? '',
+        from: s.order[slot][currentIndex(s, slot)] ?? '',
         to: s.order[slot][spare] ?? '',
         afterMatches: s.matches,
       },
@@ -269,10 +336,37 @@ export function reroll(
   };
 }
 
+// The replays of the reset a loss is about to cause (FR-18): the conquered kits in a new order, with
+// the gear they were last won with dealt out again among them. A kit holds the gear dealt to it at
+// the previous reset, re-rolls included, or else the gear it was conquered with. The draw is kept
+// with the match that caused it, so the same loss reported again after undo brings it back (FR-14).
+function replaysFor(s: RunState, action: Result): Replays {
+  const next = s.resets + 1;
+  const kept = s.replays[next];
+  if (kept && kept.matches === s.matches + 1 && kept.draws.length === s.conquered) return kept;
+  if (!action.source) throw new Error('run: a reset draws its replays, and needs a random source');
+  const previous = s.replays[s.resets];
+  const holds = (slot: GearSlot, draw: number) => {
+    const place = previous?.draws.indexOf(draw) ?? -1;
+    return place >= 0 ? (previous?.gear[slot][place] ?? draw) : wornIndex(s, draw, slot);
+  };
+  const conquered = Array.from({ length: s.conquered }, (_, n) => n);
+  const deal = (slot: GearSlot) =>
+    shuffle(
+      conquered.map((n) => holds(slot, n)),
+      action.source as RandomSource,
+    );
+  return {
+    matches: s.matches + 1,
+    draws: shuffle(conquered, action.source),
+    gear: { head: deal('head'), clothes: deal('clothes'), shoes: deal('shoes') },
+  };
+}
+
 // A loss costs a life and the same set is played again (FR-17). On the last life the run resets
-// (FR-18): back to the first conquered set with 1 life, and what was conquered stays conquered. The
-// order is fixed and the conquered kits are its prefix, so the replay is the cursor walking from 0
-// again, each set with the gear it was won with.
+// (FR-18): back to the first replay with 1 life, and what was conquered stays conquered. Under the
+// reshuffle rule the replays are drawn for the reset; under the earlier rule they are the conquered
+// sets in order, the cursor walking from 0 again, each with the gear it was won with.
 export function reportLoss(s: RunState, action: Result): RunState {
   checked(s, action, 'loss');
   if (s.lives > 1) {
@@ -283,8 +377,13 @@ export function reportLoss(s: RunState, action: Result): RunState {
       step: s.step + 1,
     });
   }
+  const replays =
+    s.resetRule === 'reshuffle'
+      ? { ...s.replays, [s.resets + 1]: replaysFor(s, action) }
+      : s.replays;
   return recorded(s, action, 'loss', {
     ...s,
+    replays,
     cursor: 0,
     lives: 1,
     winsSinceReset: 0,
