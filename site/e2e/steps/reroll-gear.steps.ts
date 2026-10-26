@@ -191,9 +191,15 @@ Given('a player who lost a match with the current set and has lives left', async
   await seedRun(page, playRun([...winsThenPlaying(10), 'loss']));
 });
 
-Given('a player replaying a conquered set after a reset', async ({ page }) => {
-  await seedRun(page, playRun([...winsThenPlaying(3), 'loss']));
-});
+Given(
+  'a player replaying a conquered set after a reset, in a run started before replays were reshuffled',
+  async ({ page }) => {
+    await seedRun(
+      page,
+      playRun([...winsThenPlaying(3), 'loss'], undefined, undefined, undefined, 'in-order'),
+    );
+  },
+);
 
 Then('the player is offered no re-roll', async ({ page }) => {
   await expect(page.getByRole('button', { name: message('run.won') })).toBeVisible();

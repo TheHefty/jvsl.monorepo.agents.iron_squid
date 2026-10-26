@@ -3,15 +3,15 @@ Feature: Reset and replay
   already conquered.
 
   Scenario: Losing the last life resets the run
-    Given a player with 12 conquered sets and 1 life
+    Given a player with 12 conquered sets and 1 life, in a run started before replays were reshuffled
     When the player reports a loss
     Then the run has reset
     And the player has 1 life
     And the player is playing the first set they conquered, with the same gear
     And the run shows 1 reset
 
-  Scenario: A replay follows the order of conquest
-    Given a player replaying after a reset
+  Scenario: A replay follows the order of conquest, in a run started before replays were reshuffled
+    Given a player replaying after a reset, in a run started before replays were reshuffled
     When the player wins with the first conquered set
     Then the player is playing the second conquered set, with the same gear
 
@@ -33,7 +33,7 @@ Feature: Reset and replay
     And the player is playing the same replayed set again
 
   Scenario: Losing the last life during a replay resets again
-    Given a player replaying the seventh of 12 conquered sets, with 1 life
+    Given a player replaying the seventh of 12 conquered sets, with 1 life, in a run started before replays were reshuffled
     When the player reports a loss
     Then the player is playing the first conquered set again
     And the run shows one more reset

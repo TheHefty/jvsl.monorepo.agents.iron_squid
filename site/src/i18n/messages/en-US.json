@@ -11,7 +11,7 @@
   "rules.roll": "Each match, you are given a weapon at random, with a random headgear, clothing and shoes. Each piece of gear is used once in a run.",
   "rules.win": "Win with that set before you get the next one. Nothing is skipped and nothing is drawn again.",
   "rules.lives": "You start with 1 life and earn another for every 10 wins.",
-  "rules.reset": "Lose your last life and you go back to the start: win again with every weapon you already beat, in the same order, with the same gear.",
+  "rules.reset": "Lose your last life and you go back to the start: win again with every weapon you already beat, in a new order, with the gear you won with dealt out again among them.",
   "rules.end": "The run is over when you have won with every weapon in the game.",
   "start.nameLabel": "Name your run (optional)",
   "start.nameHint": "Anyone you send a link to this run will see this name.",

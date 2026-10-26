@@ -11,7 +11,7 @@
   "rules.roll": "A cada partida, você recebe uma arma sorteada, com um acessório de cabeça, uma roupa e um calçado também sorteados. Cada peça de equipamento é usada uma única vez por run.",
   "rules.win": "Vença com esse conjunto antes de receber o próximo. Nada é pulado e nada é sorteado de novo.",
   "rules.lives": "Você começa com 1 vida e ganha mais uma a cada 10 vitórias.",
-  "rules.reset": "Se perder sua última vida, você volta ao começo: vence de novo com cada arma que já tinha vencido, na mesma ordem e com o mesmo equipamento.",
+  "rules.reset": "Se perder sua última vida, você volta ao começo: vence de novo com cada arma que já tinha vencido, numa ordem nova, com o equipamento das vitórias redistribuído entre elas.",
   "rules.end": "A run termina quando você tiver vencido com todas as armas do jogo.",
   "start.nameLabel": "Dê um nome à sua run (opcional)",
   "start.nameHint": "Qualquer pessoa para quem você mandar um link desta run vai ver esse nome.",

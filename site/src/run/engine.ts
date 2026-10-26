@@ -87,11 +87,11 @@ export type RunState = {
 
 export type CurrentSet = { kit: string; head: string; clothes: string; shoes: string };
 
-// The reset a new run follows. Until the screen shows the reshuffled reset (task reshuffle-screen),
-// a run started on the site keeps the earlier one, so the rules and the screen change together.
+// A new run follows the reshuffled reset (FR-18, amended 2026-10-26); the earlier one is for runs
+// begun before, and for tests of them.
 export function startRun(
   catalogue: Catalogue,
-  { name, resetRule = 'in-order' }: { name: string | undefined; resetRule?: ResetRule },
+  { name, resetRule = 'reshuffle' }: { name: string | undefined; resetRule?: ResetRule },
   source: RandomSource,
   at: string,
 ): RunState {

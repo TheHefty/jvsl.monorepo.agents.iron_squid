@@ -11,7 +11,7 @@
   "rules.roll": "Elke wedstrijd krijg je een willekeurig wapen, met een willekeurig hoofddeksel, kledingstuk en paar schoenen. Elk uitrustingsstuk wordt één keer per run gebruikt.",
   "rules.win": "Win met die set voordat je de volgende krijgt. Niets wordt overgeslagen en niets wordt opnieuw getrokken.",
   "rules.lives": "Je begint met 1 leven en krijgt er een bij voor elke 10 overwinningen.",
-  "rules.reset": "Verlies je je laatste leven, dan ga je terug naar het begin: win opnieuw met elk wapen dat je al hebt verslagen, in dezelfde volgorde en met dezelfde uitrusting.",
+  "rules.reset": "Verlies je je laatste leven, dan ga je terug naar het begin: win opnieuw met elk wapen dat je al hebt verslagen, in een nieuwe volgorde en met de uitrusting van je overwinningen opnieuw verdeeld.",
   "rules.end": "De run is voorbij als je met elk wapen in het spel hebt gewonnen.",
   "start.nameLabel": "Geef je run een naam (optioneel)",
   "start.nameHint": "Iedereen naar wie je een link naar deze run stuurt, ziet deze naam.",
