@@ -4,7 +4,8 @@
 import { readFileSync } from 'node:fs';
 import type { Page } from '@playwright/test';
 import type { Catalogue, NamesFile } from '../../src/catalogue/types';
-import { reportLoss, reportWin, startRun, type RunState } from '../../src/run/engine';
+import { reportLoss, reportWin, reroll, startRun, type RunState } from '../../src/run/engine';
+import type { GearSlot } from '../../src/catalogue/types';
 import { cryptoSource } from '../../src/run/random';
 
 const catalogue = JSON.parse(
@@ -39,6 +40,18 @@ export function playRun(
 // replay (share-mode).
 export const conquestMode = (state: RunState, n: number) =>
   state.log.find((e) => e.draw === n && e.result === 'win' && !e.replay)?.mode;
+
+// A run whose first set re-rolled a slot `times` times, then played on with `plays` (reroll-gear):
+// spares spent the way a player spends them, so the run is one the site could reach.
+export function rerolledRun(slot: GearSlot, times: number, plays: Play[] = []): RunState {
+  let s = startRun(catalogue, { name: undefined }, cryptoSource, at);
+  for (let n = 0; n < times; n++) s = reroll(s, { step: s.step, at, slot });
+  for (const play of plays) {
+    const action = { step: s.step, at, mode: 'Pnt' };
+    s = play === 'win' ? reportWin(s, action) : reportLoss(s, action);
+  }
+  return s;
+}
 
 // n wins: a win draws the next set at once, so the player is then playing a new set.
 export const winsThenPlaying = (n: number): Play[] => Array.from({ length: n }, () => 'win');

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl';
 import { imageUrl, loadCatalogues } from '../catalogue/load';
 import { NamesContext, useItemNames, useLoadedNames } from '../catalogue/names';
-import type { Catalogue, GearItem, Item } from '../catalogue/types';
+import type { Catalogue, GearItem, GearSlot, Item } from '../catalogue/types';
 import {
   currentSet,
   reportLoss,
@@ -10,6 +10,8 @@ import {
   reportWin,
   isComplete,
   isReplay,
+  reroll,
+  rerollRefusal,
   startRun,
   undo,
   totals,
@@ -250,6 +252,30 @@ function RunView({ newestVersion, namesLoaded }: { newestVersion: string; namesL
     return true;
   };
 
+  // The re-roll a gear piece offers (FR-25): none on a replay, after a result, or once the run is
+  // complete. With no spare left the button stays, and says why it does nothing.
+  const rerollOffered = (slot: GearSlot) => {
+    const refused = rerollRefusal(state, slot);
+    return refused === undefined || refused === 'no-spare';
+  };
+  const onReroll = (event: React.MouseEvent, slot: GearSlot) => {
+    if (rerollRefusal(state, slot) === 'no-spare') {
+      if (deliberate(event)) setNotice(intl.formatMessage({ id: 'reroll.noSpare' }, { slot }));
+      return;
+    }
+    act(
+      event,
+      () => reroll(state, { step: state.step, at: new Date().toISOString(), slot }),
+      (after) =>
+        setAnnouncement(
+          intl.formatMessage(
+            { id: 'reroll.announce' },
+            { slot, piece: names(catalogue.version, currentSet(after)[slot]) },
+          ),
+        ),
+    );
+  };
+
   return (
     <>
       {!kept && <NotKeptNotice run={state} />}
@@ -322,6 +348,7 @@ function RunView({ newestVersion, namesLoaded }: { newestVersion: string; namesL
               version={catalogue.version}
               item={pieces.head}
               brand={brandOf(catalogue, pieces.head)}
+              reroll={rerollOffered('head') ? { slot: 'head', onReroll } : undefined}
             >
               <FormattedMessage id="set.head" />
             </Piece>
@@ -329,6 +356,7 @@ function RunView({ newestVersion, namesLoaded }: { newestVersion: string; namesL
               version={catalogue.version}
               item={pieces.clothes}
               brand={brandOf(catalogue, pieces.clothes)}
+              reroll={rerollOffered('clothes') ? { slot: 'clothes', onReroll } : undefined}
             >
               <FormattedMessage id="set.clothes" />
             </Piece>
@@ -336,6 +364,7 @@ function RunView({ newestVersion, namesLoaded }: { newestVersion: string; namesL
               version={catalogue.version}
               item={pieces.shoes}
               brand={brandOf(catalogue, pieces.shoes)}
+              reroll={rerollOffered('shoes') ? { slot: 'shoes', onReroll } : undefined}
             >
               <FormattedMessage id="set.shoes" />
             </Piece>
@@ -443,16 +472,19 @@ function Piece({
   version,
   item,
   brand,
+  reroll,
   kit = false,
   children,
 }: {
   version: string;
   item: Item | undefined;
   brand?: Item;
+  reroll?: { slot: GearSlot; onReroll: (event: React.MouseEvent, slot: GearSlot) => void };
   kit?: boolean;
   children: React.ReactNode;
 }) {
   const names = useItemNames();
+  const intl = useIntl();
   if (!item) return null;
   const name = names(version, item.id);
   return (
@@ -469,16 +501,32 @@ function Piece({
       <figcaption>
         <span className="piece-label tag">{children}</span>
         <span className="piece-name">{name}</span>
-        {brand && (
-          // The brand, so the player knows which shop or locker to look in (FR-5); its name is the
-          // icon's text, in the page's language.
-          <img
-            className="brand-icon"
-            src={imageUrl(version, brand.image)}
-            alt={names(version, brand.id)}
-            width={32}
-            height={32}
-          />
+        {(brand || reroll) && (
+          // Under the name, so the name keeps the row's width on a phone.
+          <span className="piece-tools">
+            {brand && (
+              // The brand, so the player knows which shop or locker to look in (FR-5); its name is
+              // the icon's text, in the page's language.
+              <img
+                className="brand-icon"
+                src={imageUrl(version, brand.image)}
+                alt={names(version, brand.id)}
+                width={32}
+                height={32}
+              />
+            )}
+            {reroll && (
+              // Its name says which piece; its text is the same word on every piece.
+              <button
+                type="button"
+                className="btn btn-ghost reroll"
+                aria-label={intl.formatMessage({ id: 'reroll.label' }, { slot: reroll.slot })}
+                onClick={(event) => reroll.onReroll(event, reroll.slot)}
+              >
+                <FormattedMessage id="reroll.button" />
+              </button>
+            )}
+          </span>
         )}
       </figcaption>
     </figure>
@@ -687,6 +735,21 @@ function JustConquered({ state, catalogue }: { state: RunState; catalogue: Catal
   );
 }
 
+// The results and the re-rolls in the order they happened: a re-roll comes after the result it
+// followed (its afterMatches), before the next. The log may begin after the run did (a run migrated
+// from format 1), so a result's place is counted back from the matches played.
+function logItems(state: RunState) {
+  const first = state.matches - state.log.length;
+  return [
+    ...state.log.map((entry, j) => ({ kind: 'result' as const, entry, key: (first + j + 1) * 2 })),
+    ...state.rerolls.map((entry) => ({
+      kind: 'reroll' as const,
+      entry,
+      key: entry.afterMatches * 2 + 1,
+    })),
+  ].sort((a, b) => a.key - b.key);
+}
+
 // The run log (FR-24): every result, newest first, each one sentence a screen reader reads whole, with
 // the date written for the page's locale. Collapsed by default, so the set stays first on screen.
 function RunLog({ state, catalogue }: { state: RunState; catalogue: Catalogue }) {
@@ -709,36 +772,56 @@ function RunLog({ state, catalogue }: { state: RunState; catalogue: Catalogue })
         <p>{intl.formatMessage({ id: 'log.empty' })}</p>
       ) : (
         <ol aria-label={title} reversed>
-          {state.log
-            .map((entry, i) => (
-              <li key={i}>
-                {/* Read as part of the sentence after it, which already says the result. */}
-                <span
-                  className={`log-mark ${entry.result === 'win' ? 'log-mark-win' : 'log-mark-loss'}`}
-                  aria-hidden="true"
-                >
-                  {intl.formatMessage({
-                    id: entry.result === 'win' ? 'log.markWin' : 'log.markLoss',
-                  })}
-                </span>{' '}
-                {intl.formatMessage(
-                  { id: 'log.entry' },
-                  {
-                    replay: String(entry.replay),
-                    result: entry.result,
-                    kit: kitName(entry.draw),
-                    conquered: entry.conqueredAfter,
-                    total: state.order.kits.length,
-                    lives: intl.formatMessage({ id: 'run.lives' }, { lives: entry.livesAfter }),
-                    reset: String(entry.reset),
-                    recorded: String(entry.mode !== undefined),
-                    mode: entry.mode ? names(catalogue.version, entry.mode) : '',
-                    notRecorded: intl.formatMessage({ id: 'log.modeNotRecorded' }),
-                  },
-                )}{' '}
-                <time dateTime={entry.at}>{intl.formatDate(entry.at, { dateStyle: 'long' })}</time>
-              </li>
-            ))
+          {logItems(state)
+            .map((item, i) =>
+              item.kind === 'reroll' ? (
+                <li key={i}>
+                  {intl.formatMessage(
+                    { id: 'log.reroll' },
+                    {
+                      from: names(catalogue.version, item.entry.from),
+                      to: names(catalogue.version, item.entry.to),
+                    },
+                  )}{' '}
+                  <time dateTime={item.entry.at}>
+                    {intl.formatDate(item.entry.at, { dateStyle: 'long' })}
+                  </time>
+                </li>
+              ) : (
+                <li key={i}>
+                  {/* Read as part of the sentence after it, which already says the result. */}
+                  <span
+                    className={`log-mark ${item.entry.result === 'win' ? 'log-mark-win' : 'log-mark-loss'}`}
+                    aria-hidden="true"
+                  >
+                    {intl.formatMessage({
+                      id: item.entry.result === 'win' ? 'log.markWin' : 'log.markLoss',
+                    })}
+                  </span>{' '}
+                  {intl.formatMessage(
+                    { id: 'log.entry' },
+                    {
+                      replay: String(item.entry.replay),
+                      result: item.entry.result,
+                      kit: kitName(item.entry.draw),
+                      conquered: item.entry.conqueredAfter,
+                      total: state.order.kits.length,
+                      lives: intl.formatMessage(
+                        { id: 'run.lives' },
+                        { lives: item.entry.livesAfter },
+                      ),
+                      reset: String(item.entry.reset),
+                      recorded: String(item.entry.mode !== undefined),
+                      mode: item.entry.mode ? names(catalogue.version, item.entry.mode) : '',
+                      notRecorded: intl.formatMessage({ id: 'log.modeNotRecorded' }),
+                    },
+                  )}{' '}
+                  <time dateTime={item.entry.at}>
+                    {intl.formatDate(item.entry.at, { dateStyle: 'long' })}
+                  </time>
+                </li>
+              ),
+            )
             .reverse()}
         </ol>
       )}
