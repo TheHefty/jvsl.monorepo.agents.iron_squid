@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.5.0](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/compare/v0.4.0...v0.5.0) (2026-10-26)
+
+
+### Features
+
+* carry the run log in a share link, and find its longest winning streak ([#95](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/issues/95)) ([2d3fb39](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/2d3fb3912a2bebbe72a9aee26eabbf0223b427b7))
+* redraw the logo as a squid in the game's style ([#93](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/issues/93)) ([dae7b4d](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/dae7b4da0d2549f14a4ff0d016fa87627d35f0e3))
+* show a shared run's log and its longest winning streak ([#96](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/issues/96)) ([6449953](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/64499537a8ff16c8acbe0a49981e0df606e40710))
+
 ## [0.4.0](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/compare/v0.3.0...v0.4.0) (2026-10-26)
 
 
