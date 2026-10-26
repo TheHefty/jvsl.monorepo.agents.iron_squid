@@ -32,6 +32,7 @@ export const registrations: Registration[] = [
   { feature: 'find-the-gear/reroll-gear.feature' },
   { feature: 'reset-reshuffle/reshuffle-replays.feature' },
   { feature: 'squid-logo/redraw-logo.feature' },
+  { feature: 'shared-log/share-the-log.feature' },
   {
     feature: 'every-language/translate-interface.feature',
   },

@@ -273,15 +273,19 @@ Then(
   'its kits conquered, kits to go, lives and resets stand in one row',
   async ({ page, world }) => {
     const state = world.state as RunState;
+    // These four lead the row; the longest streak may follow them (FR-46), on the same line.
     const terms = page.locator('.shared-numbers dt');
-    await expect(terms).toHaveText(
-      ['shared.statConquered', 'shared.statToGo', 'shared.statLives', 'shared.statResets'].map(
-        (id) => messageIn('en-US', id),
-      ),
-    );
-    await expect(page.locator('.shared-numbers dd')).toHaveText(
-      [state.conquered, 160 - state.conquered, state.lives, state.resets].map(String),
-    );
+    const values = page.locator('.shared-numbers dd');
+    const firstFour = [
+      'shared.statConquered',
+      'shared.statToGo',
+      'shared.statLives',
+      'shared.statResets',
+    ];
+    for (const [i, id] of firstFour.entries())
+      await expect(terms.nth(i)).toHaveText(messageIn('en-US', id));
+    const numbers = [state.conquered, 160 - state.conquered, state.lives, state.resets];
+    for (const [i, n] of numbers.entries()) await expect(values.nth(i)).toHaveText(String(n));
     // One row: every number at the same height.
     const tops = await page
       .locator('.shared-numbers > div')
