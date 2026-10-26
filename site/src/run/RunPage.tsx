@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl';
 import { imageUrl, loadCatalogues } from '../catalogue/load';
 import { NamesContext, useItemNames, useLoadedNames } from '../catalogue/names';
-import type { Catalogue, Item } from '../catalogue/types';
+import type { Catalogue, GearItem, Item } from '../catalogue/types';
 import {
   currentSet,
   reportLoss,
@@ -24,7 +24,11 @@ import { browserStorage, createRunStore, type LoadResult, type RunStore } from '
 
 const MAX_NAME = 30;
 
-const findItem = (items: Item[], id: string) => items.find((i) => i.id === id);
+const findItem = <T extends Item>(items: T[], id: string) => items.find((i) => i.id === id);
+
+// The brand a gear piece wears (gear-brand), with its icon.
+const brandOf = (catalogue: Catalogue, piece: GearItem | undefined) =>
+  piece ? findItem(catalogue.brands, piece.brand) : undefined;
 
 function setPieces(catalogue: Catalogue, state: RunState) {
   const set = currentSet(state);
@@ -314,13 +318,25 @@ function RunView({ newestVersion, namesLoaded }: { newestVersion: string; namesL
             </p>
           )}
           <div className="gear">
-            <Piece version={catalogue.version} item={pieces.head}>
+            <Piece
+              version={catalogue.version}
+              item={pieces.head}
+              brand={brandOf(catalogue, pieces.head)}
+            >
               <FormattedMessage id="set.head" />
             </Piece>
-            <Piece version={catalogue.version} item={pieces.clothes}>
+            <Piece
+              version={catalogue.version}
+              item={pieces.clothes}
+              brand={brandOf(catalogue, pieces.clothes)}
+            >
               <FormattedMessage id="set.clothes" />
             </Piece>
-            <Piece version={catalogue.version} item={pieces.shoes}>
+            <Piece
+              version={catalogue.version}
+              item={pieces.shoes}
+              brand={brandOf(catalogue, pieces.shoes)}
+            >
               <FormattedMessage id="set.shoes" />
             </Piece>
           </div>
@@ -426,11 +442,13 @@ export function Hero({ children }: { children: React.ReactNode }) {
 function Piece({
   version,
   item,
+  brand,
   kit = false,
   children,
 }: {
   version: string;
   item: Item | undefined;
+  brand?: Item;
   kit?: boolean;
   children: React.ReactNode;
 }) {
@@ -451,6 +469,17 @@ function Piece({
       <figcaption>
         <span className="piece-label tag">{children}</span>
         <span className="piece-name">{name}</span>
+        {brand && (
+          // The brand, so the player knows which shop or locker to look in (FR-5); its name is the
+          // icon's text, in the page's language.
+          <img
+            className="brand-icon"
+            src={imageUrl(version, brand.image)}
+            alt={names(version, brand.id)}
+            width={32}
+            height={32}
+          />
+        )}
       </figcaption>
     </figure>
   );

@@ -87,11 +87,12 @@ Then('the conquered sets, in the order they were conquered', async ({ page, worl
       }),
     );
   }
-  // 160 sets are 160 images: each loads only as it nears the screen (NFR-P1, failure 3).
+  // 160 sets are 640 images, each kit with its three gear brands (gear-brand): each loads only as
+  // it nears the screen (NFR-P1, failure 3).
   const loading = await items
     .locator('img')
     .evaluateAll((imgs) => imgs.map((i) => i.getAttribute('loading')));
-  expect(loading).toHaveLength(state.conquered);
+  expect(loading).toHaveLength(state.conquered * 4);
   expect(new Set(loading)).toEqual(new Set(['lazy']));
 });
 

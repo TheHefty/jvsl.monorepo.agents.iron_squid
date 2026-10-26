@@ -28,15 +28,7 @@ export const registrations: Registration[] = [
   { feature: 'found-and-previewed/seo-meta.feature' },
   { feature: 'found-and-previewed/link-previews.feature' },
   { feature: 'match-modes/report-mode.feature' },
-  {
-    feature: 'find-the-gear/gear-brand.feature',
-    pending: {
-      'A drawn piece shows its brand': 'show-brand (is-k2f.1.2)',
-      'The brand is named for screen readers': 'show-brand (is-k2f.1.2)',
-      "The brand's name follows the language": 'show-brand (is-k2f.1.2)',
-      'A shared run shows the brands': 'show-brand (is-k2f.1.2)',
-    },
-  },
+  { feature: 'find-the-gear/gear-brand.feature' },
   {
     feature: 'every-language/translate-interface.feature',
   },

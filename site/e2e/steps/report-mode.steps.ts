@@ -7,6 +7,7 @@ import { Given, Then, When } from '../fixtures';
 import { messageIn } from '../support/messages';
 import { askForMode, modeDialog, modes, modeName, report, tabTo } from '../support/report';
 import { playRun, seedRun, setNames, winsThenPlaying } from '../support/seed';
+import { pieceImages } from '../support/set';
 
 const catalogue = JSON.parse(
   readFileSync('src/catalogue/11.3.0/catalogue.json', 'utf8'),
@@ -14,7 +15,7 @@ const catalogue = JSON.parse(
 const message = (id: string, values: Record<string, unknown> = {}) =>
   messageIn('en-US', id, values);
 const set = async (p: Page) => {
-  const images = p.getByRole('region', { name: message('set.label') }).getByRole('img');
+  const images = pieceImages(p);
   await expect(images).toHaveCount(4);
   return images.evaluateAll((imgs) => imgs.map((i) => (i as HTMLImageElement).alt));
 };

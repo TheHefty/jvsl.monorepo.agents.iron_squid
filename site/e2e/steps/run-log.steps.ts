@@ -5,6 +5,7 @@ import type { RunState } from '../../src/run/engine';
 import { Given, Then, When } from '../fixtures';
 import { modeName, report } from '../support/report';
 import { playRun, seedRun, setNames, winsThenPlaying, type Play } from '../support/seed';
+import { pieceImages } from '../support/set';
 
 const catalogue = JSON.parse(readFileSync('src/i18n/messages/en-US.json', 'utf8')) as Record<
   string,
@@ -42,7 +43,7 @@ const sentence = (e: Entry) =>
   });
 
 async function readSet(p: Page): Promise<string[]> {
-  const images = p.getByRole('region', { name: message('set.label') }).getByRole('img');
+  const images = pieceImages(p);
   await expect(images).toHaveCount(4);
   return images.evaluateAll((imgs) => imgs.map((i) => (i as HTMLImageElement).alt));
 }

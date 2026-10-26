@@ -327,6 +327,33 @@ dialog::backdrop {
   font-weight: var(--font-weight-heading);
 }
 
+.brand-icon {
+  flex: none;
+  object-fit: contain;
+  /* The brands' own colours are drawn for a light ground (dark navy logos vanish on the dark
+     theme), so each sits on a light tile in both themes. */
+  padding: 2px;
+  border-radius: var(--radius-sm);
+  background: var(--color-brand-tile);
+}
+
+.piece figcaption .brand-icon {
+  margin-block-start: var(--space-1);
+}
+
+.shared-set-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+/* Under the sentence, not beside it: three icons beside a long name push a phone's page sideways. */
+.shared-brands {
+  display: flex;
+  gap: var(--space-1);
+}
+
 .piece-kit .piece-name {
   font-size: clamp(1.5rem, 4vw, 2.25rem);
   text-transform: uppercase;

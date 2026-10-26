@@ -3,6 +3,7 @@ import { expect, type Page } from '@playwright/test';
 import { IntlMessageFormat } from 'intl-messageformat';
 import { Given, Then, When, type World } from '../fixtures';
 import { report } from '../support/report';
+import { pieceImages } from '../support/set';
 
 const catalogue = JSON.parse(readFileSync('src/i18n/messages/en-US.json', 'utf8')) as Record<
   string,
@@ -22,7 +23,7 @@ const on = (world: World, page: Page) => world.page ?? page;
 async function readSet(p: Page): Promise<string[]> {
   const set = p.getByRole('region', { name: message('set.label') });
   await expect(set).toBeVisible();
-  const images = set.getByRole('img');
+  const images = pieceImages(p);
   await expect(images).toHaveCount(4);
   return images.evaluateAll((imgs) => imgs.map((i) => (i as HTMLImageElement).alt));
 }

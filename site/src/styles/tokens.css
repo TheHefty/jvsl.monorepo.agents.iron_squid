@@ -25,6 +25,8 @@
   --color-text: #e9e9ed;
   --color-text-muted: #b2b6ca;
   --color-divider: #3f424d;
+  /* The ground of a brand icon, light in both themes: the brands' colours are drawn for one. */
+  --color-brand-tile: #f4f5fa;
 
   /* the accent: lines, outlines, marks and large text only (3:1); small text uses accent-text */
   --color-accent: #9184d9;
