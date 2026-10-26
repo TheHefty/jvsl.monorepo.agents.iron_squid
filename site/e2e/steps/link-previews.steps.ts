@@ -42,7 +42,7 @@ Then("the page's description", async ({ world }) => {
 
 Then('an image, with its width, height and a text alternative', async ({ world }) => {
   const p = world.preview as Record<string, string>;
-  expect(p['og:image']).toBe(`${siteOrigin}/preview.png`);
+  expect(p['og:image']).toMatch(new RegExp(`^${siteOrigin}/preview\\.png\\?v=[0-9a-f]{8}$`));
   expect(p['og:image:width']).toBe('1200');
   expect(p['og:image:height']).toBe('630');
   expect(p['og:image:alt']).toBe(messageIn(world.locale as string, 'meta.imageAlt'));
@@ -79,7 +79,8 @@ Then('opening that address returns an image', async ({ world, request, baseURL }
   );
   for (const address of addresses) {
     // Served by this build: the same path, under the address the build is tested at.
-    const local = new URL(`.${new URL(address).pathname}`, baseURL).href;
+    const { pathname, search } = new URL(address);
+    const local = new URL(`.${pathname}${search}`, baseURL).href;
     const response = await request.get(local);
     expect(response.status(), local).toBe(200);
     expect(response.headers()['content-type']).toContain('image/png');
@@ -126,3 +127,24 @@ Then("the preview is the same as the home page's", async ({ world }) => {
 Then('{string} appears nowhere in what it read', async ({ world }, name: string) => {
   expect(world.html as string).not.toContain(name);
 });
+
+// debt is-bql: apps keep a preview image by its address, so the address carries the image's digest
+// and a new image is a new address.
+Given("the site's preview image", async ({ request, baseURL, world }) => {
+  const response = await request.get(new URL('./preview.png', baseURL).href);
+  expect(response.status()).toBe(200);
+  world.previewDigest = createHash('sha256')
+    .update(await response.body())
+    .digest('hex');
+});
+
+Then(
+  'every page names it at an address that changes whenever the image does',
+  async ({ request, baseURL, world }) => {
+    const expected = `${siteOrigin}/preview.png?v=${(world.previewDigest as string).slice(0, 8)}`;
+    for (const page of pagesOfBuild().filter((q) => q !== '404.html')) {
+      const p = previewOf(await read(request, baseURL, page));
+      expect(p['og:image'], page || 'the root').toBe(expected);
+    }
+  },
+);

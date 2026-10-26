@@ -18,6 +18,10 @@ Feature: Link previews
     Then the preview image's address starts with "https://iron-squid.top/"
     And opening that address returns an image
 
+  Scenario: A new preview image has a new address
+    Given the site's preview image
+    Then every page names it at an address that changes whenever the image does
+
   Scenario: The image is the site's own, not Nintendo's
     Then the preview image carries the site's logo and no game artwork
 
