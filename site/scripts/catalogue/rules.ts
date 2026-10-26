@@ -30,6 +30,11 @@ const numbered = (id: string) => /_\d+$/.test(id);
 
 const gearKey = (id: string) => id.slice(id.indexOf('_') + 1);
 
+// The six modes a result is played in (match-modes), in the order a player is offered them: Turf
+// War, Splat Zones, Tower Control, Rainmaker, Clam Blitz, Tricolor Turf War. The game's ids; their
+// "_2L" two-line variants are display forms, never used.
+const modeIds = ['Pnt', 'Var', 'Vlf', 'Vgl', 'Vcl', 'Tcl'] as const;
+
 export function buildCatalogue(source: Source): Catalogue {
   const versus = source.weapons.filter((w) => w.Type === 'Versus');
   const kitRows = versus.filter((w) => numbered(w.__RowId));
@@ -71,6 +76,7 @@ export function buildCatalogue(source: Source): Catalogue {
     kits: kitRows.map((k) => ({ id: k.__RowId, image: `weapon/Wst_${k.__RowId}.png` })),
     gear,
     excluded: { replicas, unobtainable },
+    modes: modeIds.map((id) => ({ id })),
   };
 }
 
@@ -92,5 +98,7 @@ export function buildNames(
     const table = names[nameTables[slot]] ?? {};
     for (const g of catalogue.gear[slot]) add(g.id, table[gearKey(g.id)]);
   }
+  const modeNames = names['CommonMsg/VS/VSRuleName'] ?? {};
+  for (const m of catalogue.modes) add(m.id, modeNames[m.id]);
   return out;
 }

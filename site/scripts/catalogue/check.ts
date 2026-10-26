@@ -10,6 +10,7 @@ import { locales } from '../../src/i18n/locales';
 export function catalogueProblems(c: Catalogue): string[] {
   const at = `catalogue ${c.version}`;
   if (c.kits.length === 0) return [`${at}: no kits`];
+  if (!c.modes?.length) return [`${at}: no modes`];
   const problems: string[] = [];
   for (const slot of gearSlots) {
     const n = c.gear[slot].length;
@@ -36,7 +37,7 @@ export function nameProblems(
   names: Record<string, Record<string, string>>,
   wanted: readonly string[],
 ): string[] {
-  const items = [...c.kits, ...gearSlots.flatMap((s) => c.gear[s])];
+  const items = [...c.kits, ...gearSlots.flatMap((s) => c.gear[s]), ...(c.modes ?? [])];
   return wanted.flatMap((locale) => {
     const own = names[locale];
     if (!own) return [`catalogue ${c.version} has no names for ${locale}`];

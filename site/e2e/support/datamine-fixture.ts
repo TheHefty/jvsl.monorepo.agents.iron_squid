@@ -23,6 +23,9 @@ function files(v: Version): Record<string, Buffer> {
     'CommonMsg/Gear/GearName_Head': Object.fromEntries(v.gear.map((g) => [g, `Hat ${g}`])),
     'CommonMsg/Gear/GearName_Clothes': Object.fromEntries(v.gear.map((g) => [g, `Shirt ${g}`])),
     'CommonMsg/Gear/GearName_Shoes': Object.fromEntries(v.gear.map((g) => [g, `Shoes ${g}`])),
+    'CommonMsg/VS/VSRuleName': Object.fromEntries(
+      ['Pnt', 'Var', 'Vlf', 'Vgl', 'Vcl', 'Tcl'].map((m) => [m, `Mode ${m}`]),
+    ),
   };
   const json = (o: unknown) => Buffer.from(JSON.stringify(o));
   const out: Record<string, Buffer> = {

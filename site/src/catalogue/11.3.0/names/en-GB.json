@@ -1030,6 +1030,12 @@
     "Shs_TRG001": "Burden of Floof",
     "Shs_TRS000": "Trail Boots",
     "Shs_TRS001": "Custom Trail Boots",
-    "Shs_TRS002": "Pro Trail Boots"
+    "Shs_TRS002": "Pro Trail Boots",
+    "Pnt": "Turf War",
+    "Var": "Splat Zones",
+    "Vlf": "Tower Control",
+    "Vgl": "Rainmaker",
+    "Vcl": "Clam Blitz",
+    "Tcl": "Tricolor Turf War"
   }
 }

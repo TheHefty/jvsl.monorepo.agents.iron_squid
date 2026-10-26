@@ -1,28 +1,133 @@
 {
   "version": "0.0.1",
-  "datamine": { "repo": "fixture", "commit": "x", "dataFolder": "1" },
+  "datamine": {
+    "repo": "fixture",
+    "commit": "x",
+    "dataFolder": "1"
+  },
   "kits": [
-    { "id": "K0", "name": { "en-US": "K0" }, "image": "K0.png" },
-    { "id": "K1", "name": { "en-US": "K1" }, "image": "K1.png" },
-    { "id": "K2", "name": { "en-US": "K2" }, "image": "K2.png" }
+    {
+      "id": "K0",
+      "name": {
+        "en-US": "K0"
+      },
+      "image": "K0.png"
+    },
+    {
+      "id": "K1",
+      "name": {
+        "en-US": "K1"
+      },
+      "image": "K1.png"
+    },
+    {
+      "id": "K2",
+      "name": {
+        "en-US": "K2"
+      },
+      "image": "K2.png"
+    }
   ],
   "gear": {
     "head": [
-      { "id": "H0", "name": { "en-US": "H0" }, "image": "H0.png" },
-      { "id": "H1", "name": { "en-US": "H1" }, "image": "H1.png" },
-      { "id": "H2", "name": { "en-US": "H2" }, "image": "H2.png" }
+      {
+        "id": "H0",
+        "name": {
+          "en-US": "H0"
+        },
+        "image": "H0.png"
+      },
+      {
+        "id": "H1",
+        "name": {
+          "en-US": "H1"
+        },
+        "image": "H1.png"
+      },
+      {
+        "id": "H2",
+        "name": {
+          "en-US": "H2"
+        },
+        "image": "H2.png"
+      }
     ],
     "clothes": [
-      { "id": "C0", "name": { "en-US": "C0" }, "image": "C0.png" },
-      { "id": "C1", "name": { "en-US": "C1" }, "image": "C1.png" },
-      { "id": "C2", "name": { "en-US": "C2" }, "image": "C2.png" }
+      {
+        "id": "C0",
+        "name": {
+          "en-US": "C0"
+        },
+        "image": "C0.png"
+      },
+      {
+        "id": "C1",
+        "name": {
+          "en-US": "C1"
+        },
+        "image": "C1.png"
+      },
+      {
+        "id": "C2",
+        "name": {
+          "en-US": "C2"
+        },
+        "image": "C2.png"
+      }
     ],
     "shoes": [
-      { "id": "S0", "name": { "en-US": "S0" }, "image": "S0.png" },
-      { "id": "S1", "name": { "en-US": "S1" }, "image": "S1.png" },
-      { "id": "S2", "name": { "en-US": "S2" }, "image": "S2.png" },
-      { "id": "S3", "name": { "en-US": "S3" }, "image": "S3.png" }
+      {
+        "id": "S0",
+        "name": {
+          "en-US": "S0"
+        },
+        "image": "S0.png"
+      },
+      {
+        "id": "S1",
+        "name": {
+          "en-US": "S1"
+        },
+        "image": "S1.png"
+      },
+      {
+        "id": "S2",
+        "name": {
+          "en-US": "S2"
+        },
+        "image": "S2.png"
+      },
+      {
+        "id": "S3",
+        "name": {
+          "en-US": "S3"
+        },
+        "image": "S3.png"
+      }
     ]
   },
-  "excluded": { "replicas": [], "unobtainable": [] }
+  "excluded": {
+    "replicas": [],
+    "unobtainable": []
+  },
+  "modes": [
+    {
+      "id": "Pnt"
+    },
+    {
+      "id": "Var"
+    },
+    {
+      "id": "Vlf"
+    },
+    {
+      "id": "Vgl"
+    },
+    {
+      "id": "Vcl"
+    },
+    {
+      "id": "Tcl"
+    }
+  ]
 }

@@ -11,6 +11,7 @@ const cat = (kits: number, head: number, clothes: number, shoes: number): Catalo
   kits: ids('K', kits),
   gear: { head: ids('H', head), clothes: ids('C', clothes), shoes: ids('S', shoes) },
   excluded: { replicas: [], unobtainable: [] },
+  modes: [{ id: 'M0' }],
 });
 
 describe('catalogueProblems', () => {
@@ -43,7 +44,7 @@ describe('catalogueProblems', () => {
 
 describe('nameProblems', () => {
   const c = cat(1, 1, 1, 1);
-  const all = { K0: 'Kit', H0: 'Hat', C0: 'Coat', S0: 'Shoes' };
+  const all = { K0: 'Kit', H0: 'Hat', C0: 'Coat', S0: 'Shoes', M0: 'Mode' };
 
   it('accepts names for every item in every locale', () => {
     expect(nameProblems(c, { 'en-US': all, 'ko-KR': all }, ['en-US', 'ko-KR'])).toEqual([]);
@@ -61,5 +62,21 @@ describe('nameProblems', () => {
     expect(nameProblems(c, { 'en-US': all }, ['en-US', 'ja-JP'])).toEqual([
       'catalogue 11.3.0 has no names for ja-JP',
     ]);
+  });
+
+  it('names a mode without a name in a locale (match-modes)', () => {
+    const { M0: _, ...noMode } = all;
+    void _;
+    expect(nameProblems(c, { 'en-US': all, 'ko-KR': noMode }, ['en-US', 'ko-KR'])).toEqual([
+      'catalogue 11.3.0: M0 has no ko-KR name',
+    ]);
+  });
+});
+
+describe('catalogueProblems, for modes', () => {
+  it('refuses a catalogue with no modes, since every result names one', () => {
+    const c = cat(1, 1, 1, 1);
+    c.modes = [];
+    expect(catalogueProblems(c)).toEqual(['catalogue 11.3.0: no modes']);
   });
 });

@@ -4269,5 +4269,25 @@
       "Shs_MSN310",
       "Shs_SDODR000"
     ]
-  }
+  },
+  "modes": [
+    {
+      "id": "Pnt"
+    },
+    {
+      "id": "Var"
+    },
+    {
+      "id": "Vlf"
+    },
+    {
+      "id": "Vgl"
+    },
+    {
+      "id": "Vcl"
+    },
+    {
+      "id": "Tcl"
+    }
+  ]
 }

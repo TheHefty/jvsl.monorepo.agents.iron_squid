@@ -15,6 +15,7 @@ const catalogue: Catalogue = {
     shoes: ids('S', 7).map(item),
   },
   excluded: { replicas: [], unobtainable: [] },
+  modes: ['Pnt', 'Var', 'Vlf', 'Vgl', 'Vcl', 'Tcl'].map((id) => ({ id })),
 };
 const at = '2026-10-24T12:00:00.000Z';
 const start = (source: RandomSource = cryptoSource) =>

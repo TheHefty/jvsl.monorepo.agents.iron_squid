@@ -13,6 +13,8 @@ export type Catalogue = {
   gear: { head: Item[]; clothes: Item[]; shoes: Item[] };
   // What the data had and the catalogue left out, kept so a reviewer can see why.
   excluded: { replicas: { id: string; copies: string }[]; unobtainable: string[] };
+  // The modes a result is played in (match-modes), by the game's own ids, named in names/<locale>.
+  modes: { id: string }[];
 };
 
 export const gearSlots = ['head', 'clothes', 'shoes'] as const;
