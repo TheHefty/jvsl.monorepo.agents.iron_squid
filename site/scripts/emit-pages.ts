@@ -81,6 +81,13 @@ export function emitPages({
   // What a preview generator shows for a posted link (FR-72): the site's name, the page's
   // description, its locale and the site's own image. The shared-run page previews as the home
   // page, address included: its run is in the fragment, which no preview generator receives.
+  // Apps keep a preview image by its address: the address carries the image's digest, so a new image
+  // is a new address and no app keeps showing the old one (debt is-bql).
+  const previewFile = join(distDir, 'preview.png');
+  const previewVersion = existsSync(previewFile)
+    ? createHash('sha256').update(readFileSync(previewFile)).digest('hex').slice(0, 8)
+    : '';
+  const previewImage = `${siteOrigin}/preview.png${previewVersion ? `?v=${previewVersion}` : ''}`;
   const preview = (locale: string, route: string) => {
     const shown = route === 'run' ? '' : route;
     const id = describedBy[route] ?? 'meta.home';
@@ -93,7 +100,7 @@ export function emitPages({
       meta('og:description', catalogues[locale]?.[id] ?? '') +
       meta('og:url', `${siteOrigin}/${locale}/${shown ? `${shown}/` : ''}`) +
       meta('og:locale', locale.replace('-', '_')) +
-      meta('og:image', `${siteOrigin}/preview.png`) +
+      meta('og:image', previewImage) +
       meta('og:image:width', '1200') +
       meta('og:image:height', '630') +
       meta('og:image:alt', catalogues[locale]?.['meta.imageAlt'] ?? '') +
