@@ -32,7 +32,7 @@ const winTimes = (s: RunState, n: number) => {
 
 describe('the run log (FR-24)', () => {
   it('starts empty, complete from the start of a run begun in format 2', () => {
-    expect(start()).toMatchObject({ schema: 2, log: [], logSince: t0 });
+    expect(start()).toMatchObject({ schema: 3, log: [], logSince: t0 });
   });
 
   it('logs a win: the draw, the result, the lives after it, and when', () => {

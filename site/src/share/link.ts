@@ -11,7 +11,7 @@
 // when none was recorded and then the catalogue's modes from 1. Format 1 is still read, forever:
 // links made before are in posts and messages that cannot be edited.
 import { gearSlots, type Catalogue } from '../catalogue/types';
-import type { CurrentSet, RunState } from '../run/engine';
+import { gearOf, type CurrentSet, type RunState } from '../run/engine';
 import { displayName } from '../run/name';
 
 const FORMAT = 2;
@@ -68,7 +68,9 @@ export function encodeShare(state: RunState, catalogue: Catalogue): string {
   const name = new TextEncoder().encode(state.name ?? '');
   const sets = Array.from({ length: state.conquered }, (_, n) => [
     ...slots.map((slot, i) => {
-      const id = (slot === 'kits' ? state.order.kits : state.order[slot])[n] ?? '';
+      // The gear the set was played with, re-rolls included (FR-25).
+      const worn = gearOf(state, n);
+      const id = slot === 'kits' ? worn.kit : worn[slot];
       const place = places[i]?.get(id);
       if (place === undefined)
         throw new Error(`share: ${id} is not in catalogue ${catalogue.version}`);

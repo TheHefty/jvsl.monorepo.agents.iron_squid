@@ -224,11 +224,10 @@ test('a run saved in format 1 loads, plays on, and is kept in format 2 with its 
 }) => {
   const { playRun, winsThenPlaying } = await import('../support/seed');
   const played = playRun(winsThenPlaying(3));
-  // The same run as the site wrote it in format 1: no log, no log date.
+  // The same run as the site wrote it in format 1: no log, no log date, no re-rolls.
   const asFormat1 = (s: Record<string, unknown>) => {
-    const { log: _log, logSince: _since, previous, ...rest } = s;
-    void _log;
-    void _since;
+    const { log: _log, logSince: _since, worn: _w, spent: _s, rerolls: _r, previous, ...rest } = s;
+    void [_log, _since, _w, _s, _r];
     return {
       ...rest,
       schema: 1,
@@ -255,7 +254,7 @@ test('a run saved in format 1 loads, plays on, and is kept in format 2 with its 
   const stored = JSON.parse(
     (await page.evaluate(() => localStorage.getItem('iron-squid:run'))) ?? '{}',
   );
-  expect(stored.state.schema).toBe(2);
+  expect(stored.state.schema).toBe(3);
   expect(stored.state.log).toHaveLength(1);
   expect(stored.state.log[0]).toMatchObject({ draw: 3, result: 'win' });
   // The log starts when the run was read, not when it was started.
@@ -277,11 +276,13 @@ test('a completed run whose log began part-way says from when wins and losses we
   const {
     log: _log,
     logSince: _since,
+    worn: _worn,
+    spent: _spent,
+    rerolls: _rerolls,
     previous,
     ...rest
   } = played as unknown as Record<string, unknown>;
-  void _log;
-  void _since;
+  void [_log, _since, _worn, _spent, _rerolls];
   const format1 = {
     ...rest,
     schema: 1,
