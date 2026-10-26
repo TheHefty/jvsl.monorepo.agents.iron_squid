@@ -4,6 +4,7 @@ import type { Catalogue, NamesFile } from '../../src/catalogue/types';
 import type { RunState } from '../../src/run/engine';
 import { encodeShare } from '../../src/share/link';
 import { Given, Then, When } from '../fixtures';
+import { basePath } from '../site-under-test';
 import { messageIn } from '../support/messages';
 import { playRun, seedRun, winsThenPlaying } from '../support/seed';
 
@@ -24,7 +25,9 @@ const brandsOf = (state: RunState, n: number) =>
     if (!piece) throw new Error(`steps: ${String(id)} is not in catalogue ${version}`);
     return piece.brand;
   });
-const iconSrc = (brand: string) => `/game/${version}/brand/${brand}.png`;
+// Where the site serves an icon: under the path it was built for, which CI also builds as a project
+// page (BASE_PATH), not only at the root.
+const iconSrc = (brand: string) => `${basePath}game/${version}/brand/${brand}.png`;
 
 // The run as the page stored it, to know which set is on screen.
 const stored = async (p: Page) =>
