@@ -14,7 +14,7 @@ because everything downstream assumes it.
 
 **Iron Squid** is a Splatoon 3 challenge, and this project is the website that runs it. The
 challenge: win consecutively with every weapon in the game, each paired with randomly drawn gear,
-and start over — replaying every weapon already conquered — whenever a defeat costs the last life.
+and start over from nothing, with a new draw, whenever a defeat costs the last life.
 The website does what a player cannot do fairly by hand: it draws the weapon and the gear, keeps
 the run honest to the rules, remembers where the player is, and gives them a link that shows the
 run to anyone they share it with. It exists for Splatoon players who want a long, visible test of
@@ -23,19 +23,19 @@ how well they play with *everything*, not only with their main.
 ### The rules the site enforces
 
 - Each match is assigned a random weapon, and a random piece of headgear, clothing and shoes.
-- Each piece of gear is used at most once in a run.
-- Before the first match of a newly drawn set, or of a replayed one, the player may re-roll any of
-  its gear, as often as they like, when they do not have a piece. A piece re-rolled away is spent,
-  as if it had been used. The weapon is never re-rolled.
+- Each piece of gear is used at most once between one reset and the next.
+- Before the first match of a newly drawn set, the player may re-roll any of its gear, as often as
+  they like, when they do not have a piece. A piece re-rolled away is spent, as if it had been used,
+  until the next reset. The weapon is never re-rolled.
 - A win must be secured with the drawn weapon and gear before the next draw. Nothing is skipped.
-- The player starts with **1 life** and earns **1 more for every 10 wins**. Wins during a replay
-  count toward that.
+- The player starts with **1 life** and earns **1 more for every 10 wins** since the run started or
+  last reset.
 - A loss costs a life, and the player tries the same weapon and gear again.
-- At **0 lives**, the run returns to the beginning: the player replays the weapons already won, in
-  a new random order, and lives go back to 1. The gear those weapons were won with is dealt out
-  again among them at random, so each replay is a new pairing of weapon and gear; no unused piece
-  is spent on it. Every reset draws again.
-- The run is complete when every weapon in the game has been won with.
+- At **0 lives**, the run starts over from nothing: every weapon conquered is lost, and a new order
+  of every weapon and a new draw of gear from the whole catalogue are made, as at the start. Lives
+  go back to 1. The run keeps counting its resets and its matches.
+- The run is complete when every weapon in the game has been won with, one after another, between
+  one reset and the next.
 
 ## In scope / out of scope
 
@@ -137,3 +137,12 @@ leave a long run without re-rolls. Since a replay can now bring a pairing the pl
 the re-roll applies to replayed sets too. The change applies only to runs started after it: a run
 begun under the earlier rules finishes under them, so that runs stay comparable. The SRS states it
 in FR-13, FR-14, FR-18 and FR-25.
+
+Amended again on 2026-10-26 by João Lima: a reset no longer replays the weapons already conquered.
+Losing the last life starts the run over from nothing: the weapons conquered are lost, and every
+weapon and every piece of gear is drawn again from the whole catalogue, as when the run began; the
+run keeps its count of resets and its log. The owner chose this after playing the reshuffled reset,
+whose replays brought back the same weapons, where a new draw was wanted. It makes a run a single
+unbroken streak through the whole game, and a reset its full cost. The re-roll therefore has no
+replays to apply to, and a piece is spent only until the next reset. Runs begun under an earlier
+reset finish under it, so that runs stay comparable. The SRS states it.
