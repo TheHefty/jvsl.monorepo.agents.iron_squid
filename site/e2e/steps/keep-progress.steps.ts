@@ -12,6 +12,7 @@ import type { RunState } from '../../src/run/engine';
 import { basePath } from '../site-under-test';
 import { run } from '../support/run';
 import { playRun, seedRun, seedRunScript, setNames, winsThenPlaying } from '../support/seed';
+import { pieceImages } from '../support/set';
 
 const catalogue = JSON.parse(readFileSync('src/i18n/messages/en-US.json', 'utf8')) as Record<
   string,
@@ -25,7 +26,7 @@ const message = (id: string, values: Record<string, unknown> = {}) => {
 const button = (p: Page, id: string) => p.getByRole('button', { name: message(id) });
 
 async function readSet(p: Page): Promise<string[]> {
-  const images = p.getByRole('region', { name: message('set.label') }).getByRole('img');
+  const images = pieceImages(p);
   await expect(images).toHaveCount(4);
   return images.evaluateAll((imgs) => imgs.map((i) => (i as HTMLImageElement).alt));
 }

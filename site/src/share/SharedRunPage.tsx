@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { imageUrl, loadCatalogues } from '../catalogue/load';
 import { NamesContext, useItemNames, useLoadedNames } from '../catalogue/names';
-import type { Catalogue, Item } from '../catalogue/types';
+import { gearSlots, type Catalogue, type Item } from '../catalogue/types';
 import { Hero } from '../run/RunPage';
 import { browserStorage, hasStoredRun } from '../run/storage';
 import { decodeShare, type SharedRun } from './link';
@@ -133,21 +133,44 @@ function SharedSets({ run, catalogue }: { run: SharedRun; catalogue: Catalogue }
                 height={48}
                 loading="lazy"
               />
-              <span>
-                {intl.formatMessage(
-                  { id: 'shared.set' },
-                  {
-                    number: n + 1,
-                    kit: name(catalogue.kits, set.kit),
-                    head: name(catalogue.gear.head, set.head),
-                    clothes: name(catalogue.gear.clothes, set.clothes),
-                    shoes: name(catalogue.gear.shoes, set.shoes),
-                    // The mode it was conquered in, when the link carries one (share-mode).
-                    recorded: String(set.mode !== undefined),
-                    mode: set.mode ? names(catalogue.version, set.mode) : '',
-                  },
-                )}
-              </span>
+              <div className="shared-set-text">
+                <span>
+                  {intl.formatMessage(
+                    { id: 'shared.set' },
+                    {
+                      number: n + 1,
+                      kit: name(catalogue.kits, set.kit),
+                      head: name(catalogue.gear.head, set.head),
+                      clothes: name(catalogue.gear.clothes, set.clothes),
+                      shoes: name(catalogue.gear.shoes, set.shoes),
+                      // The mode it was conquered in, when the link carries one (share-mode).
+                      recorded: String(set.mode !== undefined),
+                      mode: set.mode ? names(catalogue.version, set.mode) : '',
+                    },
+                  )}
+                </span>
+                {/* Each piece's brand, in the order the sentence names them (gear-brand). */}
+                <span className="shared-brands">
+                  {gearSlots.map((slot) => {
+                    const brand = catalogue.brands.find(
+                      (b) => b.id === catalogue.gear[slot].find((g) => g.id === set[slot])?.brand,
+                    );
+                    return (
+                      brand && (
+                        <img
+                          key={slot}
+                          className="brand-icon"
+                          src={imageUrl(catalogue.version, brand.image)}
+                          alt={names(catalogue.version, brand.id)}
+                          width={24}
+                          height={24}
+                          loading="lazy"
+                        />
+                      )
+                    );
+                  })}
+                </span>
+              </div>
             </li>
           ))}
         </ol>

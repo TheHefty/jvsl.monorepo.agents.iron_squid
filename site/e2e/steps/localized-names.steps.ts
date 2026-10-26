@@ -9,6 +9,7 @@ import { Given, Then, When } from '../fixtures';
 import { buildState } from '../support/build-state';
 import { messageIn } from '../support/messages';
 import { conquestMode, playRun, seedRun, winsThenPlaying } from '../support/seed';
+import { pieceImages } from '../support/set';
 
 const version = '11.3.0';
 const catalogue = JSON.parse(
@@ -73,9 +74,7 @@ Then('every kit and gear image is described by its French name', async ({ page, 
   const locale = world.locale as string;
   const state = playRun(winsThenPlaying(3));
   await seedRun(page, state, locale);
-  const images = page
-    .getByRole('region', { name: messageIn(locale, 'set.label') })
-    .getByRole('img');
+  const images = pieceImages(page, locale);
   await expect(images).toHaveCount(4);
   const { names } = namesFile(locale);
   const n = state.cursor;
