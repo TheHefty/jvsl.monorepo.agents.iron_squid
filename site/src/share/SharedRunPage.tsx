@@ -88,6 +88,10 @@ export function SharedRunPage({ home }: { home: string }) {
               ['shared.statResets', run.resets],
               // Only for a run that re-rolled: the row stays the design's four numbers otherwise.
               ...(run.rerolls > 0 ? [['shared.statRerolls', run.rerolls] as const] : []),
+              // The longest run of wins the link's log holds (FR-46); none in a link without a log.
+              ...(run.longestStreak !== undefined
+                ? [['shared.statStreak', run.longestStreak] as const]
+                : []),
             ] as const
           ).map(([id, value]) => (
             <div key={id}>
@@ -105,6 +109,7 @@ export function SharedRunPage({ home }: { home: string }) {
       {offer}
       <NamesContext.Provider value={names}>
         <SharedSets run={run} catalogue={catalogue} />
+        <SharedLog run={run} catalogue={catalogue} />
       </NamesContext.Provider>
     </>
   );
@@ -178,5 +183,60 @@ function SharedSets({ run, catalogue }: { run: SharedRun; catalogue: Catalogue }
         </ol>
       )}
     </section>
+  );
+}
+
+// The run log a link carries (FR-45), newest first, as the player's own log words it but with no
+// date: a shared run says nothing about when it was played. A link made before logs were shared
+// says it has none; a long one says how many earlier matches it leaves out.
+function SharedLog({ run, catalogue }: { run: SharedRun; catalogue: Catalogue }) {
+  const intl = useIntl();
+  const names = useItemNames();
+  if (!run.log) {
+    return (
+      <p className="notice">
+        <FormattedMessage id="shared.noLog" />
+      </p>
+    );
+  }
+  const title = intl.formatMessage({ id: 'log.title' });
+  return (
+    <details className="run-log shared-log">
+      <summary>{intl.formatMessage({ id: 'log.summary' }, { count: run.log.length })}</summary>
+      {run.logOmitted > 0 && (
+        <p className="field-hint">
+          {intl.formatMessage({ id: 'shared.logOmitted' }, { count: run.logOmitted })}
+        </p>
+      )}
+      <ol aria-label={title} reversed>
+        {run.log
+          .map((match, i) => (
+            <li key={i}>
+              {/* Read as part of the sentence after it, which already says the result. */}
+              <span
+                className={`log-mark ${match.result === 'win' ? 'log-mark-win' : 'log-mark-loss'}`}
+                aria-hidden="true"
+              >
+                {intl.formatMessage({
+                  id: match.result === 'win' ? 'log.markWin' : 'log.markLoss',
+                })}
+              </span>{' '}
+              {match.replay && <>{intl.formatMessage({ id: 'shared.logReplay' })} </>}
+              {intl.formatMessage(
+                { id: 'shared.logEntry' },
+                {
+                  result: match.result,
+                  kit: names(catalogue.version, match.kit),
+                  recorded: String(match.mode !== undefined),
+                  mode: match.mode ? names(catalogue.version, match.mode) : '',
+                  notRecorded: intl.formatMessage({ id: 'log.modeNotRecorded' }),
+                },
+              )}
+              {match.reset && <> {intl.formatMessage({ id: 'shared.logReset' })}</>}
+            </li>
+          ))
+          .reverse()}
+      </ol>
+    </details>
   );
 }
