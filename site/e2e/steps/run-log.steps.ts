@@ -1,10 +1,10 @@
 import { readFileSync } from 'node:fs';
 import { expect, type Page } from '@playwright/test';
 import { IntlMessageFormat } from 'intl-messageformat';
-import type { RunState } from '../../src/run/engine';
+import { currentSet, type RunState } from '../../src/run/engine';
 import { Given, Then, When } from '../fixtures';
 import { modeName, report } from '../support/report';
-import { playRun, seedRun, setNames, winsThenPlaying, type Play } from '../support/seed';
+import { nameOf, playRun, seedRun, setNames, winsThenPlaying, type Play } from '../support/seed';
 import { pieceImages } from '../support/set';
 
 const catalogue = JSON.parse(readFileSync('src/i18n/messages/en-US.json', 'utf8')) as Record<
@@ -105,7 +105,9 @@ Then('the run log marks a reset right after that loss', async ({ page, world }) 
 
 Then('the newest entry of the run log is marked as a replay', async ({ page, world }) => {
   const state = world.state as RunState;
-  const kit = setNames(state, 0)[0] ?? '';
+  // The kit replayed: the first replay of the reset, which the reshuffled reset draws (FR-18), not
+  // the first kit conquered.
+  const kit = nameOf(currentSet(state).kit);
   await expect(await newest(page)).toContainText(
     sentence({ result: 'win', kit, lives: 1, conquered: state.conquered, replay: true }),
   );
