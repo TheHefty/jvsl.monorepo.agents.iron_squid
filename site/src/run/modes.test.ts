@@ -34,7 +34,8 @@ const catalogue: Catalogue = {
 const at = '2026-10-24T12:00:00.000Z';
 const start = () => startRun(catalogue, { name: undefined }, cryptoSource, at);
 const win = (s: RunState, mode = 'Pnt') => reportWin(s, { step: s.step, at, mode });
-const lose = (s: RunState, mode = 'Pnt') => reportLoss(s, { step: s.step, at, mode });
+const lose = (s: RunState, mode = 'Pnt') =>
+  reportLoss(s, { step: s.step, at, mode, source: cryptoSource });
 
 describe('a result in a mode', () => {
   it('is refused without a mode (report-with-mode, failure 1)', () => {

@@ -24,7 +24,8 @@ const catalogue: Catalogue = {
 const at = '2026-10-25T12:00:00.000Z';
 const start = () => startRun(catalogue, { name: undefined }, cryptoSource, at);
 const win = (s: RunState) => reportWin(s, { step: s.step, at, mode: 'Pnt' });
-const lose = (s: RunState) => reportLoss(s, { step: s.step, at, mode: 'Pnt' });
+const lose = (s: RunState) =>
+  reportLoss(s, { step: s.step, at, mode: 'Pnt', source: cryptoSource });
 const winTimes = (s: RunState, n: number) => {
   for (let i = 0; i < n; i++) s = win(s);
   return s;

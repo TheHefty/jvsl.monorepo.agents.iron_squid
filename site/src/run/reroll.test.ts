@@ -40,7 +40,8 @@ const catalogue: Catalogue = {
 const at = '2026-10-26T12:00:00.000Z';
 const start = () => startRun(catalogue, { name: undefined }, cryptoSource, at);
 const win = (s: RunState) => reportWin(s, { step: s.step, at, mode: 'Pnt' });
-const lose = (s: RunState) => reportLoss(s, { step: s.step, at, mode: 'Pnt' });
+const lose = (s: RunState) =>
+  reportLoss(s, { step: s.step, at, mode: 'Pnt', source: cryptoSource });
 const re = (s: RunState, slot: GearSlot) => reroll(s, { step: s.step, at, slot });
 const catalogues = { '0.0.1': catalogue };
 const stored = (s: RunState) => JSON.parse(JSON.stringify(s)) as unknown;
@@ -103,8 +104,8 @@ describe('a re-roll', () => {
     expect(() => re(lost, 'head')).toThrow(/result/);
   });
 
-  it('is refused on a replay, which keeps the gear the set was won with (FR-18)', () => {
-    const replaying = lose(win(start()));
+  it('is refused on a replay of a run under the earlier reset, which keeps its gear (FR-18)', () => {
+    const replaying = lose(win({ ...start(), resetRule: 'in-order' }));
     expect(replaying.cursor).toBe(0);
     expect(rerollRefusal(replaying, 'head')).toBe('replay');
     expect(() => re(replaying, 'head')).toThrow(/replay/);
@@ -188,7 +189,10 @@ describe('a stored run with re-rolls that cannot be true', () => {
 describe('a run saved with a re-roll', () => {
   it('reads forever, wearing the piece it was re-rolled to', () => {
     const parsed = parseRun(structuredClone(v3), { '0.0.1': fixtureCatalogue as Catalogue });
-    expect(parsed).toMatchObject({ ok: true, state: { schema: 3, cursor: 1 } });
+    expect(parsed).toMatchObject({
+      ok: true,
+      state: { schema: 4, resetRule: 'in-order', cursor: 1 },
+    });
     if (parsed.ok) {
       expect(currentSet(parsed.state).shoes).toBe(v3.order.shoes[3]);
       expect(parsed.state.rerolls).toEqual(v3.rerolls);
@@ -205,7 +209,12 @@ describe('runs saved before re-rolls (failure 3)', () => {
     );
     expect(parsed).toMatchObject({
       ok: true,
-      state: { schema: 3, spent: { head: 0, clothes: 0, shoes: 0 }, rerolls: [] },
+      state: {
+        schema: 4,
+        resetRule: 'in-order',
+        spent: { head: 0, clothes: 0, shoes: 0 },
+        rerolls: [],
+      },
     });
   });
 });

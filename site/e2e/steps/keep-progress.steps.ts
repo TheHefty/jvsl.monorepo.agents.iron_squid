@@ -77,7 +77,7 @@ Then('the player receives a file holding the run', async ({ world }) => {
   expect(file).toMatchObject({
     format: 'iron-squid-run',
     version: 1,
-    run: { schema: 3, catalogueVersion: '11.3.0' },
+    run: { schema: 4, catalogueVersion: '11.3.0' },
   });
   expect(file.run.order.kits).toHaveLength(160);
 });

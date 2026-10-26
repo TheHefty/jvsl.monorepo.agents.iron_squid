@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import type { Catalogue } from '../catalogue/types';
-import { currentSet, reportLoss, reportWin, startRun, undo, type RunState } from './engine';
+import {
+  currentSet,
+  isReplay,
+  reportLoss,
+  reportWin,
+  startRun,
+  undo,
+  type RunState,
+} from './engine';
 import { cryptoSource, type RandomSource } from './random';
 
 const item = (id: string) => ({ id, name: { 'en-US': id }, image: `${id}.png` });
@@ -29,7 +37,8 @@ describe('startRun', () => {
   it('starts with 1 life, nothing conquered, and the first set to play', () => {
     const s = start();
     expect(s).toMatchObject({
-      schema: 3,
+      schema: 4,
+      resetRule: 'in-order',
       catalogueVersion: '11.3.0',
       lives: 1,
       conquered: 0,
@@ -126,12 +135,15 @@ describe('undo', () => {
         const choice = (walker[0] ?? 0) % 3;
         try {
           if (choice === 0) s = win(s);
-          else if (choice === 1) s = reportLoss(s, { step: s.step, at, mode: 'Pnt' });
+          else if (choice === 1)
+            s = reportLoss(s, { step: s.step, at, mode: 'Pnt', source: cryptoSource });
           else s = undo(s);
         } catch {
           // an action the state does not allow right now: nothing happens
         }
-        expect(currentSet(s).kit).toBe(s.order.kits[s.cursor]);
+        // A new draw is always order[n]; a replay is one of the kits already conquered.
+        if (isReplay(s)) expect(s.order.kits.slice(0, s.conquered)).toContain(currentSet(s).kit);
+        else expect(currentSet(s).kit).toBe(s.order.kits[s.cursor]);
         expect(s.order).toEqual(drawn);
       }
     }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Catalogue } from '../catalogue/types';
-import { reportLoss, reportWin, startRun, undo, type RunState } from './engine';
+import { currentSet, reportLoss, reportWin, startRun, undo, type RunState } from './engine';
 import { cryptoSource } from './random';
 
 const item = (id: string) => ({ id, name: { 'en-US': id }, image: `${id}.png` });
@@ -24,7 +24,8 @@ const t0 = '2026-10-24T12:00:00.000Z';
 const t1 = '2026-10-25T09:30:00.000Z';
 const start = () => startRun(catalogue, { name: undefined }, cryptoSource, t0);
 const win = (s: RunState, at = t1) => reportWin(s, { step: s.step, at, mode: 'Pnt' });
-const lose = (s: RunState, at = t1) => reportLoss(s, { step: s.step, at, mode: 'Pnt' });
+const lose = (s: RunState, at = t1) =>
+  reportLoss(s, { step: s.step, at, mode: 'Pnt', source: cryptoSource });
 const winTimes = (s: RunState, n: number) => {
   for (let i = 0; i < n; i++) s = win(s);
   return s;
@@ -32,7 +33,7 @@ const winTimes = (s: RunState, n: number) => {
 
 describe('the run log (FR-24)', () => {
   it('starts empty, complete from the start of a run begun in format 2', () => {
-    expect(start()).toMatchObject({ schema: 3, log: [], logSince: t0 });
+    expect(start()).toMatchObject({ schema: 4, log: [], logSince: t0 });
   });
 
   it('logs a win: the draw, the result, the lives after it, and when', () => {
@@ -79,9 +80,12 @@ describe('the run log (FR-24)', () => {
     });
   });
 
-  it('marks a replayed set as a replay', () => {
+  it('marks a replayed set as a replay, with the draw of the kit replayed', () => {
     const reset = lose(lose(winTimes(start(), 12)));
-    expect(win(reset).log.at(-1)).toMatchObject({ draw: 0, result: 'win', replay: true });
+    const kit = currentSet(reset).kit;
+    const last = win(reset).log.at(-1);
+    expect(last).toMatchObject({ result: 'win', replay: true });
+    expect(reset.order.kits[last?.draw ?? -1]).toBe(kit);
   });
 
   it('loses the entry of an undone result, and only that one (FR-20)', () => {

@@ -10,7 +10,7 @@ const at = '2026-10-20T12:00:00.000Z';
 const played = (): RunState => {
   let s = startRun(catalogue as Catalogue, { name: 'Inkling Ivo' }, cryptoSource, at);
   s = reportWin(s, { step: s.step, at, mode: 'Pnt' });
-  s = reportLoss(s, { step: s.step, at, mode: 'Pnt' });
+  s = reportLoss(s, { step: s.step, at, mode: 'Pnt', source: cryptoSource });
   return s;
 };
 

@@ -28,7 +28,7 @@ export function playRun(
 ): RunState {
   let s = startRun(catalogue, { name }, cryptoSource, at);
   for (const play of plays) {
-    const action = { step: s.step, at: when, mode: mode ?? 'Pnt' };
+    const action = { step: s.step, at: when, mode: mode ?? 'Pnt', source: cryptoSource };
     s = play === 'win' ? reportWin(s, action) : reportLoss(s, action);
   }
   if (mode === null)
@@ -47,7 +47,7 @@ export function rerolledRun(slot: GearSlot, times: number, plays: Play[] = []): 
   let s = startRun(catalogue, { name: undefined }, cryptoSource, at);
   for (let n = 0; n < times; n++) s = reroll(s, { step: s.step, at, slot });
   for (const play of plays) {
-    const action = { step: s.step, at, mode: 'Pnt' };
+    const action = { step: s.step, at, mode: 'Pnt', source: cryptoSource };
     s = play === 'win' ? reportWin(s, action) : reportLoss(s, action);
   }
   return s;
