@@ -306,3 +306,48 @@ test('a completed run whose log began part-way says from when wins and losses we
   ).toBeVisible();
   await expect(page.getByText(/Wins and losses are counted from/)).toBeVisible();
 });
+
+// reroll-gear: what the store holds, to see how many re-rolls a click made.
+const storedRerolls = async (p: Page) =>
+  (
+    JSON.parse((await p.evaluate(() => localStorage.getItem('iron-squid:run'))) ?? '{}') as {
+      state?: { rerolls?: unknown[] };
+    }
+  ).state?.rerolls?.length ?? 0;
+
+test('the second click of a double click never re-rolls a piece (reroll-screen, failure 1)', async ({
+  page,
+}) => {
+  await startRun(page);
+  const shoes = page.getByRole('button', { name: message('reroll.label', { slot: 'shoes' }) });
+  await shoes.dispatchEvent('click', { detail: 2 });
+  await page.waitForTimeout(300);
+  expect(await storedRerolls(page)).toBe(0);
+  await doubleClickAt(page, shoes);
+  await expect.poll(() => storedRerolls(page)).toBe(1);
+  await page.waitForTimeout(300);
+  expect(await storedRerolls(page)).toBe(1);
+});
+
+test('a re-roll in one tab is not made twice by the other (reroll-screen, failure 3)', async ({
+  page,
+}) => {
+  await startRun(page);
+  const other = await page.context().newPage();
+  // This tab never hears of the other's change, so it still shows the set as it was: the store,
+  // not the event, is what must refuse its stale re-roll.
+  await other.addInitScript(() =>
+    window.addEventListener('storage', (e) => e.stopImmediatePropagation(), true),
+  );
+  await other.goto('./en-US/');
+  const reroll = (p: Page) =>
+    p.getByRole('button', { name: message('reroll.label', { slot: 'clothes' }) });
+  await expect(reroll(other)).toBeVisible();
+  // Both tabs show the same set; one re-rolls, then the other acts on what it still shows.
+  await reroll(page).click();
+  await expect.poll(() => storedRerolls(page)).toBe(1);
+  await reroll(other).click();
+  await page.waitForTimeout(300);
+  expect(await storedRerolls(page)).toBe(1);
+  await expect(other.getByText(message('run.updatedElsewhere'))).toBeVisible();
+});
