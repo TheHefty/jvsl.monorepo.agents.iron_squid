@@ -24,15 +24,17 @@ how well they play with *everything*, not only with their main.
 
 - Each match is assigned a random weapon, and a random piece of headgear, clothing and shoes.
 - Each piece of gear is used at most once in a run.
-- Before the first match of a newly drawn set, the player may re-roll any of its gear, as often as
-  they like, when they do not have a piece. A piece re-rolled away is spent, as if it had been used.
-  The weapon is never re-rolled.
+- Before the first match of a newly drawn set, or of a replayed one, the player may re-roll any of
+  its gear, as often as they like, when they do not have a piece. A piece re-rolled away is spent,
+  as if it had been used. The weapon is never re-rolled.
 - A win must be secured with the drawn weapon and gear before the next draw. Nothing is skipped.
 - The player starts with **1 life** and earns **1 more for every 10 wins**. Wins during a replay
   count toward that.
 - A loss costs a life, and the player tries the same weapon and gear again.
 - At **0 lives**, the run returns to the beginning: the player replays the weapons already won, in
-  the same order and with the same gear, and lives go back to 1.
+  a new random order, and lives go back to 1. The gear those weapons were won with is dealt out
+  again among them at random, so each replay is a new pairing of weapon and gear; no unused piece
+  is spent on it. Every reset draws again.
 - The run is complete when every weapon in the game has been won with.
 
 ## In scope / out of scope
@@ -126,3 +128,12 @@ drawn piece could otherwise not play the set at all, and the challenge asked the
 in the game. The re-roll costs the piece, so it is not free: a run that re-rolls often spends its
 gear faster. The weapon stays fixed, and filtering gear by what the player owns stays out of scope.
 The SRS states the rule as FR-25.
+
+Amended on 2026-10-26 by João Lima: a reset no longer replays the conquered weapons in the order and
+with the gear they were won with. Each reset draws a new order for them, and deals the gear they
+were won with out again among them, so the replay is a new test rather than a repeat of one
+already passed. The gear is redealt rather than drawn from unused pieces, which would run out and
+leave a long run without re-rolls. Since a replay can now bring a pairing the player cannot wear,
+the re-roll applies to replayed sets too. The change applies only to runs started after it: a run
+begun under the earlier rules finishes under them, so that runs stay comparable. The SRS states it
+in FR-13, FR-14, FR-18 and FR-25.
