@@ -7,7 +7,8 @@ const cat = (kits: string[], head: string[]): Catalogue => ({
   version: 'v',
   datamine: { repo: 'r', commit: 'c', dataFolder: 'f' },
   kits: kits.map(item),
-  gear: { head: head.map(item), clothes: [], shoes: [] },
+  gear: { head: head.map((id) => ({ ...item(id), brand: 'B00' })), clothes: [], shoes: [] },
+  brands: [{ id: 'B00', image: 'brand/B00.png' }],
   excluded: { replicas: [], unobtainable: [] },
   modes: ['Pnt', 'Var', 'Vlf', 'Vgl', 'Vcl', 'Tcl'].map((id) => ({ id })),
 });

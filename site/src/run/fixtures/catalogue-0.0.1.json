@@ -35,21 +35,24 @@
         "name": {
           "en-US": "H0"
         },
-        "image": "H0.png"
+        "image": "H0.png",
+        "brand": "B00"
       },
       {
         "id": "H1",
         "name": {
           "en-US": "H1"
         },
-        "image": "H1.png"
+        "image": "H1.png",
+        "brand": "B00"
       },
       {
         "id": "H2",
         "name": {
           "en-US": "H2"
         },
-        "image": "H2.png"
+        "image": "H2.png",
+        "brand": "B00"
       }
     ],
     "clothes": [
@@ -58,21 +61,24 @@
         "name": {
           "en-US": "C0"
         },
-        "image": "C0.png"
+        "image": "C0.png",
+        "brand": "B00"
       },
       {
         "id": "C1",
         "name": {
           "en-US": "C1"
         },
-        "image": "C1.png"
+        "image": "C1.png",
+        "brand": "B00"
       },
       {
         "id": "C2",
         "name": {
           "en-US": "C2"
         },
-        "image": "C2.png"
+        "image": "C2.png",
+        "brand": "B00"
       }
     ],
     "shoes": [
@@ -81,31 +87,41 @@
         "name": {
           "en-US": "S0"
         },
-        "image": "S0.png"
+        "image": "S0.png",
+        "brand": "B00"
       },
       {
         "id": "S1",
         "name": {
           "en-US": "S1"
         },
-        "image": "S1.png"
+        "image": "S1.png",
+        "brand": "B00"
       },
       {
         "id": "S2",
         "name": {
           "en-US": "S2"
         },
-        "image": "S2.png"
+        "image": "S2.png",
+        "brand": "B00"
       },
       {
         "id": "S3",
         "name": {
           "en-US": "S3"
         },
-        "image": "S3.png"
+        "image": "S3.png",
+        "brand": "B00"
       }
     ]
   },
+  "brands": [
+    {
+      "id": "B00",
+      "image": "brand/B00.png"
+    }
+  ],
   "excluded": {
     "replicas": [],
     "unobtainable": []

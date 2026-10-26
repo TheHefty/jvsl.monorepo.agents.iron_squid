@@ -17,12 +17,13 @@ const weapon = (id: string) => ({
 // One body per path, for each commit. Gear ids are suffixes; each slot gets the same set.
 function files(v: Version): Record<string, Buffer> {
   const slot = (prefix: string) =>
-    v.gear.map((g) => ({ __RowId: `${prefix}_${g}`, HowToGet: 'Shop' }));
+    v.gear.map((g) => ({ __RowId: `${prefix}_${g}`, HowToGet: 'Shop', Brand: 'B00' }));
   const names = {
     'CommonMsg/Weapon/WeaponName_Main': Object.fromEntries(v.kits.map((k) => [k, `Kit ${k}`])),
     'CommonMsg/Gear/GearName_Head': Object.fromEntries(v.gear.map((g) => [g, `Hat ${g}`])),
     'CommonMsg/Gear/GearName_Clothes': Object.fromEntries(v.gear.map((g) => [g, `Shirt ${g}`])),
     'CommonMsg/Gear/GearName_Shoes': Object.fromEntries(v.gear.map((g) => [g, `Shoes ${g}`])),
+    'CommonMsg/Gear/GearBrandName': { B00: 'Brand B00' },
     'CommonMsg/VS/VSRuleName': Object.fromEntries(
       ['Pnt', 'Var', 'Vlf', 'Vgl', 'Vcl', 'Tcl'].map((m) => [m, `Mode ${m}`]),
     ),
@@ -45,6 +46,7 @@ function files(v: Version): Record<string, Buffer> {
       ),
     );
   for (const k of v.kits) out[`images/weapon/Wst_${k}.png`] = Buffer.from(`not an image: ${k}`);
+  out['images/brand/B00.png'] = Buffer.from('not an image: B00');
   for (const p of ['Hed', 'Clt', 'Shs'])
     for (const g of v.gear)
       out[`images/gear/${p}_${g}.png`] = Buffer.from(`not an image: ${p}_${g}`);

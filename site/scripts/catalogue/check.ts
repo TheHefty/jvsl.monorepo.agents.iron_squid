@@ -21,13 +21,18 @@ export function catalogueProblems(c: Catalogue): string[] {
       );
     }
   }
-  const all = [...c.kits, ...gearSlots.flatMap((s) => c.gear[s])];
+  const all = [...c.kits, ...gearSlots.flatMap((s) => c.gear[s]), ...c.brands];
   const seen = new Set<string>();
   for (const item of all) {
     if (!item.image) problems.push(`${at}: ${item.id} has no image`);
     if (seen.has(item.id)) problems.push(`${at}: the id ${item.id} is used more than once`);
     seen.add(item.id);
   }
+  // Every piece shows its brand's icon (gear-brand), so its brand must be one the catalogue lists.
+  const brands = new Set(c.brands.map((b) => b.id));
+  for (const piece of gearSlots.flatMap((s) => c.gear[s]))
+    if (!brands.has(piece.brand))
+      problems.push(`${at}: ${piece.id} wears the brand ${piece.brand}, which is not listed`);
   return problems;
 }
 
@@ -37,7 +42,12 @@ export function nameProblems(
   names: Record<string, Record<string, string>>,
   wanted: readonly string[],
 ): string[] {
-  const items = [...c.kits, ...gearSlots.flatMap((s) => c.gear[s]), ...(c.modes ?? [])];
+  const items = [
+    ...c.kits,
+    ...gearSlots.flatMap((s) => c.gear[s]),
+    ...c.brands,
+    ...(c.modes ?? []),
+  ];
   return wanted.flatMap((locale) => {
     const own = names[locale];
     if (!own) return [`catalogue ${c.version} has no names for ${locale}`];

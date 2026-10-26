@@ -15,16 +15,19 @@ import { cryptoSource } from './random';
 // The rules of match-modes (FR-15, FR-23, FR-24 as amended): every result names its mode, and a win
 // moves straight on to the next set.
 const item = (id: string) => ({ id, image: `${id}.png` });
+// Every piece wears a brand (gear-brand); which one does not matter to the rules.
+const piece = (id: string) => ({ ...item(id), brand: 'B00' });
 const ids = (p: string, n: number) => Array.from({ length: n }, (_, i) => `${p}${i}`);
 const catalogue: Catalogue = {
   version: '0.0.1',
   datamine: { repo: 'r', commit: 'c', dataFolder: '1' },
   kits: ids('K', 3).map(item),
   gear: {
-    head: ids('H', 3).map(item),
-    clothes: ids('C', 3).map(item),
-    shoes: ids('S', 3).map(item),
+    head: ids('H', 3).map(piece),
+    clothes: ids('C', 3).map(piece),
+    shoes: ids('S', 3).map(piece),
   },
+  brands: [{ id: 'B00', image: 'brand/B00.png' }],
   excluded: { replicas: [], unobtainable: [] },
   modes: ['Pnt', 'Var', 'Vlf', 'Vgl', 'Vcl', 'Tcl'].map((id) => ({ id })),
 };

@@ -5,16 +5,19 @@ import { parseRun } from './parse';
 import { cryptoSource } from './random';
 
 const item = (id: string) => ({ id, name: { 'en-US': id }, image: `${id}.png` });
+// Every piece wears a brand (gear-brand); which one does not matter to the rules.
+const piece = (id: string) => ({ ...item(id), brand: 'B00' });
 const ids = (p: string, n: number) => Array.from({ length: n }, (_, i) => `${p}${i}`);
 const catalogue: Catalogue = {
   version: '11.3.0',
   datamine: { repo: 'r', commit: 'c', dataFolder: '1130' },
   kits: ids('K', 12).map(item),
   gear: {
-    head: ids('H', 12).map(item),
-    clothes: ids('C', 12).map(item),
-    shoes: ids('S', 12).map(item),
+    head: ids('H', 12).map(piece),
+    clothes: ids('C', 12).map(piece),
+    shoes: ids('S', 12).map(piece),
   },
+  brands: [{ id: 'B00', image: 'brand/B00.png' }],
   excluded: { replicas: [], unobtainable: [] },
   modes: ['Pnt', 'Var', 'Vlf', 'Vgl', 'Vcl', 'Tcl'].map((id) => ({ id })),
 };

@@ -18,5 +18,11 @@ export const pendingWith =
     pending(task)();
   };
 
-// No scenario is pending at the moment; these are what a task's pending steps are written with.
-void [Given, Then, When];
+const showBrand = pending('show-brand (is-k2f.1.2)');
+Then("the headgear, the clothing and the shoes each show their brand's icon", showBrand);
+When('the player reads the current set', showBrand);
+Then("each gear piece's brand is read by its name", showBrand);
+Given('a player on the {string} address with a set drawn', pendingWith('show-brand (is-k2f.1.2)'));
+Then('each brand is named in Japanese', showBrand);
+When('a visitor opens a link to a run with conquered sets', showBrand);
+Then("each conquered set's gear shows its brand's icon", showBrand);

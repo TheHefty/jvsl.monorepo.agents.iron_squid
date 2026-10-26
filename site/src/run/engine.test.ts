@@ -4,16 +4,19 @@ import { currentSet, reportLoss, reportWin, startRun, undo, type RunState } from
 import { cryptoSource, type RandomSource } from './random';
 
 const item = (id: string) => ({ id, name: { 'en-US': id }, image: `${id}.png` });
+// Every piece wears a brand (gear-brand); which one does not matter to the rules.
+const piece = (id: string) => ({ ...item(id), brand: 'B00' });
 const ids = (p: string, n: number) => Array.from({ length: n }, (_, i) => `${p}${i}`);
 const catalogue: Catalogue = {
   version: '11.3.0',
   datamine: { repo: 'r', commit: 'c', dataFolder: '1130' },
   kits: ids('K', 5).map(item),
   gear: {
-    head: ids('H', 6).map(item),
-    clothes: ids('C', 5).map(item),
-    shoes: ids('S', 7).map(item),
+    head: ids('H', 6).map(piece),
+    clothes: ids('C', 5).map(piece),
+    shoes: ids('S', 7).map(piece),
   },
+  brands: [{ id: 'B00', image: 'brand/B00.png' }],
   excluded: { replicas: [], unobtainable: [] },
   modes: ['Pnt', 'Var', 'Vlf', 'Vgl', 'Vcl', 'Tcl'].map((id) => ({ id })),
 };
@@ -54,7 +57,7 @@ describe('startRun', () => {
   });
 
   it('refuses a catalogue with a gear slot smaller than its kits', () => {
-    const small = { ...catalogue, gear: { ...catalogue.gear, clothes: ids('C', 4).map(item) } };
+    const small = { ...catalogue, gear: { ...catalogue.gear, clothes: ids('C', 4).map(piece) } };
     expect(() => startRun(small, { name: undefined }, cryptoSource, at)).toThrow(
       'run: the clothes slot has 4 pieces for 5 kits',
     );
