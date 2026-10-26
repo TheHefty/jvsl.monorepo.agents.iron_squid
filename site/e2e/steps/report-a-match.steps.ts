@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { expect, type Page } from '@playwright/test';
 import { IntlMessageFormat } from 'intl-messageformat';
 import { Given, Then, When } from '../fixtures';
+import { askForMode, modeName, report } from '../support/report';
 import { playRun, seedRun, winsThenPlaying } from '../support/seed';
 
 const catalogue = JSON.parse(readFileSync('src/i18n/messages/en-US.json', 'utf8')) as Record<
@@ -59,16 +60,21 @@ Given('a player playing a set with {int} lives', async ({ page, world }, lives: 
   world.set = await readSet(page);
 });
 
-When('the player reports a win', async ({ page }) => {
-  await button(page, 'run.won').click();
+// Opens the choice of mode; the report is completed in Turf War before the next step, unless that
+// step is about the choice (see BeforeStep in e2e/fixtures.ts).
+When('the player reports a win', async ({ page, world }) => {
+  await askForMode(page, 'win', { keyboard: world.keyboard === true });
+  world.reportPending = 'win';
 });
 
-When('the player reports a loss', async ({ page }) => {
-  await button(page, 'run.lost').click();
+When('the player reports a loss', async ({ page, world }) => {
+  await askForMode(page, 'loss');
+  world.reportPending = 'loss';
 });
 
+// A win moves straight on to the next set (match-modes): what was conquered is the notice it leaves.
 Then('the set is conquered', async ({ page }) => {
-  await expect(page.getByText(message('set.conquered'), { exact: true })).toBeVisible();
+  await expect(page.locator('.just-conquered')).toBeVisible();
 });
 
 Then('the player has {int} lives', async ({ page }, lives: number) => {
@@ -92,7 +98,7 @@ Given(
   async ({ page, world }, lives: number) => {
     await seedRun(page, playRun(winsThenPlaying(10 * (lives - 1))));
     world.before = await snapshot(page);
-    await button(page, 'run.lost').click();
+    await report(page, 'loss');
   },
 );
 
@@ -106,7 +112,7 @@ Then('the run is exactly as it was before the loss was reported', async ({ page,
 
 Given('a player has just reported the win that earned a life', async ({ page }) => {
   await seedRun(page, playRun(winsThenPlaying(9)));
-  await button(page, 'run.won').click();
+  await report(page, 'win');
   await expect(page.getByRole('list', { name: message('run.lives', { lives: 2 }) })).toBeVisible();
 });
 
@@ -121,8 +127,8 @@ Then('the life it earned is gone', async ({ page }) => {
 
 Given('a player has reported two results', async ({ page }) => {
   await seedRun(page, playRun(winsThenPlaying(10)));
-  await button(page, 'run.lost').click();
-  await button(page, 'run.won').click();
+  await report(page, 'loss');
+  await report(page, 'win');
 });
 
 When('the player undoes the second', async ({ page }) => {
@@ -167,17 +173,24 @@ Given('a player using a screen reader', async ({ page, world }) => {
 });
 
 When('the player reports a result', async ({ page }) => {
-  await button(page, 'run.won').click();
+  await report(page, 'win');
 });
 
 Then(
   'the screen reader announces the result and the lives the player now has',
   async ({ page, world }) => {
     const [kit] = world.set as string[];
-    const expected = message('announce.win', { kit, lives: message('run.lives', { lives: 1 }) });
-    // The run's own announcement; the page has other live regions (the share status).
+    const expected = message('announce.win', {
+      kit,
+      mode: modeName('Pnt'),
+      lives: message('run.lives', { lives: 1 }),
+    });
+    // The run's own announcement, which goes on to the next set (report-mode); the page has other
+    // live regions (the share status).
     const live = page.locator('.run-announcement[aria-live="polite"]');
-    await expect(live).toHaveText(expected);
+    await expect(live).toHaveText(
+      new RegExp(`^${expected.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')} `),
+    );
     await expect(live).toHaveCount(1);
   },
 );

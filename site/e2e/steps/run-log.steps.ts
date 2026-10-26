@@ -3,6 +3,7 @@ import { expect, type Page } from '@playwright/test';
 import { IntlMessageFormat } from 'intl-messageformat';
 import type { RunState } from '../../src/run/engine';
 import { Given, Then, When } from '../fixtures';
+import { modeName, report } from '../support/report';
 import { playRun, seedRun, setNames, winsThenPlaying, type Play } from '../support/seed';
 
 const catalogue = JSON.parse(readFileSync('src/i18n/messages/en-US.json', 'utf8')) as Record<
@@ -23,6 +24,8 @@ type Entry = {
   conquered?: number;
   replay?: boolean;
   reset?: boolean;
+  // Every result these steps report or seed is in Turf War, the first mode offered.
+  mode?: string;
 };
 const sentence = (e: Entry) =>
   message('log.entry', {
@@ -33,6 +36,9 @@ const sentence = (e: Entry) =>
     total: 160,
     lives: message('run.lives', { lives: e.lives }),
     reset: String(e.reset ?? false),
+    recorded: 'true',
+    mode: e.mode ?? modeName('Pnt'),
+    notRecorded: message('log.modeNotRecorded'),
   });
 
 async function readSet(p: Page): Promise<string[]> {
@@ -107,7 +113,7 @@ Then('the newest entry of the run log is marked as a replay', async ({ page, wor
 Given('a player has just reported a result', async ({ page, world }) => {
   await seedRun(page, playRun(winsThenPlaying(3)));
   world.before = await (await entries(page)).allInnerTexts();
-  await page.getByRole('button', { name: message('run.won') }).click();
+  await report(page, 'win');
   await expect(await entries(page)).toHaveCount((world.before as string[]).length + 1);
 });
 

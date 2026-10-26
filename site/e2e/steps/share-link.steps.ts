@@ -4,6 +4,7 @@ import { IntlMessageFormat } from 'intl-messageformat';
 import type { Catalogue } from '../../src/catalogue/types';
 import { decodeShare } from '../../src/share/link';
 import { Given, Then, When } from '../fixtures';
+import { report } from '../support/report';
 import { playRun, seedRun, winsThenPlaying } from '../support/seed';
 
 const messages = JSON.parse(readFileSync('src/i18n/messages/en-US.json', 'utf8')) as Record<
@@ -139,8 +140,7 @@ Given(
 
 When('the player wins three more matches', async ({ page }) => {
   for (let i = 0; i < 3; i++) {
-    await button(page, 'run.won').click();
-    await button(page, 'run.next').click();
+    await report(page, 'win');
   }
   await expect(page.locator('.run-conquered')).toHaveText(
     message('run.conquered', { conquered: 15, total: 160 }),

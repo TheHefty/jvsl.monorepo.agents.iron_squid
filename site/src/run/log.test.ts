@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Catalogue } from '../catalogue/types';
-import { nextSet, reportLoss, reportWin, startRun, undo, type RunState } from './engine';
+import { reportLoss, reportWin, startRun, undo, type RunState } from './engine';
 import { cryptoSource } from './random';
 
 const item = (id: string) => ({ id, name: { 'en-US': id }, image: `${id}.png` });
@@ -20,11 +20,10 @@ const catalogue: Catalogue = {
 const t0 = '2026-10-24T12:00:00.000Z';
 const t1 = '2026-10-25T09:30:00.000Z';
 const start = () => startRun(catalogue, { name: undefined }, cryptoSource, t0);
-const win = (s: RunState, at = t1) => reportWin(s, { step: s.step, at });
-const lose = (s: RunState, at = t1) => reportLoss(s, { step: s.step, at });
-const next = (s: RunState) => nextSet(s, { step: s.step });
-const winAndNext = (s: RunState, n: number) => {
-  for (let i = 0; i < n; i++) s = next(win(s));
+const win = (s: RunState, at = t1) => reportWin(s, { step: s.step, at, mode: 'Pnt' });
+const lose = (s: RunState, at = t1) => reportLoss(s, { step: s.step, at, mode: 'Pnt' });
+const winTimes = (s: RunState, n: number) => {
+  for (let i = 0; i < n; i++) s = win(s);
   return s;
 };
 
@@ -39,6 +38,7 @@ describe('the run log (FR-24)', () => {
         at: t1,
         draw: 0,
         result: 'win',
+        mode: 'Pnt',
         livesAfter: 1,
         conqueredAfter: 1,
         replay: false,
@@ -48,7 +48,7 @@ describe('the run log (FR-24)', () => {
   });
 
   it('logs the life a tenth win earned as part of that win', () => {
-    expect(win(winAndNext(start(), 9)).log.at(-1)).toMatchObject({
+    expect(win(winTimes(start(), 9)).log.at(-1)).toMatchObject({
       draw: 9,
       result: 'win',
       livesAfter: 2,
@@ -56,12 +56,13 @@ describe('the run log (FR-24)', () => {
   });
 
   it('logs a loss with the lives it left, and a reset where it happened', () => {
-    const twoLives = winAndNext(start(), 12);
+    const twoLives = winTimes(start(), 12);
     const lost = lose(twoLives);
     expect(lost.log.at(-1)).toEqual({
       at: t1,
       draw: 12,
       result: 'loss',
+      mode: 'Pnt',
       livesAfter: 1,
       conqueredAfter: 12,
       replay: false,
@@ -76,19 +77,14 @@ describe('the run log (FR-24)', () => {
   });
 
   it('marks a replayed set as a replay', () => {
-    const reset = lose(lose(winAndNext(start(), 12)));
+    const reset = lose(lose(winTimes(start(), 12)));
     expect(win(reset).log.at(-1)).toMatchObject({ draw: 0, result: 'win', replay: true });
   });
 
-  it('does not log asking for the next set', () => {
-    const s = win(start());
-    expect(next(s).log).toEqual(s.log);
-  });
-
   it('loses the entry of an undone result, and only that one (FR-20)', () => {
-    const s = winAndNext(start(), 3);
+    const s = winTimes(start(), 3);
     expect(undo(win(s)).log).toEqual(s.log);
-    expect(undo(next(win(s))).log).toEqual(s.log);
+    expect(undo(win(s)).log).toEqual(s.log);
     expect(undo(lose(s)).log).toEqual(s.log);
   });
 
@@ -96,7 +92,6 @@ describe('the run log (FR-24)', () => {
     let s = start();
     for (let n = 0; n < 2000; n++) {
       s = n % 3 === 2 ? lose(s) : win(s);
-      if (s.phase === 'conquered' && s.cursor + 1 < s.order.kits.length) s = next(s);
     }
     expect(s.previous && 'log' in s.previous).toBe(false);
     expect(JSON.stringify(s).length).toBeLessThan(500_000);
@@ -108,9 +103,9 @@ describe('the run log (FR-24)', () => {
       let s = start();
       for (let step = 0; step < 150; step++) {
         crypto.getRandomValues(r);
-        const choice = (r[0] ?? 0) % 5;
+        const choice = (r[0] ?? 0) % 4;
         try {
-          s = choice < 2 ? win(s) : choice === 2 ? lose(s) : choice === 3 ? next(s) : undo(s);
+          s = choice < 2 ? win(s) : choice === 2 ? lose(s) : undo(s);
         } catch {
           continue;
         }

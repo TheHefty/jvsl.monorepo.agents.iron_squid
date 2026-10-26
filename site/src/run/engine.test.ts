@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Catalogue } from '../catalogue/types';
-import { currentSet, nextSet, reportWin, startRun, undo, type RunState } from './engine';
+import { currentSet, reportLoss, reportWin, startRun, undo, type RunState } from './engine';
 import { cryptoSource, type RandomSource } from './random';
 
 const item = (id: string) => ({ id, name: { 'en-US': id }, image: `${id}.png` });
@@ -20,8 +20,7 @@ const catalogue: Catalogue = {
 const at = '2026-10-24T12:00:00.000Z';
 const start = (source: RandomSource = cryptoSource) =>
   startRun(catalogue, { name: undefined }, source, at);
-const win = (s: RunState) => reportWin(s, { step: s.step, at });
-const next = (s: RunState) => nextSet(s, { step: s.step });
+const win = (s: RunState) => reportWin(s, { step: s.step, at, mode: 'Pnt' });
 
 describe('startRun', () => {
   it('starts with 1 life, nothing conquered, and the first set to play', () => {
@@ -63,14 +62,11 @@ describe('startRun', () => {
 });
 
 describe('a win and the next set', () => {
-  it('conquers the set, shows it, and draws the next only when asked (FR-23)', () => {
+  it('conquers the set and moves straight on to the next (FR-23)', () => {
     const s0 = start();
     const s1 = win(s0);
-    expect(s1).toMatchObject({ phase: 'conquered', conquered: 1, cursor: 0, matches: 1 });
-    expect(currentSet(s1)).toEqual(currentSet(s0));
-    const s2 = next(s1);
-    expect(s2).toMatchObject({ phase: 'playing', cursor: 1 });
-    expect(currentSet(s2).kit).toBe(s0.order.kits[1]);
+    expect(s1).toMatchObject({ phase: 'playing', conquered: 1, cursor: 1, matches: 1 });
+    expect(currentSet(s1).kit).toBe(s0.order.kits[1]);
   });
 
   it('never repeats a kit or a gear piece across a whole run (FR-12, FR-13)', () => {
@@ -80,7 +76,6 @@ describe('a win and the next set', () => {
       const set = currentSet(s);
       seen.push(set.kit, set.head, set.clothes, set.shoes);
       s = win(s);
-      if (n < 4) s = next(s);
     }
     expect(new Set(seen).size).toBe(seen.length);
   });
@@ -88,22 +83,16 @@ describe('a win and the next set', () => {
   it('refuses an action made on a state the screen no longer shows (double click, another tab)', () => {
     const s0 = start();
     const s1 = win(s0);
-    expect(() => reportWin(s1, { step: s0.step, at })).toThrow(/stale/);
-    expect(() => nextSet(next(s1), { step: s1.step })).toThrow(/stale/);
+    expect(() => reportWin(s1, { step: s0.step, at, mode: 'Pnt' })).toThrow(/stale/);
+    expect(() => reportWin(win(s1), { step: s1.step, at, mode: 'Pnt' })).toThrow(/stale/);
   });
 
   it('draws nothing after the last kit is conquered', () => {
     let s = start();
-    for (let n = 0; n < 4; n++) s = next(win(s));
+    for (let n = 0; n < 4; n++) s = win(s);
     const done = win(s);
-    expect(done.conquered).toBe(5);
-    expect(() => next(done)).toThrow('run: every kit is conquered; there is no next set');
-  });
-
-  it('refuses a win while the conquered set is on show, and a next set while playing', () => {
-    const s0 = start();
-    expect(() => next(s0)).toThrow(/not after a win/);
-    expect(() => win(win(s0))).toThrow(/after a win/);
+    expect(done).toMatchObject({ conquered: 5, cursor: 4, phase: 'conquered' });
+    expect(() => win(done)).toThrow(/after the run is complete/);
   });
 });
 
@@ -124,7 +113,7 @@ describe('undo', () => {
   });
 
   it('never changes which set comes next, however often it is used (FR-14)', () => {
-    // A long random walk of wins, nexts and undos: the n-th set played is always order[n].
+    // A long random walk of wins, losses and undos: the n-th set played is always order[n].
     const walker = new Uint32Array(1);
     for (let trial = 0; trial < 50; trial++) {
       let s = start();
@@ -134,7 +123,7 @@ describe('undo', () => {
         const choice = (walker[0] ?? 0) % 3;
         try {
           if (choice === 0) s = win(s);
-          else if (choice === 1) s = next(s);
+          else if (choice === 1) s = reportLoss(s, { step: s.step, at, mode: 'Pnt' });
           else s = undo(s);
         } catch {
           // an action the state does not allow right now: nothing happens
@@ -147,8 +136,8 @@ describe('undo', () => {
 
   it('undoing and winning again leads to the same next set', () => {
     const s0 = start();
-    const viaOnce = currentSet(next(win(s0)));
-    const viaUndo = currentSet(next(win(undo(win(s0)))));
+    const viaOnce = currentSet(win(s0));
+    const viaUndo = currentSet(win(undo(win(s0))));
     expect(viaUndo).toEqual(viaOnce);
   });
 });

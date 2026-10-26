@@ -8,7 +8,7 @@ import { browserStorage, createRunStore, RUN_KEY, type StorageLike } from './sto
 const catalogues = { '0.0.1': catalogue as Catalogue };
 const at = '2026-10-24T12:00:00.000Z';
 const newRun = () => startRun(catalogue as Catalogue, { name: undefined }, cryptoSource, at);
-const win = (s: RunState) => reportWin(s, { step: s.step, at });
+const win = (s: RunState) => reportWin(s, { step: s.step, at, mode: 'Pnt' });
 
 // One storage shared by every store made on it, as tabs of one browser share localStorage.
 function sharedStorage(): StorageLike & { raw: Map<string, string> } {

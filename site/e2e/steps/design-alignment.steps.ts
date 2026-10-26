@@ -4,6 +4,7 @@ import type { Catalogue } from '../../src/catalogue/types';
 import type { RunState } from '../../src/run/engine';
 import { encodeShare } from '../../src/share/link';
 import { Given, Then, When } from '../fixtures';
+import { report } from '../support/report';
 import { messageIn } from '../support/messages';
 import { playRun, seedRun, winsThenPlaying } from '../support/seed';
 
@@ -223,8 +224,7 @@ Given('a device that asks for reduced motion', async ({ page }) => {
 
 When('a player is given a new set', async ({ page }) => {
   await seedRun(page, playRun(winsThenPlaying(1)));
-  await page.getByRole('button', { name: messageIn('en-US', 'run.won') }).click();
-  await page.getByRole('button', { name: messageIn('en-US', 'run.next') }).click();
+  await report(page, 'win');
 });
 
 Then("the kit's splat does not move", async ({ page }) => {

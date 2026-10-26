@@ -23,11 +23,13 @@ describe('parseRun', () => {
     expect(result.ok).toBe(true);
     if (result.ok) {
       expect(result.state.name).toBe('Inkling Ivo');
+      // Saved with its first set conquered and on show, it loads on the second, which its order
+      // already held (match-modes: a win moves straight on to the next set).
       expect(currentSet(result.state)).toEqual({
-        kit: 'K2',
-        head: 'H1',
-        clothes: 'C0',
-        shoes: 'S3',
+        kit: 'K0',
+        head: 'H2',
+        clothes: 'C2',
+        shoes: 'S1',
       });
       expect(result.state.previous?.phase).toBe('playing');
     }

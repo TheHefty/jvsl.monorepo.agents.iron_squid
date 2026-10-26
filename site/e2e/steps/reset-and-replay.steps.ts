@@ -3,6 +3,7 @@ import { expect, type Page } from '@playwright/test';
 import { IntlMessageFormat } from 'intl-messageformat';
 import type { RunState } from '../../src/run/engine';
 import { Given, Then, When, type World } from '../fixtures';
+import { report } from '../support/report';
 import { playRun, seedRun, setNames, winsThenPlaying, type Play } from '../support/seed';
 
 const catalogue = JSON.parse(readFileSync('src/i18n/messages/en-US.json', 'utf8')) as Record<
@@ -14,7 +15,6 @@ const message = (id: string, values: Record<string, unknown> = {}) => {
   if (text === undefined) throw new Error(`steps: en-US catalogue has no message "${id}"`);
   return String(new IntlMessageFormat(text, 'en-US').format(values));
 };
-const button = (p: Page, id: string) => p.getByRole('button', { name: message(id) });
 
 async function readSet(p: Page): Promise<string[]> {
   const images = p.getByRole('region', { name: message('set.label') }).getByRole('img');
@@ -62,8 +62,7 @@ Given('a player replaying after a reset', async ({ page, world }) => {
 });
 
 When('the player wins with the first conquered set', async ({ page }) => {
-  await button(page, 'run.won').click();
-  await button(page, 'run.next').click();
+  await report(page, 'win');
 });
 
 Then(
@@ -83,8 +82,7 @@ Given(
 
 When('the player is playing the fifth of them', async ({ page }) => {
   for (let i = 0; i < 4; i++) {
-    await button(page, 'run.won').click();
-    await button(page, 'run.next').click();
+    await report(page, 'win');
   }
   await expect(
     page.getByText(message('set.weaponNumber', { number: 5, total: 160 })),
@@ -179,7 +177,7 @@ Then('the player is playing the same set again, with 1 life', async ({ page, wor
 Given('a player whose last loss reset the run', async ({ page, world }) => {
   const state = await seed(page, world, winsThenPlaying(3));
   world.lostWith = setNames(state, state.cursor);
-  await button(page, 'run.lost').click();
+  await report(page, 'loss');
   await expect(page.getByText(message('run.resetNotice'))).toBeVisible();
 });
 

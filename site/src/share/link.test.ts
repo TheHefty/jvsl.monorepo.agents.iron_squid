@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import published from '../catalogue/11.3.0/catalogue.json';
 import type { Catalogue } from '../catalogue/types';
-import { nextSet, reportLoss, reportWin, startRun, type RunState } from '../run/engine';
+import { reportLoss, reportWin, startRun, type RunState } from '../run/engine';
 import { cryptoSource } from '../run/random';
 import { decodeShare, encodeShare, packShare, widthsOf, type Packed } from './link';
 
@@ -13,8 +13,7 @@ const site = 'https://iron-squid.top/en-US/run/#';
 function played(wins: number, name?: string): RunState {
   let s = startRun(catalogue, { name }, cryptoSource, at);
   for (let i = 0; i < wins; i++) {
-    s = reportWin(s, { step: s.step, at });
-    if (s.conquered < s.order.kits.length) s = nextSet(s, { step: s.step });
+    s = reportWin(s, { step: s.step, at, mode: 'Pnt' });
   }
   return s;
 }
@@ -43,7 +42,7 @@ const valid = (): Packed => ({
 describe('a share link', () => {
   it('carries what a shared run shows, and reads back to it', () => {
     let s = played(12, 'Inkling Ivo');
-    s = reportLoss(s, { step: s.step, at });
+    s = reportLoss(s, { step: s.step, at, mode: 'Pnt' });
     const shared = decodeShare(encodeShare(s, catalogue), catalogues);
     expect(shared).toEqual({
       ok: true,

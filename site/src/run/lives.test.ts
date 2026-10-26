@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import type { Catalogue } from '../catalogue/types';
 import {
   currentSet,
-  nextSet,
   reportLoss,
   reportWin,
   startRun,
@@ -28,11 +27,10 @@ const catalogue: Catalogue = {
 };
 const at = '2026-10-25T12:00:00.000Z';
 const start = () => startRun(catalogue, { name: undefined }, cryptoSource, at);
-const win = (s: RunState) => reportWin(s, { step: s.step, at });
-const lose = (s: RunState) => reportLoss(s, { step: s.step, at });
-const next = (s: RunState) => nextSet(s, { step: s.step });
-const winAndNext = (s: RunState, times: number) => {
-  for (let i = 0; i < times; i++) s = next(win(s));
+const win = (s: RunState) => reportWin(s, { step: s.step, at, mode: 'Pnt' });
+const lose = (s: RunState) => reportLoss(s, { step: s.step, at, mode: 'Pnt' });
+const winTimes = (s: RunState, times: number) => {
+  for (let i = 0; i < times; i++) s = win(s);
   return s;
 };
 // The run itself, without the step counter and the one-level undo history: what FR-20 restores.
@@ -50,21 +48,20 @@ describe('lives from wins (FR-16)', () => {
     [19, 2],
     [20, 3],
   ])('after %i wins since the run started, the player has %i lives', (wins, lives) => {
-    let s = winAndNext(start(), wins - 1);
+    let s = winTimes(start(), wins - 1);
     s = win(s);
     expect(s.lives).toBe(lives);
   });
 
   it('says how many wins earn the next life', () => {
     expect(winsToNextLife(start())).toBe(10);
-    expect(winsToNextLife(win(winAndNext(start(), 12)))).toBe(7);
+    expect(winsToNextLife(win(winTimes(start(), 12)))).toBe(7);
   });
 });
 
 describe('a loss with lives to spare (FR-17)', () => {
   it('costs one life, and the same set is played again', () => {
-    let s = win(winAndNext(start(), 9)); // 10 wins: 2 lives
-    s = next(s);
+    const s = win(winTimes(start(), 9)); // 10 wins: 2 lives
     const set = currentSet(s);
     const lost = lose(s);
     expect(lost).toMatchObject({ lives: 1, phase: 'playing', matches: s.matches + 1, resets: 0 });
@@ -75,7 +72,7 @@ describe('a loss with lives to spare (FR-17)', () => {
 describe('a loss on the last life resets the run (FR-18)', () => {
   it('goes back to the first conquered set, with 1 life, and keeps what was conquered', () => {
     // 12 wins earn a second life; one loss spends it, so the player has 12 conquered and 1 life.
-    const s = lose(winAndNext(start(), 12));
+    const s = lose(winTimes(start(), 12));
     expect(s.lives).toBe(1);
     const reset = lose(s);
     expect(reset).toMatchObject({
@@ -94,12 +91,11 @@ describe('a loss on the last life resets the run (FR-18)', () => {
   });
 
   it('replays the conquered sets in order without conquering them again, then draws anew', () => {
-    let s = lose(winAndNext(start(), 3));
+    let s = lose(winTimes(start(), 3));
     for (let i = 0; i < 3; i++) {
       expect(currentSet(s).kit).toBe(s.order.kits[i]);
       s = win(s);
       expect(s.conquered).toBe(3);
-      s = next(s);
     }
     expect(s.cursor).toBe(3);
     expect(currentSet(s).kit).toBe(s.order.kits[3]);
@@ -107,9 +103,9 @@ describe('a loss on the last life resets the run (FR-18)', () => {
   });
 
   it('counts replay wins towards the next life', () => {
-    let s = lose(lose(winAndNext(start(), 12)));
+    let s = lose(lose(winTimes(start(), 12)));
     expect(s.resets).toBe(1);
-    s = winAndNext(s, 9);
+    s = winTimes(s, 9);
     expect(win(s).lives).toBe(2);
   });
 
@@ -123,24 +119,24 @@ describe('a loss on the last life resets the run (FR-18)', () => {
 
 describe('undo across losses (FR-20)', () => {
   it('undoes a loss exactly', () => {
-    const s = next(win(winAndNext(start(), 9)));
+    const s = win(winTimes(start(), 9));
     expect(run(undo(lose(s)))).toEqual(run(s));
   });
 
   it('undoes the loss that caused a reset exactly, resets included', () => {
-    const s = winAndNext(start(), 5);
+    const s = winTimes(start(), 5);
     expect(run(undo(lose(s)))).toEqual(run(s));
   });
 
   it('takes back the life a tenth win earned', () => {
-    const s = winAndNext(start(), 9);
+    const s = winTimes(start(), 9);
     const tenth = win(s);
     expect(tenth.lives).toBe(2);
     expect(undo(tenth).lives).toBe(1);
   });
 
   it('allows only the last result to be undone', () => {
-    const twoLives = next(win(winAndNext(start(), 9)));
+    const twoLives = win(winTimes(start(), 9));
     const back = undo(lose(twoLives));
     expect(() => undo(back)).toThrow(/nothing to undo/);
   });
@@ -156,12 +152,11 @@ describe('every walk keeps the rules (property)', () => {
       let history: { losses: number } | undefined;
       for (let step = 0; step < 120; step++) {
         crypto.getRandomValues(r);
-        const choice = (r[0] ?? 0) % 6;
+        const choice = (r[0] ?? 0) % 4;
         const before = s;
         try {
           if (choice < 2) s = win(s);
           else if (choice === 2) s = lose(s);
-          else if (choice < 5) s = next(s);
           else s = undo(s);
         } catch {
           continue;
@@ -169,14 +164,14 @@ describe('every walk keeps the rules (property)', () => {
         if (choice < 2 || choice === 2) {
           history = { losses };
           if (choice === 2) losses = before.lives > 1 ? losses + 1 : 0;
-        } else if (choice === 5) {
+        } else {
           losses = history?.losses ?? losses;
           history = undefined;
         }
         expect(s.lives).toBeGreaterThanOrEqual(1);
         expect(s.lives).toBe(1 + Math.floor(s.winsSinceReset / 10) - losses);
         expect(s.cursor).toBeLessThanOrEqual(s.conquered);
-        if (choice !== 5) expect(s.conquered).toBeGreaterThanOrEqual(before.conquered);
+        if (choice !== 3) expect(s.conquered).toBeGreaterThanOrEqual(before.conquered);
       }
     }
   });

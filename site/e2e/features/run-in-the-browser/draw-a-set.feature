@@ -52,12 +52,6 @@ Feature: Draw a set
     Then its kit is not one already conquered in this run
     And none of its gear pieces has been drawn before in this run
 
-  Scenario: The next set comes when the player asks for it
-    Given the player has just reported a win
-    Then the player is shown the set they just conquered
-    When the player asks for the next set
-    Then the player is shown the next set
-
   Scenario: Undoing a win does not re-roll the next set
     Given the player has reported a win and been shown the next set
     When the player undoes the win and reports the win again

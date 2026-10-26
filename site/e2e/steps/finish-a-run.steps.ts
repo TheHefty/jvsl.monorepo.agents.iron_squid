@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { expect, type Page } from '@playwright/test';
 import { IntlMessageFormat } from 'intl-messageformat';
 import { Given, Then, When } from '../fixtures';
+import { report } from '../support/report';
 import { playRun, seedRun, winsThenPlaying } from '../support/seed';
 
 const catalogue = JSON.parse(readFileSync('src/i18n/messages/en-US.json', 'utf8')) as Record<
@@ -29,7 +30,7 @@ Given(
 );
 
 When('the player reports a win with the last kit', async ({ page }) => {
-  await button(page, 'run.won').click();
+  await report(page, 'win');
 });
 
 Then('the player is told the run is complete', async ({ page }) => {
@@ -48,7 +49,6 @@ Given('a complete run', async ({ page }) => {
 });
 
 Then('the player is not offered a next set', async ({ page }) => {
-  await expect(button(page, 'run.next')).toHaveCount(0);
   await expect(button(page, 'run.won')).toHaveCount(0);
   await expect(button(page, 'run.lost')).toHaveCount(0);
 });
@@ -63,7 +63,7 @@ Then('the run is still shown as complete', async ({ page }) => {
 
 Given('a player has just completed the run', async ({ page }) => {
   await seedRun(page, oneToGo());
-  await button(page, 'run.won').click();
+  await report(page, 'win');
   await expect(complete(page)).toBeVisible();
 });
 
@@ -89,7 +89,7 @@ When('the player completes the run', async ({ page }) => {
     JSON.stringify({ revision: 1, state: oneToGo() }),
   );
   await page.reload();
-  await button(page, 'run.won').click();
+  await report(page, 'win');
 });
 
 Then('the screen reader announces that the run is complete', async ({ page }) => {

@@ -90,4 +90,22 @@ export const test = base.extend<{ guard: Guard; guarded: undefined; world: World
   ],
 });
 
-export const { Given, When, Then } = createBdd(test);
+export const { Given, When, Then, BeforeStep } = createBdd(test);
+
+// "The player reports a win" (or a loss) opens the choice of mode and leaves it open (match-modes).
+// The scenarios of report-mode go on to look at that choice, or dismiss it. Every other scenario,
+// written before modes, means the whole report by those words: so before any step that is not about
+// the choice itself, a report left open is completed in the first mode, Turf War.
+const aboutTheChoice = [
+  'the player is asked which mode the match was played in',
+  'the choices are',
+  'dismisses the choice of mode',
+  'the player can choose any mode, and dismiss the choice, from the keyboard',
+];
+BeforeStep(async ({ world, page, $step }) => {
+  const pending = world.reportPending as 'win' | 'loss' | undefined;
+  if (!pending || aboutTheChoice.some((t) => $step.title.startsWith(t))) return;
+  world.reportPending = undefined;
+  const { chooseMode } = await import('./support/report');
+  await chooseMode((world.page as typeof page | undefined) ?? page, pending);
+});
