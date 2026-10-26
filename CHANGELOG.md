@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.4.0](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/compare/v0.3.0...v0.4.0) (2026-10-26)
+
+
+### Features
+
+* ask which mode every match was played in, and move straight on after a win ([#80](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/issues/80)) ([0e67e83](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/0e67e83b34e2268152e950ffa15e01806af480be))
+* describe every page to search engines, and name it in every locale ([#76](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/issues/76)) ([dbf28ab](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/dbf28abd968b1178d68396215a3292904dc05ebc))
+* give a posted link a preview of the site ([#78](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/issues/78)) ([dbb4902](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/dbb4902e1f020b91455c1f7af3524a856c2c60dc))
+* give every gear piece its brand, from the game's own data ([#82](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/issues/82)) ([81567ae](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/81567ae60e10113e998cf09d070c0e7b2ace68c6))
+* let the rules re-roll a piece of gear the player does not have ([#84](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/issues/84)) ([3549610](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/35496100498841f545e7b9b8e6ba3035959b3a6c))
+* name the six modes in every language, from the game's own data ([#79](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/issues/79)) ([5b9edeb](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/5b9edeb91782e77c80d2347fff9fc040b45a63ad))
+* re-roll a piece of gear from the set, and see it in the run log ([#85](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/issues/85)) ([18d02be](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/18d02be1b7590682e8ac9c5a6b3070c7ee244309))
+* reshuffle the replays of every new run at each reset ([#90](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/issues/90)) ([7108fe4](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/7108fe4f289dfc751950c056f97ca1c528e816b8))
+* show each gear piece's brand, on the set and on a shared run ([#83](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/issues/83)) ([532b5e3](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/532b5e343429c977da726f139a1a1b692b77d55f))
+* show on a shared run how many pieces were re-rolled away ([#86](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/issues/86)) ([3ad57d2](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/3ad57d223cc7d11118e75a3a08775e89bde840e5))
+* show the mode of each conquest on a shared run ([#81](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/issues/81)) ([5dca058](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/5dca058f5de6e0f351c8ede0639b1a6ff1570d5f))
+* teach the rules the reshuffled reset, for the runs that will follow it ([#89](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/issues/89)) ([86fa525](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/86fa525d46754024d42d398eba5a538d628c49bd))
+
+
+### Bug Fixes
+
+* check brand icons where the site serves them, under any base path ([#87](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/issues/87)) ([4ac18f4](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/4ac18f4e1d94dc51f9d508c3e9a0eba0c83bdd00))
+* name the kit actually replayed when checking the run log ([#91](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/issues/91)) ([8cb7df4](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/8cb7df4e040a63307f984ca37049861a3e9fdcc4))
+
 ## [0.3.0](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/compare/v0.2.0...v0.3.0) (2026-10-25)
 
 
