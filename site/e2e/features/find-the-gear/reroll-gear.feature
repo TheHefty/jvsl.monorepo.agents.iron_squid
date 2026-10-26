@@ -41,8 +41,8 @@ Feature: Re-roll gear
     Given a player who lost a match with the current set and has lives left
     Then the player is offered no re-roll
 
-  Scenario: A replayed set keeps its gear
-    Given a player replaying a conquered set after a reset
+  Scenario: A replay keeps its gear in a run started before replays were reshuffled
+    Given a player replaying a conquered set after a reset, in a run started before replays were reshuffled
     Then the player is offered no re-roll
 
   Scenario: A re-roll survives a reload

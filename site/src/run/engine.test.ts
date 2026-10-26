@@ -38,7 +38,7 @@ describe('startRun', () => {
     const s = start();
     expect(s).toMatchObject({
       schema: 4,
-      resetRule: 'in-order',
+      resetRule: 'reshuffle',
       catalogueVersion: '11.3.0',
       lives: 1,
       conquered: 0,

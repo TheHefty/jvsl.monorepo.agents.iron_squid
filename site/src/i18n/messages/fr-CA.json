@@ -11,7 +11,7 @@
   "rules.roll": "À chaque match, vous recevez une arme tirée au sort, avec un couvre-chef, un vêtement et des chaussures eux aussi tirés au sort. Chaque équipement ne sert qu’une fois par défi.",
   "rules.win": "Gagnez avec cet ensemble avant de recevoir le suivant. Rien n’est sauté et rien n’est retiré au sort.",
   "rules.lives": "Vous commencez avec 1 vie et en gagnez une autre toutes les 10 victoires.",
-  "rules.reset": "Si vous perdez votre dernière vie, vous revenez au début : regagnez avec chaque arme déjà battue, dans le même ordre et avec les mêmes équipements.",
+  "rules.reset": "Si vous perdez votre dernière vie, vous revenez au début : regagnez avec chaque arme déjà battue, dans un nouvel ordre et avec les équipements de vos victoires redistribués entre elles.",
   "rules.end": "Le défi est terminé quand vous avez gagné avec toutes les armes du jeu.",
   "start.nameLabel": "Donnez un nom à votre défi (facultatif)",
   "start.nameHint": "Toute personne à qui vous envoyez un lien vers ce défi verra ce nom.",

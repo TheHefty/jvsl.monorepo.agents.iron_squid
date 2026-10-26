@@ -11,7 +11,7 @@
   "rules.roll": "In jedem Kampf bekommst du eine zufällige Waffe, dazu eine zufällige Kopfbedeckung, Kleidung und Schuhe. Jedes Ausrüstungsteil wird pro Run nur einmal verwendet.",
   "rules.win": "Gewinne mit diesem Set, bevor du das nächste bekommst. Nichts wird übersprungen, nichts wird neu gezogen.",
   "rules.lives": "Du beginnst mit 1 Leben und bekommst für je 10 Siege ein weiteres.",
-  "rules.reset": "Verlierst du dein letztes Leben, geht es zurück an den Anfang: Gewinne noch einmal mit jeder Waffe, die du schon geschafft hast, in derselben Reihenfolge und mit derselben Ausrüstung.",
+  "rules.reset": "Verlierst du dein letztes Leben, geht es zurück an den Anfang: Gewinne noch einmal mit jeder Waffe, die du schon geschafft hast, in neuer Reihenfolge und mit der Ausrüstung deiner Siege neu verteilt.",
   "rules.end": "Der Run ist vorbei, wenn du mit jeder Waffe im Spiel gewonnen hast.",
   "start.nameLabel": "Gib deinem Run einen Namen (optional)",
   "start.nameHint": "Alle, denen du einen Link zu diesem Run schickst, sehen diesen Namen.",

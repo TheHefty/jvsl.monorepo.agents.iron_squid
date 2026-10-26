@@ -4,7 +4,14 @@
 import { readFileSync } from 'node:fs';
 import type { Page } from '@playwright/test';
 import type { Catalogue, NamesFile } from '../../src/catalogue/types';
-import { reportLoss, reportWin, reroll, startRun, type RunState } from '../../src/run/engine';
+import {
+  reportLoss,
+  reportWin,
+  reroll,
+  startRun,
+  type ResetRule,
+  type RunState,
+} from '../../src/run/engine';
 import type { GearSlot } from '../../src/catalogue/types';
 import { cryptoSource } from '../../src/run/random';
 
@@ -19,14 +26,16 @@ const at = '2026-10-20T12:00:00.000Z';
 
 // `when` dates the results (the run log shows them); by default every result is dated `at`. Every
 // result is played in `mode` (Turf War by default); null makes a run from before modes were
-// recorded, whose log entries carry none (match-modes).
+// recorded, whose log entries carry none (match-modes). `resetRule` 'in-order' makes a run begun
+// before replays were reshuffled (reset-reshuffle), which keeps the earlier reset.
 export function playRun(
   plays: Play[],
   name?: string,
   when: string = at,
   mode: string | null = 'Pnt',
+  resetRule: ResetRule = 'reshuffle',
 ): RunState {
-  let s = startRun(catalogue, { name }, cryptoSource, at);
+  let s = startRun(catalogue, { name, resetRule }, cryptoSource, at);
   for (const play of plays) {
     const action = { step: s.step, at: when, mode: mode ?? 'Pnt', source: cryptoSource };
     s = play === 'win' ? reportWin(s, action) : reportLoss(s, action);
