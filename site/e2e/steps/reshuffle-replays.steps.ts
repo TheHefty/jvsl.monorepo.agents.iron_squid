@@ -71,8 +71,9 @@ function drawnReplays(s: RunState, reset: number): CurrentSet[] {
   }));
 }
 
+// These scenarios are about runs begun under the reshuffled reset, which keep it (FR-18).
 async function seed(p: Page, world: Record<string, unknown>, plays: Play[]) {
-  const state = playRun(plays);
+  const state = playRun(plays, undefined, undefined, undefined, 'reshuffle');
   world.state = state;
   await seedRun(p, state);
   await onScreen(p);
@@ -303,8 +304,4 @@ Given('a player who starts a new run', async ({ page }) => {
   await page.goto('./en-US/');
   await page.getByRole('button', { name: message('start.roll') }).click();
   await expect(page.getByRole('button', { name: message('run.won') })).toBeVisible();
-});
-
-Then('the run replays in a new order at each reset', async ({ page }) => {
-  expect((await stored(page)).resetRule).toBe('reshuffle');
 });

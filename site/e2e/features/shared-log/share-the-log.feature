@@ -14,7 +14,7 @@ Feature: Share the log
     Then no match on the shared log shows a date
 
   Scenario: Replays and resets are marked on the shared log
-    Given a run that lost its last life and won a replay
+    Given a run begun under the reshuffled reset that lost its last life and won a replay
     When a visitor opens a link to the run
     Then the shared log marks the loss that reset the run
     And marks the replay as a replay
@@ -25,7 +25,7 @@ Feature: Share the log
     Then the visitor is shown a longest winning streak of 8
 
   Scenario: Wins in a replay count towards the streak
-    Given a run that reset, then won its 12 replays and 3 new sets
+    Given a run begun under the reshuffled reset that reset, then won its 12 replays and 3 new sets
     When a visitor opens a link to the run
     Then the visitor is shown a longest winning streak of 15
 

@@ -37,7 +37,14 @@ const winTimes = (s: RunState, n: number) => {
 };
 // 12 conquered, then two losses: the 12 wins earned a second life, so the second loss resets.
 const afterReset = () =>
-  lose(lose(winTimes(startRun(catalogue, { name: undefined }, cryptoSource, at), 12)));
+  lose(
+    lose(
+      winTimes(
+        startRun(catalogue, { name: undefined, resetRule: 'reshuffle' }, cryptoSource, at),
+        12,
+      ),
+    ),
+  );
 
 describe('a replay (FR-19)', () => {
   it('is a set already conquered, played again after a reset', () => {
@@ -59,7 +66,10 @@ describe('a replay (FR-19)', () => {
   });
 
   it('is never a new draw, nor the set just conquered by a new win', () => {
-    const s = winTimes(startRun(catalogue, { name: undefined }, cryptoSource, at), 3);
+    const s = winTimes(
+      startRun(catalogue, { name: undefined, resetRule: 'reshuffle' }, cryptoSource, at),
+      3,
+    );
     expect(isReplay(s)).toBe(false);
     expect(isReplay(win(s))).toBe(false);
   });

@@ -104,11 +104,11 @@ export type RunState = {
 
 export type CurrentSet = { kit: string; head: string; clothes: string; shoes: string };
 
-// A new run follows the reshuffled reset (FR-18, amended 2026-10-26); the earlier one is for runs
-// begun before, and for tests of them.
+// A new run starts over from nothing at a reset (FR-18, amended a second time on 2026-10-26); the
+// earlier resets are for runs begun under them, and for tests of them.
 export function startRun(
   catalogue: Catalogue,
-  { name, resetRule = 'reshuffle' }: { name: string | undefined; resetRule?: ResetRule },
+  { name, resetRule = 'restart' }: { name: string | undefined; resetRule?: ResetRule },
   source: RandomSource,
   at: string,
 ): RunState {
@@ -303,7 +303,12 @@ export function rerollRefusal(
     const since = s.log.findLastIndex((e) => e.reset);
     const draw = currentDraw(s);
     if (s.log.slice(since + 1).some((e) => e.draw === draw)) return 'played';
-  } else if (s.log.some((e) => e.draw === s.cursor)) return 'played';
+  } else {
+    // A result for this draw. A reset that starts over draws a new order, so results before it were
+    // for other sets: only those since count (FR-18).
+    const since = s.resetRule === 'restart' ? s.log.findLastIndex((e) => e.reset) + 1 : 0;
+    if (s.log.slice(since).some((e) => e.draw === s.cursor)) return 'played';
+  }
   if (s.order.kits.length + s.spent[slot] >= s.order[slot].length) return 'no-spare';
   return undefined;
 }
@@ -423,7 +428,9 @@ export function reportLoss(s: RunState, action: Result): RunState {
     const redraw = redrawFor(s, action);
     return recorded(s, action, 'loss', {
       ...s,
-      redraws: { ...s.redraws, [s.resets + 1]: redraw },
+      // Only the latest draw is kept: undo goes back one result at most, and the order it returns
+      // to is in its snapshot. Every draw kept would grow a long run past browser storage.
+      redraws: { [s.resets + 1]: redraw },
       order: redraw.order,
       worn: { head: {}, clothes: {}, shoes: {} },
       spent: { head: 0, clothes: 0, shoes: 0 },

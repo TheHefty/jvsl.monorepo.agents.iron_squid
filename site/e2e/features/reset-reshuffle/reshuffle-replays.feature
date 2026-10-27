@@ -1,6 +1,7 @@
 Feature: Reshuffle the replays
-  Every reset is a new test: the conquered kits come back in a new order,
-  each with gear dealt out again from what they were won with.
+  In a run begun under the reshuffled reset, every reset is a new test: the
+  conquered kits come back in a new order, each with gear dealt out again from
+  what they were won with.
 
   Scenario: A reset replays the conquered kits in a new order
     Given a player with 12 conquered kits and 1 life
@@ -55,7 +56,3 @@ Feature: Reshuffle the replays
     When the player reports a loss
     Then the player replays the conquered sets in the order they were conquered, with the same gear
     And the player is offered no re-roll on a replay
-
-  Scenario: A new run follows the new reset
-    Given a player who starts a new run
-    Then the run replays in a new order at each reset
