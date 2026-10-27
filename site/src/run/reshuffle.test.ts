@@ -230,7 +230,7 @@ describe('a run started before the change (failure 3)', () => {
 describe('a run saved with a reshuffled reset', () => {
   it('reads forever, replaying what its reset drew', () => {
     const parsed = parseRun(structuredClone(v4), { '0.0.1': fixtureCatalogue as Catalogue });
-    expect(parsed).toMatchObject({ ok: true, state: { schema: 4, resetRule: 'reshuffle' } });
+    expect(parsed).toMatchObject({ ok: true, state: { schema: 5, resetRule: 'reshuffle' } });
     if (!parsed.ok) return;
     const r = v4.replays['1'];
     expect(currentSet(parsed.state)).toEqual({

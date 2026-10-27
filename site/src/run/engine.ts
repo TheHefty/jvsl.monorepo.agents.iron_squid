@@ -9,10 +9,12 @@ type Order = { kits: string[]; head: string[]; clothes: string[]; shoes: string[
 // One reported result (FR-24): which draw of the order it was (so its kit and gear are the run's own
 // order[draw]), win or loss, the mode it was played in, the lives left and the kits conquered after
 // it, and whether it was a replay or reset the run. A result reported before the site recorded modes
-// has none, and none is invented for it.
+// has none, and none is invented for it. From run format 5 an entry also names its kit: a reset
+// that starts over replaces the order, and `draw` alone would name the new order's kit.
 export type LogEntry = {
   at: string;
   draw: number;
+  kit?: string;
   result: 'win' | 'loss';
   mode?: string;
   livesAfter: number;
@@ -30,6 +32,8 @@ export type RerollEntry = {
   from: string;
   to: string;
   afterMatches: number;
+  // The resets before it (format 5): a reset that starts over gives every spare back (FR-25).
+  reset?: number;
 };
 
 // The replays of one reset (FR-18, reshuffle rule): the conquered kits in the order drawn for it, by
@@ -37,17 +41,28 @@ export type RerollEntry = {
 // is the match that caused the reset, so a reset reported again after undo reuses it (FR-14).
 export type Replays = { matches: number; draws: number[]; gear: Record<GearSlot, number[]> };
 
-// Which reset a run follows: 'reshuffle' for runs started after 2026-10-26, 'in-order' (the conquered
-// sets again, in order, with their own gear) for runs begun before, which finish under it.
-export type ResetRule = 'reshuffle' | 'in-order';
+// The new draw of a reset that starts over (FR-18, restart rule): every kit and gear piece in a new
+// order. `matches` is the match that caused the reset, so the same loss reported again after undo
+// brings the same draw (FR-14).
+export type Redraw = { matches: number; order: Order };
+
+// Which reset a run follows (FR-18). 'restart', for runs started after the second amendment of
+// 2026-10-26: everything conquered is lost and the whole run is drawn again. 'reshuffle', for runs
+// begun between the two amendments: the conquered kits replayed in a new order, their gear dealt out
+// again. 'in-order', for runs begun before: the conquered sets replayed in order, with their gear.
+// A run finishes under the rule it began with.
+export type ResetRule = 'restart' | 'reshuffle' | 'in-order';
 
 // The state before the last result, without the logs: undo removes the log's last entry instead, so
 // a long run never stores its log twice (task run-log-format, failure 3); re-rolls are never undone,
 // and a reset's replays outlive an undo so that it cannot draw them again.
-export type Snapshot = Omit<RunState, 'previous' | 'log' | 'logSince' | 'rerolls' | 'replays'>;
+export type Snapshot = Omit<
+  RunState,
+  'previous' | 'log' | 'logSince' | 'rerolls' | 'replays' | 'redraws'
+>;
 
 export type RunState = {
-  schema: 4;
+  schema: 5;
   resetRule: ResetRule;
   catalogueVersion: string;
   name?: string;
@@ -81,6 +96,8 @@ export type RunState = {
   rerolls: RerollEntry[];
   // The replays drawn for each reset, by reset number; kept apart from the results, like re-rolls.
   replays: Record<number, Replays>;
+  // The new draw of each reset that started over, by reset number; kept apart like the replays.
+  redraws: Record<number, Redraw>;
   // The state before the last result: what undo returns to (FR-20). One level only.
   previous?: Snapshot;
 };
@@ -107,7 +124,7 @@ export function startRun(
       source,
     );
   return {
-    schema: 4,
+    schema: 5,
     resetRule,
     catalogueVersion: catalogue.version,
     ...(name === undefined ? {} : { name }),
@@ -132,6 +149,7 @@ export function startRun(
     spent: { head: 0, clothes: 0, shoes: 0 },
     rerolls: [],
     replays: {},
+    redraws: {},
   };
 }
 
@@ -195,9 +213,10 @@ function snapshot(s: RunState): Snapshot {
     logSince: _logSince,
     rerolls: _rerolls,
     replays: _replays,
+    redraws: _redraws,
     ...rest
   } = s;
-  void [_previous, _log, _logSince, _rerolls, _replays];
+  void [_previous, _log, _logSince, _rerolls, _replays, _redraws];
   return rest;
 }
 
@@ -213,6 +232,7 @@ const entry = (
 ): LogEntry => ({
   at,
   draw: currentDraw(s),
+  kit: currentSet(s).kit,
   result,
   mode,
   livesAfter: after.lives,
@@ -263,6 +283,7 @@ export function undo(s: RunState): RunState {
     logSince: s.logSince,
     rerolls: s.rerolls,
     replays: s.replays,
+    redraws: s.redraws,
     step: s.step + 1,
   };
 }
@@ -330,6 +351,7 @@ export function reroll(
         from: s.order[slot][currentIndex(s, slot)] ?? '',
         to: s.order[slot][spare] ?? '',
         afterMatches: s.matches,
+        reset: s.resets,
       },
     ],
     step: s.step + 1,
@@ -363,16 +385,53 @@ function replaysFor(s: RunState, action: Result): Replays {
   };
 }
 
+// The new draw of the reset a loss is about to cause, under the restart rule: every list of the
+// order drawn again, the same pieces in a new order (FR-18). Kept with the match that caused it, so
+// the same loss reported again after undo brings it back (FR-14).
+function redrawFor(s: RunState, action: Result): Redraw {
+  const kept = s.redraws[s.resets + 1];
+  if (kept && kept.matches === s.matches + 1) return kept;
+  const source = action.source;
+  if (!source) throw new Error('run: a reset draws the run again, and needs a random source');
+  return {
+    matches: s.matches + 1,
+    order: {
+      kits: shuffle(s.order.kits, source),
+      head: shuffle(s.order.head, source),
+      clothes: shuffle(s.order.clothes, source),
+      shoes: shuffle(s.order.shoes, source),
+    },
+  };
+}
+
 // A loss costs a life and the same set is played again (FR-17). On the last life the run resets
-// (FR-18): back to the first replay with 1 life, and what was conquered stays conquered. Under the
-// reshuffle rule the replays are drawn for the reset; under the earlier rule they are the conquered
-// sets in order, the cursor walking from 0 again, each with the gear it was won with.
+// (FR-18), with 1 life. Under the restart rule everything conquered is lost and the whole run is
+// drawn again, the spares given back. Under the reshuffle rule the replays are drawn for the reset;
+// under the earliest rule they are the conquered sets in order, the cursor walking from 0 again,
+// each with the gear it was won with.
 export function reportLoss(s: RunState, action: Result): RunState {
   checked(s, action, 'loss');
   if (s.lives > 1) {
     return recorded(s, action, 'loss', {
       ...s,
       lives: s.lives - 1,
+      matches: s.matches + 1,
+      step: s.step + 1,
+    });
+  }
+  if (s.resetRule === 'restart') {
+    const redraw = redrawFor(s, action);
+    return recorded(s, action, 'loss', {
+      ...s,
+      redraws: { ...s.redraws, [s.resets + 1]: redraw },
+      order: redraw.order,
+      worn: { head: {}, clothes: {}, shoes: {} },
+      spent: { head: 0, clothes: 0, shoes: 0 },
+      conquered: 0,
+      cursor: 0,
+      lives: 1,
+      winsSinceReset: 0,
+      resets: s.resets + 1,
       matches: s.matches + 1,
       step: s.step + 1,
     });

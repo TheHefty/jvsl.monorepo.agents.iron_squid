@@ -106,8 +106,13 @@ export function longestStreak(matches: { result: 'win' | 'loss' }[]): number {
 
 // The mode a set was conquered in: that of the win on its draw that was not a replay. A replay won
 // since does not change it, and a conquest from before modes has none.
-const conquestMode = (state: RunState, draw: number) =>
-  state.log.find((e) => e.draw === draw && e.result === 'win' && !e.replay)?.mode;
+// Under the restart rule only the matches since the last reset count: a reset draws a new order, and
+// a draw before it was another kit.
+function conquestMode(state: RunState, draw: number) {
+  const since = state.resetRule === 'restart' ? state.log.findLastIndex((e) => e.reset) + 1 : 0;
+  return state.log.slice(since).find((e) => e.draw === draw && e.result === 'win' && !e.replay)
+    ?.mode;
+}
 
 export function encodeShare(
   state: RunState,
@@ -133,7 +138,8 @@ export function encodeShare(
   const matches = state.log.map((e) => [
     e.result === 'win' ? 1 : 0,
     modes.indexOf(e.mode ?? '') + 1,
-    kitPlaces?.get(state.order.kits[e.draw] ?? '') ?? 0,
+    // The kit the entry names (format 5); before, its draw in an order no reset has replaced.
+    kitPlaces?.get(e.kit ?? state.order.kits[e.draw] ?? '') ?? 0,
     e.replay ? 1 : 0,
     e.reset ? 1 : 0,
   ]);

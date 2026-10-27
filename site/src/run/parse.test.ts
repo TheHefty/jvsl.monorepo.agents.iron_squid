@@ -36,10 +36,10 @@ describe('parseRun', () => {
   });
 
   it('refuses a format it does not know, rather than guessing a migration', () => {
-    expect(parseRun(with_({ schema: 5 }), catalogues)).toEqual({
+    expect(parseRun(with_({ schema: 6 }), catalogues)).toEqual({
       ok: false,
       reason: 'unknown-schema',
-      detail: 'the run is in format 5; this site reads formats 1 to 4',
+      detail: 'the run is in format 6; this site reads formats 1 to 5',
     });
   });
 
@@ -47,7 +47,7 @@ describe('parseRun', () => {
     const result = parseRun(structuredClone(v1), catalogues, '2026-10-25T08:00:00.000Z');
     expect(result).toMatchObject({
       ok: true,
-      state: { schema: 4, resetRule: 'in-order', log: [], logSince: '2026-10-25T08:00:00.000Z' },
+      state: { schema: 5, resetRule: 'in-order', log: [], logSince: '2026-10-25T08:00:00.000Z' },
     });
     if (result.ok) {
       expect(result.state.startedAt).toBe(v1.startedAt);
@@ -61,7 +61,7 @@ describe('parseRun', () => {
     const result = parseRun(structuredClone(v2), catalogues);
     expect(result).toMatchObject({
       ok: true,
-      state: { schema: 4, resetRule: 'in-order', logSince: '2026-10-25T10:00:00.000Z' },
+      state: { schema: 5, resetRule: 'in-order', logSince: '2026-10-25T10:00:00.000Z' },
     });
     if (result.ok) expect(result.state.log).toEqual(v2.log);
   });

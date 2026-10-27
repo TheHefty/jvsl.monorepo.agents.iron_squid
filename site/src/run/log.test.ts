@@ -33,14 +33,16 @@ const winTimes = (s: RunState, n: number) => {
 
 describe('the run log (FR-24)', () => {
   it('starts empty, complete from the start of a run begun in format 2', () => {
-    expect(start()).toMatchObject({ schema: 4, log: [], logSince: t0 });
+    expect(start()).toMatchObject({ schema: 5, log: [], logSince: t0 });
   });
 
   it('logs a win: the draw, the result, the lives after it, and when', () => {
-    expect(win(start()).log).toEqual([
+    const s = start();
+    expect(win(s).log).toEqual([
       {
         at: t1,
         draw: 0,
+        kit: s.order.kits[0],
         result: 'win',
         mode: 'Pnt',
         livesAfter: 1,
@@ -65,6 +67,7 @@ describe('the run log (FR-24)', () => {
     expect(lost.log.at(-1)).toEqual({
       at: t1,
       draw: 12,
+      kit: twoLives.order.kits[12],
       result: 'loss',
       mode: 'Pnt',
       livesAfter: 1,
