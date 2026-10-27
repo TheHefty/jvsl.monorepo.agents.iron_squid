@@ -9,6 +9,7 @@ import {
   reportLoss,
   reportWin,
   reroll,
+  rerollRefusal,
   startRun,
   undo,
   type RunState,
@@ -65,6 +66,12 @@ describe('a reset that starts over (FR-18)', () => {
     expect(s.spent).toEqual({ head: 0, clothes: 0, shoes: 0 });
     expect(s.worn).toEqual({ head: {}, clothes: {}, shoes: {} });
     expect(s.rerolls).toHaveLength(1);
+  });
+
+  it('lets the first set of the new draw be re-rolled: results before the reset were other sets', () => {
+    const s = reset(start());
+    expect(s.log).toHaveLength(1);
+    expect(rerollRefusal(s, 'shoes')).toBeUndefined();
   });
 
   it('cannot be drawn again by undo: the same loss brings the same draw (FR-14, failure 1)', () => {

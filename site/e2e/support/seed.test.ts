@@ -19,9 +19,10 @@ describe('playRun', () => {
       conquered: 10,
       resets: 0,
     });
+    // A new run starts over at a reset (FR-18): nothing conquered after it.
     expect(playRun([...winsThenPlaying(3), 'loss'])).toMatchObject({
       lives: 1,
-      conquered: 3,
+      conquered: 0,
       resets: 1,
       cursor: 0,
     });

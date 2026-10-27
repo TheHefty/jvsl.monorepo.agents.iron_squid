@@ -38,7 +38,7 @@ describe('startRun', () => {
     const s = start();
     expect(s).toMatchObject({
       schema: 5,
-      resetRule: 'reshuffle',
+      resetRule: 'restart',
       catalogueVersion: '11.3.0',
       lives: 1,
       conquered: 0,
@@ -128,7 +128,8 @@ describe('undo', () => {
     // A long random walk of wins, losses and undos: the n-th set played is always order[n].
     const walker = new Uint32Array(1);
     for (let trial = 0; trial < 50; trial++) {
-      let s = start();
+      // The order of a run that replays; one that starts over draws it again (restart.test.ts).
+      let s: RunState = { ...start(), resetRule: 'reshuffle' };
       const drawn = structuredClone(s.order);
       for (let step = 0; step < 40; step++) {
         crypto.getRandomValues(walker);

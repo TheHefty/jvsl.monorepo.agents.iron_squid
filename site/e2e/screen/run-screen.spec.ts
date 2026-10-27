@@ -191,7 +191,8 @@ test('after a loss, an undo and a reset, the strip matches a fresh load of the r
   await report(page, 'loss');
   await report(page, 'loss');
   await expect(page.getByText(message('run.resets', { resets: 1 }), { exact: true })).toBeVisible();
-  await expect(page.getByText(message('run.resetNotice'))).toBeVisible();
+  // A new run starts over at a reset (FR-18), and says so.
+  await expect(page.getByText(message('run.restartNotice'))).toBeVisible();
   await freshly();
 });
 
@@ -201,8 +202,18 @@ test('after a reset during a replay, the strip and the card match a fresh load',
   page,
 }) => {
   const { playRun, seedRun, winsThenPlaying } = await import('../support/seed');
-  // 12 conquered, reset, then 6 replay wins: replaying the seventh, with 1 life.
-  await seedRun(page, playRun([...winsThenPlaying(12), 'loss', 'loss', ...winsThenPlaying(6)]));
+  // 12 conquered, reset, then 6 replay wins: replaying the seventh, with 1 life. Replays exist in a
+  // run begun under an earlier reset (FR-18); one that starts over has none.
+  await seedRun(
+    page,
+    playRun(
+      [...winsThenPlaying(12), 'loss', 'loss', ...winsThenPlaying(6)],
+      undefined,
+      undefined,
+      undefined,
+      'reshuffle',
+    ),
+  );
   await expect(page.getByText(message('set.replay'), { exact: true })).toBeVisible();
   await report(page, 'loss');
   await expect(page.getByText(message('run.resets', { resets: 2 }), { exact: true })).toBeVisible();

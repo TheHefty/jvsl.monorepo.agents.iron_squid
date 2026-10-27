@@ -33,7 +33,7 @@ export function playRun(
   name?: string,
   when: string = at,
   mode: string | null = 'Pnt',
-  resetRule: ResetRule = 'reshuffle',
+  resetRule: ResetRule = 'restart',
 ): RunState {
   let s = startRun(catalogue, { name, resetRule }, cryptoSource, at);
   for (const play of plays) {

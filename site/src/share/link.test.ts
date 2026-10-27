@@ -168,23 +168,28 @@ describe('reading a share link', () => {
     expect(read({ ...valid(), version: '<b>' })).toEqual(broken);
   });
 
-  it('never throws on a damaged link: each one is refused or reads as a valid run (failure 1)', () => {
-    const bytes = bytesOf(encodeShare(played(30, 'Ivo'), catalogue));
-    let seed = 1;
-    const random = () => (seed = (seed * 1103515245 + 12345) % 2 ** 31) / 2 ** 31;
-    for (let i = 0; i < 10_000; i++) {
-      const damaged = bytes.slice();
-      damaged[Math.floor(random() * damaged.length)] = Math.floor(random() * 256);
-      const result = decodeShare(textOf(damaged), catalogues);
-      if (!result.ok) continue;
-      const { run } = result;
-      expect(run.sets).toHaveLength(run.conquered);
-      for (const slot of ['kit', 'head', 'clothes', 'shoes'] as const) {
-        expect(new Set(run.sets.map((s) => s[slot])).size).toBe(run.conquered);
+  // 10,000 damaged links: about a second alone, past the default 5 s when every file runs at once.
+  it(
+    'never throws on a damaged link: each one is refused or reads as a valid run (failure 1)',
+    { timeout: 30_000 },
+    () => {
+      const bytes = bytesOf(encodeShare(played(30, 'Ivo'), catalogue));
+      let seed = 1;
+      const random = () => (seed = (seed * 1103515245 + 12345) % 2 ** 31) / 2 ** 31;
+      for (let i = 0; i < 10_000; i++) {
+        const damaged = bytes.slice();
+        damaged[Math.floor(random() * damaged.length)] = Math.floor(random() * 256);
+        const result = decodeShare(textOf(damaged), catalogues);
+        if (!result.ok) continue;
+        const { run } = result;
+        expect(run.sets).toHaveLength(run.conquered);
+        for (const slot of ['kit', 'head', 'clothes', 'shoes'] as const) {
+          expect(new Set(run.sets.map((s) => s[slot])).size).toBe(run.conquered);
+        }
+        expect(run.lives).toBeGreaterThan(0);
       }
-      expect(run.lives).toBeGreaterThan(0);
-    }
-  });
+    },
+  );
 });
 
 describe('the mode of each conquest (share-mode)', () => {
@@ -201,7 +206,13 @@ describe('the mode of each conquest (share-mode)', () => {
   });
 
   it('keeps the mode of the conquest, not of a replay won since', () => {
-    let s = win(win(startRun(catalogue, { name: undefined }, cryptoSource, at), 'Vgl'), 'Vgl');
+    let s = win(
+      win(
+        startRun(catalogue, { name: undefined, resetRule: 'reshuffle' }, cryptoSource, at),
+        'Vgl',
+      ),
+      'Vgl',
+    );
     s = win(lose(s), 'Tcl'); // reset, then the first set replayed in another mode
     const shared = decodeShare(encodeShare(s, catalogue), catalogues);
     expect(shared.ok && shared.run.sets.map((set) => set.mode)).toEqual(['Vgl', 'Vgl']);
@@ -312,7 +323,7 @@ describe('the run log of a shared run (share-log-codec)', () => {
   };
 
   it('carries every match: its result, kit, mode, replay and reset, newest last, and no date', () => {
-    let s = startRun(catalogue, { name: 'Ivo' }, cryptoSource, at);
+    let s = startRun(catalogue, { name: 'Ivo', resetRule: 'reshuffle' }, cryptoSource, at);
     s = reportWin(s, act(s, 'Var'));
     s = reportLoss(s, act(s, 'Vgl')); // the last life: a reset
     s = reportWin(s, act(s, 'Tcl')); // a replay
@@ -340,7 +351,10 @@ describe('the run log of a shared run (share-log-codec)', () => {
 
   it('counts wins in a replay towards the streak', () => {
     // 12 wins, a loss and a reset, then 12 replays and 3 new sets won: 15 in a row.
-    const s = play([...seq('W'.repeat(12)), 'L', 'L', ...seq('W'.repeat(15))]);
+    const s = play(
+      [...seq('W'.repeat(12)), 'L', 'L', ...seq('W'.repeat(15))],
+      startRun(catalogue, { name: 'Ivo', resetRule: 'reshuffle' }, cryptoSource, at),
+    );
     expect(read(s).longestStreak).toBe(15);
   });
 

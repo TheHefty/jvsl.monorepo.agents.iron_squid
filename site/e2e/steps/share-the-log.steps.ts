@@ -1,7 +1,13 @@
 import { readFileSync } from 'node:fs';
 import { expect, type Page } from '@playwright/test';
 import type { Catalogue } from '../../src/catalogue/types';
-import { reportLoss, reportWin, startRun, type RunState } from '../../src/run/engine';
+import {
+  reportLoss,
+  reportWin,
+  startRun,
+  type ResetRule,
+  type RunState,
+} from '../../src/run/engine';
 import { cryptoSource } from '../../src/run/random';
 import { decodeShare, packShare, widthsOf } from '../../src/share/link';
 import { Given, Then } from '../fixtures';
@@ -22,8 +28,8 @@ type Play = { result: 'win' | 'loss'; mode?: string };
 const wins = (n: number, mode = 'Pnt'): Play[] => Array(n).fill({ result: 'win', mode });
 const loss = (mode = 'Pnt'): Play => ({ result: 'loss', mode });
 
-function play(plays: Play[], name?: string): RunState {
-  let s = startRun(catalogue, { name }, cryptoSource, at);
+function play(plays: Play[], name?: string, resetRule: ResetRule = 'restart'): RunState {
+  let s = startRun(catalogue, { name, resetRule }, cryptoSource, at);
   for (const p of plays) {
     const action = { step: s.step, at, mode: p.mode ?? 'Pnt', source: cryptoSource };
     s = p.result === 'win' ? reportWin(s, action) : reportLoss(s, action);
@@ -58,7 +64,9 @@ Then('the visitor sees its {int} matches, newest first', async ({ world }, match
   await expect(items).toHaveCount(matches);
   const state = world.state as RunState;
   const newest = state.log.at(-1);
-  await expect(items.first()).toContainText(nameOf(state.order.kits[newest?.draw ?? -1]));
+  await expect(items.first()).toContainText(
+    nameOf(newest?.kit ?? state.order.kits[newest?.draw ?? -1]),
+  );
 });
 
 Then('each says its result, its kit and its mode', async ({ world }) => {
@@ -67,7 +75,7 @@ Then('each says its result, its kit and its mode', async ({ world }) => {
   const entries = [...state.log].reverse();
   for (const [i, e] of entries.entries()) {
     const item = items.nth(i);
-    await expect(item).toContainText(nameOf(state.order.kits[e.draw]));
+    await expect(item).toContainText(nameOf(e.kit ?? state.order.kits[e.draw]));
     await expect(item).toContainText(modeName(e.mode ?? ''));
     await expect(item).toContainText(message(e.result === 'win' ? 'log.markWin' : 'log.markLoss'));
   }
@@ -79,9 +87,12 @@ Then('no match on the shared log shows a date', async ({ world }) => {
   for (const text of await items.allInnerTexts()) expect(text).not.toMatch(/2026|October/);
 });
 
-Given('a run that lost its last life and won a replay', async ({ page, world }) => {
-  await seed(page, world, play([...wins(3), loss(), ...wins(1)]));
-});
+Given(
+  'a run begun under the reshuffled reset that lost its last life and won a replay',
+  async ({ page, world }) => {
+    await seed(page, world, play([...wins(3), loss(), ...wins(1)], undefined, 'reshuffle'));
+  },
+);
 
 Then('the shared log marks the loss that reset the run', async ({ world }) => {
   const items = await sharedLog(world.other as Page);
@@ -112,10 +123,14 @@ Then(
 );
 
 Given(
-  'a run that reset, then won its {int} replays and {int} new sets',
+  'a run begun under the reshuffled reset that reset, then won its {int} replays and {int} new sets',
   async ({ page, world }, replays: number, fresh: number) => {
     // `replays` wins earn a second life: the first loss spends it, the second resets.
-    const state = play([...wins(replays), loss(), loss(), ...wins(replays + fresh)]);
+    const state = play(
+      [...wins(replays), loss(), loss(), ...wins(replays + fresh)],
+      undefined,
+      'reshuffle',
+    );
     expect(state.resets).toBe(1);
     await seed(page, world, state);
   },

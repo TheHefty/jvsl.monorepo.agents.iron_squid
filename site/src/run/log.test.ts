@@ -84,7 +84,15 @@ describe('the run log (FR-24)', () => {
   });
 
   it('marks a replayed set as a replay, with the draw of the kit replayed', () => {
-    const reset = lose(lose(winTimes(start(), 12)));
+    // Replays exist under the earlier resets; a run that starts over has none (FR-18).
+    const reset = lose(
+      lose(
+        winTimes(
+          startRun(catalogue, { name: undefined, resetRule: 'reshuffle' }, cryptoSource, t0),
+          12,
+        ),
+      ),
+    );
     const kit = currentSet(reset).kit;
     const last = win(reset).log.at(-1);
     expect(last).toMatchObject({ result: 'win', replay: true });
@@ -107,7 +115,9 @@ describe('the run log (FR-24)', () => {
     expect(JSON.stringify(s).length).toBeLessThan(500_000);
   });
 
-  it('always agrees with the run, over random walks (failure 2)', () => {
+  // A walk of 9,000 steps whose resets each draw the whole run again (FR-18): about a second alone,
+  // past the default 5 s when every test file runs at once.
+  it('always agrees with the run, over random walks (failure 2)', { timeout: 30_000 }, () => {
     const r = new Uint32Array(1);
     for (let trial = 0; trial < 60; trial++) {
       let s = start();

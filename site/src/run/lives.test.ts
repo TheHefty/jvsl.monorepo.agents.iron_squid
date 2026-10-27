@@ -116,8 +116,8 @@ describe('a loss on the last life resets the run (FR-18)', () => {
     expect(win(s).lives).toBe(2);
   });
 
-  it('with nothing conquered, counts the reset and plays the same set', () => {
-    const s = start();
+  it('with nothing conquered, counts the reset and plays the same set (earlier rules)', () => {
+    const s = startInOrder();
     const reset = lose(s);
     expect(reset).toMatchObject({ resets: 1, lives: 1, cursor: 0, conquered: 0 });
     expect(currentSet(reset)).toEqual(currentSet(s));
@@ -155,10 +155,10 @@ describe('undo across losses (FR-20)', () => {
 });
 
 describe('every walk keeps the rules (property)', () => {
-  it('lives always equal 1 + wins/10 − losses since the last reset; conquered never drops', () => {
+  it('lives always equal 1 + wins/10 − losses since the last reset; conquered never drops (replaying rules)', () => {
     const r = new Uint32Array(1);
     for (let trial = 0; trial < 100; trial++) {
-      let s = start();
+      let s: RunState = { ...start(), resetRule: 'reshuffle' };
       // What the test expects, kept beside the run, with one level of history for undo.
       let losses = 0;
       let history: { losses: number } | undefined;

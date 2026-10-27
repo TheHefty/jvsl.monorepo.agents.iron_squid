@@ -33,6 +33,7 @@ export const registrations: Registration[] = [
   { feature: 'reset-reshuffle/reshuffle-replays.feature' },
   { feature: 'squid-logo/redraw-logo.feature' },
   { feature: 'shared-log/share-the-log.feature' },
+  { feature: 'reset-restart/restart-on-reset.feature' },
   {
     feature: 'every-language/translate-interface.feature',
   },

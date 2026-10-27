@@ -1,6 +1,6 @@
 Feature: Reset and replay
-  Losing the last life sends the player back through every set they have
-  already conquered.
+  In a run begun before resets started over from nothing, losing the last life
+  sends the player back through every set they have already conquered.
 
   Scenario: Losing the last life resets the run
     Given a player with 12 conquered sets and 1 life, in a run started before replays were reshuffled

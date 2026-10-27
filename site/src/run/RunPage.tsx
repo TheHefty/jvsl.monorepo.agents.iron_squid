@@ -421,8 +421,14 @@ function RunView({ newestVersion, namesLoaded }: { newestVersion: string; namesL
                   );
                 } else if (after.resets > state.resets) {
                   // A loss on the last life resets the run (FR-18); say so on the page too.
-                  setAnnouncement(announceResult('announce.reset', after, mode));
-                  setNotice(intl.formatMessage({ id: 'run.resetNotice' }));
+                  // A run that starts over has nothing to replay (FR-18); the earlier rules do.
+                  const restart = after.resetRule === 'restart';
+                  setAnnouncement(
+                    announceResult(restart ? 'announce.restart' : 'announce.reset', after, mode),
+                  );
+                  setNotice(
+                    intl.formatMessage({ id: restart ? 'run.restartNotice' : 'run.resetNotice' }),
+                  );
                 } else {
                   setAnnouncement(announceResult('announce.loss', after, mode));
                 }

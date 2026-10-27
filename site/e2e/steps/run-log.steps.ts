@@ -168,12 +168,14 @@ Then('it lists all {int} matches, the newest first', async ({ page, world }, mat
   const last = state.log.at(-1);
   const first = state.log[0];
   if (!last || !first) throw new Error('steps: an empty log');
-  const kitOf = (draw: number) => setNames(state, draw)[0] ?? '';
+  // The kit each entry names: a reset that starts over replaces the order (FR-18).
+  const kitOf = (e: { draw: number; kit?: string }) =>
+    e.kit ? nameOf(e.kit) : (setNames(state, e.draw)[0] ?? '');
   await expect(list.first()).toContainText(
-    sentence({ result: 'loss', kit: kitOf(last.draw), lives: last.livesAfter, reset: last.reset }),
+    sentence({ result: 'loss', kit: kitOf(last), lives: last.livesAfter, reset: last.reset }),
   );
   await expect(list.last()).toContainText(
-    sentence({ result: 'win', kit: kitOf(first.draw), lives: 1, conquered: 1 }),
+    sentence({ result: 'win', kit: kitOf(first), lives: 1, conquered: 1 }),
   );
 });
 
