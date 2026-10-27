@@ -139,6 +139,7 @@ describe('a re-roll', () => {
         from: s.order.head[0],
         to: s.order.head[3],
         afterMatches: 0,
+        reset: 0,
       },
     ]);
   });
@@ -191,7 +192,7 @@ describe('a run saved with a re-roll', () => {
     const parsed = parseRun(structuredClone(v3), { '0.0.1': fixtureCatalogue as Catalogue });
     expect(parsed).toMatchObject({
       ok: true,
-      state: { schema: 4, resetRule: 'in-order', cursor: 1 },
+      state: { schema: 5, resetRule: 'in-order', cursor: 1 },
     });
     if (parsed.ok) {
       expect(currentSet(parsed.state).shoes).toBe(v3.order.shoes[3]);
@@ -210,7 +211,7 @@ describe('runs saved before re-rolls (failure 3)', () => {
     expect(parsed).toMatchObject({
       ok: true,
       state: {
-        schema: 4,
+        schema: 5,
         resetRule: 'in-order',
         spent: { head: 0, clothes: 0, shoes: 0 },
         rerolls: [],

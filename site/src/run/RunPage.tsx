@@ -803,7 +803,10 @@ function RunLog({ state, catalogue }: { state: RunState; catalogue: Catalogue })
                     {
                       replay: String(item.entry.replay),
                       result: item.entry.result,
-                      kit: kitName(item.entry.draw),
+                      // The kit it names (format 5): a reset that starts over replaces the order.
+                      kit: item.entry.kit
+                        ? names(catalogue.version, item.entry.kit)
+                        : kitName(item.entry.draw),
                       conquered: item.entry.conqueredAfter,
                       total: state.order.kits.length,
                       lives: intl.formatMessage(

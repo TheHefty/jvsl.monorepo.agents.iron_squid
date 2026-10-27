@@ -1,0 +1,122 @@
+{
+  "schema": 5,
+  "resetRule": "restart",
+  "catalogueVersion": "0.0.1",
+  "name": "Inkling Ivo",
+  "startedAt": "2026-10-26T20:00:00.000Z",
+  "order": {
+    "kits": ["K2", "K1", "K0"],
+    "head": ["H2", "H1", "H0"],
+    "clothes": ["C0", "C1", "C2"],
+    "shoes": ["S0", "S3", "S1", "S2"]
+  },
+  "conquered": 1,
+  "cursor": 1,
+  "phase": "playing",
+  "lives": 1,
+  "winsSinceReset": 1,
+  "resets": 1,
+  "matches": 4,
+  "step": 4,
+  "log": [
+    {
+      "at": "2026-10-26T20:00:00.000Z",
+      "draw": 0,
+      "kit": "K1",
+      "result": "win",
+      "mode": "Pnt",
+      "livesAfter": 1,
+      "conqueredAfter": 1,
+      "replay": false,
+      "reset": false
+    },
+    {
+      "at": "2026-10-26T20:00:00.000Z",
+      "draw": 1,
+      "kit": "K0",
+      "result": "win",
+      "mode": "Var",
+      "livesAfter": 1,
+      "conqueredAfter": 2,
+      "replay": false,
+      "reset": false
+    },
+    {
+      "at": "2026-10-26T20:00:00.000Z",
+      "draw": 2,
+      "kit": "K2",
+      "result": "loss",
+      "mode": "Vlf",
+      "livesAfter": 1,
+      "conqueredAfter": 0,
+      "replay": false,
+      "reset": true
+    },
+    {
+      "at": "2026-10-26T20:00:00.000Z",
+      "draw": 0,
+      "kit": "K2",
+      "result": "win",
+      "mode": "Tcl",
+      "livesAfter": 1,
+      "conqueredAfter": 1,
+      "replay": false,
+      "reset": false
+    }
+  ],
+  "logSince": "2026-10-26T20:00:00.000Z",
+  "worn": {
+    "head": {},
+    "clothes": {},
+    "shoes": {}
+  },
+  "spent": {
+    "head": 0,
+    "clothes": 0,
+    "shoes": 0
+  },
+  "rerolls": [],
+  "replays": {},
+  "redraws": {
+    "1": {
+      "matches": 3,
+      "order": {
+        "kits": ["K2", "K1", "K0"],
+        "head": ["H2", "H1", "H0"],
+        "clothes": ["C0", "C1", "C2"],
+        "shoes": ["S0", "S3", "S1", "S2"]
+      }
+    }
+  },
+  "previous": {
+    "schema": 5,
+    "resetRule": "restart",
+    "catalogueVersion": "0.0.1",
+    "name": "Inkling Ivo",
+    "startedAt": "2026-10-26T20:00:00.000Z",
+    "order": {
+      "kits": ["K2", "K1", "K0"],
+      "head": ["H2", "H1", "H0"],
+      "clothes": ["C0", "C1", "C2"],
+      "shoes": ["S0", "S3", "S1", "S2"]
+    },
+    "conquered": 0,
+    "cursor": 0,
+    "phase": "playing",
+    "lives": 1,
+    "winsSinceReset": 0,
+    "resets": 1,
+    "matches": 3,
+    "step": 3,
+    "worn": {
+      "head": {},
+      "clothes": {},
+      "shoes": {}
+    },
+    "spent": {
+      "head": 0,
+      "clothes": 0,
+      "shoes": 0
+    }
+  }
+}
