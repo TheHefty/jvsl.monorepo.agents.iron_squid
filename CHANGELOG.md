@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.6.0](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/compare/v0.5.0...v0.6.0) (2026-10-27)
+
+
+### Features
+
+* start every new run over from nothing at each reset ([#101](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/issues/101)) ([b6cf445](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/b6cf4459aa3bc35960d4669ac47fe2eb4e1a5a81))
+* teach the rules the restart reset, for the runs that will follow it ([#100](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/issues/100)) ([1c56fcd](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/1c56fcdf922e78e9230f18ecc5b329d6bd7f7e3d))
+
+
+### Bug Fixes
+
+* give the preview image a new address whenever it changes ([#97](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/issues/97)) ([f6360c8](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/commit/f6360c8ed09408936af23fa6621eb789e03b7314))
+
 ## [0.5.0](https://github.com/TheHefty/jvsl.monorepo.agents.iron_squid/compare/v0.4.0...v0.5.0) (2026-10-26)
 
 
